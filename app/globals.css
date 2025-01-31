@@ -14,8 +14,107 @@
   }
 }
 
+.auth {
+  @apply flex-center min-h-screen w-full bg-white-100;
+}
+
+.root {
+  @apply flex min-h-screen w-full flex-row bg-white-100 sm:flex-col flex-col font-plex-sans text-third-300;
+}
+
+.root-container {
+  @apply mt-16 flex-1 overflow-auto lg:mt-0 lg:max-h-screen
+}
+
+@layer utilities {
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  .text-30-extrabold {
+    @apply text-[30px] font-extrabold text-white;
+  }
+
+  .text-30-bold {
+    @apply text-[30px] font-bold text-black;
+  }
+
+  .text-30-semibold {
+    @apply font-semibold text-[30px] text-black;
+  }
+
+  .text-26-semibold {
+    @apply font-semibold text-[26px] text-black;
+  }
+
+  .text-24-black {
+    @apply text-[24px] font-black text-black;
+  }
+
+  .text-20-medium {
+    @apply font-medium text-[20px] text-black;
+  }
+
+  .text-16-medium {
+    @apply font-medium text-[16px] text-black;
+  }
+
+  .text-14-normal {
+    @apply font-normal text-sm text-white-100/80;
+  }
+ /* clothing grid */
+ .card_grid {
+  @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5;
+}
+
+.card_grid-sm {
+  @apply grid sm:grid-cols-2 gap-5;
+}
+
+.hover-grow-color {
+ @apply transition-all duration-200 ease-in-out;
+}
+
+.hover-grow-color:hover {
+  @apply text-primary-200 scale-110;
+}
+.search-form {
+  @apply max-w-[200px] w-full min-h-[30px] bg-white-200 border-[2.5px] border-black rounded-[80px] text-[20px] px-2 flex flex-row items-center gap-2;
+}
+
+.search-input {
+  @apply flex-1 font-plex-sans font-regular placeholder:opacity-50 placeholder:font-extralight rounded-[80px] placeholder:text-third-400 w-full h-auto outline-none bg-white-200 overflow-hidden;
+}
+
+.search-popup-container {
+  @apply fixed top-0 left-0 h-[30vh] w-full bg-white-100 py-3 px-3 shadow-md shadow-third-300 text-third-300;
+}
+
+.search-form-popup {
+  @apply max-w-[4xl] min-w-[200px] w-full min-h-[25px] bg-white-200 border-[2.5px] border-black rounded-[80px] text-[32px] px-3 py-2 flex flex-row items-center gap-2;
+}
+
+.search-input-popup {
+  @apply flex-1 font-plex-sans font-regular placeholder:opacity-50 placeholder:font-extralight placeholder:text-third-400 w-[90%] h-auto outline-none bg-white-200;
+}
+
+.side-bar {
+  @apply fixed w-[150px] h-full bg-white-100 shadow-md shadow-third-300 font-plex-sans font-medium;
+}
+
+.side-bar-container {
+  @apply flex flex-col items-center gap-5 w-full;
+}
+
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
