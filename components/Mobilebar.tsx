@@ -1,7 +1,7 @@
 import React from "react";
 
 const Mobilebar = () => {
-  return <div>Mobilebar</div>;
+  return <aside className="mobilebar-root">Mobilebar</aside>;
 };
 
 export default Mobilebar;
