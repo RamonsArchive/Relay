@@ -40,6 +40,21 @@ const Sidebar = () => {
     "Luxury",
   ];
 
+  const materials = [
+    "Cotton", // Soft, breathable, used in most clothing
+    "Polyester", // Durable, wrinkle-resistant, common in activewear
+    "Nylon", // Lightweight, used in sportswear & shoes
+    "Wool", // Warm, insulating, used in sweaters & coats
+    "Leather", // Used in jackets, shoes, bags
+    "Silk", // Luxurious, used in dresses, blouses
+    "Denim", // Strong, used in jeans & jackets
+    "Spandex", // Stretchy, used in activewear & leggings
+    "Rayon", // Soft, mimics silk, used in dresses
+    "Linen", // Lightweight, breathable, used in summer wear
+    "Fleece", // Warm, synthetic, used in hoodies & jackets
+    "Suede", // Soft leather, used in jackets & shoes
+  ];
+
   const [genderDrop, setGenderDrop] = useState(false);
   const [kidsDrop, setKidsDrop] = useState(false);
   const [sizeDrop, setSizeDrop] = useState(false);
@@ -48,6 +63,7 @@ const Sidebar = () => {
   const [colorDrop, setColorDrop] = useState(false);
   const [brandDrop, setBrandDrop] = useState(false);
   const [categoriesDrop, setCategoriesDrop] = useState(false);
+  const [materialDrop, setMaterialDrop] = useState(false);
   return (
     <aside className="side-bar">
       <div className="flex items-center justify-center w-full py-3">
@@ -220,6 +236,30 @@ const Sidebar = () => {
           </div>
           {brandDrop &&
             brandOptions.map((option, index) => (
+              <CheckBox key={index} options={option} />
+            ))}
+        </div>
+        <div className="side-bar-option-container">
+          <div className="side-bar-options">
+            <span>Materials</span>
+            {brandDrop ? (
+              <ChevronUp
+                className="cursor-pointer"
+                size="20px"
+                strokeWidth={2}
+                onClick={() => setMaterialDrop(!materialDrop)}
+              />
+            ) : (
+              <ChevronDown
+                className="cursor-pointer"
+                size="20px"
+                strokeWidth={2}
+                onClick={() => setMaterialDrop(!materialDrop)}
+              />
+            )}
+          </div>
+          {materialDrop &&
+            materials.map((option, index) => (
               <CheckBox key={index} options={option} />
             ))}
         </div>

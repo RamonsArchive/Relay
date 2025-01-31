@@ -123,7 +123,18 @@ html, body {
 }
 
 .home-grid {
-  @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5;
+  @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5 mt-5;
+}
+
+.product-group {
+  @apply bg-white-100 border-[2px] border-primary-200 shadow-100 transition-transform duration-300 ease-in-out;
+}
+
+.product-group:hover {
+  @apply scale-105;
+}
+.product-group-info {
+  @apply flex flex-col py-2 gap-0.5 px-2;
 }
 
 }

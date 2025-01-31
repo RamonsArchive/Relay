@@ -1,8 +1,4 @@
 import Footer from "@/components/Footer";
-import Mobilebar from "@/components/Mobilebar";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-import { SignIn, SignedOut } from "@clerk/nextjs";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
