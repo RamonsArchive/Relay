@@ -2,6 +2,8 @@ import Mobilebar from "@/components/Mobilebar";
 import Navbar from "@/components/Navbar";
 import ProductCard from "@/components/ProductCard";
 import Sidebar from "@/components/Sidebar";
+import { client } from "@/sanity/lib/client";
+import { PRODUCTS_QUERY } from "@/sanity/lib/queries";
 import { SignIn, SignedOut } from "@clerk/nextjs";
 
 const Home = async ({
@@ -10,7 +12,6 @@ const Home = async ({
   searchParams: Promise<{ query?: string }>;
 }) => {
   const query = (await searchParams).query;
-  console.log(`Query in home ${query}`);
 
   /* TODO: implement types
     const upperWear = ["shirt", "t-shirt", "sweater", "hoodie", "jacket", "coat", "blazer", "vest", "tank top"];
@@ -55,7 +56,7 @@ const Home = async ({
   "Suede",       // Soft leather, used in jackets & shoes
 ]; */
 
-  const products = [
+  /*const products = [
     {
       _createdAt: Date.now(),
       title: "Nike Joggers",
@@ -141,7 +142,13 @@ const Home = async ({
         { size: "xl", quantity: 10 },
       ],
     },
-  ];
+  ]; */
+
+  console.log("Products should be posted");
+  const products = await client.fetch(PRODUCTS_QUERY);
+  console.log(JSON.stringify(products, null, 2));
+  console.log("Products should be posted");
+
   return (
     <>
       <SignedOut>
@@ -158,7 +165,7 @@ const Home = async ({
             </span>
             <ul className="home-grid">
               {products.length > 0 ? (
-                products.map((product) => (
+                products.map((product: any) => (
                   <ProductCard key={product?._id} product={product} />
                 ))
               ) : (

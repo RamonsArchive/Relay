@@ -2,15 +2,21 @@ import React from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import { urlFor } from "@/sanity/lib/client";
 
 const ProductCard = ({ product }: { product: any }) => {
-  const { _id, title, imageUrl, categories, materials } = product;
-  console.log(product?.imageUrl);
+  const { _id, title, image, categories, materials } = product;
+  console.log(image);
   return (
     <li className="product-group">
       <div className="relative">
         <Link href={`/product/${_id}`}>
-          <Image src={imageUrl} alt="image" width={420} height={360} />
+          <Image
+            src={urlFor(image).url()}
+            alt="image"
+            width={420}
+            height={360}
+          />
         </Link>
         <div className="absolute top-2 right-2">
           <Heart size={24} />

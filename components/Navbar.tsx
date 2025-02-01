@@ -39,7 +39,7 @@ const Navbar = ({ query }: { query?: string }) => {
               <span>Featured</span>
             </Link>
             <Link href="/newreleases" className="hover-grow-color">
-              <span>New Releasees</span>
+              <span>New Arrivals</span>
             </Link>
             <Link href="/sale" className="hover-grow-color">
               <span>Sale</span>

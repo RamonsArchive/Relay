@@ -9,11 +9,55 @@ const Sidebar = () => {
   /* drop down icons for each filter */
   const genderOptions = ["male", "female", "unisex"];
   const kidsOptions = ["Boys", "Girls"];
-  const sizeOptions = ["XS", "S", "M", "L", "XL"];
+  const sizeOptions = ["XS", "S", "M", "L", "XL", "xxl", "xxxl"];
   const costOptions = ["$0-$50", "$50-$100", "$100-$150", "$150-$200"];
-  const saleOptions = ["Sale", "No Sale"];
-  const colorOptions = ["Red", "Blue", "Green", "Yellow", "Black", "White"];
-  const brandOptions = ["Nike", "Adidas", "Puma", "Reebok"];
+  const saleOptions = ["Sale"];
+  const collectionOptions = [
+    "New Arrivals",
+    "Featured",
+    "Hearted",
+    "Best Sellers",
+  ];
+  const colorOptions = [
+    "Black",
+    "White",
+    "Gray",
+    "Beige",
+    "Navy",
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Purple",
+    "Pink",
+    "Brown",
+    "Olive",
+    "Orange",
+    "Teal",
+    "Maroon",
+  ];
+  const brandOptions = [
+    "Nike",
+    "Adidas",
+    "Puma",
+    "Reebok",
+    "New Balance",
+    "Under Armour",
+    "Converse",
+    "Vans",
+    "Jordan",
+    "Fila",
+    "ASICS",
+    "Columbia",
+    "Patagonia",
+    "The North Face",
+    "Levi's",
+    "H&M",
+    "Zara",
+    "Uniqlo",
+    "Gucci",
+    "Louis Vuitton",
+  ];
 
   /* TODO: implement types
     const upperWear = ["shirt", "t-shirt", "sweater", "hoodie", "jacket", "coat", "blazer", "vest", "tank top"];
@@ -42,17 +86,37 @@ const Sidebar = () => {
 
   const materials = [
     "Cotton", // Soft, breathable, used in most clothing
+    "Wool", // Warm, insulating, used in sweaters & coats
+    "Linen", // Lightweight, breathable, used in summer wear
+    "Silk", // Luxurious, soft, used in dresses, blouses
+    "Cashmere", // Soft, high-end wool used in sweaters & coats
+    "Hemp", // Durable, eco-friendly, used in sustainable clothing
+    "Suede", // Soft leather, used in jackets & shoes
+    "Leather", // Used in jackets, shoes, bags
+    "Denim", // Strong, durable, used in jeans & jackets
+
+    // 🔹 SYNTHETIC MATERIALS
     "Polyester", // Durable, wrinkle-resistant, common in activewear
     "Nylon", // Lightweight, used in sportswear & shoes
-    "Wool", // Warm, insulating, used in sweaters & coats
-    "Leather", // Used in jackets, shoes, bags
-    "Silk", // Luxurious, used in dresses, blouses
-    "Denim", // Strong, used in jeans & jackets
     "Spandex", // Stretchy, used in activewear & leggings
     "Rayon", // Soft, mimics silk, used in dresses
-    "Linen", // Lightweight, breathable, used in summer wear
     "Fleece", // Warm, synthetic, used in hoodies & jackets
-    "Suede", // Soft leather, used in jackets & shoes
+    "Acrylic", // Soft, wool-like, used in sweaters
+    "Microfiber", // Used in sportswear, towels, and cleaning cloths
+
+    // 🔹 HIGH-TECH & SPECIALTY FABRICS
+    "Gore-Tex", // Waterproof, breathable, used in outdoor gear
+    "Neoprene", // Water-resistant, used in wetsuits & some fashionwear
+    "Kevlar", // Strong, heat-resistant, used in workwear & safety gear
+    "Coolmax", // Moisture-wicking, used in performance clothing
+    "Tencel (Lyocell)", // Eco-friendly, soft, used in sustainable fashion
+    "Modal", // Soft, similar to cotton, used in luxury loungewear
+
+    // 🔹 BLENDED & ECO-FRIENDLY MATERIALS
+    "Organic Cotton", // Grown without pesticides, used in sustainable fashion
+    "Recycled Polyester", // Eco-friendly, made from plastic bottles
+    "Bamboo Fabric", // Breathable, moisture-wicking, used in sustainable fashion
+    "Viscose", // Soft, semi-synthetic, used in dresses & blouses
   ];
 
   const [genderDrop, setGenderDrop] = useState(false);
@@ -64,6 +128,7 @@ const Sidebar = () => {
   const [brandDrop, setBrandDrop] = useState(false);
   const [categoriesDrop, setCategoriesDrop] = useState(false);
   const [materialDrop, setMaterialDrop] = useState(false);
+  const [collectionDrop, setCollectionDrop] = useState(false);
   return (
     <aside className="side-bar">
       <div className="flex items-center justify-center w-full py-3">
@@ -170,24 +235,52 @@ const Sidebar = () => {
         <div className="side-bar-option-container">
           <div className="side-bar-options">
             <span>Sale</span>
-            {saleDrop ? (
-              <ChevronUp
-                className="cursor-pointer"
-                size="20px"
-                strokeWidth={2}
-                onClick={() => setSaleDrop(!saleDrop)}
-              />
-            ) : (
-              <ChevronDown
-                className="cursor-pointer"
-                size="20px"
-                strokeWidth={2}
-                onClick={() => setSaleDrop(!saleDrop)}
-              />
-            )}
+            <div className="shrink-0">
+              {saleDrop ? (
+                <ChevronUp
+                  className="cursor-pointer"
+                  size="20px"
+                  strokeWidth={2}
+                  onClick={() => setSaleDrop(!saleDrop)}
+                />
+              ) : (
+                <ChevronDown
+                  className="cursor-pointer"
+                  size="20px"
+                  strokeWidth={2}
+                  onClick={() => setSaleDrop(!saleDrop)}
+                />
+              )}
+            </div>
           </div>
           {saleDrop &&
             saleOptions.map((option, index) => (
+              <CheckBox key={index} options={option} />
+            ))}
+        </div>
+        <div className="side-bar-option-container">
+          <div className="side-bar-options">
+            <span>Collections</span>
+            <div className="shrink-0">
+              {collectionDrop ? (
+                <ChevronUp
+                  className="cursor-pointer"
+                  size="20px"
+                  strokeWidth={2}
+                  onClick={() => setCollectionDrop(!collectionDrop)}
+                />
+              ) : (
+                <ChevronDown
+                  className="cursor-pointer"
+                  size="20px"
+                  strokeWidth={2}
+                  onClick={() => setCollectionDrop(!collectionDrop)}
+                />
+              )}
+            </div>
+          </div>
+          {collectionDrop &&
+            collectionOptions.map((option, index) => (
               <CheckBox key={index} options={option} />
             ))}
         </div>
@@ -242,7 +335,7 @@ const Sidebar = () => {
         <div className="side-bar-option-container">
           <div className="side-bar-options">
             <span>Materials</span>
-            {brandDrop ? (
+            {materialDrop ? (
               <ChevronUp
                 className="cursor-pointer"
                 size="20px"
