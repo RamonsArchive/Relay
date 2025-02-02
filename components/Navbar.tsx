@@ -62,16 +62,3 @@ const Navbar = ({ query }: { query?: string }) => {
 };
 
 export default Navbar;
-
-/* Might include a settings but stripe has address already locked.
-  <Link href="/settings" className="hover-grow-color">
-            <Image
-              src="/assets/icons/settings.svg"
-              alt="settings"
-              width={32}
-              height={32}
-              style={{ stroke: "primary-200", strokeWidth: 10 }}
-            />
-          </Link>
-
-*/

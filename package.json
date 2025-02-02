@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prevdev": "npm run typegen",
+    "prebuild": "npm run typegen",
+    "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.3",

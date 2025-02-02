@@ -3,16 +3,17 @@ import Image from "next/image";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/client";
+import { ProductType } from "@/globalTypes";
 
-const ProductCard = ({ product }: { product: any }) => {
-  const { _id, title, image, categories, materials } = product;
-  console.log(image);
+const ProductCard = ({ product }: { product: ProductType }) => {
+  console.log(product);
+  //const { _id, title, image, categories, materials } = product;
   return (
     <li className="product-group">
       <div className="relative">
-        <Link href={`/product/${_id}`}>
+        <Link href={`/product/${product?._id}`}>
           <Image
-            src={urlFor(image).url()}
+            src={urlFor(product?.image).url()}
             alt="image"
             width={420}
             height={360}
@@ -22,18 +23,22 @@ const ProductCard = ({ product }: { product: any }) => {
           <Heart size={24} />
         </div>
       </div>
-      <Link href={`/product/${_id}`}>
+      <Link href={`/product/${product?._id}`}>
         <div className="product-group-info">
-          <span className="font-plex-sans font-bold text-[20px]">{title}</span>
+          <span className="font-plex-sans font-bold text-[20px]">
+            {product?.title}
+          </span>
           <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
-            {materials.length > 0 &&
-              materials.map((material: string, index: number) => (
+            {product?.materials &&
+              product.materials.length > 0 &&
+              product.materials.map((material: string, index: number) => (
                 <span key={index}>{material}</span>
               ))}
           </div>
           <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
-            {categories.length > 0 &&
-              categories.map((category: string, index: number) => (
+            {product?.categories &&
+              product?.categories.length > 0 &&
+              product?.categories.map((category: string, index: number) => (
                 <span key={index}>{category}</span>
               ))}
           </div>
