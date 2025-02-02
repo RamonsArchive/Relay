@@ -44,6 +44,12 @@ const Navbar = ({ query }: { query?: string }) => {
             <Link href="/sale" className="hover-grow-color">
               <span>Sale</span>
             </Link>
+            <Link href="/bestsellers" className="hover-grow-color">
+              <span>Best Sellers</span>
+            </Link>
+            <Link href="/bestsellers" className="hover-grow-color">
+              <span>Hearted</span>
+            </Link>
           </div>
         </div>
         <div className="flex-center flex-1 justify-center items-center flex-col gap-y-5">

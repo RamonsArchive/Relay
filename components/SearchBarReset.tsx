@@ -17,8 +17,11 @@ const SearchBarReset = () => {
       form.reset();
     }
     const newParams = new URLSearchParams(searchParams.toString());
-    newParams.delete("query");
-    router.replace(`/?${newParams.toString()}`); // ✅ Updates URL without reloading
+    if (newParams.has("query")) {
+      newParams.delete("query");
+      router.replace(`/?${newParams.toString()}`);
+    }
+    // ✅ Updates URL without reloading
   };
   return (
     <X

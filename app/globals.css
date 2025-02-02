@@ -11,7 +11,7 @@
 }
 
 .root-container {
-  @apply flex-1 flex-row overflow-auto lg:mt-0 lg:max-h-screen;
+  @apply flex flex-1 flex-row overflow-auto lg:mt-0 lg:max-h-screen;
 }
 
 html, body {

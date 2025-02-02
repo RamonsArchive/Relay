@@ -6,7 +6,6 @@ import { urlFor } from "@/sanity/lib/client";
 import { ProductType } from "@/globalTypes";
 
 const ProductCard = ({ product }: { product: ProductType }) => {
-  console.log(product);
   //const { _id, title, image, categories, materials } = product;
   return (
     <li className="product-group">

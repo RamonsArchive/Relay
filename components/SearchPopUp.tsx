@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState } from "react";
-import Form from "next/form";
-import { CircleX, X, Search } from "lucide-react";
-import SearchBarReset from "./SearchBarReset";
+import React, { useEffect, useRef } from "react";
+import { CircleX } from "lucide-react";
 import SearchBarServer from "./SearchBarServer";
 
 // TODO: Implement RECENTS
@@ -16,6 +14,14 @@ interface Props {
 }
 
 const SearchPopUp = ({ query, setClicked }: Props) => {
+  const oldQuery = useRef<string | undefined>(query);
+  useEffect(() => {
+    if (query && query !== oldQuery.current) {
+      setClicked(false);
+    }
+    oldQuery.current = query;
+  }, [query]);
+
   return (
     <main className="search-popup-container">
       <div className="grid grid-cols-3 items-center w-full">

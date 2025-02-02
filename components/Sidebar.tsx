@@ -15,8 +15,8 @@ const Sidebar = () => {
   const collectionOptions = [
     "New Arrivals",
     "Featured",
-    "Hearted",
     "Best Sellers",
+    "Hearted",
   ];
   const colorOptions = [
     "Black",

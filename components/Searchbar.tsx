@@ -1,5 +1,4 @@
 "use client";
-import Form from "next/form";
 import { useState, useRef, useEffect } from "react";
 import SearchPopUp from "./SearchPopUp";
 import ReactDOM from "react-dom"; // create a portal to top level of the dom
@@ -9,6 +8,7 @@ const Searchbar = ({ query }: { query?: string }) => {
   const [clicked, setClicked] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
+  console.log(`Clicked in searchbar ${clicked}`);
 
   const handleClickOutside = (event: any) => {
     if (
@@ -35,8 +35,8 @@ const Searchbar = ({ query }: { query?: string }) => {
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside); // Mobile support
-      document.addEventListener("keydown", handleEscapeKey); // Escape key support
+      document.removeEventListener("touchstart", handleClickOutside); // Mobile support
+      document.removeEventListener("keydown", handleEscapeKey); // Escape key support
     };
   }, [clicked]);
 
