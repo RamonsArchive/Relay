@@ -6,11 +6,11 @@ export const collections = defineType({
     type: "document",
     fields: [
         defineField({
-            name: "name",
-            title: "Collection Name",
+            name: "title",
+            title: "Collection Title",
             type: "string",
             options: {
-              list: ["New Arrivals", "Featured", "Hearted", "Sale", "Best Sellers"],
+              list: ["new arrivals", "featured", "hearted", "sale", "best sellers"],
             },
           }),
           defineField({
@@ -25,7 +25,7 @@ export const collections = defineType({
     ],
     preview: {
         select: {
-            title: 'name',
+            title: 'title',
         }
     }
 })

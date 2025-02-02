@@ -360,30 +360,30 @@
           "type": "string"
         }
       },
-      "name": {
+      "title": {
         "type": "objectAttribute",
         "value": {
           "type": "union",
           "of": [
             {
               "type": "string",
-              "value": "New Arrivals"
+              "value": "new arrivals"
             },
             {
               "type": "string",
-              "value": "Featured"
+              "value": "featured"
             },
             {
               "type": "string",
-              "value": "Hearted"
+              "value": "hearted"
             },
             {
               "type": "string",
-              "value": "Sale"
+              "value": "sale"
             },
             {
               "type": "string",
-              "value": "Best Sellers"
+              "value": "best sellers"
             }
           ]
         },

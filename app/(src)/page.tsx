@@ -1,8 +1,10 @@
 import ProductCard from "@/components/ProductCard";
 import { client } from "@/sanity/lib/client";
-import { PRODUCTS_QUERY, SEARCH_QUERY } from "@/sanity/lib/queries";
+import { SEARCH_QUERY } from "@/sanity/lib/queries";
+import { ShoppingCart } from "lucide-react";
 
 import { ProductType } from "@/globalTypes";
+import ContentTitle from "@/components/ContentTitle";
 
 const Home = async ({
   searchParams,
@@ -18,10 +20,13 @@ const Home = async ({
   return (
     <>
       <main className="home">
+        <div className="absolute top-5 right-5 ">
+          <div className="cart-background">
+            <ShoppingCart size={36} className="text-white" />
+          </div>
+        </div>
         <div className="home-container">
-          <span className="font-plex-sans font-bold text-[30px]">
-            All Clothes
-          </span>
+          <ContentTitle />
           <ul className="home-grid">
             {products.length > 0 ? (
               products.map((product: ProductType) => (

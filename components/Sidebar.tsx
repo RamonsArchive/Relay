@@ -59,15 +59,6 @@ const Sidebar = () => {
     "Louis Vuitton",
   ];
 
-  /* TODO: implement types
-    const upperWear = ["shirt", "t-shirt", "sweater", "hoodie", "jacket", "coat", "blazer", "vest", "tank top"];
-    const lowerWear = ["pants", "jeans", "shorts", "leggings", "sweatpants", "trousers", "skirt"];
-    const footwear = ["shoes", "sneakers", "boots", "sandals", "heels", "flip-flops", "loafers"];
-    const underwear = ["underwear", "boxers", "briefs", "panties", "bra", "sports bra", "nightgown", "pajamas"];
-    const accessories = ["hat", "cap", "beanie", "gloves", "scarf", "belt", "sunglasses"];
-    const legwear = ["socks", "stockings", "tights", "leggings"];
-
-  */
   const categories = [
     "Casual",
     "Formal",
@@ -131,8 +122,10 @@ const Sidebar = () => {
   const [collectionDrop, setCollectionDrop] = useState(false);
   return (
     <aside className="side-bar">
-      <div className="flex items-center justify-center w-full py-3">
-        <span className="font-plext-sans font-bold items-center">Filters</span>
+      <div className="flex items-center justify-center w-full py-3 sticky top-0 bg-white-300 z-2 ">
+        <span className="font-plext-sans font-bold items-center text-[22px]">
+          Filters
+        </span>
       </div>
 
       <div className="side-bar-container">

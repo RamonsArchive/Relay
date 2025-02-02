@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
-import { CircleX } from "lucide-react";
-import SearchBarServer from "./SearchBarServer";
+import Form from "next/form";
+import SearchBarReset from "./SearchBarReset";
+import React, { useActionState, useEffect, useRef } from "react";
+import { CircleX, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // TODO: Implement RECENTS
 
@@ -15,6 +17,8 @@ interface Props {
 
 const SearchPopUp = ({ query, setClicked }: Props) => {
   const oldQuery = useRef<string | undefined>(query);
+  const router = useRouter();
+
   useEffect(() => {
     if (query && query !== oldQuery.current) {
       setClicked(false);
@@ -22,24 +26,67 @@ const SearchPopUp = ({ query, setClicked }: Props) => {
     oldQuery.current = query;
   }, [query]);
 
+  const handleFromSubmit = async (prevState: any, formData: FormData) => {
+    console.log(`Query from search bar: ${formData.get("query")}`);
+    try {
+      const query = formData.get("query")?.toString().trim() || undefined;
+      if (!query) {
+        return;
+      }
+      router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
+      return query;
+    } catch (error) {
+      return {
+        ...prevState,
+        error: "An error occurred, please try again.",
+        STATUS: "ERROR",
+      };
+    }
+  };
+
+  /* TODO: ADD A LOADING SCREEN USING REACT.PORTAL TO THE HOME PAGE */
+  const [state, formAction, isPending] = useActionState(handleFromSubmit, {
+    error: "",
+    status: "INITIAL",
+  });
+
   return (
     <main className="search-popup-container">
-      <div className="grid grid-cols-3 items-center w-full">
-        <div className="flex items-center">
+      <div className="grid grid-cols-3 items-center w-full relative">
+        <div className="flex justify-self-start self-start">
           <Link href="/">
             <Image
               src="/assets/logo/logo-png.png"
               alt="logo"
-              width={50}
-              height={32}
+              width={60}
+              height={40}
             />
           </Link>
         </div>
 
-        <div className="flex justify-center">
-          <SearchBarServer query={query} />
+        <div className="flex flex-col justify-center">
+          <Form action={formAction} className="search-form-popup">
+            <button type="submit">
+              <Search size="26px" className="cursor-pointer" />
+            </button>
+
+            <input
+              name="query"
+              className="search-input-popup"
+              placeholder="Search..."
+              defaultValue={query}
+            ></input>
+            <SearchBarReset />
+          </Form>
+          <div className="flex flex-col justify-center items-center w-full mt-4 gap-y-10">
+            <div className="text-md font-light self-start">Recent Searches</div>
+            <div className="text-md font-light self-start">
+              Popular Searches
+            </div>
+          </div>
         </div>
-        <div className="flex justify-end mb-12">
+
+        <div className="flex justify-self-end self-start">
           <CircleX
             size="34px"
             className="cursor-pointer"
@@ -47,10 +94,6 @@ const SearchPopUp = ({ query, setClicked }: Props) => {
             onClick={() => setClicked(false)}
           />
         </div>
-      </div>
-      <div className="flex flex-col justify-center items-center w-full mt-2 gap-y-10 ml-[35%]">
-        <div className="text-xl font-semibold self-start">Recents</div>
-        <div className="text-xl font-semibold self-start">Popular Searches</div>
       </div>
     </main>
   );

@@ -1,14 +1,5 @@
 import { defineQuery } from 'next-sanity';
 
-/* Products in home page */
-export const PRODUCTS_QUERY = defineQuery(`*[_type == "product" && defined(slug)] | order(_createdAt desc) {
-  _id,
-  title,
-  image,
-  categories,
-  materials,
-}`);
-
 
 /*TODO: Fix the cost function  */
 export const SEARCH_QUERY = (searchTerm: string | undefined) => {
@@ -30,7 +21,7 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
         "${keyword}" in gender ||
         "${keyword}" in kids ||
         "${keyword}" in size ||
-        "${keyword}" in collections[]->name || 
+        "${keyword}" in collections[]->title || 
         "${keyword}" in sale ||
         "${keyword}" in colors ||
         "${keyword}" in brand ||
@@ -51,7 +42,7 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
     kids,
     size,
     cost,
-    "collections": collections[]->{name},
+    "collections": collections[]->{title},
     sale,
     colors,
     brand,

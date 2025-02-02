@@ -6,17 +6,28 @@ import { UserButton } from "@clerk/nextjs";
 
 const Navbar = ({ query }: { query?: string }) => {
   return (
-    <header className="px-5 py-5 bg-white-300 shadow-sm text-color-primary-200">
+    <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
         <div className="flex flex-1 flex-col">
-          <Link href="/">
+          <Link href="/" className="">
             <Image
               src="/assets/logo/logo-png.png"
               alt="logo"
-              width={50}
-              height={32}
+              width={60}
+              height={40}
             />
           </Link>
+
+          <div className="mt-2 ml-2 font-plex-sans font-light text-[10px]">
+            <Image
+              src={"/assets/icons/palestine.svg"}
+              alt="Free Palestine"
+              width={30}
+              height={16}
+              className="relative group group-border glow-border"
+            />
+            <span className=" ">Relay stands with Palestine</span>
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 mt-5 flex-nowrap font-semibold text-xl">
@@ -38,7 +49,7 @@ const Navbar = ({ query }: { query?: string }) => {
             <Link href="/featured" className="hover-grow-color">
               <span>Featured</span>
             </Link>
-            <Link href="/newreleases" className="hover-grow-color">
+            <Link href="/newarrivals" className="hover-grow-color">
               <span>New Arrivals</span>
             </Link>
             <Link href="/sale" className="hover-grow-color">
@@ -52,13 +63,13 @@ const Navbar = ({ query }: { query?: string }) => {
             </Link>
           </div>
         </div>
-        <div className="flex-center flex-1 justify-center items-center flex-col gap-y-5">
-          <div className="ml-auto">
+        <div className="flex flex-1 flex-col gap-y-10">
+          <div className="flex justify-self-end self-end">
             <UserButton
               appearance={{ elements: { userButtonAvatarBox: "w-10 h-10" } }}
             />
           </div>
-          <div className="w-full flex justify-end mr-10">
+          <div className="flex justify-self-end self-end">
             <Searchbar query={query} />
           </div>
         </div>
