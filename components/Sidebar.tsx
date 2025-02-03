@@ -7,7 +7,7 @@ import sale from "@/app/(src)/sale/page";
 
 const Sidebar = () => {
   /* drop down icons for each filter */
-  const genderOptions = ["male", "female", "unisex"];
+  const genderOptions = ["men", "women", "unisex"];
   const kidsOptions = ["Boys", "Girls"];
   const sizeOptions = ["XS", "S", "M", "L", "XL", "xxl", "xxxl"];
   const costOptions = ["$0-$50", "$50-$100", "$100-$150", "$150-$200"];

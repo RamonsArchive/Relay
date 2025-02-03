@@ -367,7 +367,7 @@
           "of": [
             {
               "type": "string",
-              "value": "new arrivals"
+              "value": "newarrivals"
             },
             {
               "type": "string",
@@ -383,7 +383,7 @@
             },
             {
               "type": "string",
-              "value": "best sellers"
+              "value": "bestsellers"
             }
           ]
         },

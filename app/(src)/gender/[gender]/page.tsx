@@ -3,18 +3,11 @@ import ContentTitle from "@/components/ContentTitle";
 import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
-import { KIDS_PAGE_QUERY } from "@/sanity/lib/queries";
+import { GENDER_PAGE_QUERY } from "@/sanity/lib/queries";
 
-const page = async ({ params }: { params: { age?: string } }) => {
-  let pathName = (await params).age;
-  console.log(pathName);
-  /*if (pathName !== "/") {
-    pathName = pathName.split("/").filter(Boolean).pop() || "";
-  }*/
-  if (pathName === undefined) {
-    pathName = "/";
-  }
-  const genderProducts = await client.fetch(KIDS_PAGE_QUERY(pathName));
+const page = async ({ params }: { params: { gender: string } }) => {
+  const pathName = (await params).gender;
+  const genderProducts = await client.fetch(GENDER_PAGE_QUERY(pathName));
 
   return (
     <div className="content-page">

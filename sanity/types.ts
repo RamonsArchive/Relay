@@ -74,7 +74,7 @@ export type Collections = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: "new arrivals" | "featured" | "hearted" | "sale" | "best sellers";
+  title?: "newarrivals" | "featured" | "hearted" | "sale" | "bestsellers";
   slug?: Slug;
 };
 

@@ -106,23 +106,23 @@ html, body {
   @apply flex flex-col w-full gap-2 px-4;
   }
 
-.side-bar-options {
+  .side-bar-options {
   @apply flex flex-row items-center gap-x-2;
   }
 
-.mobilebar-root {
+  .mobilebar-root {
   @apply flex sm:hidden 
   }
 
-.home {
+  .home {
   @apply relative flex-1 w-full gap-4;
   }
 
-.home-container {
+  .product-container {
   @apply flex flex-col p-5;
   }
 
-  .home-grid {
+  .product-grid {
   @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5 mt-10;
   }
 
@@ -144,6 +144,10 @@ html, body {
 
   .text-white {
     color: white
+  }
+
+  .content-page {
+    @apply relative flex-1 w-full gap-4;
   }
 }
 

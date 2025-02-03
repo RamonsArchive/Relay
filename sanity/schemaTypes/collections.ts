@@ -10,7 +10,7 @@ export const collections = defineType({
             title: "Collection Title",
             type: "string",
             options: {
-              list: ["new arrivals", "featured", "hearted", "sale", "best sellers"],
+              list: ["newarrivals", "featured", "hearted", "sale", "bestsellers"],
             },
           }),
           defineField({
@@ -18,7 +18,7 @@ export const collections = defineType({
             title: "Slug",
             type: "slug",
             options: {
-              source: "name", // Generates from the product title
+              source: "title", // Generates from the product title
               maxLength: 96,
             },
           }),

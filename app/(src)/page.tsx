@@ -25,9 +25,9 @@ const Home = async ({
             <ShoppingCart size={36} className="text-white" />
           </div>
         </div>
-        <div className="home-container">
+        <div className="product-container">
           <ContentTitle />
-          <ul className="home-grid">
+          <ul className="product-grid">
             {products.length > 0 ? (
               products.map((product: ProductType) => (
                 <ProductCard key={product?._id} product={product} />

@@ -32,33 +32,33 @@ const Navbar = ({ query }: { query?: string }) => {
 
         <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 mt-5 flex-nowrap font-semibold text-xl">
           <div className="flex gap-x-10 whitespace-nowrap">
-            <Link className="hover-grow-color" href="/men">
+            <Link href="/gender/men" className="hover-grow-color">
               <span>Men</span>
             </Link>
-            <Link href="/women" className="hover-grow-color">
+            <Link href="/gender/women" className="hover-grow-color">
               <span>Women</span>
             </Link>
             <Link href="/kids" className="hover-grow-color">
               <span>Kids</span>
             </Link>
-            <Link href="/unisex" className="hover-grow-color">
+            <Link href="/gender/unisex" className="hover-grow-color">
               <span>Unisex</span>
             </Link>
           </div>
           <div className="flex gap-x-10 whitespace-nowrap">
-            <Link href="/featured" className="hover-grow-color">
+            <Link href="/collections/featured" className="hover-grow-color">
               <span>Featured</span>
             </Link>
-            <Link href="/newarrivals" className="hover-grow-color">
+            <Link href="/collections/newarrivals" className="hover-grow-color">
               <span>New Arrivals</span>
             </Link>
-            <Link href="/sale" className="hover-grow-color">
+            <Link href="/collections/sale" className="hover-grow-color">
               <span>Sale</span>
             </Link>
-            <Link href="/bestsellers" className="hover-grow-color">
+            <Link href="/collections/bestsellers" className="hover-grow-color">
               <span>Best Sellers</span>
             </Link>
-            <Link href="/bestsellers" className="hover-grow-color">
+            <Link href="/collections/hearted" className="hover-grow-color">
               <span>Hearted</span>
             </Link>
           </div>

@@ -5,14 +5,14 @@ import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
 import { KIDS_PAGE_QUERY } from "@/sanity/lib/queries";
 
-const page = async ({ params }: { params: { age?: string } }) => {
+/*TODO: test if this works with the filters */
+const page = async ({ params }: { params: { age: string } }) => {
   let pathName = (await params).age;
   console.log(pathName);
-  /*if (pathName !== "/") {
-    pathName = pathName.split("/").filter(Boolean).pop() || "";
-  }*/
   if (pathName === undefined) {
     pathName = "/";
+  } else {
+    pathName = pathName.split("/").filter(Boolean).pop() || "";
   }
   const genderProducts = await client.fetch(KIDS_PAGE_QUERY(pathName));
 

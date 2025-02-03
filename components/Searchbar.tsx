@@ -8,7 +8,6 @@ const Searchbar = ({ query }: { query?: string }) => {
   const [clicked, setClicked] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
-  console.log(`Clicked in searchbar ${clicked}`);
 
   const handleClickOutside = (event: any) => {
     if (

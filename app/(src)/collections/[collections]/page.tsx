@@ -3,26 +3,24 @@ import ContentTitle from "@/components/ContentTitle";
 import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
-import { KIDS_PAGE_QUERY } from "@/sanity/lib/queries";
+import { COLLECTION_PAGE_QUERY, GENDER_PAGE_QUERY } from "@/sanity/lib/queries";
 
-const page = async ({ params }: { params: { age?: string } }) => {
-  let pathName = (await params).age;
+const page = async ({ params }: { params: { collections: string } }) => {
+  const pathName = (await params).collections;
   console.log(pathName);
-  /*if (pathName !== "/") {
-    pathName = pathName.split("/").filter(Boolean).pop() || "";
-  }*/
-  if (pathName === undefined) {
-    pathName = "/";
-  }
-  const genderProducts = await client.fetch(KIDS_PAGE_QUERY(pathName));
+
+  const collectionProducts = await client.fetch(
+    COLLECTION_PAGE_QUERY(pathName)
+  );
+  console.log(collectionProducts);
 
   return (
     <div className="content-page">
       <div className="product-container">
         <ContentTitle />
         <ul className="product-grid">
-          {genderProducts.length > 0 ? (
-            genderProducts.map((product: ProductType) => (
+          {collectionProducts.length > 0 ? (
+            collectionProducts.map((product: ProductType) => (
               <ProductCard key={product?._id} product={product} />
             ))
           ) : (

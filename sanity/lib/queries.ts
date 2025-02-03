@@ -50,3 +50,46 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
     categories
   }`;
 };
+
+
+/* GENDER PAGE QUERY */
+export const GENDER_PAGE_QUERY = (searchParam: string | undefined) => {
+  const filteredParam = searchParam === "unisex" ? `"unisex" in gender` : `"${searchParam}" in gender || "unisex" in gender`;
+
+  return `*[_type == "product" && defined(slug) && (${filteredParam})] {
+  _id,
+  title,
+  image,
+  materials,
+  categories,
+  gender,
+}`;}
+
+
+/* KIDS PAGE QUERY */
+export const KIDS_PAGE_QUERY = (searchParam: string | undefined) => {
+  console.log(`Search param: ${searchParam}`);
+  const filteredParam = searchParam === "/" ? `"boys" in kids || "girls" in kids`  : `"${searchParam}" in kids`;
+  console.log(filteredParam);
+
+  return `*[_type == "product" && defined(slug) && (${filteredParam})] {
+  _id,
+  title,
+  image,
+  materials,
+  categories,
+}`;}
+
+
+/* COLLECTION PAGE QUERY */
+export const COLLECTION_PAGE_QUERY = (searchParam: string | undefined) => {
+  console.log(`Search param: ${searchParam}`);
+
+  return `*[_type == "product" && defined(slug) && (${searchParam} in collections[]->title)] {
+  _id,
+  title,
+  image,
+  materials,
+  categories,
+  "collectionTitle": collections[]->title
+}`;}
