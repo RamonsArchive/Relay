@@ -10,7 +10,7 @@ export const collections = defineType({
             title: "Collection Title",
             type: "string",
             options: {
-              list: ["newarrivals", "featured", "hearted", "sale", "bestsellers"],
+              list: ["new arrivals", "featured", "hearted", "sale", "best sellers"],
             },
           }),
           defineField({
