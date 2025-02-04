@@ -8,7 +8,6 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
   // Handle cost separately to avoid incorrect syntax
   const isNumeric = !isNaN(Number(searchTerm));
   const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
-  console.log(`Cost filter: ${costFilter}`);
 
 
   const keywords = searchTerm.split(" ").filter((term) => term.trim() !== "");
@@ -21,7 +20,7 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
         "${keyword}" in gender ||
         "${keyword}" in kids ||
         "${keyword}" in size ||
-        "${keyword}" in collections[]->title || 
+        count(collections[@->title match "${keyword}"]) > 0 ||
         "${keyword}" in sale ||
         "${keyword}" in colors ||
         "${keyword}" in brand ||
@@ -62,15 +61,12 @@ export const GENDER_PAGE_QUERY = (searchParam: string | undefined) => {
   image,
   materials,
   categories,
-  gender,
 }`;}
 
 
 /* KIDS PAGE QUERY */
 export const KIDS_PAGE_QUERY = (searchParam: string | undefined) => {
-  console.log(`Search param: ${searchParam}`);
   const filteredParam = searchParam === "/" ? `"boys" in kids || "girls" in kids`  : `"${searchParam}" in kids`;
-  console.log(filteredParam);
 
   return `*[_type == "product" && defined(slug) && (${filteredParam})] {
   _id,
@@ -83,13 +79,19 @@ export const KIDS_PAGE_QUERY = (searchParam: string | undefined) => {
 
 /* COLLECTION PAGE QUERY */
 export const COLLECTION_PAGE_QUERY = (searchParam: string | undefined) => {
-  console.log(`Search param: ${searchParam}`);
+  if (!searchParam) return `*[_type == "product"]`;
 
-  return `*[_type == "product" && defined(slug) && (${searchParam} in collections[]->title)] {
+  return `*[_type == "product" && defined(slug) && ("${searchParam}" in collections[]->title)] {
   _id,
   title,
   image,
   materials,
   categories,
-  "collectionTitle": collections[]->title
 }`;}
+
+
+/* FILTER QUERY, GETS CURRENT PARAMS AND ADDS FILTER */
+
+/*export const FILTER_QUERY = (searchParam: string | undefined) = {
+
+}*/

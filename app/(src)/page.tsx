@@ -15,7 +15,6 @@ const Home = async ({
   console.log(`Query from search bar: ${query}`);
 
   const products = await client.fetch(SEARCH_QUERY(query));
-  console.log(products[0]);
 
   return (
     <>

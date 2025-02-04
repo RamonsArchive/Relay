@@ -1,114 +1,19 @@
 "use client";
-import React from "react";
+import { use, useEffect, useRef } from "react";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import CheckBox from "./CheckBox";
-import sale from "@/app/(src)/sale/page";
+import { getDynamicFilters } from "@/lib/filters";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const Sidebar = () => {
+const Sidebar = ({ query }: { query?: string | undefined }) => {
   /* drop down icons for each filter */
-  const genderOptions = ["men", "women", "unisex"];
-  const kidsOptions = ["Boys", "Girls"];
-  const sizeOptions = ["XS", "S", "M", "L", "XL", "xxl", "xxxl"];
-  const costOptions = ["$0-$50", "$50-$100", "$100-$150", "$150-$200"];
-  const saleOptions = ["Sale"];
-  const collectionOptions = [
-    "New Arrivals",
-    "Featured",
-    "Best Sellers",
-    "Hearted",
-  ];
-  const colorOptions = [
-    "Black",
-    "White",
-    "Gray",
-    "Beige",
-    "Navy",
-    "Red",
-    "Blue",
-    "Green",
-    "Yellow",
-    "Purple",
-    "Pink",
-    "Brown",
-    "Olive",
-    "Orange",
-    "Teal",
-    "Maroon",
-  ];
-  const brandOptions = [
-    "Nike",
-    "Adidas",
-    "Puma",
-    "Reebok",
-    "New Balance",
-    "Under Armour",
-    "Converse",
-    "Vans",
-    "Jordan",
-    "Fila",
-    "ASICS",
-    "Columbia",
-    "Patagonia",
-    "The North Face",
-    "Levi's",
-    "H&M",
-    "Zara",
-    "Uniqlo",
-    "Gucci",
-    "Louis Vuitton",
-  ];
 
-  const categories = [
-    "Casual",
-    "Formal",
-    "Sportswear",
-    "Loungewear",
-    "Streetwear",
-    "Business Casual",
-    "Outerwear",
-    "Footwear",
-    "Accessories",
-    "Activewear",
-    "Swimwear",
-    "Undergarments",
-    "Luxury",
-  ];
+  const pathParams = usePathname();
+  const router = useRouter();
 
-  const materials = [
-    "Cotton", // Soft, breathable, used in most clothing
-    "Wool", // Warm, insulating, used in sweaters & coats
-    "Linen", // Lightweight, breathable, used in summer wear
-    "Silk", // Luxurious, soft, used in dresses, blouses
-    "Cashmere", // Soft, high-end wool used in sweaters & coats
-    "Hemp", // Durable, eco-friendly, used in sustainable clothing
-    "Suede", // Soft leather, used in jackets & shoes
-    "Leather", // Used in jackets, shoes, bags
-    "Denim", // Strong, durable, used in jeans & jackets
-
-    // 🔹 SYNTHETIC MATERIALS
-    "Polyester", // Durable, wrinkle-resistant, common in activewear
-    "Nylon", // Lightweight, used in sportswear & shoes
-    "Spandex", // Stretchy, used in activewear & leggings
-    "Rayon", // Soft, mimics silk, used in dresses
-    "Fleece", // Warm, synthetic, used in hoodies & jackets
-    "Acrylic", // Soft, wool-like, used in sweaters
-    "Microfiber", // Used in sportswear, towels, and cleaning cloths
-
-    // 🔹 HIGH-TECH & SPECIALTY FABRICS
-    "Gore-Tex", // Waterproof, breathable, used in outdoor gear
-    "Neoprene", // Water-resistant, used in wetsuits & some fashionwear
-    "Kevlar", // Strong, heat-resistant, used in workwear & safety gear
-    "Coolmax", // Moisture-wicking, used in performance clothing
-    "Tencel (Lyocell)", // Eco-friendly, soft, used in sustainable fashion
-    "Modal", // Soft, similar to cotton, used in luxury loungewear
-
-    // 🔹 BLENDED & ECO-FRIENDLY MATERIALS
-    "Organic Cotton", // Grown without pesticides, used in sustainable fashion
-    "Recycled Polyester", // Eco-friendly, made from plastic bottles
-    "Bamboo Fabric", // Breathable, moisture-wicking, used in sustainable fashion
-    "Viscose", // Soft, semi-synthetic, used in dresses & blouses
-  ];
+  /* Will be using this as the defualt value for the groq query */
 
   const [genderDrop, setGenderDrop] = useState(false);
   const [kidsDrop, setKidsDrop] = useState(false);
@@ -120,6 +25,71 @@ const Sidebar = () => {
   const [categoriesDrop, setCategoriesDrop] = useState(false);
   const [materialDrop, setMaterialDrop] = useState(false);
   const [collectionDrop, setCollectionDrop] = useState(false);
+  /* Checkbox for each filter passed as prop*/
+
+  /* store fetched data */
+  const [optimizedFilters, setOptimizedFilters] = useState<
+    Record<string, string[]>
+  >({});
+
+  /* Get only selected filters*/
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (query) {
+      const queryFilters = query.split(" ").filter(Boolean);
+      console.log(`Query filters: ${queryFilters}`);
+      setSelectedFilters(queryFilters);
+    } else {
+      setSelectedFilters([]);
+    }
+  }, [query]);
+
+  const handleCheckedFilters = (filter: string) => {
+    console.log(`Selected filter: ${filter}`);
+    setSelectedFilters((prev) => {
+      const updatedFilters = prev.includes(filter)
+        ? prev.filter((item) => item !== filter) // Remove if already selected
+        : [...prev, filter]; // Add new filter
+
+      console.log(`Updated selected filters: ${updatedFilters}`);
+
+      // Convert pathParams to a proper format
+      if (!pathParams) {
+        const formattedPathParams =
+          pathParams !== "/" ? pathParams.split("/").join(" ") : "";
+        console.log(`Path params: ${formattedPathParams}`);
+
+        // Merge filters with pathParams, ensuring no duplicates
+        const searchQuery = [
+          ...new Set([formattedPathParams, ...updatedFilters]),
+        ]
+          .filter(Boolean) // Remove empty values
+          .join(" ");
+
+        console.log(`Updated search query: ${searchQuery}`);
+
+        // Push updated query to URL
+        router.push(`/?query=${encodeURIComponent(searchQuery).toLowerCase()}`);
+      } else {
+        // Push updated query to URL without pathParams if it doesn't exist
+        router.push(
+          `/?query=${encodeURIComponent(updatedFilters.join(" ")).toLowerCase()}`
+        );
+      }
+
+      return updatedFilters; // Update state
+    });
+  };
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      const filters = await getDynamicFilters();
+      setOptimizedFilters(filters);
+    };
+    fetchFilters();
+  }, []);
+
   return (
     <aside className="side-bar">
       <div className="flex items-center justify-center w-full py-3 sticky top-0 bg-white-300 z-2 ">
@@ -149,8 +119,10 @@ const Sidebar = () => {
             )}
           </div>
           {genderDrop &&
-            genderOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.gender.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -173,8 +145,10 @@ const Sidebar = () => {
             )}
           </div>
           {kidsDrop &&
-            kidsOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.kids.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -197,8 +171,10 @@ const Sidebar = () => {
             )}
           </div>
           {sizeDrop &&
-            sizeOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.size.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -221,8 +197,10 @@ const Sidebar = () => {
             )}
           </div>
           {costDrop &&
-            costOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.cost.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -247,8 +225,10 @@ const Sidebar = () => {
             </div>
           </div>
           {saleDrop &&
-            saleOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.sale.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -273,8 +253,10 @@ const Sidebar = () => {
             </div>
           </div>
           {collectionDrop &&
-            collectionOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.collections.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -297,8 +279,10 @@ const Sidebar = () => {
             )}
           </div>
           {colorDrop &&
-            colorOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.colors.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -321,8 +305,10 @@ const Sidebar = () => {
             )}
           </div>
           {brandDrop &&
-            brandOptions.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.brands.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -345,8 +331,10 @@ const Sidebar = () => {
             )}
           </div>
           {materialDrop &&
-            materials.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.materials.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
         <div className="side-bar-option-container">
@@ -369,8 +357,10 @@ const Sidebar = () => {
             )}
           </div>
           {categoriesDrop &&
-            categories.map((option, index) => (
-              <CheckBox key={index} options={option} />
+            optimizedFilters.categories.map((option, index) => (
+              <button key={index} onClick={() => handleCheckedFilters(option)}>
+                <CheckBox options={option} />
+              </button>
             ))}
         </div>
       </div>

@@ -3,16 +3,20 @@ import ContentTitle from "@/components/ContentTitle";
 import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
-import { COLLECTION_PAGE_QUERY, GENDER_PAGE_QUERY } from "@/sanity/lib/queries";
+import { COLLECTION_PAGE_QUERY } from "@/sanity/lib/queries";
 
 const page = async ({ params }: { params: { collections: string } }) => {
-  const pathName = (await params).collections;
-  console.log(pathName);
+  let pathName = (await params).collections;
+  const normalizedPath =
+    pathName === "newarrivals"
+      ? "new arrivals"
+      : pathName === "bestsellers"
+        ? "best sellers"
+        : pathName;
 
   const collectionProducts = await client.fetch(
-    COLLECTION_PAGE_QUERY(pathName)
+    COLLECTION_PAGE_QUERY(normalizedPath)
   );
-  console.log(collectionProducts);
 
   return (
     <div className="content-page">

@@ -10,7 +10,17 @@ const ContentTitle = () => {
 
   if (pathName !== "/") {
     title = pathName.split("/").filter(Boolean).pop() || "All Clothes";
-    if (title !== "All Clothes") {
+    title =
+      title === "newarrivals"
+        ? "New Arrivals"
+        : title === "bestsellers"
+          ? "Best Sellers"
+          : title;
+    if (
+      title !== "All Clothes" &&
+      title !== "New Arrivals" &&
+      title !== "Best Sellers"
+    ) {
       title = title.charAt(0).toUpperCase() + title.slice(1);
     }
   } else {

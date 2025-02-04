@@ -4,9 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import Form from "next/form";
 import SearchBarReset from "./SearchBarReset";
-import React, { useActionState, useEffect, useRef } from "react";
+import React, { useActionState, useContext, useEffect, useRef } from "react";
 import { CircleX, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FilterContext } from "@/app/(src)/layout";
 
 // TODO: Implement RECENTS
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const SearchPopUp = ({ query, setClicked }: Props) => {
+  const { setCheckedFilters } = useContext(FilterContext);
   const oldQuery = useRef<string | undefined>(query);
   const router = useRouter();
 
@@ -34,6 +36,7 @@ const SearchPopUp = ({ query, setClicked }: Props) => {
         return;
       }
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
+      setCheckedFilters({});
       return query;
     } catch (error) {
       return {

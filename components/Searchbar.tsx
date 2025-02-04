@@ -6,16 +6,10 @@ import { X, Search } from "lucide-react";
 
 const Searchbar = ({ query }: { query?: string }) => {
   const [clicked, setClicked] = useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (event: any) => {
-    if (
-      searchRef.current &&
-      !searchRef.current.contains(event.target as Node) &&
-      popupRef.current &&
-      !popupRef.current.contains(event.target as Node)
-    ) {
+    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setClicked(false);
     }
   };
@@ -45,7 +39,7 @@ const Searchbar = ({ query }: { query?: string }) => {
 
   return (
     <>
-      <div ref={searchRef} className="search-form">
+      <div className="search-form">
         <Search size="18px" className="" />
         <input
           name="query"
