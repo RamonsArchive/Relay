@@ -6,8 +6,6 @@ import { FilterContext } from "@/app/(src)/layout";
 
 const CheckBoxIcons = ({ options }: { options: string }) => {
   const { checkedFilters, setCheckedFilters } = useContext(FilterContext);
-
-  console.log(`This is options: ${options}`);
   const handleClick = () => {
     console.log(
       `Before Toggle - checkedFilters: ${JSON.stringify(checkedFilters, null, 2)}`

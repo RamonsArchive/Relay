@@ -8,7 +8,6 @@ import { KIDS_PAGE_QUERY } from "@/sanity/lib/queries";
 /*TODO: test if this works with the filters */
 const page = async ({ params }: { params: { age: string } }) => {
   let pathName = (await params).age;
-  console.log(pathName);
   if (pathName === undefined) {
     pathName = "/";
   } else {

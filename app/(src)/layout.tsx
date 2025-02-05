@@ -6,6 +6,8 @@ import Mobilebar from "@/components/Mobilebar";
 import Navbar from "@/components/Navbar";
 import { SignIn, SignedOut } from "@clerk/nextjs";
 import { createContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 /* Context for checkboxes in my filters closes filters after search and on homepage*/
 export const FilterContext = createContext<{
@@ -13,27 +15,54 @@ export const FilterContext = createContext<{
   setCheckedFilters: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>
   >;
+  selectedFilters: string[];
+  setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
+  isNavigatingToNonQueryRoute: boolean;
+  setIsNavigatingToNonQueryRoute: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   checkedFilters: {},
   setCheckedFilters: () => {},
+  selectedFilters: [],
+  setSelectedFilters: () => [],
+  isNavigatingToNonQueryRoute: false,
+  setIsNavigatingToNonQueryRoute: () => {},
 });
 
 const layout = ({ children }: { children: React.ReactNode }) => {
+  const pathParams = usePathname();
   const searchParams = useSearchParams();
   const query: string | undefined = searchParams.get("query") ?? undefined;
+  console.log(`layout query: ${query}`);
 
   const [checkedFilters, setCheckedFilters] = useState<Record<string, boolean>>(
     {}
   );
+
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [isNavigatingToNonQueryRoute, setIsNavigatingToNonQueryRoute] =
+    useState(false);
+
   useEffect(() => {
-    console.log("Query in LAYOUT" + query);
+    console.log("Query in LAYOUT " + query);
     if (!query) {
-      setCheckedFilters({});
+      if (!isNavigatingToNonQueryRoute) {
+        setCheckedFilters({});
+        setSelectedFilters([]);
+      }
     }
   }, [query]);
 
   return (
-    <FilterContext.Provider value={{ checkedFilters, setCheckedFilters }}>
+    <FilterContext.Provider
+      value={{
+        checkedFilters,
+        setCheckedFilters,
+        selectedFilters,
+        setSelectedFilters,
+        isNavigatingToNonQueryRoute,
+        setIsNavigatingToNonQueryRoute,
+      }}
+    >
       <main className="root">
         <SignedOut>
           <SignIn />

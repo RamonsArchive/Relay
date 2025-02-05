@@ -2,7 +2,6 @@ import CheckBoxIcons from "./CheckBoxIcons";
 
 /* TODO: kept server so that I can fetch data */
 const CheckBox = ({ options }: { options: string }) => {
-  console.log(`This is checkBox: ${options}`);
   return (
     <div className="flex flex-col ">
       <div className="flex flex-row gap-2 items-start">

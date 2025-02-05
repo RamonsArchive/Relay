@@ -7,6 +7,7 @@ import { COLLECTION_PAGE_QUERY } from "@/sanity/lib/queries";
 
 const page = async ({ params }: { params: { collections: string } }) => {
   let pathName = (await params).collections;
+  console.log(`Pathname: ${pathName}`);
   const normalizedPath =
     pathName === "newarrivals"
       ? "new arrivals"
@@ -14,6 +15,7 @@ const page = async ({ params }: { params: { collections: string } }) => {
         ? "best sellers"
         : pathName;
 
+  console.log(`Normalized path: ${normalizedPath}`);
   const collectionProducts = await client.fetch(
     COLLECTION_PAGE_QUERY(normalizedPath)
   );
