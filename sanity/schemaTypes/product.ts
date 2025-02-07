@@ -59,7 +59,7 @@ export const product = defineType({
             type: 'array',
             of: [{type: 'string'}],
             options: {
-                list: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'],
+                list: ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'],
                 layout: 'tags',
             }
         }),

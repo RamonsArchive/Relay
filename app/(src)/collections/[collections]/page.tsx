@@ -3,22 +3,26 @@ import ContentTitle from "@/components/ContentTitle";
 import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
-import { COLLECTION_PAGE_QUERY } from "@/sanity/lib/queries";
+import { PAGE_QUERY } from "@/sanity/lib/queries";
+import { parseSearchParams } from "@/lib/parseSearchParams";
 
-const page = async ({ params }: { params: { collections: string } }) => {
-  let pathName = (await params).collections;
-  console.log(`Pathname: ${pathName}`);
-  const normalizedPath =
-    pathName === "newarrivals"
-      ? "new arrivals"
-      : pathName === "bestsellers"
-        ? "best sellers"
-        : pathName;
+const page = async ({
+  params,
+  searchParams,
+}: {
+  params: { collections?: string };
+  searchParams: Promise<{ query?: string; f?: string }>;
+}) => {
+  const path = (await params).collections || "/";
+  console.log(`Path: ${path}`);
+  const query = (await searchParams).query || "";
+  const filters = (await searchParams).f || "";
 
-  console.log(`Normalized path: ${normalizedPath}`);
+  //const finalQuery = parseSearchParams(query, filters);
   const collectionProducts = await client.fetch(
-    COLLECTION_PAGE_QUERY(normalizedPath)
+    PAGE_QUERY(path, query, filters)
   );
+  console.log(collectionProducts, null, 2);
 
   return (
     <div className="content-page">

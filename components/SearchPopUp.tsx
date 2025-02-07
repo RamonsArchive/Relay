@@ -1,10 +1,15 @@
-"use client"; // will use client to be able to close the popup once clicked outside or setclicked.
-
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import Form from "next/form";
 import SearchBarReset from "./SearchBarReset";
-import React, { useActionState, useContext, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useActionState,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { CircleX, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FilterContext } from "@/app/(src)/layout";
@@ -17,19 +22,33 @@ interface Props {
 }
 
 const SearchPopUp = ({ query, setClicked }: Props) => {
-  const { setCheckedFilters } = useContext(FilterContext);
-  const oldQuery = useRef<string | undefined>(query);
   const router = useRouter();
+
+  const [inputValue, setInputValue] = useState("");
+
+  const { setCheckedFilters, setSelectedFilters, setDroppedFilters } =
+    useContext(FilterContext);
+  const oldQuery = useRef<string | undefined>(query);
 
   useEffect(() => {
     if (query && query !== oldQuery.current) {
       setClicked(false);
+      setInputValue("");
+      setDroppedFilters((prev) => {
+        const resetFilters = Object.keys(prev).reduce(
+          (acc, key) => {
+            acc[key] = false;
+            return acc;
+          },
+          {} as Record<string, boolean>
+        );
+        return resetFilters;
+      });
     }
     oldQuery.current = query;
   }, [query]);
 
   const handleFromSubmit = async (prevState: any, formData: FormData) => {
-    console.log(`Query from search bar: ${formData.get("query")}`);
     try {
       const query = formData.get("query")?.toString().trim() || undefined;
       if (!query) {
@@ -37,6 +56,8 @@ const SearchPopUp = ({ query, setClicked }: Props) => {
       }
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       setCheckedFilters({});
+      setSelectedFilters([]);
+      setInputValue("");
       return query;
     } catch (error) {
       return {
@@ -77,7 +98,8 @@ const SearchPopUp = ({ query, setClicked }: Props) => {
               name="query"
               className="search-input-popup"
               placeholder="Search..."
-              defaultValue={query}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
             ></input>
             <SearchBarReset />
           </Form>

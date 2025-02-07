@@ -2,15 +2,193 @@ import { defineQuery } from 'next-sanity';
 
 
 /*TODO: Fix the cost function  */
-export const SEARCH_QUERY = (searchTerm: string | undefined) => {
-  if (!searchTerm) return `*[_type == "product"]`; // ✅ Returns all products if searchTerm is empty
+export const PAGE_QUERY = (path: string, query: string, filters: string) => {
+  const pageType = path.split("/")[0]; // first part of the path
+  const pageEnd = path.split("/").pop(); // last part of the path
 
-  // Handle cost separately to avoid incorrect syntax
+  console.log(`Page Type: ${pageType}`);
+  console.log(`Page End: ${pageEnd}`);
+
+  const filtersArray = filters ? filters?.split(",") : [];
+  const queryArray = query ? query?.split(" ").filter((term) => term.trim() !== "") : [];
+
+  const searchTerm = [...new Set([...filtersArray, ...queryArray])].join(" ");
+
+  console.log(`Search Conditions: ${searchTerm}`);
+  console.log("path: ", path);
+  
+    
+  if (path === "/") {
+    if (searchTerm == "") {
+      return `*[_type == "product"]`; 
+    } else if (filters == "") {
+      return constructQuerySearch(searchTerm);
+    } else if (query == "") {
+      return constructHomePageFilters(searchTerm);
+    } else {
+      return constructQueryPlusFilters(queryArray, filtersArray);
+    } 
+  } 
+    
+    let genderConditions = "";
+    let kidsConditions = "";
+    let filteredCollectionsPath = "";
+    if (pageEnd == "newarrivals" || pageEnd == "bestsellers"){
+      filteredCollectionsPath = pageEnd == "newarrivals" ? "new arrivals" : "best sellers";
+    } else if (pageEnd == "men" || pageEnd == "women" || pageEnd == "unisex") {
+      genderConditions = pageEnd == "unisex" ? `"unisex" in gender` : `"${pageEnd}" in gender || "unisex" in gender`;
+    } else if (pageEnd == "kids" || pageEnd == "boys" || pageEnd == "girls") {
+      kidsConditions = pageEnd == "kids" ? `"boys" in kids || "girls" in kids` : pageEnd == "boys" ? `"boys" in kids` : `"girls" in kids`;
+    }
+    console.log(`Filtered Collection Path: ${filteredCollectionsPath}`);
+
+
+    const paramConditions = [
+      filteredCollectionsPath ? `count(collections[@->title match "${filteredCollectionsPath}"]) > 0` : `count(collections[@->title match "${pageEnd}"]) > 0`,
+      genderConditions,
+      kidsConditions,
+    ].filter(Boolean).join(" || ");
+
+    console.log(`Param Conditions: ${paramConditions}`);
+    console.log(`searchTerm: ${searchTerm}`);
+    console.log(`Gender Conditions: ${genderConditions}`);
+    console.log(`Kids Conditions: ${kidsConditions}`);
+
+   if (!searchTerm) {
+    return constructNonHomePage(paramConditions);
+   }
+
+   return constructNonHomePagePlusFilters(paramConditions, searchTerm);
+  
+};
+
+/* For query searches only */
+const constructQuerySearch = (searchTerm: string) => {
+  console.log("THERE WAS A SEARCH TERM");
   const isNumeric = !isNaN(Number(searchTerm));
   const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
 
+  const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
 
-  const keywords = searchTerm.split(" ").filter((term) => term.trim() !== "");
+  // Construct dynamic conditions for each keyword
+  const keywordConditions = keywords
+    .map(
+      (keyword) => `
+      title match "${keyword}*" ||
+      "${keyword}" in gender ||
+      "${keyword}" in kids ||
+      "${keyword}" in size ||
+      count(collections[@->title match "${keyword}"]) > 0 ||
+      "${keyword}" in sale ||
+      "${keyword}" in colors ||
+      "${keyword}" in brand ||
+      "${keyword}" in materials ||
+      "${keyword}" in categories
+    `
+    )
+    .join(" || ");
+
+  return `*[_type == "product" && defined(slug) ${costFilter ? ` && ${costFilter}` : ""} && (
+    ${keywordConditions})] | order(_createdAt desc) {
+    _id,
+    title,
+    image,
+    slug,
+    gender,
+    kids,
+    size,
+    cost,
+    "collections": collections[]->{title},
+    sale,
+    colors,
+    brand,
+    materials,
+    categories
+  }`;
+}
+
+/* For homepage with filters */
+const constructHomePageFilters = (searchTerm: string) => {
+  // home and filters only
+  console.log("THERE WAS NO SEARCH TERM BUT FILTERS");
+  const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
+  const keywordConditions = keywords
+    .map(
+      (keyword) => `
+      title match "${keyword}*" ||
+      "${keyword}" in gender ||
+      "${keyword}" in kids ||
+      "${keyword}" in size ||
+      count(collections[@->title match "${keyword}"]) > 0 ||
+      "${keyword}" in sale ||
+      "${keyword}" in colors ||
+      "${keyword}" in brand ||
+      "${keyword}" in materials ||
+      "${keyword}" in categories
+    `
+    ).join(" && ");
+  return `*[_type == "product" && defined(slug) && (${keywordConditions})] | order(_createdAt desc){
+    _id,
+    title,
+    image,
+    materials,
+    categories,
+  }`
+}
+
+const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[]) => {
+  const  keywordConditions = queryArray.map((keyword) => `
+    title match "${keyword}*" ||
+    "${keyword}" in gender ||
+      "${keyword}" in kids ||
+      "${keyword}" in size ||
+      count(collections[@->title match "${keyword}"]) > 0 ||
+      "${keyword}" in sale ||
+      "${keyword}" in colors ||
+      "${keyword}" in brand ||
+      "${keyword}" in materials ||
+      "${keyword}" in categories
+  `).join(" || ");
+
+  const filterConditions = filtersArray.map((filter) => `
+    title match "${filter}*" ||
+    "${filter}" in gender ||
+      "${filter}" in kids ||
+      "${filter}" in size ||
+      count(collections[@->title match "${filter}"]) > 0 ||
+      "${filter}" in sale ||
+      "${filter}" in colors ||
+      "${filter}" in brand ||
+      "${filter}" in materials ||
+      "${filter}" in categories
+  `).join(" && ");
+
+  return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
+    _id,
+    title,
+    image,
+    materials,
+    categories,
+  }`
+}
+
+/* For non home pages only */
+const constructNonHomePage = (paramConditions: string) => {
+  console.log("THERE WAS NO SEARCH TERM AND NO FILTERS for non home page");
+  return `*[_type == "product" && defined(slug) && (${paramConditions})] | order(_createdAt desc) {
+    _id,
+    title,
+    image,
+    materials,
+    categories,
+  }`
+}
+
+/* For non home pages pages with filters */
+const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: string) => {
+  const isNumeric = !isNaN(Number(searchTerm));
+  const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
+  const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
 
   // Construct dynamic conditions for each keyword
   const keywordConditions = keywords
@@ -28,11 +206,10 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
         "${keyword}" in categories
       `
     )
-    .join(" || ");
+    .join(" && ");
 
   return `*[_type == "product" && defined(slug) ${costFilter ? ` && ${costFilter}` : ""} && (
-    ${keywordConditions}
-  )] | order(_createdAt desc) {
+    ${keywordConditions}) && (${paramConditions})] | order(_createdAt desc) {
     _id,
     title,
     image,
@@ -48,50 +225,6 @@ export const SEARCH_QUERY = (searchTerm: string | undefined) => {
     materials,
     categories
   }`;
-};
+}
 
 
-/* GENDER PAGE QUERY */
-export const GENDER_PAGE_QUERY = (searchParam: string | undefined) => {
-  const filteredParam = searchParam === "unisex" ? `"unisex" in gender` : `"${searchParam}" in gender || "unisex" in gender`;
-
-  return `*[_type == "product" && defined(slug) && (${filteredParam})] {
-  _id,
-  title,
-  image,
-  materials,
-  categories,
-}`;}
-
-
-/* KIDS PAGE QUERY */
-export const KIDS_PAGE_QUERY = (searchParam: string | undefined) => {
-  const filteredParam = searchParam === "/" ? `"boys" in kids || "girls" in kids`  : `"${searchParam}" in kids`;
-
-  return `*[_type == "product" && defined(slug) && (${filteredParam})] {
-  _id,
-  title,
-  image,
-  materials,
-  categories,
-}`;}
-
-
-/* COLLECTION PAGE QUERY */
-export const COLLECTION_PAGE_QUERY = (searchParam: string | undefined) => {
-  if (!searchParam) return `*[_type == "product"]`;
-
-  return `*[_type == "product" && defined(slug) && ("${searchParam}" in collections[]->title)] {
-  _id,
-  title,
-  image,
-  materials,
-  categories,
-}`;}
-
-
-/* FILTER QUERY, GETS CURRENT PARAMS AND ADDS FILTER */
-
-/*export const FILTER_QUERY = (searchParam: string | undefined) = {
-
-}*/

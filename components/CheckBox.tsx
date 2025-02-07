@@ -1,12 +1,36 @@
-import CheckBoxIcons from "./CheckBoxIcons";
+"use client";
+import { useContext } from "react";
+import { Square, Check } from "lucide-react";
+import { FilterContext } from "@/app/(src)/layout";
 
-/* TODO: kept server so that I can fetch data */
 const CheckBox = ({ options }: { options: string }) => {
+  const { checkedFilters, setCheckedFilters } = useContext(FilterContext);
+  const handleClick = () => {
+    console.log(
+      `Before Toggle - checkedFilters: ${JSON.stringify(checkedFilters, null, 2)}`
+    );
+
+    setCheckedFilters((prev) => ({
+      ...prev,
+      [options]: prev[options] !== undefined ? !prev[options] : true, // ✅ Ensure it starts with a valid boolean
+    }));
+
+    console.log(
+      `After Toggle - checkedFilters: ${JSON.stringify(checkedFilters, null, 2)}`
+    );
+  };
   return (
     <div className="flex flex-col ">
-      <div className="flex flex-row gap-2 items-start">
+      <div
+        className="flex flex-row gap-2 items-start"
+        onClick={() => {
+          handleClick();
+        }}
+      >
         <div className="shrink-0">
-          <CheckBoxIcons options={options} />
+          <Square className="cursor-pointer " size="20px">
+            {checkedFilters[options] && <Check className="h-4 w-4" />}
+          </Square>
         </div>
         <div className="flex-1 min-w-0 whitespace-normal break-words">
           <span>{options}</span>

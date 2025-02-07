@@ -6,7 +6,6 @@ import Mobilebar from "@/components/Mobilebar";
 import Navbar from "@/components/Navbar";
 import { SignIn, SignedOut } from "@clerk/nextjs";
 import { createContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import React from "react";
 
 /* Context for checkboxes in my filters closes filters after search and on homepage*/
@@ -17,40 +16,59 @@ export const FilterContext = createContext<{
   >;
   selectedFilters: string[];
   setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
-  isNavigatingToNonQueryRoute: boolean;
-  setIsNavigatingToNonQueryRoute: React.Dispatch<React.SetStateAction<boolean>>;
+  droppedFilters: Record<string, boolean>;
+  setDroppedFilters: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
 }>({
   checkedFilters: {},
   setCheckedFilters: () => {},
   selectedFilters: [],
   setSelectedFilters: () => [],
-  isNavigatingToNonQueryRoute: false,
-  setIsNavigatingToNonQueryRoute: () => {},
+  droppedFilters: {},
+  setDroppedFilters: () => {},
 });
 
 const layout = ({ children }: { children: React.ReactNode }) => {
-  const pathParams = usePathname();
   const searchParams = useSearchParams();
   const query: string | undefined = searchParams.get("query") ?? undefined;
-  console.log(`layout query: ${query}`);
+  const filters = searchParams.get("f") ?? undefined;
 
   const [checkedFilters, setCheckedFilters] = useState<Record<string, boolean>>(
     {}
   );
-
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [isNavigatingToNonQueryRoute, setIsNavigatingToNonQueryRoute] =
-    useState(false);
+  const [droppedFilters, setDroppedFilters] = useState<Record<string, boolean>>(
+    {
+      gender: false,
+      kids: false,
+      size: false,
+      cost: false,
+      sale: false,
+      collections: false,
+      colors: false,
+      brands: false,
+      category: false,
+      materials: false,
+    }
+  );
 
   useEffect(() => {
-    console.log("Query in LAYOUT " + query);
-    if (!query) {
-      if (!isNavigatingToNonQueryRoute) {
-        setCheckedFilters({});
-        setSelectedFilters([]);
-      }
+    if (!query && !filters) {
+      setCheckedFilters({});
+      setSelectedFilters([]);
+      setDroppedFilters((prev) => {
+        const resetFilters = Object.keys(prev).reduce(
+          (acc, key) => {
+            acc[key] = false;
+            return acc;
+          },
+          {} as Record<string, boolean>
+        );
+        return resetFilters;
+      });
     }
-  }, [query]);
+  }, [query, filters]);
 
   return (
     <FilterContext.Provider
@@ -59,8 +77,8 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         setCheckedFilters,
         selectedFilters,
         setSelectedFilters,
-        isNavigatingToNonQueryRoute,
-        setIsNavigatingToNonQueryRoute,
+        droppedFilters,
+        setDroppedFilters,
       }}
     >
       <main className="root">
@@ -69,7 +87,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         </SignedOut>
         <Navbar query={query} />
         <div className="root-container">
-          <Sidebar query={query} />
+          <Sidebar />
           <Mobilebar />
           <div className="root-container">{children}</div>
         </div>

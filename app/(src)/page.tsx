@@ -1,20 +1,35 @@
 import ProductCard from "@/components/ProductCard";
 import { client } from "@/sanity/lib/client";
-import { SEARCH_QUERY } from "@/sanity/lib/queries";
+import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { ShoppingCart } from "lucide-react";
-
+import { parseSearchParams } from "@/lib/parseSearchParams";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 
 const Home = async ({
+  params,
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string }>;
+  params: { slug: string };
+  searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const query = (await searchParams).query;
-  console.log(`Query from search bar: ${query}`);
+  const path = params.slug || "/"; // ✅ Default to `/` if undefined
+  console.log(`Path: ${path}`);
+  /*const pathArray = params.slug || undefined;
+  console.log(`Path Array: ${pathArray}`);
+  const path = pathArray ? `${pathArray.join("/")}` : "/"; */
 
-  const products = await client.fetch(SEARCH_QUERY(query));
+  console.log(`Path: ${path}`);
+  const query = (await searchParams).query || "";
+  const filters = (await searchParams).f || "";
+
+  console.log(`Path: ${path}`);
+  console.log(`Query: ${query}`);
+  console.log(`Filters: ${filters}`);
+
+  //const finalQuery = parseSearchParams(query, filters);
+  const products = await client.fetch(PAGE_QUERY(path, query, filters));
+  console.log(products, null, 2);
 
   return (
     <>

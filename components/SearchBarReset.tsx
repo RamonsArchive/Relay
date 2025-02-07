@@ -8,11 +8,9 @@ const SearchBarReset = () => {
   const searchParams = useSearchParams();
 
   const reset = () => {
-    console.log("Resetting search form");
     const form = document.querySelector(
       ".search-form-popup"
     ) as HTMLFormElement;
-    console.log(form);
     if (form) {
       form.reset();
     }

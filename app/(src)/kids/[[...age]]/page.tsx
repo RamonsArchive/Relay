@@ -10,12 +10,15 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: { gender?: string };
+  params: { age?: string[] };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const path = (await params).gender || "/"; // ✅ Default to `/` if undefined
+  const pathArray = (await params).age || [];
+  console.log(`Path Array: ${pathArray}`);
+  const path = ["kids", ...pathArray].join("/");
   console.log(`Path: ${path}`);
   const query = (await searchParams).query || "";
+  console.log(`Query: ${query}`);
   const filters = (await searchParams).f || "";
 
   //const finalQuery = parseSearchParams(query, filters);

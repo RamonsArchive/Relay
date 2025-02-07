@@ -6,23 +6,11 @@ import { UserButton } from "@clerk/nextjs";
 import { FilterContext } from "@/app/(src)/layout";
 
 const Navbar = ({ query }: { query?: string }) => {
-  const { isNavigatingToNonQueryRoute, setIsNavigatingToNonQueryRoute } =
-    useContext(FilterContext);
-  const handleIsNavigatingToNonQueryRoute = () => {
-    setIsNavigatingToNonQueryRoute(true);
-    console.log(
-      `isNavigatingToNonQueryRoute NAVBAR: ${isNavigatingToNonQueryRoute}`
-    );
-  };
   return (
     <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
         <div className="flex flex-1 flex-col">
-          <Link
-            href="/"
-            className=""
-            onClick={handleIsNavigatingToNonQueryRoute}
-          >
+          <Link href="/" className="">
             <Image
               src="/assets/logo/logo-png.png"
               alt="logo"
@@ -45,69 +33,33 @@ const Navbar = ({ query }: { query?: string }) => {
 
         <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 mt-5 flex-nowrap font-semibold text-xl">
           <div className="flex gap-x-10 whitespace-nowrap">
-            <Link
-              href="/gender/men"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/gender/men" className="hover-grow-color">
               <span>Men</span>
             </Link>
-            <Link
-              href="/gender/women"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/gender/women" className="hover-grow-color">
               <span>Women</span>
             </Link>
-            <Link
-              href="/kids"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/kids" className="hover-grow-color">
               <span>Kids</span>
             </Link>
-            <Link
-              href="/gender/unisex"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/gender/unisex" className="hover-grow-color">
               <span>Unisex</span>
             </Link>
           </div>
           <div className="flex gap-x-10 whitespace-nowrap">
-            <Link
-              href="/collections/featured"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/collections/featured" className="hover-grow-color">
               <span>Featured</span>
             </Link>
-            <Link
-              href="/collections/newarrivals"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/collections/newarrivals" className="hover-grow-color">
               <span>New Arrivals</span>
             </Link>
-            <Link
-              href="/collections/sale"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/collections/sale" className="hover-grow-color">
               <span>Sale</span>
             </Link>
-            <Link
-              href="/collections/bestsellers"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/collections/bestsellers" className="hover-grow-color">
               <span>Best Sellers</span>
             </Link>
-            <Link
-              href="/collections/hearted"
-              className="hover-grow-color"
-              onClick={handleIsNavigatingToNonQueryRoute}
-            >
+            <Link href="/collections/hearted" className="hover-grow-color">
               <span>Hearted</span>
             </Link>
           </div>
