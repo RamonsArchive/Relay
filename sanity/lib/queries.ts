@@ -127,7 +127,8 @@ const constructHomePageFilters = (searchTerm: string) => {
       "${keyword}" in categories
     `
     ).join(" && ");
-  return `*[_type == "product" && defined(slug) && (${keywordConditions})] | order(_createdAt desc){
+
+  return `*[_type == "product" && defined(slug) && (${keywordConditions})] | order(_createdAt desc) {
     _id,
     title,
     image,

@@ -85,7 +85,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         <SignedOut>
           <SignIn />
         </SignedOut>
-        <Navbar query={query} />
+        <Navbar />
         <div className="root-container">
           <Sidebar />
           <Mobilebar />

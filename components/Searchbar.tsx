@@ -4,7 +4,7 @@ import SearchPopUp from "./SearchPopUp";
 import ReactDOM from "react-dom"; // create a portal to top level of the dom
 import { X, Search } from "lucide-react";
 
-const Searchbar = ({ query }: { query?: string }) => {
+const Searchbar = () => {
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +54,7 @@ const Searchbar = ({ query }: { query?: string }) => {
         typeof window !== "undefined" &&
         ReactDOM.createPortal(
           <div ref={popupRef}>
-            <SearchPopUp query={query} setClicked={setClicked} />
+            <SearchPopUp setClicked={setClicked} />
           </div>,
           document.body
         )}

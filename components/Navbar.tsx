@@ -5,7 +5,7 @@ import Searchbar from "./Searchbar";
 import { UserButton } from "@clerk/nextjs";
 import { FilterContext } from "@/app/(src)/layout";
 
-const Navbar = ({ query }: { query?: string }) => {
+const Navbar = () => {
   return (
     <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
@@ -71,7 +71,7 @@ const Navbar = ({ query }: { query?: string }) => {
             />
           </div>
           <div className="flex justify-self-end self-end">
-            <Searchbar query={query} />
+            <Searchbar />
           </div>
         </div>
       </nav>

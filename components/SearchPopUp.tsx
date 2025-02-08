@@ -13,16 +13,19 @@ import React, {
 import { CircleX, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FilterContext } from "@/app/(src)/layout";
+import { useSearchParams } from "next/navigation";
 
 // TODO: Implement RECENTS
 
 interface Props {
   setClicked: React.Dispatch<React.SetStateAction<boolean>>;
-  query?: string; // passed from page
 }
 
-const SearchPopUp = ({ query, setClicked }: Props) => {
+const SearchPopUp = ({ setClicked }: Props) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
+
 
   const [inputValue, setInputValue] = useState("");
 
