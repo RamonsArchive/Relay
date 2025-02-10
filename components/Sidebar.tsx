@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import CheckBox from "./CheckBox";
 import { getDynamicFilters } from "@/lib/filters";
 import { useRouter } from "next/navigation";
-import { FilterContext } from "@/app/(src)/layout";
+import { Context } from "@/app/context/context";
 import { usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
@@ -25,7 +25,7 @@ const Sidebar = () => {
     setSelectedFilters,
     droppedFilters,
     setDroppedFilters,
-  } = useContext(FilterContext);
+  } = useContext(Context);
 
   useEffect(() => {
     const fetchFilters = async () => {

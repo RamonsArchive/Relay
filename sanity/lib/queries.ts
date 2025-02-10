@@ -20,7 +20,17 @@ export const PAGE_QUERY = (path: string, query: string, filters: string) => {
     
   if (path === "/") {
     if (searchTerm == "") {
-      return `*[_type == "product"]`; 
+      return `*[_type == "product"] {
+        _id,
+        title,
+        image,
+        materials,
+        categories,
+        "collections": collections[]->{
+          _id,
+          title,
+        }
+      }`; 
     } else if (filters == "") {
       return constructQuerySearch(searchTerm);
     } else if (query == "") {
@@ -62,6 +72,13 @@ export const PAGE_QUERY = (path: string, query: string, filters: string) => {
   
 };
 
+
+export const PRODUCT_ID_QUERY = (id: string) => {
+  return `*[_type == "product" && _id == "${id}"] {
+
+  }`
+}
+
 /* For query searches only */
 const constructQuerySearch = (searchTerm: string) => {
   console.log("THERE WAS A SEARCH TERM");
@@ -83,7 +100,7 @@ const constructQuerySearch = (searchTerm: string) => {
       "${keyword}" in colors ||
       "${keyword}" in brand ||
       "${keyword}" in materials ||
-      "${keyword}" in categories
+      "${keyword}" in categories 
     `
     )
     .join(" || ");
@@ -93,17 +110,12 @@ const constructQuerySearch = (searchTerm: string) => {
     _id,
     title,
     image,
-    slug,
-    gender,
-    kids,
-    size,
-    cost,
-    "collections": collections[]->{title},
-    sale,
-    colors,
-    brand,
     materials,
-    categories
+    categories,
+    "collections": collections[]->{
+      _id,
+      title,
+    }
   }`;
 }
 
@@ -124,7 +136,7 @@ const constructHomePageFilters = (searchTerm: string) => {
       "${keyword}" in colors ||
       "${keyword}" in brand ||
       "${keyword}" in materials ||
-      "${keyword}" in categories
+      "${keyword}" in categories 
     `
     ).join(" && ");
 
@@ -134,6 +146,10 @@ const constructHomePageFilters = (searchTerm: string) => {
     image,
     materials,
     categories,
+    "collections": collections[]->{
+      _id,
+      title,
+    }
   }`
 }
 
@@ -148,7 +164,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[])
       "${keyword}" in colors ||
       "${keyword}" in brand ||
       "${keyword}" in materials ||
-      "${keyword}" in categories
+      "${keyword}" in categories 
   `).join(" || ");
 
   const filterConditions = filtersArray.map((filter) => `
@@ -170,6 +186,10 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[])
     image,
     materials,
     categories,
+    "collections": collections[]->{
+      _id,
+      title,
+  }
   }`
 }
 
@@ -182,6 +202,10 @@ const constructNonHomePage = (paramConditions: string) => {
     image,
     materials,
     categories,
+    "collections": collections[]->{
+      _id,
+      title,
+    }
   }`
 }
 
@@ -204,7 +228,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
         "${keyword}" in colors ||
         "${keyword}" in brand ||
         "${keyword}" in materials ||
-        "${keyword}" in categories
+        "${keyword}" in categories 
       `
     )
     .join(" && ");
@@ -214,17 +238,12 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     _id,
     title,
     image,
-    slug,
-    gender,
-    kids,
-    size,
-    cost,
-    "collections": collections[]->{title},
-    sale,
-    colors,
-    brand,
     materials,
-    categories
+    categories,
+    "collections": collections[]->{
+      _id,
+      title,
+    }
   }`;
 }
 

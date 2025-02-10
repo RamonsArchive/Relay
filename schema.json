@@ -384,6 +384,10 @@
             {
               "type": "string",
               "value": "best sellers"
+            },
+            {
+              "type": "string",
+              "value": "hearted"
             }
           ]
         },

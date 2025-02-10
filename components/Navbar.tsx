@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
 import { UserButton } from "@clerk/nextjs";
-import { FilterContext } from "@/app/(src)/layout";
 
 const Navbar = () => {
   return (

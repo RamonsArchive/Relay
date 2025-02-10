@@ -1,23 +1,17 @@
 "use client";
 import { useContext } from "react";
 import { Square, Check } from "lucide-react";
-import { FilterContext } from "@/app/(src)/layout";
+import { Context } from "@/app/context/context";
 
 const CheckBox = ({ options }: { options: string }) => {
-  const { checkedFilters, setCheckedFilters } = useContext(FilterContext);
+  const { checkedFilters, setCheckedFilters } = useContext(Context);
   const handleClick = () => {
-    console.log(
-      `Before Toggle - checkedFilters: ${JSON.stringify(checkedFilters, null, 2)}`
-    );
 
     setCheckedFilters((prev) => ({
       ...prev,
       [options]: prev[options] !== undefined ? !prev[options] : true, // ✅ Ensure it starts with a valid boolean
     }));
 
-    console.log(
-      `After Toggle - checkedFilters: ${JSON.stringify(checkedFilters, null, 2)}`
-    );
   };
   return (
     <div className="flex flex-col ">

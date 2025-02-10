@@ -12,7 +12,7 @@ import React, {
 } from "react";
 import { CircleX, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FilterContext } from "@/app/(src)/layout";
+import { Context } from "@/app/context/context";
 import { useSearchParams } from "next/navigation";
 
 // TODO: Implement RECENTS
@@ -30,7 +30,7 @@ const SearchPopUp = ({ setClicked }: Props) => {
   const [inputValue, setInputValue] = useState("");
 
   const { setCheckedFilters, setSelectedFilters, setDroppedFilters } =
-    useContext(FilterContext);
+    useContext(Context);
   const oldQuery = useRef<string | undefined>(query);
 
   useEffect(() => {

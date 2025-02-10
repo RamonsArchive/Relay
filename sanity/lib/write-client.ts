@@ -1,14 +1,19 @@
+
 import { createClient } from 'next-sanity'
 import  imageUrlBuilder  from '@sanity/image-url'
-import { apiVersion, dataset, projectId } from '../env'
-import { writeClient } from "@/sanity/lib/write-client";
+import { apiVersion, dataset, projectId, token } from '../env'
 
-export const client = createClient({
+export const writeClient = createClient({
   projectId,
   dataset,
   apiVersion,
   useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
+  token,
 })
 
-const builder = imageUrlBuilder(client);
+if (!writeClient.config().token) {
+    throw new Error("Write token not found");
+}
+
+const builder = imageUrlBuilder(writeClient);
 export const urlFor = (source: any) => builder.image(source);

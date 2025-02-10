@@ -16,4 +16,6 @@ export type ProductType = Pick<
     } | null;
     categories: Array<string> | null;
     materials: Array<string> | null;
+    hearted: boolean | null;
+    collections: Array<{_id: string, title: string}> | null;
 };

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["cdn.sanity.io"], // ✅ Allow Sanity images
   },
+  experimental: {
+    ppr: "incremental",
+  }
 };
 
 export default nextConfig;
