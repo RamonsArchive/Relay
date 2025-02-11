@@ -21,7 +21,7 @@ const page = async ({
 
   //const finalQuery = parseSearchParams(query, filters);
   const collectionProducts = await client.fetch(
-    PAGE_QUERY(path, query, filters)
+    PAGE_QUERY(path, query, filters), {revaldiate: 0}
   );
   console.log(collectionProducts, null, 2);
 

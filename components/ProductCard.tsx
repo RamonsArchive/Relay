@@ -8,10 +8,13 @@ import { ProductType } from "@/globalTypes";
 import ProductCardHeart from "./ProductCardHeart";
 import {useState, useEffect} from 'react'
 import handleHeartWrite from "@/sanity/lib/actions";
+import { useRouter } from "next/navigation";
 
 
+//const revaldiate = 0;
 
 const ProductCard = ({ product }: { product: ProductType }) => {
+  const router = useRouter();
   const {_id, title, image, materials, categories} = product;
   const collections = product?.collections ?? [];
   console.log(collections?.some((collection) => collection?.title === "hearted"))
@@ -23,17 +26,14 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     setHearted(isHearted);
   },[isHearted])
  
-  
-  
-
-
   const toggleHeart = async () => {
     try {
       const newHearted = !hearted;
       console.log("New hearted status:", newHearted);
       setHearted(newHearted);
-      await handleHeartWrite(_id, collections, newHearted as boolean, {cache: "no-store"});
+      await handleHeartWrite(_id, collections, newHearted as boolean);
       console.log("Hearted status updated successfully!");
+      router.refresh();
     } catch (error) {
       console.error("Failed to execute hearted action:", error);
     }

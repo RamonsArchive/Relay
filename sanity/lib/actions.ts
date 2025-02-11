@@ -3,6 +3,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import {HeartCollectionType } from "@/globalTypes";
 import { get } from "http";
+import { revalidatePath } from "next/cache";
 //import { after } from "next/server";
 
 const getHeartedCollectionId = async () => {
@@ -22,16 +23,6 @@ const handleHeartWrite = async (productId: string, collections: Array<{_id: stri
 
     if (!hearted) {
       try {
-        /*const mutation = [
-            {
-              patch: {
-                id: productId,
-                unset: [`collections[_ref == "${heartedCollectionId}"]`],
-              },
-            },
-          ];
-        await writeClient.mutate(mutation)*/
-
       console.log("Unsetting the heart");
       await writeClient.withConfig({useCdn: false})
       .patch(productId)
@@ -55,39 +46,23 @@ const handleHeartWrite = async (productId: string, collections: Array<{_id: stri
                 .setIfMissing({collections: []})
                 .append("collections", [newCollectionReference])
                 .commit();
-            /*if (collections.length < 1) {
-                const mutation = [
-                    {
-                      patch: {
-                        id: productId,
-                        setIfMissing: { collections: [] },
-                        append: {
-                          collections: [{ _type: "reference", _ref: heartedCollectionId }],
-                        },
-                      },
-                    },
-                  ];
-                  await writeClient.mutate(mutation);*/
-                
-            } 
-            /*if (collections.length < 1) {
-                await writeClient
-                .withConfig({useCdn: false})
-                .patch(productId)
-                .setIfMissing({collections: []})
-                .append("collections", [{_type: "reference", _ref: getHeartedId}])
-                .commit();
-            } else {
-                await writeClient
-                .withConfig({useCdn: false})
-                .patch(productId)
-                .append("collections", [{_type: "reference", _ref: getHeartedId}])
-                .commit();
-            } */
+        }
          catch (error) {
             console.error("Error removing the heart", error);
         }
     }
+
+    revalidatePath("/"); // Home page
+    revalidatePath("/collections"); // General collections page
+    revalidatePath("/collections/hearted"); // Hearted collection page
+    revalidatePath("/collections/newarrivals"); // New Arrivals
+    revalidatePath("/collections/bestsellers"); // Best Sellers
+    revalidatePath("/collections/sale"); // Best Sellers
+    revalidatePath("/collections/featured"); // Best Sellers
+    revalidatePath("/gender/men"); // Best Sellers
+    revalidatePath("/gender/women"); // Best Sellers
+    revalidatePath("/gender/unisex"); // Best Sellers
+    revalidatePath("/kids"); // Best Sellers
   };
 
 export default handleHeartWrite;

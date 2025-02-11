@@ -32,7 +32,7 @@ const Home = async ({
   console.log(`Filters: ${filters}`);
 
   //const finalQuery = parseSearchParams(query, filters);
-  const products = await client.fetch(PAGE_QUERY(path, query, filters));
+  const products = await client.fetch(PAGE_QUERY(path, query, filters), { revalidate: 0});
   console.log(products, null, 2);
 
   return (
@@ -47,7 +47,6 @@ const Home = async ({
           <ContentTitle />
           <Suspense fallback={<div>Loading...</div>}>
           <ul className="product-grid">
-          
             {products.length > 0 ? (
               products.map((product: ProductType) => (
                 
