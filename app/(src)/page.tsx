@@ -5,6 +5,10 @@ import { ShoppingCart } from "lucide-react";
 import { parseSearchParams } from "@/lib/parseSearchParams";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
+import { Suspense } from 'react'
+
+
+export const experimental_ppr = true;
 
 const Home = async ({
   params,
@@ -41,15 +45,21 @@ const Home = async ({
         </div>
         <div className="product-container">
           <ContentTitle />
+          <Suspense fallback={<div>Loading...</div>}>
           <ul className="product-grid">
+          
             {products.length > 0 ? (
               products.map((product: ProductType) => (
+                
                 <ProductCard key={product?._id} product={product} />
+                
               ))
             ) : (
               <div>No product available</div>
             )}
+            
           </ul>
+          </Suspense>
         </div>
       </main>
     </>

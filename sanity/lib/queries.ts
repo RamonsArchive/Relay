@@ -28,6 +28,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string) => {
         categories,
         "collections": collections[]->{
           _id,
+          _key,
           title,
         }
       }`; 
@@ -114,6 +115,7 @@ const constructQuerySearch = (searchTerm: string) => {
     categories,
     "collections": collections[]->{
       _id,
+      _key,
       title,
     }
   }`;
@@ -148,6 +150,7 @@ const constructHomePageFilters = (searchTerm: string) => {
     categories,
     "collections": collections[]->{
       _id,
+      _key,
       title,
     }
   }`
@@ -188,6 +191,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[])
     categories,
     "collections": collections[]->{
       _id,
+      _key,
       title,
   }
   }`
@@ -204,6 +208,7 @@ const constructNonHomePage = (paramConditions: string) => {
     categories,
     "collections": collections[]->{
       _id,
+      _key,
       title,
     }
   }`
@@ -242,6 +247,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     categories,
     "collections": collections[]->{
       _id,
+      _key,
       title,
     }
   }`;

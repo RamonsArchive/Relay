@@ -6,19 +6,25 @@ import { Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/client";
 import { ProductType } from "@/globalTypes";
 import ProductCardHeart from "./ProductCardHeart";
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import handleHeartWrite from "@/sanity/lib/actions";
 
 
 
 const ProductCard = ({ product }: { product: ProductType }) => {
   const {_id, title, image, materials, categories} = product;
- 
   const collections = product?.collections ?? [];
   console.log(collections?.some((collection) => collection?.title === "hearted"))
   const isHearted = collections.length > 0 ? collections?.some((collection) => collection?.title === "hearted") : false;
   console.log("Is hearted", isHearted);
   const [hearted, setHearted] = useState<boolean>(isHearted);
+
+  useEffect(() => {
+    setHearted(isHearted);
+  },[isHearted])
+ 
+  
+  
 
 
   const toggleHeart = async () => {
@@ -26,7 +32,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
       const newHearted = !hearted;
       console.log("New hearted status:", newHearted);
       setHearted(newHearted);
-      await handleHeartWrite(_id, collections, newHearted as boolean);
+      await handleHeartWrite(_id, collections, newHearted as boolean, {cache: "no-store"});
       console.log("Hearted status updated successfully!");
     } catch (error) {
       console.error("Failed to execute hearted action:", error);
@@ -44,7 +50,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           />
         </Link>
         <div className="absolute top-2 right-2 cursor-pointer"  onClick={toggleHeart}>
-          <Heart size={24} className={hearted ? "text-red-500" : "text-gray-400"}/>
+          <Heart size={24} className={hearted ? "text-primary-200" : "text-black"} fill={hearted ? "#004BFE" : "none"}/>
         </div>
         
       </div>

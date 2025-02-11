@@ -5,6 +5,7 @@ import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { parseSearchParams } from "@/lib/parseSearchParams";
+import { Suspense } from 'react';
 
 const page = async ({
   params,
@@ -28,6 +29,7 @@ const page = async ({
     <div className="content-page">
       <div className="product-container">
         <ContentTitle />
+        <Suspense fallback={<div>Loading...</div>}>
         <ul className="product-grid">
           {collectionProducts.length > 0 ? (
             collectionProducts.map((product: ProductType) => (
@@ -37,6 +39,7 @@ const page = async ({
             <div>No product available</div>
           )}
         </ul>
+        </Suspense>
       </div>
     </div>
   );
