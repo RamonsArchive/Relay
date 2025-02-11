@@ -11,8 +11,6 @@ const getHeartedCollectionId = async () => {
     return heartedCollectionId;
 }
 
-
-
 const handleHeartWrite = async (productId: string, collections: Array<{_id: string, _key: string, title: string}>, hearted: boolean) => {   
     console.log("Should hearted", hearted);
     console.log("Product ID", productId);
@@ -52,17 +50,17 @@ const handleHeartWrite = async (productId: string, collections: Array<{_id: stri
         }
     }
 
-    revalidatePath("/"); // Home page
-    revalidatePath("/collections"); // General collections page
-    revalidatePath("/collections/hearted"); // Hearted collection page
-    revalidatePath("/collections/newarrivals"); // New Arrivals
-    revalidatePath("/collections/bestsellers"); // Best Sellers
-    revalidatePath("/collections/sale"); // Best Sellers
-    revalidatePath("/collections/featured"); // Best Sellers
-    revalidatePath("/gender/men"); // Best Sellers
-    revalidatePath("/gender/women"); // Best Sellers
-    revalidatePath("/gender/unisex"); // Best Sellers
-    revalidatePath("/kids"); // Best Sellers
+    /*revalidatePath("/"); 
+    revalidatePath("/collections"); 
+    revalidatePath("/collections/hearted"); 
+    revalidatePath("/collections/newarrivals"); 
+    revalidatePath("/collections/bestsellers"); 
+    revalidatePath("/collections/sale"); 
+    revalidatePath("/collections/featured"); 
+    revalidatePath("/gender/men"); 
+    revalidatePath("/gender/women"); 
+    revalidatePath("/gender/unisex"); 
+    revalidatePath("/kids"); */
   };
 
 export default handleHeartWrite;

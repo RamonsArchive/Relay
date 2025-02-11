@@ -7,7 +7,6 @@ import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from 'react'
 
-
 export const experimental_ppr = true;
 
 const Home = async ({
@@ -17,11 +16,8 @@ const Home = async ({
   params: { slug: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const path = params.slug || "/"; // ✅ Default to `/` if undefined
+  const path = params.slug || "/"; 
   console.log(`Path: ${path}`);
-  /*const pathArray = params.slug || undefined;
-  console.log(`Path Array: ${pathArray}`);
-  const path = pathArray ? `${pathArray.join("/")}` : "/"; */
 
   console.log(`Path: ${path}`);
   const query = (await searchParams).query || "";

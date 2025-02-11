@@ -17,9 +17,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
   const router = useRouter();
   const {_id, title, image, materials, categories} = product;
   const collections = product?.collections ?? [];
-  console.log(collections?.some((collection) => collection?.title === "hearted"))
   const isHearted = collections.length > 0 ? collections?.some((collection) => collection?.title === "hearted") : false;
-  console.log("Is hearted", isHearted);
   const [hearted, setHearted] = useState<boolean>(isHearted);
 
   useEffect(() => {
@@ -29,10 +27,8 @@ const ProductCard = ({ product }: { product: ProductType }) => {
   const toggleHeart = async () => {
     try {
       const newHearted = !hearted;
-      console.log("New hearted status:", newHearted);
       setHearted(newHearted);
       await handleHeartWrite(_id, collections, newHearted as boolean);
-      console.log("Hearted status updated successfully!");
       router.refresh();
     } catch (error) {
       console.error("Failed to execute hearted action:", error);

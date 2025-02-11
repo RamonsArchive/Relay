@@ -22,7 +22,7 @@ const page = async ({
   const filters = (await searchParams).f || "";
 
   //const finalQuery = parseSearchParams(query, filters);
-  const genderProducts = await client.fetch(PAGE_QUERY(path, query, filters), {revaldiate: 0});
+  const genderProducts = await client.fetch(PAGE_QUERY(path, query, filters));
   console.log(genderProducts, null, 2);
 
   return (
