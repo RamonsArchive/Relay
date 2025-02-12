@@ -86,7 +86,7 @@ export type Product = {
   _rev: string;
   title?: string;
   slug?: Slug;
-  image?: {
+  mainImage?: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -97,6 +97,18 @@ export type Product = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+  imageGallery?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
   description?: string;
   gender?: Array<string>;
   kids?: Array<string>;

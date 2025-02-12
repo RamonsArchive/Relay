@@ -124,6 +124,7 @@ html, body {
 
   .product-grid {
   @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5 mt-10;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 
   .product-group {

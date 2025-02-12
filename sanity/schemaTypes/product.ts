@@ -21,12 +21,18 @@ export const product = defineType({
             }
         }),
         defineField({
-            name: 'image',
-            title: 'Image',
+            name: 'mainImage',
+            title: 'Main Image',
             type: 'image',
             options: {
                 hotspot: true,
             }
+        }),
+        defineField({
+            name: 'imageGallery',
+            title: 'Image Gallery',
+            type: 'array',
+            of: [{type: 'image', options: {hotspot: true}}],
         }),
         defineField({
             name: 'description',

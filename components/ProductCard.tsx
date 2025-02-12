@@ -6,24 +6,26 @@ import { Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/client";
 import { ProductType } from "@/globalTypes";
 import ProductCardHeart from "./ProductCardHeart";
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from "react";
 import handleHeartWrite from "@/sanity/lib/actions";
 import { useRouter } from "next/navigation";
-
 
 //const revaldiate = 0;
 
 const ProductCard = ({ product }: { product: ProductType }) => {
   const router = useRouter();
-  const {_id, title, image, materials, categories} = product;
+  const { _id, title, mainImage, materials, categories } = product;
   const collections = product?.collections ?? [];
-  const isHearted = collections.length > 0 ? collections?.some((collection) => collection?.title === "hearted") : false;
+  const isHearted =
+    collections.length > 0
+      ? collections?.some((collection) => collection?.title === "hearted")
+      : false;
   const [hearted, setHearted] = useState<boolean>(isHearted);
 
   useEffect(() => {
     setHearted(isHearted);
-  },[isHearted])
- 
+  }, [isHearted]);
+
   const toggleHeart = async () => {
     try {
       const newHearted = !hearted;
@@ -36,25 +38,30 @@ const ProductCard = ({ product }: { product: ProductType }) => {
   };
   return (
     <li className="product-group">
-      <div className="relative">
+      <div className="relative w-full h-[300px] overflow-hidden">
         <Link href={`/product/${_id}`}>
           <Image
-            src={urlFor(image).url()}
+            src={urlFor(mainImage).url()}
             alt="image"
             width={420}
-            height={360}
+            height={420}
+            className="object-cover w-full h-full"
           />
         </Link>
-        <div className="absolute top-2 right-2 cursor-pointer"  onClick={toggleHeart}>
-          <Heart size={24} className={hearted ? "text-primary-200" : "text-black"} fill={hearted ? "#004BFE" : "none"}/>
+        <div
+          className="absolute top-2 right-2 cursor-pointer"
+          onClick={toggleHeart}
+        >
+          <Heart
+            size={24}
+            className={hearted ? "text-primary-200" : "text-black"}
+            fill={hearted ? "#004BFE" : "none"}
+          />
         </div>
-        
       </div>
       <Link href={`/product/${_id}`}>
         <div className="product-group-info">
-          <span className="font-plex-sans font-bold text-[20px]">
-            {title}
-          </span>
+          <span className="font-plex-sans font-bold text-[20px]">{title}</span>
           <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
             {materials &&
               materials.length > 0 &&

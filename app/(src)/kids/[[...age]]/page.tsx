@@ -4,7 +4,6 @@ import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
 import { client } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
-import { parseSearchParams } from "@/lib/parseSearchParams";
 import { Suspense } from 'react';
 
 const page = async ({

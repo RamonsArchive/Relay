@@ -2,10 +2,9 @@ import ProductCard from "@/components/ProductCard";
 import { client } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { ShoppingCart } from "lucide-react";
-import { parseSearchParams } from "@/lib/parseSearchParams";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
-import { Suspense } from 'react'
+import { Suspense } from "react";
 
 export const experimental_ppr = true;
 
@@ -16,7 +15,7 @@ const Home = async ({
   params: { slug: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const path = params.slug || "/"; 
+  const path = params.slug || "/";
   console.log(`Path: ${path}`);
 
   console.log(`Path: ${path}`);
@@ -28,7 +27,7 @@ const Home = async ({
   console.log(`Filters: ${filters}`);
 
   //const finalQuery = parseSearchParams(query, filters);
-  const products = await client.fetch(PAGE_QUERY(path, query, filters), { revalidate: 0});
+  const products = await client.fetch(PAGE_QUERY(path, query, filters));
   console.log(products, null, 2);
 
   return (
@@ -42,18 +41,15 @@ const Home = async ({
         <div className="product-container">
           <ContentTitle />
           <Suspense fallback={<div>Loading...</div>}>
-          <ul className="product-grid">
-            {products.length > 0 ? (
-              products.map((product: ProductType) => (
-                
-                <ProductCard key={product?._id} product={product} />
-                
-              ))
-            ) : (
-              <div>No product available</div>
-            )}
-            
-          </ul>
+            <ul className="product-grid">
+              {products.length > 0 ? (
+                products.map((product: ProductType) => (
+                  <ProductCard key={product?._id} product={product} />
+                ))
+              ) : (
+                <div>No product available</div>
+              )}
+            </ul>
           </Suspense>
         </div>
       </main>

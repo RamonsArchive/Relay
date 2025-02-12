@@ -49,18 +49,6 @@ const handleHeartWrite = async (productId: string, collections: Array<{_id: stri
             console.error("Error removing the heart", error);
         }
     }
-
-    /*revalidatePath("/"); 
-    revalidatePath("/collections"); 
-    revalidatePath("/collections/hearted"); 
-    revalidatePath("/collections/newarrivals"); 
-    revalidatePath("/collections/bestsellers"); 
-    revalidatePath("/collections/sale"); 
-    revalidatePath("/collections/featured"); 
-    revalidatePath("/gender/men"); 
-    revalidatePath("/gender/women"); 
-    revalidatePath("/gender/unisex"); 
-    revalidatePath("/kids"); */
   };
 
 export default handleHeartWrite;

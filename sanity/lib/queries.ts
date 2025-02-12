@@ -13,17 +13,13 @@ export const PAGE_QUERY = (path: string, query: string, filters: string) => {
   const queryArray = query ? query?.split(" ").filter((term) => term.trim() !== "") : [];
 
   const searchTerm = [...new Set([...filtersArray, ...queryArray])].join(" ");
-
-  console.log(`Search Conditions: ${searchTerm}`);
-  console.log("path: ", path);
   
-    
   if (path === "/") {
     if (searchTerm == "") {
       return `*[_type == "product"] {
         _id,
         title,
-        image,
+        mainImage,
         materials,
         categories,
         "collections": collections[]->{
@@ -51,19 +47,12 @@ export const PAGE_QUERY = (path: string, query: string, filters: string) => {
     } else if (pageEnd == "kids" || pageEnd == "boys" || pageEnd == "girls") {
       kidsConditions = pageEnd == "kids" ? `"boys" in kids || "girls" in kids` : pageEnd == "boys" ? `"boys" in kids` : `"girls" in kids`;
     }
-    console.log(`Filtered Collection Path: ${filteredCollectionsPath}`);
-
 
     const paramConditions = [
       filteredCollectionsPath ? `count(collections[@->title match "${filteredCollectionsPath}"]) > 0` : `count(collections[@->title match "${pageEnd}"]) > 0`,
       genderConditions,
       kidsConditions,
     ].filter(Boolean).join(" || ");
-
-    console.log(`Param Conditions: ${paramConditions}`);
-    console.log(`searchTerm: ${searchTerm}`);
-    console.log(`Gender Conditions: ${genderConditions}`);
-    console.log(`Kids Conditions: ${kidsConditions}`);
 
    if (!searchTerm) {
     return constructNonHomePage(paramConditions);
@@ -110,7 +99,7 @@ const constructQuerySearch = (searchTerm: string) => {
     ${keywordConditions})] | order(_createdAt desc) {
     _id,
     title,
-    image,
+    mainImage,
     materials,
     categories,
     "collections": collections[]->{
@@ -145,7 +134,7 @@ const constructHomePageFilters = (searchTerm: string) => {
   return `*[_type == "product" && defined(slug) && (${keywordConditions})] | order(_createdAt desc) {
     _id,
     title,
-    image,
+    mainImage,
     materials,
     categories,
     "collections": collections[]->{
@@ -186,7 +175,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[])
   return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
     _id,
     title,
-    image,
+    mainImage,
     materials,
     categories,
     "collections": collections[]->{
@@ -203,7 +192,7 @@ const constructNonHomePage = (paramConditions: string) => {
   return `*[_type == "product" && defined(slug) && (${paramConditions})] | order(_createdAt desc) {
     _id,
     title,
-    image,
+    mainImage,
     materials,
     categories,
     "collections": collections[]->{
@@ -242,7 +231,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     ${keywordConditions}) && (${paramConditions})] | order(_createdAt desc) {
     _id,
     title,
-    image,
+    mainImage,
     materials,
     categories,
     "collections": collections[]->{
@@ -252,5 +241,12 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     }
   }`;
 }
+
+export const PRODUCT_IMAGE_QUERY = (id: string) => {
+  return `*[_type == product && _id == "${id}"] {
+    mainImage,
+    imageGallery,
+  }`
+} 
 
 
