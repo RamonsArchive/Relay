@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 .auth {
-  @apply flex-center min-h-screen w-full bg-white-100;
+  @apply fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-secondary-200 overflow-hidden;
 }
 
 .root {
-  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300 overflow-auto;
+  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300;
 }
 
 .root-container {
-  @apply flex flex-1 flex-row overflow-auto lg:mt-0 lg:max-h-screen;
+  @apply flex flex-1 flex-row lg:mt-0 lg:max-h-screen;
 }
 
 html, body {
-  @apply min-h-screen overflow-auto;
+  @apply min-h-screen;
 }
 
 @layer utilities {

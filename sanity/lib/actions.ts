@@ -2,26 +2,24 @@
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import {HeartCollectionType } from "@/globalTypes";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect }  from "next/navigation";
 
-const getHeartedCollectionId = async () => {
-    const heartedCollectionId = await writeClient.fetch(`*[_type == "collections" && title == "hearted"][0]._id`);
-    return heartedCollectionId;
-}
 
-export const handleHeartWrite = async (productId: string, collections: Array<{_id: string, _key: string, title: string}>, hearted: boolean) => {   
-    console.log("Should hearted", hearted);
-    console.log("Product ID", productId);
-    console.log("Collections", collections);
-
-    const heartedCollectionId = await getHeartedCollectionId();
-    console.log("Hearted ID", heartedCollectionId);
+export const handleHeartWrite = async (productId: string, hearted: boolean) => {   
+   const user = await currentUser();
+   if (!user) {
+    console.error("User not authenticated");
+    redirect("/sign-in");
+   }
+   const userId = user.id;
 
     if (!hearted) {
       try {
       console.log("Unsetting the heart");
       await writeClient.withConfig({useCdn: false})
-      .patch(productId)
-      .unset([`collections[_ref=="${heartedCollectionId}"]`])
+      .patch(`user-${userId}`)
+      .unset([`heartedProducts[_ref=="${productId}"]`])
       .commit();
     } catch (error) {
         console.error("Error setting the heart", error);
@@ -30,16 +28,16 @@ export const handleHeartWrite = async (productId: string, collections: Array<{_i
         try {
             const mykey = nanoid();
             console.log("My key", mykey);
-            const newCollectionReference = {
+            const newProductReference = {
                 _type: "reference",
-                _ref: heartedCollectionId,
+                _ref: productId,
                 _key: mykey,
             }
             await writeClient
                 .withConfig({useCdn: false})
-                .patch(productId)
-                .setIfMissing({collections: []})
-                .append("collections", [newCollectionReference])
+                .patch(`user-${userId}`)
+                .setIfMissing({heartedProducts: []})
+                .append("heartedProducts", [newProductReference])
                 .commit();
         }
          catch (error) {

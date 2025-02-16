@@ -8,18 +8,19 @@ import { ProductType } from "@/globalTypes";
 import { useState, useEffect } from "react";
 import { handleHeartWrite } from "@/sanity/lib/actions";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 const ProductCard = ({
   product,
   isHearted,
+  isAuth,
 }: {
   product: ProductType;
   isHearted: boolean;
+  isAuth: string;
 }) => {
   const router = useRouter();
   const { _id, title, mainImage, materials, categories } = product;
-  const collections = product?.collections ?? [];
-
   const [hearted, setHearted] = useState<boolean>(isHearted);
 
   useEffect(() => {
@@ -27,10 +28,16 @@ const ProductCard = ({
   }, [isHearted]);
 
   const toggleHeart = async () => {
+    console.log("not yet passed auth check");
+    if (!isAuth) {
+      router.push("/sign-in");
+      return;
+    }
+    console.log("passed auth check");
     try {
       const newHearted = !hearted;
       setHearted(newHearted);
-      await handleHeartWrite(_id, collections, newHearted as boolean);
+      await handleHeartWrite(_id, newHearted as boolean);
       router.refresh();
     } catch (error) {
       console.error("Failed to execute hearted action:", error);

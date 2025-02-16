@@ -42,6 +42,7 @@ const page = async ({
                   key={product?._id}
                   product={product}
                   isHearted={heartedProductsIds.includes(product)}
+                  isAuth={userId}
                 />
               ))
             ) : (
