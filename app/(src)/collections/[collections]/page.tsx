@@ -17,6 +17,7 @@ const page = async ({
   const user = await currentUser();
   const userId = user ? user.id : "";
   const heartedProductsIds = await fetchHeartedProducts(userId);
+  console.log(`Hearted Products: ${heartedProductsIds}`);
   const path = (await params).collections || "/";
   console.log(`Path: ${path}`);
   const query = (await searchParams).query || "";

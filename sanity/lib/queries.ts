@@ -5,8 +5,7 @@ import { defineQuery } from 'next-sanity';
 export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProductsIds: string[]) => {
   const pageType = path.split("/")[0]; // first part of the path
   const pageEnd = path.split("/").pop(); // last part of the path
-  const heartedCondition = heartedProductsIds.length > 0 ? `_id in ${heartedProductsIds}` : false;
-
+  const optimizedHeartedProductsIds = `[${heartedProductsIds.map(id => `"${id}"`).join(", ")}]`;
 
   console.log(`Page Type: ${pageType}`);
   console.log(`Page End: ${pageEnd}`);
@@ -31,11 +30,11 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
         }
       }`; 
     } else if (filters == "") {
-      return constructQuerySearch(searchTerm, heartedProductsIds);
+      return constructQuerySearch(searchTerm, optimizedHeartedProductsIds);
     } else if (query == "") {
-      return constructHomePageFilters(searchTerm, heartedProductsIds);
+      return constructHomePageFilters(searchTerm, optimizedHeartedProductsIds);
     } else {
-      return constructQueryPlusFilters(queryArray, filtersArray, heartedProductsIds);
+      return constructQueryPlusFilters(queryArray, filtersArray, optimizedHeartedProductsIds);
     } 
   } 
     
@@ -50,33 +49,40 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
     } else if (pageEnd == "kids" || pageEnd == "boys" || pageEnd == "girls") {
       kidsConditions = pageEnd == "kids" ? `"boys" in kids || "girls" in kids` : pageEnd == "boys" ? `"boys" in kids` : `"girls" in kids`;
     } else if (pageEnd == "hearted") {
-      heartedConditions = `_id in ${heartedProductsIds}`;
+      heartedConditions = `_id in ${optimizedHeartedProductsIds}`;
     }
 
-    const paramConditions = [
-      filteredCollectionsPath ? `count(collections[@->title match "${filteredCollectionsPath}"]) > 0` : `count(collections[@->title match "${pageEnd}"]) > 0`,
-      genderConditions,
-      kidsConditions,
-      heartedConditions
-    ].filter(Boolean).join(" || ");
+    let paramConditions = "";
+    if (!heartedConditions) {
+      paramConditions = [
+        filteredCollectionsPath ? `count(collections[@->title match "${filteredCollectionsPath}"]) > 0` : `count(collections[@->title match "${pageEnd}"]) > 0`,
+        genderConditions,
+        kidsConditions,
+        heartedConditions
+      ].filter(Boolean).join(" || ");
+    } else {
+      paramConditions = heartedConditions;
+    }
+    
 
+   console.log(`paramConditions: ${paramConditions}`);
+   console.log(`optimizedHeartedProductsIds: ${optimizedHeartedProductsIds}`);
    if (!searchTerm) {
-    return constructNonHomePage(paramConditions, heartedProductsIds);
+    return constructNonHomePage(paramConditions, optimizedHeartedProductsIds);
    }
 
-   return constructNonHomePagePlusFilters(paramConditions, searchTerm, heartedProductsIds);
+   return constructNonHomePagePlusFilters(paramConditions, searchTerm, optimizedHeartedProductsIds);
   
 };
 
 
 export const PRODUCT_ID_QUERY = (id: string) => {
   return `*[_type == "product" && _id == "${id}"] {
-
   }`
 }
 
 /* For query searches only */
-const constructQuerySearch = (searchTerm: string, heartedProducts: string[]) => {
+const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: string) => {
   console.log("THERE WAS A SEARCH TERM");
   const isNumeric = !isNaN(Number(searchTerm));
   const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
@@ -97,7 +103,7 @@ const constructQuerySearch = (searchTerm: string, heartedProducts: string[]) => 
       "${keyword}" in brand ||
       "${keyword}" in materials ||
       "${keyword}" in categories ||
-      "${keyword}" in ["hearted", "heart"] && _id in ${heartedProducts}
+      "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
     `
     )
     .join(" || ");
@@ -113,13 +119,13 @@ const constructQuerySearch = (searchTerm: string, heartedProducts: string[]) => 
       _id,
       _key,
       title,
-    }
-    "isHearted": _id in ${heartedProducts}
+    },
+    "isHearted": _id in ${optimizedHeartedProductsIds}
   }`;
 }
 
 /* For homepage with filters */
-const constructHomePageFilters = (searchTerm: string, heartedProducts: string[]) => {
+const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsIds: string) => {
   const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
   const keywordConditions = keywords
     .map(
@@ -134,7 +140,7 @@ const constructHomePageFilters = (searchTerm: string, heartedProducts: string[])
       "${keyword}" in brand ||
       "${keyword}" in materials ||
       "${keyword}" in categories ||
-      "${keyword}" in ["hearted", "heart"] && _id in ${heartedProducts}
+      "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
     `
     ).join(" && ");
 
@@ -148,12 +154,12 @@ const constructHomePageFilters = (searchTerm: string, heartedProducts: string[])
       _id,
       _key,
       title,
-    }
-    "isHearted": _id in ${heartedProducts}
+    },
+    "isHearted": _id in ${optimizedHeartedProductsIds}
   }`
 }
 
-const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[], heartedProducts: string[]) => {
+const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[], optimizedHeartedProductsIds: string) => {
   const  keywordConditions = queryArray.map((keyword) => `
     title match "${keyword}*" ||
     "${keyword}" in gender ||
@@ -165,7 +171,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
       "${keyword}" in brand ||
       "${keyword}" in materials ||
       "${keyword}" in categories ||
-      "${keyword}" in ["hearted", "heart"] && _id in ${heartedProducts}
+      "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
   `).join(" || ");
 
   const filterConditions = filtersArray.map((filter) => `
@@ -179,7 +185,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
       "${filter}" in brand ||
       "${filter}" in materials ||
       "${filter}" in categories || 
-      "${filter}" in ["hearted", "heart"] && _id in ${heartedProducts}
+      "${filter}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
   `).join(" && ");
 
   return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
@@ -192,13 +198,13 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
       _id,
       _key,
       title,
-    }
-    "isHearted": _id in ${heartedProducts}
+    },
+    "isHearted": _id in ${optimizedHeartedProductsIds}
   }`
 }
 
 /* For non home pages only */
-const constructNonHomePage = (paramConditions: string, heartedProducts: string[]) => {
+const constructNonHomePage = (paramConditions: string, optimizedHeartedProductsIds: string) => {
   console.log("THERE WAS NO SEARCH TERM AND NO FILTERS for non home page");
   return `*[_type == "product" && defined(slug) && (${paramConditions})] | order(_createdAt desc) {
     _id,
@@ -210,13 +216,13 @@ const constructNonHomePage = (paramConditions: string, heartedProducts: string[]
       _id,
       _key,
       title,
-    }
-    "isHearted": _id in ${heartedProducts}
+    },
+    "isHearted": _id in ${optimizedHeartedProductsIds}
   }`
 }
 
 /* For non home pages pages with filters */
-const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: string, heartedProducts: string[]) => {
+const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: string, optimizedHeartedProductsIds: string) => {
   const isNumeric = !isNaN(Number(searchTerm));
   const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
   const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
@@ -235,7 +241,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
         "${keyword}" in brand ||
         "${keyword}" in materials ||
         "${keyword}" in categories ||
-        "${keyword}" in ["hearted", "heart"] && _id in ${heartedProducts}
+        "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
       `
     )
     .join(" && ");
@@ -251,8 +257,8 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
       _id,
       _key,
       title,
-    }
-    "isHearted": _id in ${heartedProducts}
+    },
+    "isHearted": _id in ${optimizedHeartedProductsIds}
   }`;
 }
 
