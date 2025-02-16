@@ -6,26 +6,38 @@ export const user = defineType({
     type: "document",
     fields: [
         defineField({
-            name: 'firstName',
+            name: 'userId',
+            title: 'User ID',
             type: 'string',
         }),
         defineField({
-            name: 'id',
-            type: 'number',
+            name: 'firstName',
+            title: 'First Name',
+            type: 'string',
         }),
         defineField({
             name: 'lastName',
+            title: 'Last Name',
             type: 'string',
         }),
         defineField({
             name: 'email',
+            title: 'Email',
             type: 'string',
         }),
+        defineField({
+            name: "heartedProducts",
+            title: "Hearted Products",
+            type: "array",
+            of: [{type: 'reference', to: [{type: 'product'}]}]
+        })
+        
     ],
 
     preview: {
         select: {
-            title: 'firstName',
+            title: 'email',
+            subtitle: 'userId',
         }
     }
 

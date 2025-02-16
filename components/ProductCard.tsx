@@ -5,21 +5,21 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { urlFor } from "@/sanity/lib/client";
 import { ProductType } from "@/globalTypes";
-import ProductCardHeart from "./ProductCardHeart";
 import { useState, useEffect } from "react";
-import handleHeartWrite from "@/sanity/lib/actions";
+import { handleHeartWrite } from "@/sanity/lib/actions";
 import { useRouter } from "next/navigation";
 
-//const revaldiate = 0;
-
-const ProductCard = ({ product }: { product: ProductType }) => {
+const ProductCard = ({
+  product,
+  isHearted,
+}: {
+  product: ProductType;
+  isHearted: boolean;
+}) => {
   const router = useRouter();
   const { _id, title, mainImage, materials, categories } = product;
   const collections = product?.collections ?? [];
-  const isHearted =
-    collections.length > 0
-      ? collections?.some((collection) => collection?.title === "hearted")
-      : false;
+
   const [hearted, setHearted] = useState<boolean>(isHearted);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     }
   };
   return (
-    <li className="product-group">
-      <div className="relative w-full h-[300px] overflow-hidden">
+    <li className="product-group w-full">
+      <div className="relative w-full h-[250px] overflow-hidden">
         <Link href={`/product/${_id}`}>
           <Image
             src={urlFor(mainImage).url()}

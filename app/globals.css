@@ -123,8 +123,7 @@ html, body {
   }
 
   .product-grid {
-  @apply grid md:grid-cols-3 sm:grid-cols-2 gap-5 mt-10;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  @apply grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-10;
   }
 
   .product-group {
@@ -150,6 +149,36 @@ html, body {
   .content-page {
     @apply relative flex-1 w-full gap-4;
   }
+
+  .product-page {
+    @apply flex flex-row p-5 w-full;
+  }
+
+  .product-page-image-container {
+    @apply flex gap-2 ml-[15%] w-full;
+  }
+
+  .product-sizebutton-grid {
+    @apply grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 gap-y-3 gap-x-4; 
+    display: grid;
+  }
+
+  .product-buy-buttons {
+    @apply font-plex-sans font-bold md:text-[20px] sm:text-[16] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-110 hover:scale-125;
+  }
+
+  .product-drop {
+    @apply flex flex-col font-plex-sans font-medium w-[75%] text-[24px] pt-5 gap-4
+  }
+
+  .product-drop-section {
+    @apply flex flex-col gap-4 border-b-[2px] pb-4 border-borderColor-100 ;
+  }
+
+  .product-drop-block {
+    @apply flex flex-row justify-between items-center cursor-pointer;
+  }
+  
 }
 
 @keyframes glowing-border {

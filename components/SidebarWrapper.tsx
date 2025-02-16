@@ -7,13 +7,11 @@ import Mobilebar from "./Mobilebar";
 
 const SidebarWrapper = () => {
   const path = usePathname();
-  console.log("Path", path);
-  const productPage = path?.startsWith("/product/");
-  console.log(`Product Page: ${productPage}`);
+  const productPage =
+    path?.startsWith("/product/") || path?.startsWith("/writeReview/");
   const [isProductPage, setIsProductPage] = useState(productPage);
 
   useEffect(() => {
-    const productPage = path?.startsWith("/product/");
     setIsProductPage(productPage);
   }, [path]);
 

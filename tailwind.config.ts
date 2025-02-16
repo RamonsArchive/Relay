@@ -38,6 +38,9 @@ export default {
   				'200': '#f6f6fe',
   				'300': '#f0f0f0'
   			},
+			borderColor: {
+				'100': '#dbdbdb',
+			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

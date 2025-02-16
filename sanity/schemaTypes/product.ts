@@ -1,4 +1,3 @@
-import { title } from "process";
 import { defineField, defineType } from "sanity";
 
 export const product = defineType({
@@ -73,6 +72,31 @@ export const product = defineType({
             name: 'cost',
             title: 'Cost',
             type: 'number',
+        }),
+        defineField({
+            name: 'details',
+            title: 'Details',
+            type: 'object',
+            fields: [
+                {   
+                    name: 'mainDetails',
+                    title: "Main text",
+                    type: 'array',
+                    of: [{type: 'block'}]
+                },
+                {
+                    name: 'detailBullets',
+                    title: 'Detail Bullets',
+                    type: 'array',
+                    of: [{type: 'string'}],
+                }
+            ]
+        }),
+        defineField({
+            name: 'reviews',
+            title: 'Reviews',
+            type: 'array',
+            of: [{type: 'reference', to: [{type: 'reviews'}]}],
         }),
         defineField({
             name: 'stock',

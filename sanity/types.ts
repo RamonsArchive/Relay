@@ -68,13 +68,44 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Reviews = {
+  _id: string;
+  _type: "reviews";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  rating?: number;
+  wouldRecommend?: boolean;
+  review?: string;
+  reviewTitle?: string;
+  sizeRating?: number;
+  widthRating?: number;
+  comfortRating?: number;
+  qualityRating?: number;
+  valueRating?: number;
+  photo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  nickname?: string;
+  slug?: Slug;
+  email?: string;
+};
+
 export type Collections = {
   _id: string;
   _type: "collections";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: "new arrivals" | "featured" | "hearted" | "sale" | "best sellers" | "hearted";
+  title?: "new arrivals" | "featured" | "hearted" | "sale" | "best sellers";
   slug?: Slug;
 };
 
@@ -114,6 +145,34 @@ export type Product = {
   kids?: Array<string>;
   size?: Array<string>;
   cost?: number;
+  details?: {
+    mainDetails?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+    detailBullets?: Array<string>;
+  };
+  reviews?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "reviews";
+  }>;
   stock?: Array<{
     size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
     quantity?: number;
@@ -203,13 +262,20 @@ export type User = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  userId?: string;
   firstName?: string;
-  id?: number;
   lastName?: string;
   email?: string;
+  heartedProducts?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "product";
+  }>;
 };
 
 export type Markdown = string;
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Collections | Product | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | User | Markdown;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Reviews | Collections | Product | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug | User | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;

@@ -5,6 +5,8 @@ import { ShoppingCart } from "lucide-react";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
+import { currentUser } from "@clerk/nextjs/server";
+import { fetchHeartedProducts } from "@/sanity/lib/client";
 
 export const experimental_ppr = true;
 
@@ -15,19 +17,19 @@ const Home = async ({
   params: { slug: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
+  const user = await currentUser();
+  const userId = user ? user.id : "";
   const path = params.slug || "/";
-  console.log(`Path: ${path}`);
 
   console.log(`Path: ${path}`);
+
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 
-  console.log(`Path: ${path}`);
-  console.log(`Query: ${query}`);
-  console.log(`Filters: ${filters}`);
-
-  //const finalQuery = parseSearchParams(query, filters);
-  const products = await client.fetch(PAGE_QUERY(path, query, filters));
+  const heartedProducts = await fetchHeartedProducts(userId);
+  const products = await client.fetch(
+    PAGE_QUERY(path, query, filters, heartedProducts)
+  );
   console.log(products, null, 2);
 
   return (

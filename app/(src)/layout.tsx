@@ -7,21 +7,12 @@ import { ContextProvider } from "@/app/context/context";
 import React from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
 
-const layout = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ path: string[] }>;
-}) => {
-  const path = (await params).path;
-  const isProductPage = path?.[0] === "product";
-  console.log("Path", path);
+const layout = async ({ children }: { children: React.ReactNode }) => {
+  /*<SignedOut>
+        <SignIn />
+      </SignedOut> */
   return (
     <main className="root">
-      <SignedOut>
-        <SignIn />
-      </SignedOut>
       <ContextProvider>
         <Navbar />
         <div className="root-container">

@@ -1,5 +1,5 @@
 import { SanityDocument } from "sanity";
-import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop } from "./sanity.types";
+import { Product, Collections, Reviews, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop } from "./sanity.types";
 
 export type ProductType = Pick<
   Product,
@@ -26,7 +26,7 @@ export type HeartCollectionType = Pick<Collections, "_id" & "title"> & {
   title: string | null;
 };
 
-export type ProductPageType =  Pick<
+export type ProductPageType = Pick<
 Product,
 "_id" 
 > & {
@@ -69,3 +69,23 @@ Product,
   hearted: boolean | null;
   collections: Array<{_id: string, _key: string, title: string}> | null;
 };
+
+
+export type ReviewType = Pick<
+  Reviews,
+  "_id"> & {
+    _createdAt: string;
+    rating: number | null;
+    wouldRecommend: boolean | null;
+    review: string | null;
+    reviewTitle: string | null;
+    sizeRating: number | null;
+    widthRating: number | null;
+    comfortRating: number | null;
+    qualityRating: number | null;
+    valueRating: number | null;
+    photo: string | null;
+    nickname: string | null;
+    slug: string | null;
+    email: string | null;
+  };

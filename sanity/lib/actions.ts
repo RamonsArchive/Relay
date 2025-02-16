@@ -2,16 +2,13 @@
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import {HeartCollectionType } from "@/globalTypes";
-import { get } from "http";
-import { revalidatePath } from "next/cache";
-//import { after } from "next/server";
 
 const getHeartedCollectionId = async () => {
     const heartedCollectionId = await writeClient.fetch(`*[_type == "collections" && title == "hearted"][0]._id`);
     return heartedCollectionId;
 }
 
-const handleHeartWrite = async (productId: string, collections: Array<{_id: string, _key: string, title: string}>, hearted: boolean) => {   
+export const handleHeartWrite = async (productId: string, collections: Array<{_id: string, _key: string, title: string}>, hearted: boolean) => {   
     console.log("Should hearted", hearted);
     console.log("Product ID", productId);
     console.log("Collections", collections);
@@ -51,4 +48,3 @@ const handleHeartWrite = async (productId: string, collections: Array<{_id: stri
     }
   };
 
-export default handleHeartWrite;
