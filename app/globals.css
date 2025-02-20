@@ -178,6 +178,18 @@ html, body {
   .product-drop-block {
     @apply flex flex-row justify-between items-center cursor-pointer;
   }
+
+  .product-write-section {
+    @apply flex flex-col w-full gap-3
+  }
+  .product-write-label {
+    @apply font-plex-sans font-regular text-[20px] 
+  }
+
+  .product-write-error {
+    @apply text-red-500 text-[14px] ;
+  }
+
   
 }
 

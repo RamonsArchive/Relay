@@ -26,12 +26,34 @@ export const user = defineType({
             type: 'string',
         }),
         defineField({
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+        }),
+        defineField({
+            name: "provider",
+            title: "Provider",
+            type: "string",
+            options: {list: ["google", "github", "email", "credentials", "undefined", "null"]}
+        }),
+        defineField({
             name: "heartedProducts",
             title: "Hearted Products",
             type: "array",
             of: [{type: 'reference', to: [{type: 'product'}]}]
+        }),
+        defineField({
+            name: "userReviews",
+            title: "User Reviews",
+            type: "array",
+            of: [{type: 'reference', to: [{type: 'reviews'}]}]
+        }),
+        defineField({
+            name: "recentlyViewedProducts",
+            title : "Recently Viewed Products",
+            type: "array",
+            of: [{type: 'reference', to: [{type: 'product'}]}]
         })
-        
     ],
 
     preview: {

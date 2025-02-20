@@ -2,17 +2,16 @@
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import {HeartCollectionType } from "@/globalTypes";
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect }  from "next/navigation";
 
-
 export const handleHeartWrite = async (productId: string, hearted: boolean) => {   
-   const user = await currentUser();
+   //const user = await currentUser();
+   const user = "";
    if (!user) {
     console.error("User not authenticated");
     redirect("/sign-in");
    }
-   const userId = user.id;
+   const userId = ""
 
     if (!hearted) {
       try {

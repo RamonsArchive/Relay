@@ -5,7 +5,6 @@ import { ProductType } from "@/globalTypes";
 import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
-import { currentUser } from "@clerk/nextjs/server";
 
 const experimental_ppr = true;
 
@@ -16,8 +15,9 @@ const page = async ({
   params: { gender?: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const user = await currentUser();
-  const userId = user ? user.id : "";
+  //const user = await currentUser();
+  //const userId = user ? user.id : "";
+  const userId = "";
   const heartedProductsIds = await fetchHeartedProducts(userId);
   const path = (await params).gender || "/"; // ✅ Default to `/` if undefined
   console.log(`Path: ${path}`);

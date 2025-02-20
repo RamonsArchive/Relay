@@ -24,3 +24,7 @@ export function getReviewRating (reviews: any) {
   return (total / reviews.length);
 }
 
+export function parseServerActionResponse<T>(response: T) {
+  return JSON.parse(JSON.stringify(response));
+}
+

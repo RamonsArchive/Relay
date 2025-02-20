@@ -2,9 +2,12 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
-import { UserButton } from "@clerk/nextjs";
+import SignIn from "./Sign-In";
+import { auth } from "@/auth";
+import ManageSession  from "./ManageSession";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await auth();
   return (
     <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
@@ -64,10 +67,8 @@ const Navbar = () => {
           </div>
         </div>
         <div className="flex flex-1 flex-col gap-y-10">
-          <div className="flex justify-self-end self-end">
-            <UserButton
-              appearance={{ elements: { userButtonAvatarBox: "w-10 h-10" } }}
-            />
+          <div className="flex justify-self-end self-end pr-1">
+            <ManageSession session={session} />
           </div>
           <div className="flex justify-self-end self-end">
             <Searchbar />

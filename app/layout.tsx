@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import "easymde/dist/easymde.min.css";
 
 const plexSans = localFont({
@@ -52,9 +51,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ClerkProvider appearance={{ variables: { colorPrimary: "#004BFE" } }}>
         <body className={`${plexSans.variable} antialiased`}>{children}</body>
-      </ClerkProvider>
+     
     </html>
   );
 }

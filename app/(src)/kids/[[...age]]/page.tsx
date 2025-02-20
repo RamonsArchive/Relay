@@ -5,7 +5,6 @@ import { ProductType } from "@/globalTypes";
 import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
-import { currentUser } from "@clerk/nextjs/server";
 
 const page = async ({
   params,
@@ -14,8 +13,9 @@ const page = async ({
   params: { age?: string[] };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const user = await currentUser();
-  const userId = user ? user.id : "";
+ // const user = await currentUser();
+ // const userId = user ? user.id : "";
+ const userId = "";
   const pathArray = (await params).age || [];
   console.log(`Path Array: ${pathArray}`);
   const path = ["kids", ...pathArray].join("/");

@@ -36,6 +36,7 @@ export const reviews = defineType({
             name: "widthRating",
             title: "Width Rating",
             type: "number",
+            validation: (Rule) => Rule.min(0).max(5),
         }),
         defineField({
             name: "comfortRating",

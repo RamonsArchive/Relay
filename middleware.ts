@@ -1,16 +1,18 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+export { auth as middleware } from "@/auth"
+import { auth } from "@/auth"
+import { NextResponse } from "next/server"
 
-const isProtectedRoute = createRouteMatcher('/writeReview(.*)');
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) await auth.protect()
-})
+export default auth((req) => {
+    if (!req.auth) {
+      const newUrl = new URL("/api/auth/signin", req.nextUrl.origin);
+      newUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
+      return Response.redirect(newUrl)
+    }
+    return NextResponse.next();
+  }) 
 
-export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-};
+
+  export const config = {
+    matcher: ["/writeReview/:path*"],
+  };

@@ -8,7 +8,6 @@ import { ProductType } from "@/globalTypes";
 import { useState, useEffect } from "react";
 import { handleHeartWrite } from "@/sanity/lib/actions";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
 
 const ProductCard = ({
   product,

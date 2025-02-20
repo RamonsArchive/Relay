@@ -5,7 +5,6 @@ import { ShoppingCart } from "lucide-react";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
-import { currentUser } from "@clerk/nextjs/server";
 import { fetchHeartedProducts } from "@/sanity/lib/client";
 
 export const experimental_ppr = true;
@@ -17,18 +16,19 @@ const Home = async ({
   params: { slug: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  const user = await currentUser();
-  const userId = user ? user.id : "";
-  const path = params.slug || "/";
+  //const user = await currentUser();
+  //const userId = user ? user.id : "";
+ const path = params.slug || "/";
 
+ const userId = "";
   console.log(`Path: ${path}`);
 
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 
-  const heartedProducts = await fetchHeartedProducts(userId);
+  const heartedProductsIds = await fetchHeartedProducts(userId);
   const products = await client.fetch(
-    PAGE_QUERY(path, query, filters, heartedProducts)
+    PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
   console.log(products, null, 2);
 
@@ -46,7 +46,7 @@ const Home = async ({
             <ul className="product-grid">
               {products.length > 0 ? (
                 products.map((product: ProductType) => (
-                  <ProductCard key={product?._id} product={product} />
+                  <ProductCard key={product?._id} product={product} isHearted={heartedProductsIds.includes(product)} isAuth={userId} />
                 ))
               ) : (
                 <div>No product available</div>
