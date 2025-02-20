@@ -4,10 +4,12 @@ import Link from "next/link";
 import Searchbar from "./Searchbar";
 import SignIn from "./Sign-In";
 import { auth } from "@/auth";
-import ManageSession  from "./ManageSession";
+import ManageSession from "./ManageSession";
 
 const Navbar = async () => {
   const session = await auth();
+  console.log(session);
+  console.log(session?.user);
   return (
     <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">

@@ -6,6 +6,7 @@ import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
 import { fetchHeartedProducts } from "@/sanity/lib/client";
+import { auth } from "@/auth";
 
 export const experimental_ppr = true;
 
@@ -16,11 +17,11 @@ const Home = async ({
   params: { slug: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  //const user = await currentUser();
-  //const userId = user ? user.id : "";
- const path = params.slug || "/";
+  const session = await auth();
+  const user = session?.user;
+  const userId = user?.id || null;
 
- const userId = "";
+  const path = params.slug || "";
   console.log(`Path: ${path}`);
 
   const query = (await searchParams).query || "";
@@ -46,7 +47,12 @@ const Home = async ({
             <ul className="product-grid">
               {products.length > 0 ? (
                 products.map((product: ProductType) => (
-                  <ProductCard key={product?._id} product={product} isHearted={heartedProductsIds.includes(product)} isAuth={userId} />
+                  <ProductCard
+                    key={product?._id}
+                    product={product}
+                    isHearted={heartedProductsIds.includes(product)}
+                    user={user}
+                  />
                 ))
               ) : (
                 <div>No product available</div>

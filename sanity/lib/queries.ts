@@ -64,9 +64,6 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
       paramConditions = heartedConditions;
     }
     
-
-   console.log(`paramConditions: ${paramConditions}`);
-   console.log(`optimizedHeartedProductsIds: ${optimizedHeartedProductsIds}`);
    if (!searchTerm) {
     return constructNonHomePage(paramConditions, optimizedHeartedProductsIds);
    }

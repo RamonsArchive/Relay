@@ -5,6 +5,7 @@ import { ProductType } from "@/globalTypes";
 import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
+import { auth } from "@/auth";
 
 const page = async ({
   params,
@@ -13,9 +14,10 @@ const page = async ({
   params: { age?: string[] };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
- // const user = await currentUser();
- // const userId = user ? user.id : "";
- const userId = "";
+  const sesson = await auth();
+  const user = sesson?.user;
+  const userId = user?.id || null;
+
   const pathArray = (await params).age || [];
   console.log(`Path Array: ${pathArray}`);
   const path = ["kids", ...pathArray].join("/");
@@ -43,7 +45,7 @@ const page = async ({
                   key={product?._id}
                   product={product}
                   isHearted={heartedProductsIds.includes(product)}
-                  isAuth={userId}
+                  user={userId}
                 />
               ))
             ) : (

@@ -1,23 +1,47 @@
 "use server";
+import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
-import {HeartCollectionType } from "@/globalTypes";
 import { redirect }  from "next/navigation";
+import { auth } from "@/auth";
+
+
+export const uploadImageToSanity = async (imageUrl: string) => {
+  try {
+    const response = await axios.get(imageUrl, {responseType: "arraybuffer"}) as any;
+    const imageBuffer = Buffer.from(response.data);
+
+    const uploadImage = await writeClient.assets.upload("image", imageBuffer, {
+      filename: `${nanoid()}.jpg`,
+    })
+
+    console.log(uploadImage._id);
+    return uploadImage._id;
+    
+  } catch (error) {
+    console.error("Error uploading image to Sanity:", error);
+    return null;
+  } 
+}
 
 export const handleHeartWrite = async (productId: string, hearted: boolean) => {   
    //const user = await currentUser();
-   const user = "";
-   if (!user) {
+   const session = await auth();
+   console.log("Session", session);
+   const user = session?.user;
+   console.log("User", user);
+   if (!session) {
     console.error("User not authenticated");
     redirect("/sign-in");
    }
-   const userId = ""
+   const userId = user?.id;
+   const userDoc = `user-${userId}`
 
     if (!hearted) {
       try {
       console.log("Unsetting the heart");
       await writeClient.withConfig({useCdn: false})
-      .patch(`user-${userId}`)
+      .patch(userDoc)
       .unset([`heartedProducts[_ref=="${productId}"]`])
       .commit();
     } catch (error) {
@@ -26,7 +50,6 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
     } else {
         try {
             const mykey = nanoid();
-            console.log("My key", mykey);
             const newProductReference = {
                 _type: "reference",
                 _ref: productId,
@@ -34,7 +57,7 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
             }
             await writeClient
                 .withConfig({useCdn: false})
-                .patch(`user-${userId}`)
+                .patch(userDoc)
                 .setIfMissing({heartedProducts: []})
                 .append("heartedProducts", [newProductReference])
                 .commit();

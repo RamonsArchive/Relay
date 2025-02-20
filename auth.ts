@@ -1,24 +1,42 @@
-import NextAuth from "next-auth"
+import NextAuth, { User } from "next-auth"
 import Google from "next-auth/providers/google"
 import {writeClient} from "@/sanity/lib/write-client"
 import { parseServerActionResponse } from "@/lib/utils";
- 
+import { AdapterUser } from "next-auth/adapters";
+import { uploadImageToSanity } from "./sanity/lib/actions";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
   callbacks: {
     async signIn({user, account}) {
       try {
-        const userExists = await fetch(`*[_type == "user" && email == "${user.email}"][0] {
-            email: email,
-          }`);
+        const userExists = await writeClient.fetch(
+          `*[_type == "user" && email == $email][0]`,
+          { email: user.email }
+        );
+
+        //console.log("User exists", userExists.email);
           
+        console.log("User exists", userExists);
          if (!userExists) {
+          let sanityImageRef = null;
+          if (user.image) {
+            const sanityImageId = await uploadImageToSanity(user.image as string);
+            if (sanityImageId) {
+              sanityImageRef = {
+                _type: 'image',
+                asset: {
+                  _ref: sanityImageId,
+                }
+              }
+            }
+          }
           await writeClient.create({
             _type: "user",
             userId: user.id,
             email: user.email,
             firstName: user.name,
-            image: user.image,
+            image: sanityImageRef,
             provider: account?.provider,
           });
          }
@@ -38,7 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   
     async session({ session, token }) {
-      session.user = token.user;
+      session.user = token.user as AdapterUser & User;
       return session;
     },
 

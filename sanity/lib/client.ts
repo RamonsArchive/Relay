@@ -10,11 +10,10 @@ export const client = createClient({
   useCdn: false, // Set to false if statically generating pages, using ISR or tag-based revalidation
 })
 
-export const fetchHeartedProducts = async (userId: string) => {
+export const fetchHeartedProducts = async (userId: string | null) => {
   if (!userId) {
     return [];
   }
-
   try {
     const query = `*[_type == "user" && userId == "${userId}"][0].heartedProducts[]._ref`;
     const heartedProducts = await client.fetch(query);

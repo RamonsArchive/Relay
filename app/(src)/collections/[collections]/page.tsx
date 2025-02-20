@@ -5,6 +5,7 @@ import { ProductType } from "@/globalTypes";
 import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
+import { auth } from "@/auth";
 
 const page = async ({
   params,
@@ -13,9 +14,14 @@ const page = async ({
   params: { collections?: string };
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
-  //const user = await currentUser();
-  //const userId = user ? user.id : "";
-  const userId = "";
+  const sesson = await auth();
+  let user = null;
+  let userId = null;
+  if (sesson) {
+    user = sesson?.user;
+    userId = user?.id || null;
+  }
+
   const heartedProductsIds = await fetchHeartedProducts(userId);
   console.log(`Hearted Products: ${heartedProductsIds}`);
   const path = (await params).collections || "/";
@@ -23,7 +29,6 @@ const page = async ({
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 
-  //const finalQuery = parseSearchParams(query, filters);
   const collectionProducts = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
@@ -41,7 +46,7 @@ const page = async ({
                   key={product?._id}
                   product={product}
                   isHearted={heartedProductsIds.includes(product)}
-                  isAuth={userId}
+                  user={userId}
                 />
               ))
             ) : (
