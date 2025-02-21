@@ -13,8 +13,8 @@ const Sidebar = () => {
   const router = useRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
-  const query = searchParams.get("query");
-  const filtersParams = searchParams.get("f");
+  const query = searchParams.get("query") || "";
+  const filtersParams = searchParams.get("f") || "";
 
   const [optimizedFilters, setOptimizedFilters] = useState<
     Record<string, string[]>
@@ -36,17 +36,31 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
+    console.log(`Path in sidebar: ${path}`);
+    console.log(`Query in sidebar: ${query}`);
+    console.log(`Filters in sidebar: ${filtersParams}`);
+    console.log(`Selected filters in sidebar: ${selectedFilters}`);
     let combinedRoute = "";
+
+    if (selectedFilters.length === 0 && filtersParams.length > 0) {
+      console.log("Filters exist in params but not in state. Waiting...");
+      return;
+    }
+
     if (selectedFilters.length === 0) {
       combinedRoute = query
-        ? `${path}/?query=${encodeURIComponent(query).toLowerCase()}`
+        ? path == "/"
+          ? `${path}?query=${encodeURIComponent(query).toLowerCase()}`
+          : path
         : path;
+      console.log(`No filters selected BEING REDIRECTED TO ${path}`);
       router.push(combinedRoute);
       return;
     } else {
       const paramsFilters = selectedFilters.join(",");
+      console.log("Selected filters exist going to change url ", path);
 
-      combinedRoute = `${path}/?f=${encodeURIComponent(paramsFilters).toLowerCase()}`;
+      combinedRoute = `${path}?f=${encodeURIComponent(paramsFilters).toLowerCase()}`;
 
       if (query) {
         combinedRoute += `&query=${encodeURIComponent(query).toLowerCase()}`;

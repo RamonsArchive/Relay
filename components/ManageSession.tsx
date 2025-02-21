@@ -1,14 +1,34 @@
 "use client";
-import { auth, signIn, signOut } from "@/auth";
 import { handleSignIn, handleSignOut } from "@/lib/serverActions";
 import React, { useActionState } from "react";
 import { useState } from "react";
 import Image from "next/image";
+import { useSearchParams, usePathname } from "next/navigation";
 
 const ManageSession = ({ session }: { session: any }) => {
   const user = session?.user;
   const isSession = user != null;
-  console.log(user);
+  //console.log(user);
+
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+  //console.log(`pathName: ${pathName}`);
+
+  const query = searchParams.get("query") || "";
+  const filters = searchParams.get("f") || "";
+
+  const fullPath = pathName;
+  // Construct the base URL
+  let callbackUrl = fullPath;
+  // Add query parameters if they exist
+  const queryParams = new URLSearchParams();
+  if (filters) queryParams.set("f", filters);
+  if (query) queryParams.set("query", query);
+
+  if (queryParams.toString()) {
+    callbackUrl += `?${queryParams.toString()}`;
+  }
+  //console.log(`Callback URL: ${callbackUrl}`);
 
   let userInfo = {};
   const [isLoggedIn, setIsLoggedIn] = useState(isSession);
@@ -18,7 +38,7 @@ const ManageSession = ({ session }: { session: any }) => {
       email: user.email,
       image: user.image,
     };
-    console.log(userInfo);
+    //console.log(userInfo);
   }
 
   const handleFormSubmit = async () => {
@@ -28,7 +48,7 @@ const ManageSession = ({ session }: { session: any }) => {
         handleSignOut();
       } else {
         setIsLoggedIn(true);
-        handleSignIn();
+        handleSignIn(callbackUrl);
       }
       console.log(`Is still logged in ${user}`);
     } catch (error) {

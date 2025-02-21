@@ -17,6 +17,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
   
   if (path === "/") {
     if (searchTerm == "") {
+      console.log("NO SEARCH TERM and home page");
       return `*[_type == "product"] {
         _id,
         title,

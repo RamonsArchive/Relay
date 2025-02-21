@@ -190,6 +190,10 @@ html, body {
     @apply text-red-500 text-[14px] ;
   }
 
+  .sign-in-button {
+    @apply font-plex-sans font-bold md:text-[20px] sm:text-[16] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-110 hover:scale-125;
+  }
+
   
 }
 

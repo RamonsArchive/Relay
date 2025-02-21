@@ -5,10 +5,11 @@ import { NextResponse } from "next/server"
 
 export default auth((req) => {
     if (!req.auth) {
-      const newUrl = new URL("/api/auth/signin", req.nextUrl.origin);
+      const newUrl = new URL("/sign-in", req.nextUrl.origin);
       newUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
-      return Response.redirect(newUrl)
+      return NextResponse.redirect(newUrl)
     }
+    console.log(`New URL: ${req.nextUrl.pathname}`);
     return NextResponse.next();
   }) 
 

@@ -21,17 +21,30 @@ const Home = async ({
   const user = session?.user;
   const userId = user?.id || null;
 
-  const path = params.slug || "";
+  const path = params.slug || "/";
   console.log(`Path: ${path}`);
 
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
+  console.log(`Query: ${query}`);
+  console.log(`Filters: ${filters}`);
+
+  let callbackUrl = path;
+
+  // Add query parameters if they exist
+  const queryParams = new URLSearchParams();
+  if (filters) queryParams.set("f", filters);
+  if (query) queryParams.set("query", query);
+
+  if (queryParams.toString()) {
+    callbackUrl += `?${queryParams.toString()}`;
+  }
+  console.log(`Callback URL: ${callbackUrl}`);
 
   const heartedProductsIds = await fetchHeartedProducts(userId);
   const products = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
-  console.log(products, null, 2);
 
   return (
     <>
@@ -51,6 +64,7 @@ const Home = async ({
                     key={product?._id}
                     product={product}
                     isHearted={heartedProductsIds.includes(product)}
+                    currentUrl={callbackUrl}
                     user={user}
                   />
                 ))

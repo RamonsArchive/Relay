@@ -57,10 +57,6 @@ const page = async ({ params }: { params: { id: string } }) => {
     reviews,
   };
 
-  console.log(`Main details: ${typeof mainDetails}`);
-  console.log(`Detail bullets: ${typeof detailBullets}`);
-  console.log(`Reviews: ${reviews[0].sizeRating}`);
-
   const parsedDescription = md.render(description);
 
   const capitalizeBrand = (brand: string) => {

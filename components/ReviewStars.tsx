@@ -10,10 +10,6 @@ const ReviewStars = ({ reviews }: { reviews: ReviewType[] | ReviewType }) => {
   const partialStar = averageRating % 1;
   const emptyStars = Math.floor(5 - fullStars - partialStar);
 
-  console.log(`Full stars: ${fullStars}`);
-  console.log(`Partial star: ${partialStar}`);
-  console.log(`Empty stars: ${emptyStars}`);
-
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-row gap-3 items-center">
@@ -41,7 +37,10 @@ const ReviewStars = ({ reviews }: { reviews: ReviewType[] | ReviewType }) => {
                 className="absolute top-0 left-0 overflow-hidden"
                 style={{ width: `${partialStar * 100}%` }}
               >
-                <Star size={24} className="fill-yellow-400 text-yellow-400" />{" "}
+                <Star
+                  size={24}
+                  className="fill-yellow-400 text-yellow-400"
+                />{" "}
               </div>
             </div>
           )}

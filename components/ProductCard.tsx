@@ -12,11 +12,13 @@ import { useRouter } from "next/navigation";
 const ProductCard = ({
   product,
   isHearted,
-  isAuth,
+  currentUrl,
+  user,
 }: {
   product: ProductType;
   isHearted: boolean;
-  isAuth: string;
+  currentUrl: string;
+  user: any;
 }) => {
   const router = useRouter();
   const { _id, title, mainImage, materials, categories } = product;
@@ -26,13 +28,15 @@ const ProductCard = ({
     setHearted(isHearted);
   }, [isHearted]);
 
+  console.log(`Current URL: ${currentUrl}`);
   const toggleHeart = async () => {
     console.log("not yet passed auth check");
-    if (!isAuth) {
-      router.push("/sign-in");
+    if (!user) {
+      router.push(`/sign-in?callbackUrl=${encodeURIComponent(currentUrl)}`);
       return;
     }
     console.log("passed auth check");
+    return;
     try {
       const newHearted = !hearted;
       setHearted(newHearted);

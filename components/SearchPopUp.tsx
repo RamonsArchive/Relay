@@ -26,7 +26,6 @@ const SearchPopUp = ({ setClicked }: Props) => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
-
   const [inputValue, setInputValue] = useState("");
 
   const { setCheckedFilters, setSelectedFilters, setDroppedFilters } =
@@ -34,6 +33,8 @@ const SearchPopUp = ({ setClicked }: Props) => {
   const oldQuery = useRef<string | undefined>(query);
 
   useEffect(() => {
+    console.log("SearchPopUp", searchParams);
+    console.log("SearchPopUp", searchParams);
     if (query && query !== oldQuery.current) {
       setClicked(false);
       setInputValue("");

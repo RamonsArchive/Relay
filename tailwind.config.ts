@@ -36,7 +36,8 @@ export default {
   			white: {
   				'100': '#e3e5fc',
   				'200': '#f6f6fe',
-  				'300': '#f0f0f0'
+  				'300': '#f0f0f0',
+				"400": "#E0E0E0",
   			},
 			borderColor: {
 				'100': '#dbdbdb',

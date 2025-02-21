@@ -33,8 +33,6 @@ const ProductDetailsDrop = ({
     }));
   };
 
-  console.log(`Top Reviews: ${topReviews[0]}`);
-
   return (
     <div className="product-drop">
       <div className="product-drop-section">

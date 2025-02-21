@@ -15,7 +15,6 @@ export const uploadImageToSanity = async (imageUrl: string) => {
       filename: `${nanoid()}.jpg`,
     })
 
-    console.log(uploadImage._id);
     return uploadImage._id;
     
   } catch (error) {
@@ -30,10 +29,10 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
    console.log("Session", session);
    const user = session?.user;
    console.log("User", user);
-   if (!session) {
+   /*if (!session) {
     console.error("User not authenticated");
     redirect("/sign-in");
-   }
+   }*/
    const userId = user?.id;
    const userDoc = `user-${userId}`
 
