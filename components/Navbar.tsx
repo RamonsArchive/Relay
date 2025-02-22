@@ -8,9 +8,9 @@ import ManageSession from "./ManageSession";
 const Navbar = async () => {
   const session = await auth();
   return (
-    <header className="px-3 py-3 bg-white-300 shadow-sm text-color-primary-200">
+    <header className="px-3 py-3 bg-white-300  max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-row items-center gap-8">
           <Link href="/" className="">
             <Image
               src="/assets/logo/logo-png.png"
@@ -20,7 +20,7 @@ const Navbar = async () => {
             />
           </Link>
 
-          <div className="mt-2 ml-2 font-plex-sans font-light text-[10px]">
+          <div className="font-plex-sans font-light text-[10px] pt-10">
             <Image
               src={"/assets/icons/palestine.svg"}
               alt="Free Palestine"
@@ -32,7 +32,7 @@ const Navbar = async () => {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 mt-5 flex-nowrap font-semibold text-xl">
+        <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 flex-nowrap font-semibold text-xl">
           <div className="flex gap-x-10 whitespace-nowrap">
             <Link href="/gender/men" className="hover-grow-color">
               <span>Men</span>
@@ -65,7 +65,7 @@ const Navbar = async () => {
             </Link>
           </div>
         </div>
-        <div className="flex flex-1 flex-col gap-y-10">
+        <div className="flex flex-1 flex-col gap-y-5">
           <div className="flex justify-self-end self-end pr-1">
             <ManageSession session={session} />
           </div>

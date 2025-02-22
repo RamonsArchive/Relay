@@ -7,19 +7,23 @@ import React from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  /*<SignedOut>
-        <SignIn />
-      </SignedOut> */
   return (
     <main className="root">
       <ContextProvider>
         <Navbar />
         <div className="root-container">
-          <SidebarWrapper />
-          <div className="root-container">{children}</div>
+          <div className="side-bar">
+            <SidebarWrapper />
+          </div>
+
+          <div className="content-wrapper">
+            <div className="content-container">{children}</div>
+          </div>
+        </div>
+        <div className="footer-wrapper">
+          <Footer />
         </div>
       </ContextProvider>
-      <Footer />
     </main>
   );
 };

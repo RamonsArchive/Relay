@@ -47,35 +47,35 @@ const Home = async ({
   );
 
   return (
-    <>
-      <main className="home">
-        <div className="absolute top-5 right-5 ">
+    <main className="content-page">
+      <div className="flex flex-1 p-5">
+        <div className="absolute top-5 right-5">
           <div className="cart-background">
             <ShoppingCart size={36} className="text-white" />
           </div>
         </div>
-        <div className="product-container">
-          <ContentTitle />
-          <Suspense fallback={<div>Loading...</div>}>
-            <ul className="product-grid">
-              {products.length > 0 ? (
-                products.map((product: ProductType) => (
-                  <ProductCard
-                    key={product?._id}
-                    product={product}
-                    isHearted={heartedProductsIds.includes(product)}
-                    currentUrl={callbackUrl}
-                    user={user}
-                  />
-                ))
-              ) : (
-                <div>No product available</div>
-              )}
-            </ul>
-          </Suspense>
-        </div>
-      </main>
-    </>
+        <ContentTitle />
+      </div>
+      <div className="product-container overflow-y-auto">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ul className="product-grid">
+            {products.length > 0 ? (
+              products.map((product: ProductType) => (
+                <ProductCard
+                  key={product?._id}
+                  product={product}
+                  isHearted={heartedProductsIds.includes(product)}
+                  currentUrl={callbackUrl}
+                  user={user}
+                />
+              ))
+            ) : (
+              <div>No product available</div>
+            )}
+          </ul>
+        </Suspense>
+      </div>
+    </main>
   );
 };
 

@@ -60,7 +60,7 @@ const SearchPopUp = ({ setClicked }: Props) => {
       }
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       setCheckedFilters({});
-      setSelectedFilters([]);
+      setSelectedFilters({});
       setInputValue("");
       return query;
     } catch (error) {

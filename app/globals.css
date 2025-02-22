@@ -7,11 +7,23 @@
 }
 
 .root {
-  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300;
+  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300 overflow-hidden;
 }
 
 .root-container {
-  @apply flex flex-1 flex-row lg:mt-0 lg:max-h-screen;
+  @apply flex flex-1 flex-row lg:mt-0 h-[calc(100vh-5rem)];
+}
+
+.content-wrapper {
+  @apply flex-1 flex flex-col h-screen;
+}
+
+.content-container {
+  @apply flex-1 h-screen
+}
+
+.footer-wrapper {
+  @apply flex flex-row w-full
 }
 
 html, body {
@@ -94,20 +106,21 @@ html, body {
   @apply flex-1 font-plex-sans font-regular placeholder:opacity-50 placeholder:font-extralight placeholder:text-third-400 w-[90%] h-auto outline-none bg-white-200;
   }
 
-.side-bar {
-  @apply flex flex-col w-[150px] h-full h-screen shadow-md shadow-third-300 font-plex-sans font-medium overflow-y-auto;
+  .side-bar {
+    @apply min-w-[165px] max-w-[200px] w-[100%] h-screen overflow-y-auto sticky top-0;
+   
   }
 
-.side-bar-container {
-  @apply flex flex-col flex-1 items-center gap-5 w-full;
+  .side-bar-container {
+    @apply flex flex-col w-full h-full pb-5 gap-5 items-center;
   }
 
-.side-bar-option-container {
-  @apply flex flex-col w-full gap-2 px-4;
+  .side-bar-option-container {
+    @apply flex flex-col w-full gap-2 px-4;
   }
 
   .side-bar-options {
-  @apply flex flex-row items-center gap-x-2;
+  @apply flex flex-row items-center w-full justify-between font-plex-sans text-[18px] font-semibold gap-x-2;
   }
 
   .mobilebar-root {
@@ -115,15 +128,15 @@ html, body {
   }
 
   .home {
-  @apply relative flex-1 w-full gap-4;
+  @apply relative flex-1 w-full h-screen gap-4;
   }
 
   .product-container {
-  @apply flex flex-col p-5;
+  @apply flex flex-col p-5 h-[calc(100vh-5rem)] overflow-y-auto;
   }
 
   .product-grid {
-  @apply grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 mt-10;
+  @apply grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 ;
   }
 
   .product-group {
@@ -147,7 +160,7 @@ html, body {
   }
 
   .content-page {
-    @apply relative flex-1 w-full gap-4;
+    @apply relative flex-1 w-full h-screen gap-4;
   }
 
   .product-page {

@@ -6,6 +6,7 @@ import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
 import { auth } from "@/auth";
+import { ShoppingCart } from "lucide-react";
 
 const experimental_ppr = true;
 
@@ -29,7 +30,6 @@ const page = async ({
   const filters = (await searchParams).f || "";
 
   const fullPath = `/collections/${path}`;
-
   // Construct the base URL
   let callbackUrl = fullPath;
 
@@ -41,7 +41,6 @@ const page = async ({
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-
   console.log(`Callback URL: ${callbackUrl}`);
 
   const collectionProducts = await client.fetch(
@@ -50,9 +49,16 @@ const page = async ({
   console.log(collectionProducts, null, 2);
 
   return (
-    <div className="content-page">
-      <div className="product-container">
+    <main className="content-page">
+      <div className="flex flex-1 p-5">
+        <div className="absolute top-5 right-5">
+          <div className="cart-background">
+            <ShoppingCart size={36} className="text-white" />
+          </div>
+        </div>
         <ContentTitle />
+      </div>
+      <div className="product-container">
         <Suspense fallback={<div>Loading...</div>}>
           <ul className="product-grid">
             {collectionProducts.length > 0 ? (
@@ -71,7 +77,7 @@ const page = async ({
           </ul>
         </Suspense>
       </div>
-    </div>
+    </main>
   );
 };
 

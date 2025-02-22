@@ -1,28 +1,29 @@
 "use client";
 import Footer from "@/components/Footer";
+import { getDynamicFilters } from "@/lib/filters";
 import { useSearchParams, usePathname } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 import React from "react";
 
 /* Context for checkboxes in my filters closes filters after search and on homepage*/
-export const Context = createContext<{
-  checkedFilters: Record<string, boolean>;
-  setCheckedFilters: React.Dispatch<
-    React.SetStateAction<Record<string, boolean>>
+
+type FilterContextType = {
+  filters: Record<string, { expanded: boolean; options: string[] }>;
+  selectedFilters: Record<string, string[]>;
+  setSelectedFilters: React.Dispatch<
+    React.SetStateAction<Record<string, string[]>>
   >;
-  selectedFilters: string[];
-  setSelectedFilters: React.Dispatch<React.SetStateAction<string[]>>;
-  droppedFilters: Record<string, boolean>;
-  setDroppedFilters: React.Dispatch<
-    React.SetStateAction<Record<string, boolean>>
-  >;
-}>({
-  checkedFilters: {},
-  setCheckedFilters: () => {},
-  selectedFilters: [],
-  setSelectedFilters: () => [],
-  droppedFilters: {},
-  setDroppedFilters: () => {},
+  toggleFilter: (category: string, filter: string) => void;
+  toggleCategory: (category: string) => void;
+  resetFilters: () => void;
+};
+export const Context = createContext<FilterContextType>({
+  filters: {},
+  selectedFilters: {},
+  setSelectedFilters: () => {},
+  toggleFilter: () => {},
+  toggleCategory: () => {},
+  resetFilters: () => {},
 });
 
 export const ContextProvider = ({
@@ -33,26 +34,27 @@ export const ContextProvider = ({
   const searchParams = useSearchParams();
   const path = usePathname();
   const query: string | undefined = searchParams.get("query") || "";
-  const filters = searchParams.get("f") || "";
+  const filterParams = searchParams.get("f") || "";
 
-  const [checkedFilters, setCheckedFilters] = useState<Record<string, boolean>>(
-    {}
-  );
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  const [droppedFilters, setDroppedFilters] = useState<Record<string, boolean>>(
-    {
-      gender: false,
-      kids: false,
-      size: false,
-      cost: false,
-      sale: false,
-      collections: false,
-      colors: false,
-      brands: false,
-      category: false,
-      materials: false,
-    }
-  );
+  const [filters, setFilters] = useState<
+    Record<string, { expanded: boolean; options: string[] }>
+  >({});
+  const [selectedFilters, setSelectedFilters] = useState<
+    Record<string, string[]>
+  >({});
+
+  useEffect(() => {
+    getDynamicFilters().then((data) => {
+      const formattedFilters = Object.entries(data).reduce(
+        (acc, [key, values]) => {
+          acc[key] = { expanded: false, options: values };
+          return acc;
+        },
+        {} as Record<string, { expanded: boolean; options: string[] }>
+      );
+      setFilters(formattedFilters);
+    });
+  }, []);
 
   /*useEffect(() => {
     if (selectedFilters.length === 0 && filters?.length > 0) {
@@ -61,6 +63,7 @@ export const ContextProvider = ({
     }
   }, [filters]);*/
 
+  /* Sync with url */
   useEffect(() => {
     console.log("Three below are in context");
     console.log(`Path: ${path}`);
@@ -72,46 +75,71 @@ export const ContextProvider = ({
     const currentSignIn =
       path.includes("/sign-in") || path.includes("callbackUrl");
 
-    if (currentSignIn) {
-      console.log("Path includes /sign-in correcltly passed resetting filters");
-      return;
-    }
-    if (isReturingFromSignIn) {
-      console.log("Returning from sign-in correcltly passed resetting filters");
+    if (currentSignIn || isReturingFromSignIn) {
+      console.log(
+        "Path includes /sign-in or is returning from sing-in - correcltly passed resetting filters"
+      );
       return;
     }
 
     if (filters) {
       console.log("Syncing selectedFilters with filtersParams");
-      setSelectedFilters(filters.split(",").map((f) => f.trim().toLowerCase()));
-      console.log(`Selected filters in contex: ${selectedFilters}`);
+      const parsedFilters = filterParams.split(",").reduce(
+        (acc: Record<string, string[]>, item) => {
+          const [category, value] = item.split(":");
+          if (category && value) {
+            acc[category] = acc[category] ? [...acc[category], value] : [value];
+          }
+          return acc;
+        },
+        {} as Record<string, string[]>
+      );
+
+      console.log("Syncing selectedFilters from URL:", parsedFilters);
+      setSelectedFilters(parsedFilters);
     } else if (!query && !filters) {
       console.log("Resetting filters in context might be ERROR");
-      setCheckedFilters({});
-      setSelectedFilters([]);
-      setDroppedFilters((prev) => {
-        const resetFilters = Object.keys(prev).reduce(
-          (acc, key) => {
-            acc[key] = false;
-            return acc;
-          },
-          {} as Record<string, boolean>
-        );
-        return resetFilters;
-      });
+      resetFilters();
     }
     console.log("Correclty passed resetting filters in context");
-  }, [query, filters]);
+  }, [query, filterParams]);
+
+  const resetFilters = () => {
+    setSelectedFilters({});
+  };
+
+  const toggleFilter = (category: string, filter: string) => {
+    setSelectedFilters((prev) => {
+      const newFilters = { ...prev };
+      if (newFilters[category]?.includes(filter)) {
+        newFilters[category] = newFilters[category].filter((f) => f !== filter);
+        if (newFilters[category].length === 0) delete newFilters[category];
+      } else {
+        newFilters[category] = [...(newFilters[category] || []), filter];
+      }
+      return newFilters;
+    });
+  };
+
+  const toggleCategory = (category: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        expanded: !prev[category].expanded,
+      },
+    }));
+  };
 
   return (
     <Context.Provider
       value={{
-        checkedFilters,
-        setCheckedFilters,
+        filters,
         selectedFilters,
         setSelectedFilters,
-        droppedFilters,
-        setDroppedFilters,
+        toggleFilter,
+        toggleCategory,
+        resetFilters,
       }}
     >
       {children}

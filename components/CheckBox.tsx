@@ -1,20 +1,37 @@
 "use client";
-import { useContext } from "react";
 import { Square, Check } from "lucide-react";
-import { Context } from "@/app/context/context";
 
-const CheckBox = ({ options }: { options: string }) => {
-  const { checkedFilters, setCheckedFilters } = useContext(Context);
-  const handleClick = () => {
+interface Props {
+  option: string;
+  category: string;
+  isChecked: boolean;
+  onToggle: (category: string, option: string) => void;
+}
 
-    setCheckedFilters((prev) => ({
-      ...prev,
-      [options]: prev[options] !== undefined ? !prev[options] : true, // ✅ Ensure it starts with a valid boolean
-    }));
-
-  };
+const CheckBox = ({ option, category, isChecked, onToggle }: Props) => {
   return (
-    <div className="flex flex-col ">
+    <button
+      onClick={() => onToggle(category, option)}
+      className="flex flex-row items-center gap-2 hover:text-gray-500 transition:colors duration-200 ease-in-out"
+    >
+      <div className="flex-shrink-0">
+        <Square
+          className="cursor-pointer font-plex-sans font-regular"
+          size="20px"
+        >
+          {isChecked && <Check className="h-4 w-4" />}
+        </Square>
+      </div>
+      <span className="font-plex-sans font-regular text-[18px] min-w-0 break-words">
+        {option}
+      </span>
+    </button>
+  );
+};
+
+export default CheckBox;
+
+/*<div className="flex flex-col ">
       <div
         className="flex flex-row gap-2 items-start"
         onClick={() => {
@@ -30,8 +47,4 @@ const CheckBox = ({ options }: { options: string }) => {
           <span>{options}</span>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default CheckBox;
+    </div> */

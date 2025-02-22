@@ -29,7 +29,9 @@ const SignInPage = () => {
             action={() => handleSignIn(callbackUrl)}
             className="sign-in-button bg-primary-200 text-white w-full"
           >
-            <button type="submit">Sign in</button>
+            <button type="submit" className="w-full h-full">
+              Sign in
+            </button>
           </form>
         </div>
       </div>
