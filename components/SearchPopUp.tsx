@@ -28,8 +28,7 @@ const SearchPopUp = ({ setClicked }: Props) => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const { setCheckedFilters, setSelectedFilters, setDroppedFilters } =
-    useContext(Context);
+  const { resetFilters } = useContext(Context);
   const oldQuery = useRef<string | undefined>(query);
 
   useEffect(() => {
@@ -38,16 +37,7 @@ const SearchPopUp = ({ setClicked }: Props) => {
     if (query && query !== oldQuery.current) {
       setClicked(false);
       setInputValue("");
-      setDroppedFilters((prev) => {
-        const resetFilters = Object.keys(prev).reduce(
-          (acc, key) => {
-            acc[key] = false;
-            return acc;
-          },
-          {} as Record<string, boolean>
-        );
-        return resetFilters;
-      });
+      resetFilters();
     }
     oldQuery.current = query;
   }, [query]);
@@ -59,8 +49,7 @@ const SearchPopUp = ({ setClicked }: Props) => {
         return;
       }
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
-      setCheckedFilters({});
-      setSelectedFilters({});
+      resetFilters();
       setInputValue("");
       return query;
     } catch (error) {

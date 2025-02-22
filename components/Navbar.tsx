@@ -8,10 +8,10 @@ import ManageSession from "./ManageSession";
 const Navbar = async () => {
   const session = await auth();
   return (
-    <header className="px-3 py-3 bg-white-300  max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
+    <header className="px-3 py-3 bg-white-300 max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
         <div className="flex flex-1 flex-row items-center gap-8">
-          <Link href="/" className="">
+          <Link href="/" className="shrink-0">
             <Image
               src="/assets/logo/logo-png.png"
               alt="logo"

@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { getDynamicFilters } from "@/lib/filters";
 import { useSearchParams, usePathname } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 /* Context for checkboxes in my filters closes filters after search and on homepage*/
@@ -31,6 +32,7 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
   const query: string | undefined = searchParams.get("query") || "";
@@ -56,12 +58,26 @@ export const ContextProvider = ({
     });
   }, []);
 
-  /*useEffect(() => {
-    if (selectedFilters.length === 0 && filters?.length > 0) {
-      console.log("Syncing selectedFilters with filtersParams");
-      setSelectedFilters(filters?.split(","));
+  /* Set queryParams when filter is clicked*/
+  useEffect(() => {
+    const clickedFilters = Object.values(selectedFilters)
+      .flat()
+      .filter(Boolean)
+      .join(",");
+    console.log("Clicked filters", clickedFilters);
+
+    let newQueryParams = path;
+    const queryParams = new URLSearchParams();
+    if (clickedFilters) queryParams.set("f", clickedFilters);
+    if (query) queryParams.set("query", query);
+
+    if (queryParams.toString()) {
+      newQueryParams += `?${queryParams.toString()}`;
     }
-  }, [filters]);*/
+    console.log(`QueyrParams: ${queryParams}`);
+    console.log(`New QueryParams: ${newQueryParams}`);
+    router.push(newQueryParams.toLowerCase());
+  }, [selectedFilters]);
 
   /* Sync with url */
   useEffect(() => {
@@ -83,7 +99,8 @@ export const ContextProvider = ({
     }
 
     if (filters) {
-      console.log("Syncing selectedFilters with filtersParams");
+      // TODO: USE USE REF OR USESTATE TO RUN THIS ONLY ON CALLBACK
+      /* console.log("Syncing selectedFilters with filtersParams");
       const parsedFilters = filterParams.split(",").reduce(
         (acc: Record<string, string[]>, item) => {
           const [category, value] = item.split(":");
@@ -96,7 +113,7 @@ export const ContextProvider = ({
       );
 
       console.log("Syncing selectedFilters from URL:", parsedFilters);
-      setSelectedFilters(parsedFilters);
+      setSelectedFilters(parsedFilters); */
     } else if (!query && !filters) {
       console.log("Resetting filters in context might be ERROR");
       resetFilters();
@@ -109,6 +126,7 @@ export const ContextProvider = ({
   };
 
   const toggleFilter = (category: string, filter: string) => {
+    console.log("Toggling filter", category, filter);
     setSelectedFilters((prev) => {
       const newFilters = { ...prev };
       if (newFilters[category]?.includes(filter)) {
@@ -117,7 +135,14 @@ export const ContextProvider = ({
       } else {
         newFilters[category] = [...(newFilters[category] || []), filter];
       }
+      console.log("New filters", newFilters);
+      Object.entries(selectedFilters).forEach(([category, filter]) => {
+        console.log(`Category: ${category}, filter: ${filter}`);
+      });
       return newFilters;
+    });
+    Object.entries(selectedFilters).forEach(([category, filter]) => {
+      console.log(`Category: ${category}, filter: ${filter}`);
     });
   };
 
