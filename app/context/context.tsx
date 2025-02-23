@@ -2,7 +2,7 @@
 import Footer from "@/components/Footer";
 import { getDynamicFilters } from "@/lib/filters";
 import { useSearchParams, usePathname } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -38,6 +38,10 @@ export const ContextProvider = ({
   const query: string | undefined = searchParams.get("query") || "";
   const filterParams = searchParams.get("f") || "";
 
+  const [shouldSync, setShouldSync] = useState(() => {
+    return sessionStorage.getItem("shouldSync") === "true";
+  });
+
   const [filters, setFilters] = useState<
     Record<string, { expanded: boolean; options: string[] }>
   >({});
@@ -46,19 +50,19 @@ export const ContextProvider = ({
   >({});
 
   useEffect(() => {
-    getDynamicFilters().then((data) => {
-      const formattedFilters = Object.entries(data).reduce(
-        (acc, [key, values]) => {
-          acc[key] = { expanded: false, options: values };
-          return acc;
-        },
-        {} as Record<string, { expanded: boolean; options: string[] }>
-      );
-      setFilters(formattedFilters);
-    });
+    const savedToggledCategoryFilters = sessionStorage.getItem("filters");
+    if (savedToggledCategoryFilters) return;
+    setDefaultFilters();
   }, []);
 
-  /* Set queryParams when filter is clicked*/
+  useEffect(() => {
+    console.log("Filters has been toggled");
+    if (filters !== null && !shouldSync) {
+      console.log("Setting filters in session storage", filters);
+      sessionStorage.setItem("filters", JSON.stringify(filters));
+    }
+  }, [filters]);
+
   useEffect(() => {
     const clickedFilters = Object.values(selectedFilters)
       .flat()
@@ -76,6 +80,15 @@ export const ContextProvider = ({
     }
     console.log(`QueyrParams: ${queryParams}`);
     console.log(`New QueryParams: ${newQueryParams}`);
+
+    // only on return from sign-in do we sest selectedFilters to storage
+    if (Object.keys(selectedFilters).length > 0 && !shouldSync) {
+      console.log("Setting selectedFilters in session storage");
+      sessionStorage.setItem(
+        "selectedFilters",
+        JSON.stringify(selectedFilters)
+      );
+    }
     router.push(newQueryParams.toLowerCase());
   }, [selectedFilters]);
 
@@ -84,37 +97,43 @@ export const ContextProvider = ({
     console.log("Three below are in context");
     console.log(`Path: ${path}`);
     console.log(`Query: ${query}`);
+    console.log(`Filter Params: ${filterParams}`);
     console.log(`Filters: ${filters}`);
 
-    const isReturingFromSignIn = document.referrer.includes("/sign-in");
-    console.log(`Is returning from sign-in: ${isReturingFromSignIn}`);
     const currentSignIn =
       path.includes("/sign-in") || path.includes("callbackUrl");
 
-    if (currentSignIn || isReturingFromSignIn) {
+    if (currentSignIn) {
       console.log(
         "Path includes /sign-in or is returning from sing-in - correcltly passed resetting filters"
       );
+      sessionStorage.setItem("shouldSync", "true");
+      console.log(`Should sync: ${shouldSync}`);
+      setShouldSync(true);
+      console.log();
       return;
     }
 
-    if (filters) {
-      // TODO: USE USE REF OR USESTATE TO RUN THIS ONLY ON CALLBACK
-      /* console.log("Syncing selectedFilters with filtersParams");
-      const parsedFilters = filterParams.split(",").reduce(
-        (acc: Record<string, string[]>, item) => {
-          const [category, value] = item.split(":");
-          if (category && value) {
-            acc[category] = acc[category] ? [...acc[category], value] : [value];
-          }
-          return acc;
-        },
-        {} as Record<string, string[]>
-      );
+    console.log(`Should sync: ${shouldSync}`);
+    if (shouldSync) {
+      const savedFilters = sessionStorage.getItem("selectedFilters");
+      const savedToggledFilters = sessionStorage.getItem("filters");
+      console.log(`Saved filters: ${savedFilters}`);
+      console.log(`Saved toggled filters: ${savedToggledFilters}`);
 
-      console.log("Syncing selectedFilters from URL:", parsedFilters);
-      setSelectedFilters(parsedFilters); */
-    } else if (!query && !filters) {
+      if (savedFilters) {
+        console.log("Syncing selectedFilters from session storage");
+        setSelectedFilters(JSON.parse(savedFilters));
+      }
+      if (savedToggledFilters) {
+        console.log("Syncing filters from session storage");
+        setFilters(JSON.parse(savedToggledFilters));
+      }
+
+      sessionStorage.setItem("shouldSync", "false");
+      setShouldSync(false);
+    }
+    if (!query && !filterParams) {
       console.log("Resetting filters in context might be ERROR");
       resetFilters();
     }
@@ -122,7 +141,10 @@ export const ContextProvider = ({
   }, [query, filterParams]);
 
   const resetFilters = () => {
+    sessionStorage.removeItem("selectedFilters");
+    sessionStorage.removeItem("filters");
     setSelectedFilters({});
+    setDefaultFilters();
   };
 
   const toggleFilter = (category: string, filter: string) => {
@@ -139,10 +161,24 @@ export const ContextProvider = ({
       Object.entries(selectedFilters).forEach(([category, filter]) => {
         console.log(`Category: ${category}, filter: ${filter}`);
       });
+      //selectedFiltersRef.current = newFilters;
       return newFilters;
     });
     Object.entries(selectedFilters).forEach(([category, filter]) => {
       console.log(`Category: ${category}, filter: ${filter}`);
+    });
+  };
+
+  const setDefaultFilters = () => {
+    getDynamicFilters().then((data) => {
+      const formattedFilters = Object.entries(data).reduce(
+        (acc, [key, values]) => {
+          acc[key] = { expanded: false, options: values };
+          return acc;
+        },
+        {} as Record<string, { expanded: boolean; options: string[] }>
+      );
+      setFilters(formattedFilters);
     });
   };
 
