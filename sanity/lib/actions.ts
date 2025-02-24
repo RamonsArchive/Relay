@@ -23,24 +23,20 @@ export const uploadImageToSanity = async (imageUrl: string) => {
   } 
 }
 
-export const handleHeartWrite = async (productId: string, hearted: boolean) => {   
-   //const user = await currentUser();
+export const handleHeartWrite = async (productId: string, hearted: boolean) => {  
    const session = await auth();
-   console.log("Session", session);
+   if (!session) {
+    redirect("/sign-in?callbackUrl=/");
+   }
    const user = session?.user;
-   console.log("User", user);
-   /*if (!session) {
-    console.error("User not authenticated");
-    redirect("/sign-in");
-   }*/
+   
    const userId = user?.id;
-   const userDoc = `user-${userId}`
+   const userIdString = userId?.toString() || "";
 
     if (!hearted) {
       try {
-      console.log("Unsetting the heart");
       await writeClient.withConfig({useCdn: false})
-      .patch(userDoc)
+      .patch(userIdString)
       .unset([`heartedProducts[_ref=="${productId}"]`])
       .commit();
     } catch (error) {
@@ -56,7 +52,7 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
             }
             await writeClient
                 .withConfig({useCdn: false})
-                .patch(userDoc)
+                .patch(userIdString)
                 .setIfMissing({heartedProducts: []})
                 .append("heartedProducts", [newProductReference])
                 .commit();
@@ -64,6 +60,26 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
          catch (error) {
             console.error("Error removing the heart", error);
         }
-    }
-  };
+      }
+    };
+
+  export const handleRecentyViewedProductsWrite = async (productId: string, userId: string) => {
+    try {
+      const myKey = nanoid();
+      await writeClient.withConfig({useCdn: false})
+        .patch(userId)
+        .setIfMissing({recentlyViewedProducts: []})
+        .prepend("recentlyViewdProducts", [
+          {
+            _type: "reference",
+            _ref: productId.toString(),
+            _key: myKey,
+          }
+        ])
+        .commit();
+    } catch (error) {
+      console.error("Error writing recently viewed products", error);
+    } 
+
+  }
 

@@ -12,9 +12,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <ContextProvider>
         <Navbar />
         <div className="root-container">
-          <div className="side-bar">
-            <SidebarWrapper />
-          </div>
+          <SidebarWrapper />
 
           <div className="content-wrapper">
             <div className="content-container">{children}</div>

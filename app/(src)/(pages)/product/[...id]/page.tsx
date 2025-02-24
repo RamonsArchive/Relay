@@ -1,5 +1,5 @@
 import ProductImages from "@/components/ProductImages";
-import { client } from "@/sanity/lib/client";
+import { client, fetchRecentyViewedProducts } from "@/sanity/lib/client";
 import {
   GET_TOP_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
@@ -7,12 +7,17 @@ import {
 import { Suspense } from "react";
 import markdownit from "markdown-it";
 import ProductDetailsDrop from "@/components/ProductDetailsDrop";
+import { auth } from "@/auth";
+import { handleRecentyViewedProductsWrite } from "@/sanity/lib/actions";
 
 export const experimental_ppr = true;
 
 const md = markdownit();
 
 const page = async ({ params }: { params: { id: string } }) => {
+  const sesson = await auth();
+  const user = sesson?.user;
+  const userId = user?.id || null;
   const path = params.id || "/";
   console.log(`Path in product page: ${path}`);
   if (!path) {
@@ -23,6 +28,19 @@ const page = async ({ params }: { params: { id: string } }) => {
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(path as string)
   );
+
+  let getRecentyViewedProducts = null;
+  let addRecentlyViewdProducts = null;
+  if (userId) {
+    getRecentyViewedProducts = await fetchRecentyViewedProducts(userId);
+    addRecentlyViewdProducts = await handleRecentyViewedProductsWrite(
+      path,
+      userId
+    );
+  }
+
+  console.log(`Recenty Viewed Products: ${getRecentyViewedProducts}`);
+  console.log(`Add Recently Viewed Products: ${addRecentlyViewdProducts}`);
 
   const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
   console.log(`Top Reviews: ${topReviews.reviews}`);
@@ -77,7 +95,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         </div>
       </Suspense>
 
-      <div className="flex flex-col w-full overflow-y-auto">
+      <div className="flex flex-col w-full overflow-y-auto ">
         <div className="flex flex-col pl-5 gap-y-2 w-full">
           <div className="font-plex-sans font-bold text-[28px]">
             <p>{capitalizeBrand(brand)}</p>

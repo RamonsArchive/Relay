@@ -37,6 +37,7 @@ export const ContextProvider = ({
   const path = usePathname();
   const query: string | undefined = searchParams.get("query") || "";
   const filterParams = searchParams.get("f") || "";
+  const [backButtonClicked, setBackButtonClicked] = useState(false);
 
   const [shouldSync, setShouldSync] = useState(() => {
     return sessionStorage.getItem("shouldSync") === "true";
@@ -48,6 +49,19 @@ export const ContextProvider = ({
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >({});
+
+  useEffect(() => {
+    const handlePopState = () => {
+      console.log("Back button clicked");
+      setBackButtonClicked(true); // Call the sync function
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     const savedToggledCategoryFilters = sessionStorage.getItem("filters");
@@ -129,12 +143,21 @@ export const ContextProvider = ({
         console.log("Syncing filters from session storage");
         setFilters(JSON.parse(savedToggledFilters));
       }
-
       sessionStorage.setItem("shouldSync", "false");
       setShouldSync(false);
     }
+
+    // TODO: enable go back button on history to sync filters
+    if (backButtonClicked) {
+      console.log("Back button clicked");
+      syncFiltersSidebar();
+      setBackButtonClicked(false);
+    }
     if (!query && !filterParams) {
       console.log("Resetting filters in context might be ERROR");
+      resetFilters();
+    } else if (query && !filterParams) {
+      console.log("Resetting on page reload ");
       resetFilters();
     }
     console.log("Correclty passed resetting filters in context");
@@ -145,6 +168,80 @@ export const ContextProvider = ({
     sessionStorage.removeItem("filters");
     setSelectedFilters({});
     setDefaultFilters();
+  };
+
+  const syncFiltersSidebar = () => {
+    if (filterParams) {
+      console.log("Filter params", filterParams);
+      const parsedFilters = filterParams.split(",").filter(Boolean);
+      const numFilterParams = parsedFilters.length;
+      const updatedFilters = JSON.parse(JSON.stringify(selectedFilters));
+      const updatedSidebarFilters = JSON.parse(JSON.stringify(filters));
+      console.log("Updated sidebar filters", updatedSidebarFilters);
+
+      let numCurrentFiltersSelected = 0;
+      Object.keys(updatedFilters).forEach((category) => {
+        updatedFilters[category].forEach(
+          (value: string) => numCurrentFiltersSelected++
+        );
+      });
+
+      /* if (numCurrentFiltersSelected === 0) {
+        return;
+      } */
+      console.log("numcurrentFiltersSelected", numCurrentFiltersSelected);
+      if (numFilterParams > numCurrentFiltersSelected) {
+        console.log("Filter params", parsedFilters);
+        parsedFilters.forEach((filterParam) => {
+          // Format the filter parameter (e.g., capitalize the first letter)
+          const formattedFilterParam =
+            filterParam.slice(0, 1).toUpperCase() + filterParam.slice(1);
+
+          // Get the category for the filter parameter
+          const categoryFilter = getCategoryFilter(formattedFilterParam);
+
+          if (categoryFilter) {
+            // Initialize the category array if it doesn't exist
+            updatedSidebarFilters[categoryFilter].expanded = true;
+            if (!updatedFilters[categoryFilter]) {
+              updatedFilters[categoryFilter] = [];
+            }
+
+            // Add the filter parameter to the category if it's not already present
+            if (
+              !updatedFilters[categoryFilter].includes(formattedFilterParam)
+            ) {
+              updatedFilters[categoryFilter].push(formattedFilterParam);
+            }
+          }
+        });
+        setFilters(updatedSidebarFilters);
+      } else {
+        console.log("Filter params", parsedFilters);
+        Object.keys(updatedFilters).forEach((category) => {
+          updatedFilters[category] = updatedFilters[category].filter(
+            (value: string) => {
+              const shouldKeep = parsedFilters.includes(value.toLowerCase());
+              return shouldKeep;
+            }
+          );
+          if (updatedFilters[category].length === 0) {
+            delete updatedFilters[category];
+          }
+        });
+      }
+
+      setSelectedFilters(updatedFilters);
+    }
+  };
+
+  const getCategoryFilter = (filter: string) => {
+    for (const [category, { options }] of Object.entries(filters)) {
+      if (options.includes(filter)) {
+        return category;
+      }
+    }
+    return null;
   };
 
   const toggleFilter = (category: string, filter: string) => {
@@ -163,9 +260,6 @@ export const ContextProvider = ({
       });
       //selectedFiltersRef.current = newFilters;
       return newFilters;
-    });
-    Object.entries(selectedFilters).forEach(([category, filter]) => {
-      console.log(`Category: ${category}, filter: ${filter}`);
     });
   };
 

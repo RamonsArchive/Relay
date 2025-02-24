@@ -107,7 +107,7 @@ html, body {
   }
 
   .side-bar {
-    @apply min-w-[165px] max-w-[200px] w-[100%] h-[calc(100vh-8rem)] overflow-y-auto sticky top-0;
+    @apply max-w-[200px] w-[100%] h-[calc(100vh-8rem)] overflow-y-auto sticky top-0;
    
   }
 
@@ -164,7 +164,7 @@ html, body {
   }
 
   .product-page {
-    @apply flex flex-row p-5 w-full;
+    @apply flex flex-row p-5 w-full min-h-0 h-[calc(100vh-8rem)];
   }
 
   .product-page-image-container {

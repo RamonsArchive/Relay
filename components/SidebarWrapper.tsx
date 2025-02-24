@@ -7,22 +7,22 @@ import Mobilebar from "./Mobilebar";
 
 const SidebarWrapper = () => {
   const path = usePathname();
-  const productPage =
+  const noSideBarPage =
     path?.startsWith("/product/") || path?.startsWith("/writeReview/");
-  const [isProductPage, setIsProductPage] = useState(productPage);
+  const [isNoSideBarPage, setIsNoSideBarPage] = useState(noSideBarPage);
 
   useEffect(() => {
-    setIsProductPage(productPage);
+    setIsNoSideBarPage(noSideBarPage);
   }, [path]);
 
   return (
     <div>
-      {!isProductPage && (
-        <>
-          <Sidebar />
-          <Mobilebar />
-        </>
-      )}
+      <div className={`${isNoSideBarPage ? "w-0 hidden" : "side-bar"}`}>
+        <Sidebar />
+      </div>
+      <div>
+        <Mobilebar />
+      </div>
     </div>
   );
 };

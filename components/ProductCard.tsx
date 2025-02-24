@@ -8,16 +8,17 @@ import { ProductType } from "@/globalTypes";
 import { useState, useEffect } from "react";
 import { handleHeartWrite } from "@/sanity/lib/actions";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const ProductCard = ({
   product,
   isHearted,
-  currentUrl,
+  callbackUrl,
   user,
 }: {
   product: ProductType;
   isHearted: boolean;
-  currentUrl: string;
+  callbackUrl: string;
   user: any;
 }) => {
   const router = useRouter();
@@ -28,19 +29,21 @@ const ProductCard = ({
     setHearted(isHearted);
   }, [isHearted]);
 
-  console.log(`Current URL: ${currentUrl}`);
   const toggleHeart = async () => {
     console.log("not yet passed auth check");
     if (!user) {
-      router.push(`/sign-in?callbackUrl=${encodeURIComponent(currentUrl)}`);
+      Cookies.set("heartedProductId", _id, { expires: 1 });
+      Cookies.set("heartedAction", "true", { expires: 1 });
+      router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
       return;
     }
     console.log("passed auth check");
-    return;
     try {
       const newHearted = !hearted;
       setHearted(newHearted);
+      console.log("Going to handleHeartWrite");
       await handleHeartWrite(_id, newHearted as boolean);
+      console.log("Hearted action executed");
       router.refresh();
     } catch (error) {
       console.error("Failed to execute hearted action:", error);

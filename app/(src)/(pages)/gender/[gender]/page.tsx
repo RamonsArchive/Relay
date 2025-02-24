@@ -63,8 +63,8 @@ const page = async ({
                 <ProductCard
                   key={product?._id}
                   product={product}
-                  isHearted={heartedProductsIds.includes(product)}
-                  currentUrl={callbackUrl}
+                  isHearted={heartedProductsIds.includes(product?._id)}
+                  callbackUrl={callbackUrl}
                   user={userId}
                 />
               ))

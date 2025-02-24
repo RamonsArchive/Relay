@@ -41,7 +41,10 @@ const Home = async ({
   }
   console.log(`Callback URL: ${callbackUrl}`);
 
+  console.log("User email", user?.email);
+  console.log("User id", userId);
   const heartedProductsIds = await fetchHeartedProducts(userId);
+  console.log("Hearted Products", heartedProductsIds);
   const products = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
@@ -64,8 +67,8 @@ const Home = async ({
                 <ProductCard
                   key={product?._id}
                   product={product}
-                  isHearted={heartedProductsIds.includes(product)}
-                  currentUrl={callbackUrl}
+                  isHearted={heartedProductsIds.includes(product?._id)}
+                  callbackUrl={callbackUrl}
                   user={user}
                 />
               ))

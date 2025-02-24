@@ -9,6 +9,8 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
 
   console.log(`Page Type: ${pageType}`);
   console.log(`Page End: ${pageEnd}`);
+  console.log(`Query: ${query}`);
+  console.log(`Filters: ${filters}`);
 
   const filtersArray = filters ? filters?.split(",") : [];
   const queryArray = query ? query?.split(" ").filter((term) => term.trim() !== "") : [];
@@ -35,6 +37,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
     } else if (query == "") {
       return constructHomePageFilters(searchTerm, optimizedHeartedProductsIds);
     } else {
+      console.log(`Query and filter no path`)
       return constructQueryPlusFilters(queryArray, filtersArray, optimizedHeartedProductsIds);
     } 
   } 
@@ -171,6 +174,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
       "${keyword}" in categories ||
       "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
   `).join(" || ");
+  console.log("keywordConditions", keywordConditions);
 
   const filterConditions = filtersArray.map((filter) => `
     title match "${filter}*" ||
@@ -185,6 +189,8 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
       "${filter}" in categories || 
       "${filter}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
   `).join(" && ");
+
+  console.log("filterConditions", filterConditions);
 
   return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
     _id,
