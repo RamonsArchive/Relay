@@ -1,5 +1,3 @@
-import { defineQuery } from 'next-sanity';
-
 
 /*TODO: Fix the cost function  */
 export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProductsIds: string[]) => {
@@ -24,8 +22,16 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
         _id,
         title,
         mainImage,
-        materials,
-        categories,
+        "materials": materials[]->{
+          _id,
+          _key,
+          name,
+        },
+        "categories": categories[]->{
+          _id,
+          _key,
+          name,
+        },
         "collections": collections[]->{
           _id,
           _key,
@@ -99,11 +105,10 @@ const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: s
       "${keyword}" in kids ||
       "${keyword}" in size ||
       count(collections[@->title match "${keyword}"]) > 0 ||
-      "${keyword}" in sale ||
-      "${keyword}" in colors ||
-      "${keyword}" in brand ||
-      "${keyword}" in materials ||
-      "${keyword}" in categories ||
+      count(colors[@->name match "${keyword}"]) > 0 ||
+      count(brands[@->name match "${keyword}"]) > 0 ||
+      count(materials[@->name match "${keyword}"]) > 0 ||
+      count(categories[@->name match "${keyword}"]) > 0 ||
       "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
     `
     )
@@ -114,8 +119,16 @@ const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: s
     _id,
     title,
     mainImage,
-    materials,
-    categories,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
     "collections": collections[]->{
       _id,
       _key,
@@ -136,11 +149,10 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
       "${keyword}" in kids ||
       "${keyword}" in size ||
       count(collections[@->title match "${keyword}"]) > 0 ||
-      "${keyword}" in sale ||
-      "${keyword}" in colors ||
-      "${keyword}" in brand ||
-      "${keyword}" in materials ||
-      "${keyword}" in categories ||
+      count(colors[@->name match "${keyword}"]) > 0 ||
+      count(brands[@->name match "${keyword}"]) > 0 ||
+      count(materials[@->name match "${keyword}"]) > 0 ||
+      count(categories[@->name match "${keyword}"]) > 0 ||
       "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
     `
     ).join(" && ");
@@ -149,8 +161,16 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
     _id,
     title,
     mainImage,
-    materials,
-    categories,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
     "collections": collections[]->{
       _id,
       _key,
@@ -161,43 +181,55 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
 }
 
 const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[], optimizedHeartedProductsIds: string) => {
-  const  keywordConditions = queryArray.map((keyword) => `
+  const  keywordConditions = queryArray.map((keyword) => 
+    `
     title match "${keyword}*" ||
     "${keyword}" in gender ||
-      "${keyword}" in kids ||
-      "${keyword}" in size ||
-      count(collections[@->title match "${keyword}"]) > 0 ||
-      "${keyword}" in sale ||
-      "${keyword}" in colors ||
-      "${keyword}" in brand ||
-      "${keyword}" in materials ||
-      "${keyword}" in categories ||
-      "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
-  `).join(" || ");
+    "${keyword}" in kids ||
+    "${keyword}" in size ||
+    count(collections[@->title match "${keyword}"]) > 0 ||
+    count(colors[@->name match "${keyword}"]) > 0 ||
+    count(brands[@->name match "${keyword}"]) > 0 ||
+    count(materials[@->name match "${keyword}"]) > 0 ||
+    count(categories[@->name match "${keyword}"]) > 0 ||
+    "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
+  `)
+  .join(" || ");
   console.log("keywordConditions", keywordConditions);
 
-  const filterConditions = filtersArray.map((filter) => `
+  const filterConditions = filtersArray.map((filter) => 
+    `
     title match "${filter}*" ||
     "${filter}" in gender ||
-      "${filter}" in kids ||
-      "${filter}" in size ||
-      count(collections[@->title match "${filter}"]) > 0 ||
-      "${filter}" in sale ||
-      "${filter}" in colors ||
-      "${filter}" in brand ||
-      "${filter}" in materials ||
-      "${filter}" in categories || 
-      "${filter}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
-  `).join(" && ");
+    "${filter}" in kids ||
+    "${filter}" in size ||
+    count(collections[@->title match "${filter}"]) > 0 ||
+    count(colors[@->name match "${filter}"]) > 0 ||
+    count(brands[@->name match "${filter}"]) > 0 ||
+    count(materials[@->name match "${filter}"]) > 0 ||
+    count(categories[@->name match "${filter}"]) > 0 ||
+    "${filter}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
+  `)
+  .join(" && ");
 
-  console.log("filterConditions", filterConditions);
+  console.log("filterConditions", filterConditions
+    
+  );
 
   return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
     _id,
     title,
     mainImage,
-    materials,
-    categories,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
     "collections": collections[]->{
       _id,
       _key,
@@ -214,8 +246,16 @@ const constructNonHomePage = (paramConditions: string, optimizedHeartedProductsI
     _id,
     title,
     mainImage,
-    materials,
-    categories,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
     "collections": collections[]->{
       _id,
       _key,
@@ -240,11 +280,10 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
         "${keyword}" in kids ||
         "${keyword}" in size ||
         count(collections[@->title match "${keyword}"]) > 0 ||
-        "${keyword}" in sale ||
-        "${keyword}" in colors ||
-        "${keyword}" in brand ||
-        "${keyword}" in materials ||
-        "${keyword}" in categories ||
+        count(colors[@->name match "${keyword}"]) > 0 ||
+        count(brands[@->name match "${keyword}"]) > 0 ||
+        count(materials[@->name match "${keyword}"]) > 0 ||
+        count(categories[@->name match "${keyword}"]) > 0 ||
         "${keyword}" in ["hearted", "heart"] && _id in ${optimizedHeartedProductsIds}
       `
     )
@@ -255,8 +294,16 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     _id,
     title,
     mainImage,
-    materials,
-    categories,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
     "collections": collections[]->{
       _id,
       _key,
@@ -274,12 +321,23 @@ export const PRODUCT_PAGE_INFORMATION = (id: string) => {
     title,
     stock,
     cost,
-    size,
     description,
-    categories,
-    materials,
-    brand,
-    hearted,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
+    "brands": brands[]->{
+      _id,
+      _key,
+      name,
+      logo,
+    },
     "collections": collections[]->{
       _id,
       _key,

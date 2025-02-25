@@ -30,6 +30,7 @@ const page = async ({ params }: { params: { id: string } }) => {
     PRODUCT_PAGE_INFORMATION(path as string)
   );
 
+  console.log("Images and product details: ", imagesPlusProductDetails);
   let getRecentyViewedProducts = null;
   let addRecentlyViewdProducts = null;
   if (userId) {
@@ -41,9 +42,6 @@ const page = async ({ params }: { params: { id: string } }) => {
     );
   }
 
-  console.log(`Recenty Viewed Products: ${getRecentyViewedProducts}`);
-  console.log(`Add Recently Viewed Products: ${addRecentlyViewdProducts}`);
-
   const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
   console.log(`Top Reviews: ${topReviews.reviews}`);
 
@@ -54,7 +52,7 @@ const page = async ({ params }: { params: { id: string } }) => {
     size,
     description,
     materials,
-    brand,
+    brands,
     collections,
     categories,
     mainDetails,
@@ -62,27 +60,13 @@ const page = async ({ params }: { params: { id: string } }) => {
     reviews,
   } = imagesPlusProductDetails;
 
-  const productDetails = {
-    title,
-    stock,
-    cost,
-    size,
-    description,
-    materials,
-    brand,
-    categories,
-    collections,
-    mainDetails,
-    detailBullets,
-    reviews,
-  };
-
   const parsedDescription = md.render(description);
 
-  const capitalizeBrand = (brand: string) => {
-    const newBrand = brand[0]
+  const capitalizeBrand = (brand: any) => {
+    console.log("Brand", brand);
+    const newBrand = brand?.name
       .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
     console.log(newBrand);
     return newBrand;
@@ -100,7 +84,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       <div className="flex flex-col w-full overflow-y-auto ">
         <div className="flex flex-col pl-5 gap-y-2 w-full">
           <div className="font-plex-sans font-bold text-[28px]">
-            <p>{capitalizeBrand(brand)}</p>
+            <p>{capitalizeBrand(brands[0])}</p>
             <p>{title}</p>
           </div>
           <div>
