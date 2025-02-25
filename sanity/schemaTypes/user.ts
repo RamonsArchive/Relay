@@ -9,6 +9,7 @@ export const user = defineType({
             name: 'userId',
             title: 'User ID',
             type: 'string',
+            validation: Rule => Rule.required().error("A user must have a user ID")
         }),
         defineField({
             name: 'firstName',
@@ -24,6 +25,11 @@ export const user = defineType({
             name: 'email',
             title: 'Email',
             type: 'string',
+            validation: (Rule) =>
+                Rule.regex(
+                  /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  { name: "email", invert: false }
+                ).error("Invalid email format."),
         }),
         defineField({
             name: 'image',
@@ -34,7 +40,9 @@ export const user = defineType({
             name: "provider",
             title: "Provider",
             type: "string",
-            options: {list: ["google", "github", "email", "credentials", "undefined", "null"]}
+            options: {list: ["google", "github", "email", "credentials", "undefined", "null"]},
+            validation: (Rule) =>
+                Rule.required().error("Provider must be one of the allowed values."),
         }),
         defineField({
             name: "heartedProducts",
@@ -53,7 +61,29 @@ export const user = defineType({
             title : "Recently Viewed Products",
             type: "array",
             of: [{type: 'reference', to: [{type: 'product'}]}]
+        }),
+        defineField({
+            name: "frequentSearches",
+            title: "Frequent Searches",
+            type: "array",
+            of: [{ type: "string" }]
+          }),
+          defineField({
+            name: "popularCategories",
+            title: "Popular Categories",
+            type: "array",
+            of: [{ type: "string" }]
+          }),
+        defineField({
+            name: "recentSearches",
+            title: "Recent Searches",
+            type: "array",
+            of: [{type: 'object', fields: [
+                {name: 'query', type: 'string', title: 'Query'},
+                {name: 'timestamp', type: 'datetime', title: 'Searched At'}
+            ]}]
         })
+
     ],
 
     preview: {

@@ -40,7 +40,10 @@ export const ContextProvider = ({
   const [backButtonClicked, setBackButtonClicked] = useState(false);
 
   const [shouldSync, setShouldSync] = useState(() => {
-    return sessionStorage.getItem("shouldSync") === "true";
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("shouldSync") === "true";
+    }
+    return false; // Default value for SSR
   });
 
   const [filters, setFilters] = useState<
@@ -78,6 +81,15 @@ export const ContextProvider = ({
   }, [filters]);
 
   useEffect(() => {
+    if (
+      path.includes("/sign-in") ||
+      path.includes("/product") ||
+      path.includes("/writeReview")
+    ) {
+      console.log("Path includes /sign-in or /product or /writeReview");
+      return;
+    }
+
     const clickedFilters = Object.values(selectedFilters)
       .flat()
       .filter(Boolean)

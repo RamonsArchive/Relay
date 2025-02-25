@@ -326,6 +326,613 @@
     }
   },
   {
+    "name": "categories",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "categories"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "accessories"
+            },
+            {
+              "type": "string",
+              "value": "activewear"
+            },
+            {
+              "type": "string",
+              "value": "bottoms"
+            },
+            {
+              "type": "string",
+              "value": "dresses"
+            },
+            {
+              "type": "string",
+              "value": "loungewear"
+            },
+            {
+              "type": "string",
+              "value": "outerwear"
+            },
+            {
+              "type": "string",
+              "value": "shoes"
+            },
+            {
+              "type": "string",
+              "value": "swimwear"
+            },
+            {
+              "type": "string",
+              "value": "tops"
+            },
+            {
+              "type": "string",
+              "value": "underwear"
+            },
+            {
+              "type": "string",
+              "value": "casual"
+            },
+            {
+              "type": "string",
+              "value": "formal"
+            },
+            {
+              "type": "string",
+              "value": "sportswear"
+            },
+            {
+              "type": "string",
+              "value": "streetwear"
+            },
+            {
+              "type": "string",
+              "value": "business casual"
+            },
+            {
+              "type": "string",
+              "value": "luxury"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "materials",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "materials"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "cotton"
+            },
+            {
+              "type": "string",
+              "value": "wool"
+            },
+            {
+              "type": "string",
+              "value": "linen"
+            },
+            {
+              "type": "string",
+              "value": "silk"
+            },
+            {
+              "type": "string",
+              "value": "cashmere"
+            },
+            {
+              "type": "string",
+              "value": "hemp"
+            },
+            {
+              "type": "string",
+              "value": "suede"
+            },
+            {
+              "type": "string",
+              "value": "leather"
+            },
+            {
+              "type": "string",
+              "value": "denim"
+            },
+            {
+              "type": "string",
+              "value": "polyester"
+            },
+            {
+              "type": "string",
+              "value": "nylon"
+            },
+            {
+              "type": "string",
+              "value": "spandex"
+            },
+            {
+              "type": "string",
+              "value": "rayon"
+            },
+            {
+              "type": "string",
+              "value": "fleece"
+            },
+            {
+              "type": "string",
+              "value": "acrylic"
+            },
+            {
+              "type": "string",
+              "value": "microfiber"
+            },
+            {
+              "type": "string",
+              "value": "gore-tex"
+            },
+            {
+              "type": "string",
+              "value": "neoprene"
+            },
+            {
+              "type": "string",
+              "value": "kevlar"
+            },
+            {
+              "type": "string",
+              "value": "coolmax"
+            },
+            {
+              "type": "string",
+              "value": "tencel (lyocell)"
+            },
+            {
+              "type": "string",
+              "value": "modal"
+            },
+            {
+              "type": "string",
+              "value": "organic cotton"
+            },
+            {
+              "type": "string",
+              "value": "recycled polyester"
+            },
+            {
+              "type": "string",
+              "value": "bamboo fabric"
+            },
+            {
+              "type": "string",
+              "value": "viscose"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "colors",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "colors"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "black"
+            },
+            {
+              "type": "string",
+              "value": "white"
+            },
+            {
+              "type": "string",
+              "value": "gray"
+            },
+            {
+              "type": "string",
+              "value": "beige"
+            },
+            {
+              "type": "string",
+              "value": "navy"
+            },
+            {
+              "type": "string",
+              "value": "red"
+            },
+            {
+              "type": "string",
+              "value": "blue"
+            },
+            {
+              "type": "string",
+              "value": "green"
+            },
+            {
+              "type": "string",
+              "value": "yellow"
+            },
+            {
+              "type": "string",
+              "value": "purple"
+            },
+            {
+              "type": "string",
+              "value": "pink"
+            },
+            {
+              "type": "string",
+              "value": "brown"
+            },
+            {
+              "type": "string",
+              "value": "olive"
+            },
+            {
+              "type": "string",
+              "value": "orange"
+            },
+            {
+              "type": "string",
+              "value": "teal"
+            },
+            {
+              "type": "string",
+              "value": "maroon"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": true
+      },
+      "hexCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "altNames": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "brands",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "brands"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "nike"
+            },
+            {
+              "type": "string",
+              "value": "adidas"
+            },
+            {
+              "type": "string",
+              "value": "puma"
+            },
+            {
+              "type": "string",
+              "value": "reebok"
+            },
+            {
+              "type": "string",
+              "value": "new balance"
+            },
+            {
+              "type": "string",
+              "value": "under armour"
+            },
+            {
+              "type": "string",
+              "value": "converse"
+            },
+            {
+              "type": "string",
+              "value": "vans"
+            },
+            {
+              "type": "string",
+              "value": "jordan"
+            },
+            {
+              "type": "string",
+              "value": "fila"
+            },
+            {
+              "type": "string",
+              "value": "asics"
+            },
+            {
+              "type": "string",
+              "value": "columbia"
+            },
+            {
+              "type": "string",
+              "value": "patagonia"
+            },
+            {
+              "type": "string",
+              "value": "the north face"
+            },
+            {
+              "type": "string",
+              "value": "levi's"
+            },
+            {
+              "type": "string",
+              "value": "h&m"
+            },
+            {
+              "type": "string",
+              "value": "zara"
+            },
+            {
+              "type": "string",
+              "value": "uniqlo"
+            },
+            {
+              "type": "string",
+              "value": "gucci"
+            },
+            {
+              "type": "string",
+              "value": "louis vuitton"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
+        },
+        "optional": true
+      },
+      "logo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "asset": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "object",
+                "attributes": {
+                  "_ref": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "_type": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "string",
+                      "value": "reference"
+                    }
+                  },
+                  "_weak": {
+                    "type": "objectAttribute",
+                    "value": {
+                      "type": "boolean"
+                    },
+                    "optional": true
+                  }
+                },
+                "dereferencesTo": "sanity.imageAsset"
+              },
+              "optional": true
+            },
+            "hotspot": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageHotspot"
+              },
+              "optional": true
+            },
+            "crop": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "sanity.imageCrop"
+              },
+              "optional": true
+            },
+            "_type": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string",
+                "value": "image"
+              }
+            }
+          }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
     "name": "reviews",
     "type": "document",
     "attributes": {
@@ -798,16 +1405,6 @@
         },
         "optional": true
       },
-      "size": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "array",
-          "of": {
-            "type": "string"
-          }
-        },
-        "optional": true
-      },
       "cost": {
         "type": "objectAttribute",
         "value": {
@@ -1131,16 +1728,6 @@
         },
         "optional": true
       },
-      "sale": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "array",
-          "of": {
-            "type": "string"
-          }
-        },
-        "optional": true
-      },
       "collections": {
         "type": "objectAttribute",
         "value": {
@@ -1190,17 +1777,85 @@
         "value": {
           "type": "array",
           "of": {
-            "type": "string"
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "colors",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "optional": true
       },
-      "brand": {
+      "brands": {
         "type": "objectAttribute",
         "value": {
           "type": "array",
           "of": {
-            "type": "string"
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "brands",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "optional": true
@@ -1210,7 +1865,41 @@
         "value": {
           "type": "array",
           "of": {
-            "type": "string"
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "materials",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "optional": true
@@ -1220,7 +1909,41 @@
         "value": {
           "type": "array",
           "of": {
-            "type": "string"
+            "type": "object",
+            "attributes": {
+              "_ref": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              },
+              "_type": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string",
+                  "value": "reference"
+                }
+              },
+              "_weak": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              }
+            },
+            "dereferencesTo": "categories",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         },
         "optional": true
@@ -1532,6 +2255,63 @@
               }
             },
             "dereferencesTo": "product",
+            "rest": {
+              "type": "object",
+              "attributes": {
+                "_key": {
+                  "type": "objectAttribute",
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": true
+      },
+      "frequentSearches": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "popularCategories": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "recentSearches": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "query": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "timestamp": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
+              }
+            },
             "rest": {
               "type": "object",
               "attributes": {

@@ -28,10 +28,16 @@ export const fetchRecentyViewedProducts = async (userId: string) => {
   if (!userId) {
     return [];
   }
-
   try {
-    const query = `*[_type == "user" && userId == "${userId}"][0].recentlyViewedProducts[0...8]._ref`;
+    const query = `*[_type == "user" && userId == "${userId}"][0]{
+      "recentlyViewedProducts": recentlyViewedProducts[] {
+        _type,
+        _ref,
+        _key,
+      }
+    }`;
     const recentlyViewedProducts = await client.fetch(query);
+    console.log("Recently viewed products", recentlyViewedProducts);
     return recentlyViewedProducts || [];
   } catch (error) {
     console.error("Error fetching recently viewed products", error);

@@ -63,19 +63,38 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
       }
     };
 
-  export const handleRecentyViewedProductsWrite = async (productId: string, userId: string) => {
+  export const handleRecentyViewedProductsWrite = async (productId: string, userId: string, recentlyViewedProducts: any) => {
+    console.log("recentlyViewedProducts: ", recentlyViewedProducts);
+    console.log("type of recentlyViewedProducts: ", typeof recentlyViewedProducts);
     try {
+      if (!userId) {
+        throw new Error("No user ID provided");
+      }
       const myKey = nanoid();
-      await writeClient.withConfig({useCdn: false})
+
+      const productIdString = productId.toString();
+
+      const newProductReference = {
+        _type: "reference",
+        _ref: productIdString,
+        _key: myKey,
+      }
+
+      let updatedProducts = recentlyViewedProducts.recentlyViewedProducts || []
+      console.log("Tyep of updatedProducts: ", typeof updatedProducts);
+      console.log("upadted Products: ", updatedProducts);
+      updatedProducts = updatedProducts.filter((product: any) => product._ref !== productIdString);
+      console.log("Unique Filters: ", updatedProducts);
+      updatedProducts = [newProductReference, ...updatedProducts];
+      updatedProducts = updatedProducts.slice(0, 10);
+      
+
+      console.log("Updated Products: ", updatedProducts);
+
+      await writeClient
+        .withConfig({useCdn: false})
         .patch(userId)
-        .setIfMissing({recentlyViewedProducts: []})
-        .prepend("recentlyViewdProducts", [
-          {
-            _type: "reference",
-            _ref: productId.toString(),
-            _key: myKey,
-          }
-        ])
+        .set({"recentlyViewedProducts": updatedProducts})
         .commit();
     } catch (error) {
       console.error("Error writing recently viewed products", error);

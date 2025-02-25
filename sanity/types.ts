@@ -68,6 +68,59 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Categories = {
+  _id: string;
+  _type: "categories";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "accessories" | "activewear" | "bottoms" | "dresses" | "loungewear" | "outerwear" | "shoes" | "swimwear" | "tops" | "underwear" | "casual" | "formal" | "sportswear" | "streetwear" | "business casual" | "luxury";
+  slug?: Slug;
+};
+
+export type Materials = {
+  _id: string;
+  _type: "materials";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "cotton" | "wool" | "linen" | "silk" | "cashmere" | "hemp" | "suede" | "leather" | "denim" | "polyester" | "nylon" | "spandex" | "rayon" | "fleece" | "acrylic" | "microfiber" | "gore-tex" | "neoprene" | "kevlar" | "coolmax" | "tencel (lyocell)" | "modal" | "organic cotton" | "recycled polyester" | "bamboo fabric" | "viscose";
+  slug?: Slug;
+};
+
+export type Colors = {
+  _id: string;
+  _type: "colors";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "black" | "white" | "gray" | "beige" | "navy" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "brown" | "olive" | "orange" | "teal" | "maroon";
+  slug?: Slug;
+  hexCode?: string;
+  altNames?: Array<string>;
+};
+
+export type Brands = {
+  _id: string;
+  _type: "brands";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "nike" | "adidas" | "puma" | "reebok" | "new balance" | "under armour" | "converse" | "vans" | "jordan" | "fila" | "asics" | "columbia" | "patagonia" | "the north face" | "levi's" | "h&m" | "zara" | "uniqlo" | "gucci" | "louis vuitton";
+  slug?: Slug;
+  logo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
 export type Reviews = {
   _id: string;
   _type: "reviews";
@@ -143,7 +196,6 @@ export type Product = {
   description?: string;
   gender?: Array<string>;
   kids?: Array<string>;
-  size?: Array<string>;
   cost?: number;
   details?: {
     mainDetails?: Array<{
@@ -179,7 +231,6 @@ export type Product = {
     _type: "stockItem";
     _key: string;
   }>;
-  sale?: Array<string>;
   collections?: Array<{
     _ref: string;
     _type: "reference";
@@ -187,10 +238,34 @@ export type Product = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "collections";
   }>;
-  colors?: Array<string>;
-  brand?: Array<string>;
-  materials?: Array<string>;
-  categories?: Array<string>;
+  colors?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "colors";
+  }>;
+  brands?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "brands";
+  }>;
+  materials?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "materials";
+  }>;
+  categories?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "categories";
+  }>;
 };
 
 export type Slug = {
@@ -241,6 +316,13 @@ export type User = {
     _weak?: boolean;
     _key: string;
     [internalGroqTypeReferenceTo]?: "product";
+  }>;
+  frequentSearches?: Array<string>;
+  popularCategories?: Array<string>;
+  recentSearches?: Array<{
+    query?: string;
+    timestamp?: string;
+    _key: string;
   }>;
 };
 
@@ -303,5 +385,5 @@ export type SanityImageMetadata = {
 
 export type Markdown = string;
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Reviews | Collections | Product | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Categories | Materials | Colors | Brands | Reviews | Collections | Product | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;

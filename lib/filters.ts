@@ -18,7 +18,6 @@ export const getDynamicFilters = async () => {
       "Patagonia", "Puma", "Reebok", "The North Face", "Under Armour", "Uniqlo", "Vans", "Zara"
     ],
     commonMaterials: ["Acrylic", "Cotton", "Denim", "Fleece", "Leather", "Nylon", "Polyester", "Rayon", "Spandex", "Wool"],
-    commonCategories: ["Accessories", "Activewear", "Bottoms", "Dresses", "Loungewear", "Outerwear", "Shoes", "Swimwear", "Tops", "Underwear"]
   };
 
   return {
@@ -32,6 +31,23 @@ export const getDynamicFilters = async () => {
     colors: [...new Set([...commonFilters.commonColors, ...data.colors.map(capitalize)])].sort(),
     brands: [...new Set([...commonFilters.commonBrands, ...data.brands.map(capitalize)])].sort(),
     materials: [...new Set([...commonFilters.commonMaterials, ...data.materials.map(capitalize)])].sort(),
-    categories: [...new Set([...commonFilters.commonCategories, ...data.categories.map(capitalize)])].sort()
+    categories: [ 
+      "Accessories",
+      "Activewear",
+      "Bottoms",
+      "Dresses",
+      "Loungewear",
+      "Outerwear",
+      "Shoes",
+      "Swimwear",
+      "Tops",
+      "Underwear",
+      "Casual",
+      "Formal",
+      "Sportswear",
+      "Streetwear",
+      "Business Casual",
+      "Luxury"
+    ]
   };
 };

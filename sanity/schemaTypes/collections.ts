@@ -12,6 +12,20 @@ export const collections = defineType({
             options: {
               list: ["new arrivals", "featured", "hearted", "sale", "best sellers"],
             },
+            validation: (Rule) =>
+              Rule.required().custom((title) => {
+                const validTitles = ["new arrivals", "featured", "hearted", "sale", "best sellers"];
+          
+                if (!title) {
+                  return "Collection title is required.";
+                }
+          
+                if (!validTitles.includes(title)) {
+                  return `Invalid collection title. Allowed values: ${validTitles.join(", ")}`;
+                }
+          
+                return true; 
+              }),
           }),
           defineField({
             name: "slug",

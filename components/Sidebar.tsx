@@ -20,7 +20,7 @@ const Sidebar = () => {
           Filters
         </span>
       </div>
-      <div className="flex flex-col gap-5 items-center w-full font-plex-sans font-medium text-[20px]">
+      <div className="flex flex-col gap-5 pb-5 items-center w-full font-plex-sans font-medium text-[20px]">
         {Object.entries(filters).map(
           ([category, { expanded, options }], index, arr) => (
             <div

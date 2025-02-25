@@ -31,7 +31,12 @@ export const product = defineType({
             name: 'imageGallery',
             title: 'Image Gallery',
             type: 'array',
-            of: [{type: 'image', options: {hotspot: true}}],
+            of: [
+                {
+                    type: 'image', 
+                    options: {hotspot: true},
+                }
+            ],
         }),
         defineField({
             name: 'description',
@@ -46,7 +51,19 @@ export const product = defineType({
             options: {
                 list: ['men', 'women', 'unisex'],
                 layout: 'tags',
-            }
+            },
+            validation: (Rule) =>
+                Rule.custom((genders) => {
+                  const allowedGenders = ['men', 'women', 'unisex'];
+                  if (!genders) return true; // Skip validation if empty
+            
+                  for (const gender of genders) {
+                    if (!allowedGenders.includes(gender as string)) {
+                      return `"${gender}" is not a valid gender. Allowed values: ${allowedGenders.join(', ')}`;
+                    }
+                  }
+                  return true;
+                }),
         }),
         defineField({
             name: 'kids',
@@ -56,17 +73,21 @@ export const product = defineType({
             options: {
                 list: ['boys', 'girls'],
                 layout: 'tags',
-            }
-        }),
-        defineField({
-            name: 'size',
-            title: 'Sizes',
-            type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: ['xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'],
-                layout: 'tags',
-            }
+            },
+            validation: (Rule) => 
+                Rule.custom((kids) => {
+                    const allowedKids = [
+                        "boys",
+                        "girls",
+                    ];
+                    if (!kids) return true; // Skip validation if no kids are provided
+                    for (const kid of kids) {
+                        if (!allowedKids.includes(kid as string)) {
+                            return `"${kid}" is not a valid kid. Allowed kids are: ${allowedKids.join(', ')}`;
+                        }
+                    }
+                    return true;
+                })
         }),
         defineField({
             name: 'cost',
@@ -102,7 +123,8 @@ export const product = defineType({
             name: 'stock',
             title: 'Stock',
             type: 'array',
-            of: [{
+            of: [
+              {
                 name: 'stockItem',
                 title: 'Stock Item',
                 type: 'object',
@@ -112,30 +134,50 @@ export const product = defineType({
                     title: "Size",
                     type: 'string',
                     options: {
-                        list: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'],
-                        layout: 'tags',
-                    }
+                      list: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'],
+                      layout: 'tags',
+                    },
+                    validation: (Rule) =>
+                      Rule.required().custom((size) => {
+                        const allowedSizes = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'];
+                        if (!allowedSizes.includes(size as string)) {
+                          return `"${size}" is not a valid size. Allowed sizes: ${allowedSizes.join(', ')}`;
+                        }
+                        return true;
+                      }),
                   },
                   {
                     name: "quantity",
                     title: "Quantity",
                     type: 'number',
-                    validation: (Rule) => Rule.min(0)
-                  }
+                    validation: (Rule) =>
+                      Rule.required()
+                        .min(0)
+                        .integer()
+                        .error("Quantity must be a whole number and at least 0"),
+                  },
                 ],
-            }, 
-        ],
-        }),
-        defineField({
-            name: 'sale',
-            title: 'Sale',
-            type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: ['sale'],
-                layout: 'tags',
-            }
-        }),
+              },
+            ],
+            validation: (Rule) =>
+              Rule.custom((stockItems) => {
+                if (!Array.isArray(stockItems)) return "Stock must be an array.";
+          
+                const seenSizes = new Set();
+                for (const item of stockItems as any) {
+                  if (!item.size || item.quantity < 0) {
+                    return "Each stock item must have a size and quantity.";
+                  }
+          
+                  if (seenSizes.has(item.size)) {
+                    return `Duplicate size detected: "${item.size}". Each size should be unique.`;
+                  }
+                  seenSizes.add(item.size);
+                }
+          
+                return true;
+              }),
+          }),
         defineField({
             name: 'collections',
             title: 'Collections',
@@ -146,113 +188,25 @@ export const product = defineType({
             name: 'colors',
             title: 'Colors',
             type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: [  "Black",
-                    "White",
-                    "Gray",
-                    "Beige",
-                    "Navy",
-                    "Red",
-                    "Blue",
-                    "Green",
-                    "Yellow",
-                    "Purple",
-                    "Pink",
-                    "Brown",
-                    "Olive",
-                    "Orange",
-                    "Teal",
-                    "Maroon",],
-                layout: 'tags',
-            }
+            of: [{type: 'reference', to: [{type: 'colors'}]}],
         }),
         defineField({
-            name: 'brand',
+            name: 'brands',
             title: 'Brand',
             type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: ["Nike",
-                    "Adidas",
-                    "Puma",
-                    "Reebok",
-                    "New Balance",
-                    "Under Armour",
-                    "Converse",
-                    "Vans",
-                    "Jordan",
-                    "Fila",
-                    "ASICS",
-                    "Columbia",
-                    "Patagonia",
-                    "The North Face",
-                    "Levi's",
-                    "H&M",
-                    "Zara",
-                    "Uniqlo",
-                    "Gucci",
-                    "Louis Vuitton",    
-                ],  
-                layout: 'tags',
-            }
+            of: [{type: 'reference', to: [{type: 'brands'}]}],
         }),
         defineField({
             name: 'materials',
             title: 'Materials',
             type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: [  "Cotton", 
-                    "Wool", 
-                    "Linen", 
-                    "Silk", 
-                    "Cashmere", 
-                    "Hemp", 
-                    "Suede", 
-                    "Leather", 
-                    "Denim", 
-                    "Polyester", 
-                    "Nylon", 
-                    "Spandex", 
-                    "Rayon", 
-                    "Fleece", 
-                    "Acrylic", 
-                    "Microfiber", 
-                    "Gore-Tex", 
-                    "Neoprene", 
-                    "Kevlar", 
-                    "Coolmax", 
-                    "Tencel (Lyocell)", 
-                    "Modal", 
-                    "Organic Cotton", 
-                    "Recycled Polyester", 
-                    "Bamboo Fabric", 
-                    "Viscose",],
-                layout: 'tags',
-            }
+            of: [{type: 'reference', to: [{type: 'materials'}]}]
         }),
         defineField({
             name: 'categories',
             title: 'Categories',
             type: 'array',
-            of: [{type: 'string'}],
-            options: {
-                list: [ "Casual",
-                    "Formal",
-                    "Sportswear",
-                    "Loungewear",
-                    "Streetwear",
-                    "Business Casual",
-                    "Outerwear",
-                    "Footwear",
-                    "Accessories",
-                    "Activewear",
-                    "Swimwear",
-                    "Undergarments",
-                    "Luxury",],
-                layout: 'tags',
-            }
+            of: [{type: 'reference', to: [{type: 'categories'}]}],
         }),
     ],
     preview: {

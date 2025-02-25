@@ -18,11 +18,12 @@ const page = async ({ params }: { params: { id: string } }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
-  const path = params.id || "/";
-  console.log(`Path in product page: ${path}`);
+  const path = (await params).id || "/";
   if (!path) {
     throw new Error("No path provided");
   }
+
+  console.log(`Path in product page: ${path}`);
 
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
   const imagesPlusProductDetails = await client.fetch(
@@ -35,7 +36,8 @@ const page = async ({ params }: { params: { id: string } }) => {
     getRecentyViewedProducts = await fetchRecentyViewedProducts(userId);
     addRecentlyViewdProducts = await handleRecentyViewedProductsWrite(
       path,
-      userId
+      userId,
+      getRecentyViewedProducts
     );
   }
 
