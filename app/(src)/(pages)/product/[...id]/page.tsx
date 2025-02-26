@@ -1,5 +1,10 @@
 import ProductImages from "@/components/ProductImages";
-import { client, fetchRecentyViewedProducts } from "@/sanity/lib/client";
+import {
+  client,
+  fetchHeartedProducts,
+  fetchRecentyViewedProducts,
+  urlFor,
+} from "@/sanity/lib/client";
 import {
   GET_TOP_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
@@ -9,6 +14,8 @@ import markdownit from "markdown-it";
 import ProductDetailsDrop from "@/components/ProductDetailsDrop";
 import { auth } from "@/auth";
 import { handleRecentyViewedProductsWrite } from "@/sanity/lib/actions";
+import Image from "next/image";
+import ProductPageHeart from "@/components/ProductPageHeart";
 
 export const experimental_ppr = true;
 
@@ -19,13 +26,14 @@ const page = async ({ params }: { params: { id: string } }) => {
   const user = sesson?.user;
   const userId = user?.id || null;
   const path = (await params).id || "/";
+  const callbackUrl = `/product/${path}`;
   if (!path) {
     throw new Error("No path provided");
   }
 
   console.log(`Path in product page: ${path}`);
-
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(path as string)
   );
@@ -33,6 +41,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   console.log("Images and product details: ", imagesPlusProductDetails);
   let getRecentyViewedProducts = null;
   let addRecentlyViewdProducts = null;
+  let heartedProducts = [];
   if (userId) {
     getRecentyViewedProducts = await fetchRecentyViewedProducts(userId);
     addRecentlyViewdProducts = await handleRecentyViewedProductsWrite(
@@ -40,6 +49,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       userId,
       getRecentyViewedProducts
     );
+    heartedProducts = await fetchHeartedProducts(userId);
   }
 
   const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
@@ -49,7 +59,6 @@ const page = async ({ params }: { params: { id: string } }) => {
     title,
     stock,
     cost,
-    size,
     description,
     materials,
     brands,
@@ -83,10 +92,29 @@ const page = async ({ params }: { params: { id: string } }) => {
 
       <div className="flex flex-col w-full overflow-y-auto ">
         <div className="flex flex-col pl-5 gap-y-2 w-full">
-          <div className="font-plex-sans font-bold text-[28px]">
-            <p>{capitalizeBrand(brands[0])}</p>
-            <p>{title}</p>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-5 font-plex-sans font-bold text-[28px] items-center">
+              <Image
+                src={urlFor(brands[0]?.logo).url()}
+                alt="brand logo"
+                width={80}
+                height={50}
+                className="object-contain w-12 h-12"
+              />
+              <p>{capitalizeBrand(brands[0])}</p>
+            </div>
+            <div className="pr-5">
+              <ProductPageHeart
+                heartedProducts={heartedProducts}
+                isHearted={heartedProducts?.includes(path)}
+                path={path}
+                userId={userId}
+                callbackUrl={callbackUrl}
+              />
+            </div>
           </div>
+          <p className="font-plex-sans font-bold text-[28px]">{title}</p>
+
           <div>
             <p className="font-plex-sans font-regular text-[16px]">${cost}</p>
           </div>

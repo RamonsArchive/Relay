@@ -332,6 +332,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
 /* Product page only */
 export const PRODUCT_PAGE_INFORMATION = (id: string) => {
   return `*[_type == "product" && _id == "${id}"][0] {
+    userId,
     mainImage,
     imageGallery,
     title,

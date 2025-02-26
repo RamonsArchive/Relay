@@ -77,14 +77,14 @@ const ProductCard = ({
       <Link href={`/product/${_id}`}>
         <div className="product-group-info">
           <span className="font-plex-sans font-bold text-[20px]">{title}</span>
-          <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
+          <div className="flex flex-wrap gap-x-1.5 font-plex-sans font-medium">
             {materials &&
               materials.length > 0 &&
               materials.map((obj: any, index: number) => (
                 <span key={index}>{obj.name}</span>
               ))}
           </div>
-          <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
+          <div className="flex flex-wrap gap-x-1.5 font-plex-sans font-medium">
             {categories &&
               categories.length > 0 &&
               categories.map((obj: any, index: number) => (
