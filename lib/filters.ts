@@ -5,10 +5,10 @@ export const getDynamicFilters = async () => {
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
   const data = await client.fetch(`
   {
-      "colors": array::unique(*[_type == "product"].colors[]) | order(@ asc),
-      "brands": array::unique(*[_type == "product"].brand[]) | order(@ asc),
-      "materials": array::unique(*[_type == "product"].materials[]) | order(@ asc),
-      "categories": array::unique(*[_type == "product"].categories[]) | order(@ asc)
+      "colors": array::unique(*[_type == "product"].colors[]->name) | order(@ asc),
+      "brands": array::unique(*[_type == "product"].brands[]->name) | order(@ asc),
+      "materials": array::unique(*[_type == "product"].materials[]->name) | order(@ asc),
+      "categories": array::unique(*[_type == "product"].categories[]->name) | order(@ asc)
   }`);
 
   const commonFilters = {

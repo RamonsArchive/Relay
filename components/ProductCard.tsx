@@ -24,6 +24,8 @@ const ProductCard = ({
   const router = useRouter();
   const { _id, title, mainImage, materials, categories } = product;
   const [hearted, setHearted] = useState<boolean>(isHearted);
+  console.log("Materials", materials);
+  console.log("Categories", categories);
 
   useEffect(() => {
     setHearted(isHearted);
@@ -78,15 +80,15 @@ const ProductCard = ({
           <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
             {materials &&
               materials.length > 0 &&
-              materials.map((material: string, index: number) => (
-                <span key={index}>{material}</span>
+              materials.map((obj: any, index: number) => (
+                <span key={index}>{obj.name}</span>
               ))}
           </div>
           <div className="flex flex-row gap-x-1.5 font-plex-sans font-medium">
             {categories &&
               categories.length > 0 &&
-              categories.map((category: string, index: number) => (
-                <span key={index}>{category}</span>
+              categories.map((obj: any, index: number) => (
+                <span key={index}>{obj.name}</span>
               ))}
           </div>
         </div>
