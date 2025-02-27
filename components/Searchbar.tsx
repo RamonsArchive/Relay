@@ -3,8 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import SearchPopUp from "./SearchPopUp";
 import ReactDOM from "react-dom"; // create a portal to top level of the dom
 import { X, Search } from "lucide-react";
+import { Session } from "next-auth";
 
-const Searchbar = () => {
+const Searchbar = ({ session }: { session: Session | null }) => {
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +55,7 @@ const Searchbar = () => {
         typeof window !== "undefined" &&
         ReactDOM.createPortal(
           <div ref={popupRef}>
-            <SearchPopUp setClicked={setClicked} />
+            <SearchPopUp session={session} setClicked={setClicked} />
           </div>,
           document.body
         )}

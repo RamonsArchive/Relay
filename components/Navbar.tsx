@@ -7,6 +7,7 @@ import ManageSession from "./ManageSession";
 
 const Navbar = async () => {
   const session = await auth();
+
   return (
     <header className="px-3 py-3 bg-white-300 max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
       <nav className="flex flex-row gap-4 items-center">
@@ -70,7 +71,7 @@ const Navbar = async () => {
             <ManageSession session={session} />
           </div>
           <div className="flex justify-self-end self-end">
-            <Searchbar />
+            <Searchbar session={session} />
           </div>
         </div>
       </nav>

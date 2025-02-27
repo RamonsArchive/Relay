@@ -2,8 +2,8 @@
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
-import { redirect }  from "next/navigation";
-import { auth } from "@/auth";
+import { fetchPopularCategories } from "./client";
+import { categoriesType } from "@/globalTypes";
 
 
 export const uploadImageToSanity = async (imageUrl: string) => {
@@ -23,16 +23,17 @@ export const uploadImageToSanity = async (imageUrl: string) => {
   } 
 }
 
-export const handleHeartWrite = async (productId: string, hearted: boolean) => {  
-   const session = await auth();
-   if (!session) {
-    redirect("/sign-in?callbackUrl=/");
+export const handleHeartWrite = async (userId: string, productId: string, hearted: boolean) => {  
+   const userIdString = userId;
+   console.log("User ID: ", userIdString);
+   console.log("User ID: ", userIdString);
+   console.log("Product ID: ", productId);
+   console.log("Type of prdouct id: ", typeof productId);
+   if (!userIdString || !productId) {
+    throw new Error("No user ID provided");
    }
-   const user = session?.user;
-   
-   const userId = user?.id;
-   const userIdString = userId?.toString() || "";
 
+   console.log("Hearted value: ", hearted);
     if (!hearted) {
       try {
       await writeClient.withConfig({useCdn: false})
@@ -61,18 +62,18 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
             console.error("Error removing the heart", error);
         }
       }
-    };
+  } 
 
   export const handleRecentyViewedProductsWrite = async (productId: string, userId: string, recentlyViewedProducts: any) => {
     console.log("recentlyViewedProducts: ", recentlyViewedProducts);
     console.log("type of recentlyViewedProducts: ", typeof recentlyViewedProducts);
     try {
-      if (!userId) {
+      if (!userId || !productId) {
         throw new Error("No user ID provided");
       }
       const myKey = nanoid();
 
-      const productIdString = productId.toString();
+      const productIdString = productId;
 
       const newProductReference = {
         _type: "reference",
@@ -101,4 +102,35 @@ export const handleHeartWrite = async (productId: string, hearted: boolean) => {
     } 
 
   }
+
+export const writePopularCategories = async (userId: string, productId: string, categories: categoriesType[]) => {
+  try {
+    if (!userId) {
+      throw new Error("No user ID provided");
+    }
+
+    const dereferencedCategories = categories.map((obj: any) => obj.name);
+    console.log("Dereferenced categories: ", dereferencedCategories);
+
+    const popularCategories = await fetchPopularCategories(userId);
+    let updatedPopularCategories = dereferencedCategories;
+    updatedPopularCategories = [...dereferencedCategories, ...popularCategories];
+    updatedPopularCategories = updatedPopularCategories.slice(0, 100);
+    console.log("Updated popular categories: ", updatedPopularCategories);
+
+    await writeClient
+      .withConfig({useCdn: false})
+      .patch(userId)
+      .set({"popularCategories": updatedPopularCategories})
+      .commit();
+  } catch (error) {
+    console.error("Error writing popular categories", error);
+    return;
+  }
+} 
+
+
+export const writeRecentSearch = async (userId: string, searchQuery: string, date: number) => {
+
+}
 

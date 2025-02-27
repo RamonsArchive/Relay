@@ -18,6 +18,7 @@ const Home = async ({
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const session = await auth();
+  console.log("Session", session);
   const user = session?.user;
   const userId = user?.id || null;
 

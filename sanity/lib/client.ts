@@ -45,5 +45,23 @@ export const fetchRecentyViewedProducts = async (userId: string) => {
   }
 }
 
+export const fetchPopularCategories = async (userId: string) => {
+  if (!userId) {
+    return [];
+  }
+  try {
+    const query = `*[_type == "user" && userId == "${userId}"][0]{
+      popularCategories,
+    }`;
+    const result = await client.fetch(query);
+    const popularCategories = result.popularCategories || [];
+    console.log("Popular categories", popularCategories);
+    return popularCategories || [];
+  } catch (error) {
+    console.error("Error fetching popular categories", error);
+    return [];
+  }
+}
+
 const builder = imageUrlBuilder(client);
 export const urlFor = (source: any) => builder.image(source);

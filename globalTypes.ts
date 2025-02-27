@@ -1,5 +1,6 @@
 import { SanityDocument } from "sanity";
 import { Product, Collections, Reviews, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop } from "./sanity.types";
+import { Categories } from "./sanity/types";
 
 export type ProductType = Pick<
   Product,
@@ -88,4 +89,11 @@ export type ReviewType = Pick<
     nickname: string | null;
     slug: string | null;
     email: string | null;
+  };
+
+
+export type categoriesType = Pick<
+  Categories,
+  "_id"> & {
+    name: string | null;
   };

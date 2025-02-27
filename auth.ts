@@ -6,7 +6,6 @@ import { parseServerActionResponse } from "@/lib/utils";
 import { AdapterUser } from "next-auth/adapters";
 import { uploadImageToSanity } from "./sanity/lib/actions";
 import { client } from "./sanity/lib/client";
-import { cookies } from "next/headers";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
@@ -47,19 +46,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
          }
 
-         const cookieStore = cookies();
-         const heartedProductId = (await cookieStore).get("heartedProductId")?.value;
-         const heartedAction = (await cookieStore).get("heartedAction")?.value;
-
-         if (heartedProductId && heartedAction == "true") {
-          // await handleHeartWrite(heartedProductId, true);
-         }
          return true; // allow sign in
       } catch (error) {
         console.error(parseServerActionResponse({err: error, status: "ERROR"}));
         return false; // block sign
-      } finally {
-        cleanUpCookes();
       }
     },
 
@@ -79,6 +69,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token
     },
   
+    
     async session({ session, token }) {
       session.user = token.user as AdapterUser & User;
       session.user.id = token.id as string;
@@ -99,14 +90,3 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   }*/
 
 })
-
-const cleanUpCookes = async () => {
-  const cookieStore = cookies();
-  const heartedProductId = (await cookieStore).get("heartedProductId")?.value;
-  const heartedAction = (await cookieStore).get("heartedAction")?.value;
-
-  if (heartedProductId && heartedAction === "true") {
-    (await cookieStore).delete("heartedProductId");
-    (await cookieStore).delete("heartedAction");
-  }
-}

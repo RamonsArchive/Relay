@@ -13,9 +13,12 @@ import { Suspense } from "react";
 import markdownit from "markdown-it";
 import ProductDetailsDrop from "@/components/ProductDetailsDrop";
 import { auth } from "@/auth";
-import { handleRecentyViewedProductsWrite } from "@/sanity/lib/actions";
+import {
+  handleRecentyViewedProductsWrite,
+  writePopularCategories,
+} from "@/sanity/lib/actions";
 import Image from "next/image";
-import ProductPageHeart from "@/components/ProductPageHeart";
+import ProductHeart from "@/components/ProductHeart";
 
 export const experimental_ppr = true;
 
@@ -26,6 +29,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   const user = sesson?.user;
   const userId = user?.id || null;
   const path = (await params).id || "/";
+  const productIdString = path.toString();
   const callbackUrl = `/product/${path}`;
   if (!path) {
     throw new Error("No path provided");
@@ -37,23 +41,6 @@ const page = async ({ params }: { params: { id: string } }) => {
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(path as string)
   );
-
-  console.log("Images and product details: ", imagesPlusProductDetails);
-  let getRecentyViewedProducts = null;
-  let addRecentlyViewdProducts = null;
-  let heartedProducts = [];
-  if (userId) {
-    getRecentyViewedProducts = await fetchRecentyViewedProducts(userId);
-    addRecentlyViewdProducts = await handleRecentyViewedProductsWrite(
-      path,
-      userId,
-      getRecentyViewedProducts
-    );
-    heartedProducts = await fetchHeartedProducts(userId);
-  }
-
-  const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
-  console.log(`Top Reviews: ${topReviews.reviews}`);
 
   const {
     title,
@@ -68,6 +55,29 @@ const page = async ({ params }: { params: { id: string } }) => {
     detailBullets,
     reviews,
   } = imagesPlusProductDetails;
+
+  console.log("Categories: ", categories);
+  console.log("Images and product details: ", imagesPlusProductDetails);
+  let getRecentyViewedProducts = null;
+  let addRecentlyViewdProducts = null;
+  let heartedProducts = [];
+  console.log("User ID: ", userId);
+  if (userId) {
+    getRecentyViewedProducts = await fetchRecentyViewedProducts(userId);
+    addRecentlyViewdProducts = await handleRecentyViewedProductsWrite(
+      productIdString,
+      userId,
+      getRecentyViewedProducts
+    );
+    heartedProducts = await fetchHeartedProducts(userId);
+    console.log("Categories: ", categories);
+    writePopularCategories(userId, productIdString, categories);
+  }
+
+  console.log("Hearted products: ", heartedProducts);
+
+  const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
+  console.log(`Top Reviews: ${topReviews.reviews}`);
 
   const parsedDescription = md.render(description);
 
@@ -91,29 +101,46 @@ const page = async ({ params }: { params: { id: string } }) => {
       </Suspense>
 
       <div className="flex flex-col w-full overflow-y-auto ">
-        <div className="flex flex-col pl-5 gap-y-2 w-full">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-5 font-plex-sans font-bold text-[28px] items-center">
-              <Image
-                src={urlFor(brands[0]?.logo).url()}
-                alt="brand logo"
-                width={80}
-                height={50}
-                className="object-contain w-12 h-12"
-              />
-              <p>{capitalizeBrand(brands[0])}</p>
+        <div className="flex flex-col pl-5 gap-y-5 w-full">
+          <div>
+            <div className="flex justify-between items-center">
+              <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
+                <Image
+                  src={urlFor(brands[0]?.logo).url()}
+                  alt="brand logo"
+                  width={80}
+                  height={50}
+                  className="object-contain w-12 h-12"
+                />
+                <p>{capitalizeBrand(brands[0])}</p>
+              </div>
+              <Suspense fallback={<div>Heart</div>}>
+                <div className="pr-5">
+                  <ProductHeart
+                    isHearted={heartedProducts?.includes(
+                      productIdString.toString()
+                    )}
+                    productIdString={productIdString}
+                    userId={userId}
+                    callbackUrl={callbackUrl}
+                  />
+                </div>
+              </Suspense>
             </div>
-            <div className="pr-5">
-              <ProductPageHeart
-                heartedProducts={heartedProducts}
-                isHearted={heartedProducts?.includes(path)}
-                path={path}
-                userId={userId}
-                callbackUrl={callbackUrl}
-              />
+            <div className="flex flex-col">
+              <p className="font-plex-sans font-bold text-[28px]">{title}</p>
+              {categories &&
+                categories.length > 0 &&
+                categories.map((obj: any, index: number) => (
+                  <p
+                    key={index}
+                    className="font-plex-sans font-regular text-[18px]"
+                  >
+                    {obj.name}
+                  </p>
+                ))}
             </div>
           </div>
-          <p className="font-plex-sans font-bold text-[28px]">{title}</p>
 
           <div>
             <p className="font-plex-sans font-regular text-[16px]">${cost}</p>

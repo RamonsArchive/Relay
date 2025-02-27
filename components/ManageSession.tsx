@@ -32,14 +32,6 @@ const ManageSession = ({ session }: { session: any }) => {
 
   let userInfo = {};
   const [isLoggedIn, setIsLoggedIn] = useState(isSession);
-  if (isLoggedIn) {
-    userInfo = {
-      name: user.name,
-      email: user.email,
-      image: user.image,
-    };
-    //console.log(userInfo);
-  }
 
   const handleFormSubmit = async () => {
     try {

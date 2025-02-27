@@ -14,14 +14,17 @@ import { CircleX, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Context } from "@/app/context/context";
 import { useSearchParams } from "next/navigation";
+import { Session } from "next-auth";
+import { writeRecentSearch } from "@/sanity/lib/actions";
 
 // TODO: Implement RECENTS
 
 interface Props {
+  session: Session | null;
   setClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SearchPopUp = ({ setClicked }: Props) => {
+const SearchPopUp = ({ session, setClicked }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
@@ -51,6 +54,10 @@ const SearchPopUp = ({ setClicked }: Props) => {
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       resetFilters();
       setInputValue("");
+      if (session) {
+        const userId = session.user?.id;
+        await writeRecentSearch(userId as string, query, Date.now());
+      }
       return query;
     } catch (error) {
       return {
