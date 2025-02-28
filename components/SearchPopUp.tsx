@@ -35,8 +35,6 @@ const SearchPopUp = ({ session, setClicked }: Props) => {
   const oldQuery = useRef<string | undefined>(query);
 
   useEffect(() => {
-    console.log("SearchPopUp", searchParams);
-    console.log("SearchPopUp", searchParams);
     if (query && query !== oldQuery.current) {
       setClicked(false);
       setInputValue("");
@@ -51,12 +49,14 @@ const SearchPopUp = ({ session, setClicked }: Props) => {
       if (!query) {
         return;
       }
+      console.log("Query", query);
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       resetFilters();
       setInputValue("");
       if (session) {
+        console.log("Going to write recent search history");
         const userId = session.user?.id;
-        await writeRecentSearch(userId as string, query, Date.now());
+        await writeRecentSearch(userId as string, query);
       }
       return query;
     } catch (error) {

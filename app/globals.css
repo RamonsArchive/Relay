@@ -7,19 +7,19 @@
 }
 
 .root {
-  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300 overflow-hidden;
+  @apply flex min-h-screen w-full flex-row bg-white-300 sm:flex-col flex-col font-plex-sans text-third-300;
 }
 
 .root-container {
-  @apply flex flex-1 flex-row h-[calc(100vh-8rem)] overflow-hidden;
+  @apply flex flex-1 flex-row min-h-0 max-w-full;
 }
 
 .content-wrapper {
-  @apply flex flex-col flex-1 h-[calc(100vh-8rem)];
+  @apply flex flex-col flex-1 min-h-0 max-w-full;
 }
 
 .content-container {
-  @apply flex-1 h-[calc(100vh-8rem)];
+  @apply flex-1 min-h-0;
 }
 
 .footer-wrapper {
@@ -140,7 +140,7 @@ html, body {
   }
 
   .product-group {
-  @apply bg-white-100 border-[2px] border-primary-200 shadow-100 transition-transform duration-300 ease-in-out;
+  @apply bg-white-100 border-[2px] border-primary-200 shadow-100 transition-transform duration-300 ease-in-out min-w-[300px] min-h-[350px] max-w-[450px] max-h-[500px] ;
   }
 
   .product-group:hover {
@@ -163,12 +163,15 @@ html, body {
     @apply relative flex-1 w-full min-h-0 gap-4;
   }
 
+  .product-page-wrapper {
+    @apply flex flex-col w-full h-full h-[calc(100vh-8rem)] overflow-y-auto;
+  }
   .product-page {
-    @apply flex flex-row p-5 w-full min-h-0 h-[calc(100vh-8rem)];
+    @apply flex flex-row p-5 w-full h-[calc(100vh-8rem)];
   }
 
   .product-page-image-container {
-    @apply flex gap-2 ml-[15%] w-full;
+    @apply flex gap-2 ml-[10%] w-full;
   }
 
   .product-sizebutton-grid {
@@ -177,11 +180,11 @@ html, body {
   }
 
   .product-buy-buttons {
-    @apply font-plex-sans font-bold md:text-[20px] sm:text-[16] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-110 hover:scale-125;
+    @apply font-plex-sans font-bold md:text-[20px] sm:text-[16] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-105 hover:scale-110;
   }
 
   .product-drop {
-    @apply flex flex-col font-plex-sans font-medium w-[75%] text-[24px] pt-5 gap-4
+    @apply flex flex-col font-plex-sans font-medium w-full text-[24px] pt-5 gap-4
   }
 
   .product-drop-section {

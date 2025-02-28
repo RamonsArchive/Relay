@@ -18,9 +18,10 @@ const ProductCard = ({
   user: any;
 }) => {
   const { _id, title, mainImage, materials, categories } = product;
+  console.log("Product card product", product);
   return (
-    <li className="product-group w-full">
-      <div className="relative w-full h-[250px] overflow-hidden">
+    <li className="product-group w-full list-none">
+      <div className="relative w-full h-[300px] overflow-hidden">
         <Link href={`/product/${_id}`}>
           <Image
             src={urlFor(mainImage).url()}

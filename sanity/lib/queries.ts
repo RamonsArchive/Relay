@@ -403,4 +403,22 @@ export const GET_TOP_REVIEWS = (id: string) => {
   }`
 }
 
+export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = () => {
+   return `*[_type == "product" && _id in $productIds]{
+    _id,
+    title,
+    mainImage,
+    "materials": materials[]->{
+      _id,
+      _key,
+      name,
+    },
+    "categories": categories[]->{
+      _id,
+      _key,
+      name,
+    },
+  }`
+}
+
 

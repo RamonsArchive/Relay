@@ -11,8 +11,8 @@ const ProductImages = ({ images }: { images: ProductPageType }) => {
 
   const [frontImage, setFrontImage] = useState(mainImage);
   return (
-    <div className="flex flex-row gap-5 w-full">
-      <div className="border border-primary-200 p-2 align-center">
+    <div className="flex flex-row gap-5 w-full ">
+      <div className="min-w-[100px] p-2 align-center">
         <ul className="flex flex-col items-center gap-4 relative">
           <li
             className="h-[50px]"
@@ -37,14 +37,14 @@ const ProductImages = ({ images }: { images: ProductPageType }) => {
                 alt="product image"
                 width={75}
                 height={75}
-                className="object-cover w-full h-full overflow-y-auto"
+                className="object-contain w-full h-full overflow-y-auto"
               />
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="relative w-full h-[650px] overflow-hidden">
+      <div className="relative min-w-[350px] w-full h-[650px] overflow-hidden">
         <Image
           src={urlFor(frontImage).url()}
           alt="main image"

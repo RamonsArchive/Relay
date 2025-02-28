@@ -38,7 +38,7 @@ export const fetchRecentyViewedProducts = async (userId: string) => {
     }`;
     const recentlyViewedProducts = await client.fetch(query);
     console.log("Recently viewed products", recentlyViewedProducts);
-    return recentlyViewedProducts || [];
+    return recentlyViewedProducts.recentlyViewedProducts || [];
   } catch (error) {
     console.error("Error fetching recently viewed products", error);
     return [];
@@ -55,11 +55,25 @@ export const fetchPopularCategories = async (userId: string) => {
     }`;
     const result = await client.fetch(query);
     const popularCategories = result.popularCategories || [];
-    console.log("Popular categories", popularCategories);
     return popularCategories || [];
   } catch (error) {
     console.error("Error fetching popular categories", error);
     return [];
+  }
+}
+
+export const fetchRecentSearches = async (userId: string) => {
+  if (!userId) {
+    return [];
+  }
+  try {
+    const query = `*[_type == "user" && userId == "${userId}"][0]{
+      recentSearches
+    }`
+    const result = await client.fetch(query);
+    return result.recentSearches || [];
+  } catch (error) {
+
   }
 }
 

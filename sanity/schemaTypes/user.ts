@@ -80,7 +80,7 @@ export const user = defineType({
             type: "array",
             of: [{type: 'object', fields: [
                 {name: 'query', type: 'string', title: 'Query'},
-                {name: 'timestamp', type: 'datetime', title: 'Searched At'}
+                {name: 'timestamp', type: 'number', title: 'Searched At'}
             ]}]
         })
 

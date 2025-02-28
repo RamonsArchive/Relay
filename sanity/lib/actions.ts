@@ -3,6 +3,7 @@ import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import { fetchPopularCategories } from "./client";
+import {fetchRecentSearches } from "./client";
 import { categoriesType } from "@/globalTypes";
 
 
@@ -65,8 +66,6 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
   } 
 
   export const handleRecentyViewedProductsWrite = async (productId: string, userId: string, recentlyViewedProducts: any) => {
-    console.log("recentlyViewedProducts: ", recentlyViewedProducts);
-    console.log("type of recentlyViewedProducts: ", typeof recentlyViewedProducts);
     try {
       if (!userId || !productId) {
         throw new Error("No user ID provided");
@@ -81,13 +80,12 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
         _key: myKey,
       }
 
-      let updatedProducts = recentlyViewedProducts.recentlyViewedProducts || []
+      let updatedProducts = recentlyViewedProducts || []
       console.log("Tyep of updatedProducts: ", typeof updatedProducts);
       console.log("upadted Products: ", updatedProducts);
       updatedProducts = updatedProducts.filter((product: any) => product._ref !== productIdString);
       console.log("Unique Filters: ", updatedProducts);
       updatedProducts = [newProductReference, ...updatedProducts];
-      updatedProducts = updatedProducts.slice(0, 10);
       
 
       console.log("Updated Products: ", updatedProducts);
@@ -115,7 +113,6 @@ export const writePopularCategories = async (userId: string, productId: string, 
     const popularCategories = await fetchPopularCategories(userId);
     let updatedPopularCategories = dereferencedCategories;
     updatedPopularCategories = [...dereferencedCategories, ...popularCategories];
-    updatedPopularCategories = updatedPopularCategories.slice(0, 100);
     console.log("Updated popular categories: ", updatedPopularCategories);
 
     await writeClient
@@ -130,7 +127,30 @@ export const writePopularCategories = async (userId: string, productId: string, 
 } 
 
 
-export const writeRecentSearch = async (userId: string, searchQuery: string, date: number) => {
+export const writeRecentSearch = async (userId: string, searchQuery: string) => {
+  try {
+    if (!userId) {
+      throw new Error("No user ID provided");
+    }
+    
+    const myKey = nanoid();
+    const newSearch = {
+      query: searchQuery,
+      timestamp: Date.now(),
+      _key: myKey,
+    }
+    console.log("New search: ", newSearch);
 
+    await writeClient
+      .withConfig({useCdn: false})
+      .patch(userId)
+      .setIfMissing({recentSearches: []})
+      .prepend("recentSearches", [newSearch])
+      .commit();
+    
+  } catch (error) {
+    console.error("Error writing recent search", error);
+    return;
+  }
 }
 
