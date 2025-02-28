@@ -10,7 +10,6 @@ export const client = createClient({
 })
 
 export const fetchHeartedProducts = async (userId: string | null) => {
-  console.log("Fetching hearted products for user", userId);
   if (!userId) {
     return [];
   }
@@ -37,7 +36,6 @@ export const fetchRecentyViewedProducts = async (userId: string) => {
       }
     }`;
     const recentlyViewedProducts = await client.fetch(query);
-    console.log("Recently viewed products", recentlyViewedProducts);
     return recentlyViewedProducts.recentlyViewedProducts || [];
   } catch (error) {
     console.error("Error fetching recently viewed products", error);

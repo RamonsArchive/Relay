@@ -17,7 +17,7 @@ const WriteReview = async ({ params }: { params: { id: string } }) => {
 
   // if not authenticated, redirect to sign in
   return (
-    <div className="flex flex-row w-full h-screen">
+    <div className="flex flex-row w-full h-[calc(100vh-8rem)]">
       <Suspense fallback={<div>Loading review form... </div>}>
         <ReviewForm user={user} />
       </Suspense>

@@ -62,7 +62,7 @@ const ReviewForm = ({ user }: { user: any }) => {
   });
 
   return (
-    <div className="flex flex-col w-[50%] h-auto overflow-y-auto items-center gap-5 p-5 pb-20 ">
+    <div className="flex flex-col w-[50%] h-full overflow-y-auto items-center gap-5 p-5 pb-10">
       <h1 className="font-plex-sans font-medium text-[28px]">
         Write your Review!
       </h1>

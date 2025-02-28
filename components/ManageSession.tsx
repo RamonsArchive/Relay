@@ -8,11 +8,9 @@ import { useSearchParams, usePathname } from "next/navigation";
 const ManageSession = ({ session }: { session: any }) => {
   const user = session?.user;
   const isSession = user != null;
-  //console.log(user);
 
   const searchParams = useSearchParams();
   const pathName = usePathname();
-  //console.log(`pathName: ${pathName}`);
 
   const query = searchParams.get("query") || "";
   const filters = searchParams.get("f") || "";
@@ -28,9 +26,6 @@ const ManageSession = ({ session }: { session: any }) => {
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-  //console.log(`Callback URL: ${callbackUrl}`);
-
-  let userInfo = {};
   const [isLoggedIn, setIsLoggedIn] = useState(isSession);
 
   const handleFormSubmit = async () => {

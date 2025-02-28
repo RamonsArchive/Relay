@@ -59,14 +59,12 @@ const ProductPageHeart = ({
   }, []); // Runs once when component mounts
 
   const toggleHeart = async () => {
-    console.log("not yet passed auth check");
     if (!userId) {
       // get product Id
       Cookies.set("heartedProductId", productIdString, { expires: 1 });
       router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
       return;
     }
-    console.log("passed auth check");
     try {
       const newHearted = !hearted;
       setHearted(newHearted);

@@ -39,14 +39,12 @@ const page = async ({
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-  console.log(`Callback URL: ${callbackUrl}`);
 
   //const finalQuery = parseSearchParams(query, filters);
   const heartedProductsIds = await fetchHeartedProducts(userId);
   const genderProducts = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
-  console.log(genderProducts, null, 2);
 
   return (
     <div className="content-page">

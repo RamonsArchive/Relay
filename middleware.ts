@@ -9,7 +9,7 @@ export default auth((req) => {
       newUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
       return NextResponse.redirect(newUrl)
     }
-    console.log(`New URL: ${req.nextUrl.pathname}`);
+
     return NextResponse.next();
   }) 
 

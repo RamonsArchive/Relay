@@ -40,9 +40,9 @@ const page = async ({ params }: { params: { id: string } }) => {
   console.log(`Path in product page: ${path}`);
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
-  const imagesPlusProductDetails = await client
-    .withConfig({ useCdn: false })
-    .fetch(PRODUCT_PAGE_INFORMATION(path as string));
+  const imagesPlusProductDetails = await client.fetch(
+    PRODUCT_PAGE_INFORMATION(path as string)
+  );
 
   const {
     title,
@@ -59,12 +59,18 @@ const page = async ({ params }: { params: { id: string } }) => {
     reviews,
   } = imagesPlusProductDetails;
 
-  console.log("Categories: ", categories);
-  console.log("Images and product details: ", imagesPlusProductDetails);
   let getRecentlyViewedProducts = null;
+  let dereferencedRecenltyViewedProducts = null;
   let heartedProducts = [];
-  console.log("User ID: ", userId);
   if (userId) {
+    const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
+    dereferencedRecenltyViewedProducts = await client
+      .withConfig({ useCdn: false })
+      .fetch(query, {
+        userId,
+      });
+    dereferencedRecenltyViewedProducts =
+      dereferencedRecenltyViewedProducts.recentlyViewedProducts;
     getRecentlyViewedProducts = await fetchRecentyViewedProducts(userId);
     await handleRecentyViewedProductsWrite(
       productIdString,
@@ -72,24 +78,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       getRecentlyViewedProducts
     );
     heartedProducts = await fetchHeartedProducts(userId);
-    console.log("Categories: ", categories);
     writePopularCategories(userId, productIdString, categories);
-  }
-
-  console.log("Recently viewed Products: ", getRecentlyViewedProducts);
-  let dereferencedRecenltyViewedProducts = null;
-  if (getRecentlyViewedProducts) {
-    const productIds = getRecentlyViewedProducts.map(
-      (product: any) => product._ref
-    );
-    console.log("Product IDs: ", productIds);
-    console.log("Product Ids: type", typeof productIds);
-    console.log("Product Ids: type", typeof productIds[0]);
-    console.log("Product Ids:", productIds[0]);
-    const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
-    dereferencedRecenltyViewedProducts = await client.fetch(query, {
-      productIds,
-    });
   }
 
   const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
@@ -97,12 +86,10 @@ const page = async ({ params }: { params: { id: string } }) => {
   const parsedDescription = md.render(description);
 
   const capitalizeBrand = (brand: any) => {
-    console.log("Brand", brand);
     const newBrand = brand?.name
       .split(" ")
       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
-    console.log(newBrand);
     return newBrand;
   };
 
@@ -233,13 +220,11 @@ const page = async ({ params }: { params: { id: string } }) => {
                 dereferencedRecenltyViewedProducts
                   .slice(0, 10)
                   .map((product: any, index: number) => {
-                    console.log("Product", product);
-                    console.log("Product image", product?.mainImage);
                     return (
                       <ProductCard
                         key={index}
                         product={product}
-                        isHearted={heartedProducts.includes(productIdString)}
+                        isHearted={product?._id.includes(productIdString)}
                         callbackUrl={callbackUrl}
                         user={user}
                       />

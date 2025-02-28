@@ -8,7 +8,6 @@ import Link from "next/link";
 const SignInPage = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  console.log(`Callback URL in SIGN IN PAGE: ${callbackUrl}`);
 
   return (
     <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300">

@@ -23,9 +23,7 @@ const page = async ({
   const entirePath = await params;
 
   const heartedProductsIds = await fetchHeartedProducts(userId);
-  console.log(`Hearted Products: ${heartedProductsIds}`);
   const path = (await params).collections || "/";
-  console.log(`Path: ${path}`);
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 
@@ -41,12 +39,10 @@ const page = async ({
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-  console.log(`Callback URL: ${callbackUrl}`);
 
   const collectionProducts = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );
-  console.log(collectionProducts, null, 2);
 
   return (
     <main className="content-page">

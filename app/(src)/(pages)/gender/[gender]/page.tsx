@@ -38,7 +38,6 @@ const page = async ({
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-  console.log(`Callback URL: ${callbackUrl}`);
 
   //const finalQuery = parseSearchParams(query, filters);
   const genderProducts = await client.fetch(

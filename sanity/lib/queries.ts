@@ -255,7 +255,6 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
 
 /* For non home pages only */
 const constructNonHomePage = (paramConditions: string, optimizedHeartedProductsIds: string) => {
-  console.log("THERE WAS NO SEARCH TERM AND NO FILTERS for non home page");
   return `*[_type == "product" && defined(slug) && (${paramConditions})] | order(_createdAt desc) {
     _id,
     title,
@@ -404,7 +403,8 @@ export const GET_TOP_REVIEWS = (id: string) => {
 }
 
 export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = () => {
-   return `*[_type == "product" && _id in $productIds]{
+   return `*[_type == "user" && userId == $userId][0] {
+   "recentlyViewedProducts": recentlyViewedProducts[]->{
     _id,
     title,
     mainImage,
@@ -418,6 +418,7 @@ export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = () => {
       _key,
       name,
     },
+    }
   }`
 }
 

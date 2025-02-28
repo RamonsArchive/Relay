@@ -26,15 +26,10 @@ export const uploadImageToSanity = async (imageUrl: string) => {
 
 export const handleHeartWrite = async (userId: string, productId: string, hearted: boolean) => {  
    const userIdString = userId;
-   console.log("User ID: ", userIdString);
-   console.log("User ID: ", userIdString);
-   console.log("Product ID: ", productId);
-   console.log("Type of prdouct id: ", typeof productId);
    if (!userIdString || !productId) {
     throw new Error("No user ID provided");
    }
 
-   console.log("Hearted value: ", hearted);
     if (!hearted) {
       try {
       await writeClient.withConfig({useCdn: false})
@@ -81,14 +76,8 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
       }
 
       let updatedProducts = recentlyViewedProducts || []
-      console.log("Tyep of updatedProducts: ", typeof updatedProducts);
-      console.log("upadted Products: ", updatedProducts);
       updatedProducts = updatedProducts.filter((product: any) => product._ref !== productIdString);
-      console.log("Unique Filters: ", updatedProducts);
       updatedProducts = [newProductReference, ...updatedProducts];
-      
-
-      console.log("Updated Products: ", updatedProducts);
 
       await writeClient
         .withConfig({useCdn: false})
@@ -108,12 +97,10 @@ export const writePopularCategories = async (userId: string, productId: string, 
     }
 
     const dereferencedCategories = categories.map((obj: any) => obj.name);
-    console.log("Dereferenced categories: ", dereferencedCategories);
 
     const popularCategories = await fetchPopularCategories(userId);
     let updatedPopularCategories = dereferencedCategories;
     updatedPopularCategories = [...dereferencedCategories, ...popularCategories];
-    console.log("Updated popular categories: ", updatedPopularCategories);
 
     await writeClient
       .withConfig({useCdn: false})
@@ -139,7 +126,6 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       timestamp: Date.now(),
       _key: myKey,
     }
-    console.log("New search: ", newSearch);
 
     await writeClient
       .withConfig({useCdn: false})
