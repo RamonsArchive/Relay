@@ -40,7 +40,6 @@ export const colors = defineType({
         source: "name", // ✅ Auto-generates slug from color name
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required().error("Slug is required."),
     }),
 
     defineField({

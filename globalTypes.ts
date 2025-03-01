@@ -75,20 +75,30 @@ Product,
 export type ReviewType = Pick<
   Reviews,
   "_id"> & {
-    _createdAt: string;
-    rating: number | null;
-    wouldRecommend: boolean | null;
-    review: string | null;
-    reviewTitle: string | null;
-    sizeRating: number | null;
-    widthRating: number | null;
-    comfortRating: number | null;
-    qualityRating: number | null;
-    valueRating: number | null;
-    photo: string | null;
-    nickname: string | null;
-    slug: string | null;
-    email: string | null;
+    _id?: string
+    _createdAt?: string;
+    rating?: number;
+    wouldRecommend?: boolean;
+    review?: string;
+    reviewTitle?: string;
+    sizeRating?: number;
+    widthRating?: number;
+    comfortRating?: number;
+    qualityRating?: number;
+    valueRating?: number;
+    photo?: {
+      asset?: {
+        _ref?: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    nickname?: string;
+    email?: string;
   };
 
 

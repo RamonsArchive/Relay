@@ -4,17 +4,26 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
 import { fetchPopularCategories } from "./client";
 import {fetchRecentSearches } from "./client";
-import { categoriesType } from "@/globalTypes";
+import { ReviewType, categoriesType } from "@/globalTypes";
 
 
 export const uploadImageToSanity = async (imageUrl: string) => {
+  console.log("Image url", imageUrl);
   try {
+    if (!imageUrl) {
+      console.log("No image URL provided");
+      return;
+    }
     const response = await axios.get(imageUrl, {responseType: "arraybuffer"}) as any;
+    console.log("Response", response);
     const imageBuffer = Buffer.from(response.data);
+    console.log("Image Buffer", imageBuffer);
 
     const uploadImage = await writeClient.assets.upload("image", imageBuffer, {
       filename: `${nanoid()}.jpg`,
     })
+
+    console.log("Upload Image", uploadImage);
 
     return uploadImage._id;
     
@@ -111,8 +120,7 @@ export const writePopularCategories = async (userId: string, productId: string, 
     console.error("Error writing popular categories", error);
     return;
   }
-} 
-
+};
 
 export const writeRecentSearch = async (userId: string, searchQuery: string) => {
   try {
@@ -137,6 +145,50 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
   } catch (error) {
     console.error("Error writing recent search", error);
     return;
+  }
+}
+
+export const writeReview = async (userId: string, review: ReviewType) => {
+  console.log("Review", review);
+  try {
+    console.log("User ID", userId);
+    if (!userId) {
+      console.log("No user Id provided")
+      throw new Error("No user ID provided");
+    }
+
+    const reviewInfo = {
+      rating: review.rating,
+      wouldRecommend: review.wouldRecommend,
+      review: review.review,
+      reviewTitle: review.reviewTitle,
+      sizeRating: review.sizeRating,
+      widthRating: review.widthRating,
+      comfortRating: review.comfortRating,
+      qualityRating: review.qualityRating,
+      valueRating: review.valueRating,
+      photo: review.photo,
+      nickname: review.nickname,
+      email: review.email,
+    }
+    console.log("Review Info",  reviewInfo);
+    const myKey = nanoid();
+    const newReview = await writeClient.create({
+      _type: "reviews",
+      _key: myKey,
+      ...reviewInfo
+    })
+
+    console.log("New Review", newReview);
+    await writeClient
+      .withConfig({useCdn: false})
+      .patch(userId)
+      .setIfMissing({userReviews: []})
+      .prepend("userReviews", [{_type: "reference", _ref: newReview._id}])
+      .commit();
+  } catch (error) {
+    console.error("Error writing review", error);
+    return
   }
 }
 

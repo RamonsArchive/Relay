@@ -40,7 +40,6 @@ export const categories = defineType({
         source: "name", 
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required().error("Slug is required."),
     }),
   ],
 

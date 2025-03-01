@@ -50,7 +50,6 @@ export const materials = defineType({
         source: "name", // ✅ Auto-generates slug from material name
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required().error("Slug is required."),
     }),
   ],
   preview: {

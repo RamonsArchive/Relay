@@ -74,7 +74,6 @@ export const reviews = defineType({
                 source: (doc) => `${doc.nickname}-${doc.reviewTitle}-${doc._id.slice(-4)}`,
                 maxLength: 80,
             },
-            validation: (Rule) => Rule.required(),
           }),
         defineField({
             name: "email",

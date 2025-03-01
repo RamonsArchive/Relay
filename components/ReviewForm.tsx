@@ -9,6 +9,9 @@ import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import { reviewSchmea } from "@/lib/validation";
 import { z } from "zod";
+import { uploadImageToSanity, writeReview } from "@/sanity/lib/actions";
+import { nanoid } from "nanoid";
+import { readFileAsDataURL } from "@/lib/utils";
 
 const ReviewForm = ({ user }: { user: any }) => {
   const [errors, setErrors] = useState<Record<string, string | number>>({});
@@ -21,27 +24,58 @@ const ReviewForm = ({ user }: { user: any }) => {
   const [valueRating, setValueRating] = useState(-1);
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
+    const photoFile = formData.get("photo");
+    console.log("photoFile", photoFile);
+    let photoRef = null;
+    if (photoFile instanceof File) {
+      try {
+        const imageUrl = await readFileAsDataURL(photoFile);
+        console.log("imageUrl", imageUrl);
+        const uploadImageId = await uploadImageToSanity(imageUrl);
+        console.log("uploadImageId", uploadImageId);
+
+        if (uploadImageId) {
+          const myKey = nanoid();
+          photoRef = {
+            _type: "image",
+            _key: myKey,
+            asset: {
+              _type: "reference",
+              _ref: uploadImageId,
+            },
+          };
+        }
+      } catch (error) {
+        console.error("Error uploading image", error);
+        return;
+      }
+    }
     try {
+      const recommendValue = formData.get("recommend");
+      const reccomendBoolean =
+        recommendValue !== null ? Number(recommendValue) === 1 : undefined;
       const reviewData = {
-        mainRating: Number(formData.get("mainRating")),
-        recommend: Number(formData.get("recommend")),
-        review: formData.get("review"),
-        reviewTitle: formData.get("title"),
-        sizeRating: Number(formData.get("sizeRating")),
-        widthRating: Number(formData.get("widthRating")),
-        comfortRating: Number(formData.get("comfortRating")),
-        qualityRating: Number(formData.get("qualityRating")),
-        valueRating: Number(formData.get("valueRating")),
-        photo:
-          formData.get("photo") instanceof File ? formData.get("photo") : null,
-        email: formData.get("email"),
+        // Add the _id property with an empty string value
+        _id: nanoid() || undefined,
+        mainRating: Number(formData.get("mainRating")) || undefined,
+        recommend: reccomendBoolean,
+        review: formData.get("review")?.toString() || undefined,
+        reviewTitle: formData.get("title")?.toString() || undefined,
+        sizeRating: Number(formData.get("sizeRating")) || undefined,
+        widthRating: Number(formData.get("widthRating")) || undefined,
+        comfortRating: Number(formData.get("comfortRating")) || undefined,
+        qualityRating: Number(formData.get("qualityRating")) || undefined,
+        valueRating: Number(formData.get("valueRating")) || undefined,
+        photo: photoRef || undefined,
+        email: formData.get("email")?.toString() || undefined,
       };
 
       console.log(reviewData);
       await reviewSchmea.parseAsync(reviewData);
-      //const result = await createReview(prevState, reviewData);
-      // console.log(result);
+      console.log("Going to write Review");
+      await writeReview(user.id, reviewData);
     } catch (errors) {
+      console.log("Error before righting error");
       if (errors instanceof z.ZodError) {
         const fieldErrors = errors.flatten().fieldErrors;
         setErrors(fieldErrors as unknown as Record<string, string>);
@@ -74,8 +108,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= mainRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setMainRating(i)}
+                className={`cursor-pointer ${i < mainRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setMainRating(i + 1)}
               />
             ))}
           </div>
@@ -150,8 +184,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= widthRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setWidthRating(i)}
+                className={`cursor-pointer ${i < widthRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setWidthRating(i + 1)}
               />
             ))}
           </div>
@@ -170,8 +204,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= comfortRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setComfortRating(i)}
+                className={`cursor-pointer ${i < comfortRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setComfortRating(i + 1)}
               />
             ))}
           </div>
@@ -190,8 +224,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= sizeRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setSizeRating(i)}
+                className={`cursor-pointer ${i < sizeRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setSizeRating(i + 1)}
               />
             ))}
           </div>
@@ -210,8 +244,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= qualityRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setQualityRating(i)}
+                className={`cursor-pointer ${i < qualityRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setQualityRating(i + 1)}
               />
             ))}
           </div>
@@ -230,8 +264,8 @@ const ReviewForm = ({ user }: { user: any }) => {
               <Star
                 key={i}
                 size={24}
-                className={`cursor-pointer ${i <= valueRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setValueRating(i)}
+                className={`cursor-pointer ${i < valueRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                onClick={() => setValueRating(i + 1)}
               />
             ))}
           </div>

@@ -321,7 +321,7 @@ export type User = {
   popularCategories?: Array<string>;
   recentSearches?: Array<{
     query?: string;
-    timestamp?: string;
+    timestamp?: number;
     _key: string;
   }>;
 };
