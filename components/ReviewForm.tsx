@@ -13,6 +13,7 @@ import { uploadImageToSanity, writeReview } from "@/sanity/lib/actions";
 import { SanityImage } from "@/globalTypes";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
   const router = useRouter();
@@ -130,6 +131,11 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
   return (
     <div className="flex flex-col w-[50%] h-full overflow-y-auto items-center gap-5 p-5 pb-10">
+      {isPending && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
+          <Loader />
+        </div>
+      )}
       <h1 className="font-plex-sans font-medium text-[28px]">
         Write your Review!
       </h1>
