@@ -1,7 +1,7 @@
 "use server";
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches } from "./client";
 import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
@@ -212,8 +212,8 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       email: review.email,
     }
     console.log("Review Info",  reviewInfo);
-    const myKey = nanoid();
-    console.log("My Key", myKey);
+    const nanoidSafe = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 21);
+    const myKey = nanoidSafe();
     const mySlug = slugify(`${reviewInfo.nickname}-${reviewInfo.reviewTitle}-${userId.slice(-4)}`, 
       {lower: true, 
       strict: true});
@@ -226,8 +226,8 @@ export const writeReview = async (userId: string, productId: string, review: Rev
         _type: "slug",
         current: mySlug
       },
-      user: {_type: 'user', _ref: userId},
-      product: {_type: 'product', _ref: productId},
+      user: {_type: "reference", _ref: userId.toString()},
+      product: {_type: "reference", _ref: productId.toString()},
       ...reviewInfo
     }
 
@@ -238,9 +238,13 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       .transaction()
       .create(newReview)
       .patch(userId, (patch) => 
-        patch.prepend("userReviews", [{_type: 'reference', _ref: newReview._id, _key: nanoid()}])
+        patch
+        .setIfMissing({userReviews: []})
+        .append("userReviews", [{_type: "reference", _ref: newReview._id, _key: nanoid()}])
       ).patch(productId, (patch) => 
-        patch.prepend("productReviews", [{_type: 'reference', _ref: newReview._id, _key: nanoid()}])
+        patch
+        .setIfMissing({productReviews: []})
+        .append("productReviews", [{_type: "reference", _ref: newReview._id, _key: nanoid()}])
       );
 
     const result = await transaction.commit();
