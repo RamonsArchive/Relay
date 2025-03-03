@@ -6,12 +6,12 @@ import { auth } from "@/auth";
 export const experimental_ppr = true;
 
 const WriteReview = async ({ params }: { params: { id: string } }) => {
-  const path = (await params.id) || "/";
+  const productId = (await params).id || "/";
   const session = await auth();
   const user = session?.user;
   if (!user) {
     return redirect(
-      `/api/auth/signin/callbackUrl=${encodeURIComponent(`/writeReview/${path}`)}`
+      `/api/auth/signin/callbackUrl=${encodeURIComponent(`/writeReview/${productId}`)}`
     );
   }
 
@@ -19,7 +19,7 @@ const WriteReview = async ({ params }: { params: { id: string } }) => {
   return (
     <div className="flex flex-row w-full h-[calc(100vh-8rem)]">
       <Suspense fallback={<div>Loading review form... </div>}>
-        <ReviewForm user={user} />
+        <ReviewForm user={user} productId={productId} />
       </Suspense>
       <div className="flex flex-col w-[50%] p-5 gap-8">
         <div className="flex flex-col gap-3">

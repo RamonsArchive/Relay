@@ -95,9 +95,9 @@ export type Colors = {
   _updatedAt: string;
   _rev: string;
   name?: "black" | "white" | "gray" | "beige" | "navy" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "brown" | "olive" | "orange" | "teal" | "maroon";
-  slug?: Slug;
   hexCode?: string;
   altNames?: Array<string>;
+  slug?: Slug;
 };
 
 export type Brands = {
@@ -127,7 +127,19 @@ export type Reviews = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  rating?: number;
+  user?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "user";
+  };
+  product?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "product";
+  };
+  mainRating?: number;
   wouldRecommend?: boolean;
   review?: string;
   reviewTitle?: string;
@@ -148,8 +160,8 @@ export type Reviews = {
     _type: "image";
   };
   nickname?: string;
-  slug?: Slug;
   email?: string;
+  slug?: Slug;
 };
 
 export type Collections = {
@@ -218,7 +230,7 @@ export type Product = {
     }>;
     detailBullets?: Array<string>;
   };
-  reviews?: Array<{
+  productReviews?: Array<{
     _ref: string;
     _type: "reference";
     _weak?: boolean;

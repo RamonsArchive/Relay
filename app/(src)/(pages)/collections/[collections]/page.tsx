@@ -20,6 +20,7 @@ const page = async ({
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
+  console.log("Collections User Id", userId);
   const entirePath = await params;
 
   const heartedProductsIds = await fetchHeartedProducts(userId);
@@ -63,7 +64,7 @@ const page = async ({
                   key={product?._id}
                   product={product}
                   isHearted={heartedProductsIds.includes(product?._id)}
-                  user={userId}
+                  user={user}
                   callbackUrl={callbackUrl}
                 />
               ))

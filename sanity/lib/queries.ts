@@ -329,8 +329,8 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
 }
 
 /* Product page only */
-export const PRODUCT_PAGE_INFORMATION = (id: string) => {
-  return `*[_type == "product" && _id == "${id}"][0] {
+export const PRODUCT_PAGE_INFORMATION = (productId: string) => {
+  return `*[_type == "product" && _id == "${productId}"][0] {
     userId,
     mainImage,
     imageGallery,
@@ -341,29 +341,30 @@ export const PRODUCT_PAGE_INFORMATION = (id: string) => {
     "materials": materials[]->{
       _id,
       _key,
-      name,
+      name
     },
     "categories": categories[]->{
       _id,
       _key,
-      name,
+      name
     },
     "brands": brands[]->{
       _id,
       _key,
       name,
-      logo,
+      logo
     },
     "collections": collections[]->{
       _id,
       _key,
-      title,
+      title
     },
     "mainDetails": details.mainDetails[].children[].text,
     "detailBullets": details.detailBullets,
-    reviews[] -> {
+    "reviews": *[_type == "reviews" && references("${productId}")] | order(_createdAt desc) {
+      _id,
       _createdAt,
-      rating,
+      mainRating,
       wouldRecommend,
       review,
       reviewTitle,
@@ -376,6 +377,7 @@ export const PRODUCT_PAGE_INFORMATION = (id: string) => {
       nickname,
       slug,
       email,
+      user -> { _id }
     }
   }`
 } 
@@ -402,8 +404,8 @@ export const GET_TOP_REVIEWS = (id: string) => {
   }`
 }
 
-export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = () => {
-   return `*[_type == "user" && userId == $userId][0] {
+export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 10) => {
+   return `*[_type == "user" && _id == $userId][0] {
    "recentlyViewedProducts": recentlyViewedProducts[]->{
     _id,
     title,
@@ -418,8 +420,27 @@ export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = () => {
       _key,
       name,
     },
-    }
+    } | order(_updatedAt desc) [0...${limit}]
   }`
+}
+
+export const GET_USER_REVIEWS = () =>  {
+  return `*[_type == "reviews" && author._ref == $userId && product._ref == $productIdString] {
+    _createdAt,
+    rating,
+    wouldRecommend,
+    review,
+    reviewTitle,
+    sizeRating,
+    widthRating,
+    comfortRating,
+    qualityRating,
+    valueRating,
+    photo,
+    nickname,
+    slug,
+    email
+  } | order(createdAt desc) [0...1]`
 }
 
 

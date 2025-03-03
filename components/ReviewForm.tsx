@@ -10,13 +10,15 @@ import { Send } from "lucide-react";
 import { reviewSchmea } from "@/lib/validation";
 import { z } from "zod";
 import { uploadImageToSanity, writeReview } from "@/sanity/lib/actions";
-import { nanoid } from "nanoid";
-import { readFileAsDataURL } from "@/lib/utils";
+import { SanityImage } from "@/globalTypes";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const ReviewForm = ({ user }: { user: any }) => {
+const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
+  const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string | number>>({});
   const [mainRating, setMainRating] = useState(-1);
-  const [recommend, setRecommend] = useState(-1);
+  const [wouldRecommend, setWouldRecommend] = useState(-1);
   const [sizeRating, setSizeRating] = useState(-1);
   const [widthRating, setWidthRating] = useState(-1);
   const [comfortRating, setComfortRating] = useState(-1);
@@ -28,17 +30,26 @@ const ReviewForm = ({ user }: { user: any }) => {
     console.log("photoFile", photoFile);
     let photoRef = null;
     if (photoFile instanceof File) {
+      if (photoFile instanceof File) {
+        if (photoFile.size > 5 * 1024 * 1024) {
+          console.error("File is too large! Must be under 5MB.");
+          setErrors({ photo: "File size exceeds 5MB limit." });
+          return {
+            ...prevState,
+            error: "File size exceeds 5MB limit.",
+            status: "ERROR",
+          };
+        }
+      }
       try {
-        const imageUrl = await readFileAsDataURL(photoFile);
-        console.log("imageUrl", imageUrl);
-        const uploadImageId = await uploadImageToSanity(imageUrl);
+        //const imageUrl = await readFileAsDataURL(photoFile);
+        //console.log("imageUrl", imageUrl);
+        const uploadImageId = await uploadImageToSanity(photoFile);
         console.log("uploadImageId", uploadImageId);
 
         if (uploadImageId) {
-          const myKey = nanoid();
           photoRef = {
             _type: "image",
-            _key: myKey,
             asset: {
               _type: "reference",
               _ref: uploadImageId,
@@ -51,14 +62,15 @@ const ReviewForm = ({ user }: { user: any }) => {
       }
     }
     try {
-      const recommendValue = formData.get("recommend");
+      const recommendValue = formData.get("wouldRecommend");
       const reccomendBoolean =
-        recommendValue !== null ? Number(recommendValue) === 1 : undefined;
+        recommendValue == null || Number(recommendValue) == -1
+          ? undefined
+          : Number(recommendValue) === 1;
+
       const reviewData = {
-        // Add the _id property with an empty string value
-        _id: nanoid() || undefined,
         mainRating: Number(formData.get("mainRating")) || undefined,
-        recommend: reccomendBoolean,
+        wouldRecommend: reccomendBoolean,
         review: formData.get("review")?.toString() || undefined,
         reviewTitle: formData.get("title")?.toString() || undefined,
         sizeRating: Number(formData.get("sizeRating")) || undefined,
@@ -66,21 +78,42 @@ const ReviewForm = ({ user }: { user: any }) => {
         comfortRating: Number(formData.get("comfortRating")) || undefined,
         qualityRating: Number(formData.get("qualityRating")) || undefined,
         valueRating: Number(formData.get("valueRating")) || undefined,
-        photo: photoRef || undefined,
+        photo: (photoRef as SanityImage) || undefined,
+        nickname: formData.get("nickname")?.toString() || undefined,
         email: formData.get("email")?.toString() || undefined,
       };
 
       console.log(reviewData);
       await reviewSchmea.parseAsync(reviewData);
       console.log("Going to write Review");
-      await writeReview(user.id, reviewData);
+      console.log("Before right reveiw here is revewData", reviewData);
+      const result = await writeReview(
+        user.id.toString(),
+        productId.toString(),
+        reviewData
+      );
+      console.log("Result", result);
+      if (result.status === "SUCCESS") {
+        toast.success("Success", {
+          description: "Congrats, your review was a success",
+        });
+        router.push(`/product/${productId}`);
+      }
+
+      //return result;
     } catch (errors) {
       console.log("Error before righting error");
       if (errors instanceof z.ZodError) {
         const fieldErrors = errors.flatten().fieldErrors;
         setErrors(fieldErrors as unknown as Record<string, string>);
+        toast.error("Error", {
+          description: "Please check your inputs and try again",
+        });
         return { ...prevState, error: "Validation Failed", status: "ERROR" };
       } else {
+        toast.error("Error", {
+          description: "An unexpected error occured. Please try again",
+        });
         return {
           ...prevState,
           error: "An unexpected Error occured",
@@ -128,23 +161,23 @@ const ReviewForm = ({ user }: { user: any }) => {
           <div className="flex flex-row gap-5">
             <Circle
               size={24}
-              className={`${recommend == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-              onClick={() => setRecommend(1)}
+              className={`${wouldRecommend == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setWouldRecommend(1)}
             />
             <span>Yes</span>
             <Circle
               size={24}
-              className={`${recommend == 0 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-              onClick={() => setRecommend(0)}
+              className={`${wouldRecommend == 0 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setWouldRecommend(0)}
             />
             <span>No</span>
           </div>
-          {errors.recommend && (
+          {errors.wouldRecommend && (
             <span className="product-write-error">
               Recommend must be yes or no
             </span>
           )}
-          <input type="hidden" name="recommend" value={recommend} />
+          <input type="hidden" name="wouldRecommend" value={wouldRecommend} />
         </div>
 
         <div className="product-write-section">

@@ -2,36 +2,59 @@
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid } from "nanoid";
-import { fetchPopularCategories } from "./client";
-import {fetchRecentSearches } from "./client";
+import { fetchPopularCategories, fetchRecentSearches } from "./client";
 import { ReviewType, categoriesType } from "@/globalTypes";
+import slugify from "slugify";
+import { parseServerActionResponse } from "@/lib/utils";
 
 
-export const uploadImageToSanity = async (imageUrl: string) => {
+export const uploadImageToSanity = async (imageFile: File) => {
+  console.log("Uploading file:", imageFile);
+  try {
+    if (!imageFile) {
+      console.log("No file provided");
+      return null;
+    }
+
+    const uploadImage = await writeClient.assets.upload("image", imageFile, {
+      filename: imageFile.name || `${nanoid()}.jpg`,
+    });
+
+    console.log("Upload Success:", uploadImage);
+    return uploadImage._id;
+  } catch (error) {
+    console.error("Error uploading image to Sanity:", error);
+    return null;
+  }
+};
+
+export const uploadImageStringToSanity = async (imageUrl: string) => {
   console.log("Image url", imageUrl);
   try {
     if (!imageUrl) {
       console.log("No image URL provided");
-      return;
+      return null;
     }
-    const response = await axios.get(imageUrl, {responseType: "arraybuffer"}) as any;
+
+    // Fetch the image as an array buffer
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" }) as any;
     console.log("Response", response);
+
     const imageBuffer = Buffer.from(response.data);
     console.log("Image Buffer", imageBuffer);
 
+    // Upload the image to Sanity
     const uploadImage = await writeClient.assets.upload("image", imageBuffer, {
       filename: `${nanoid()}.jpg`,
-    })
+    });
 
-    console.log("Upload Image", uploadImage);
-
+    console.log("Upload Success:", uploadImage);
     return uploadImage._id;
-    
   } catch (error) {
     console.error("Error uploading image to Sanity:", error);
     return null;
-  } 
-}
+  }
+};
 
 export const handleHeartWrite = async (userId: string, productId: string, hearted: boolean) => {  
    const userIdString = userId;
@@ -87,6 +110,7 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
       let updatedProducts = recentlyViewedProducts || []
       updatedProducts = updatedProducts.filter((product: any) => product._ref !== productIdString);
       updatedProducts = [newProductReference, ...updatedProducts];
+      updatedProducts = updatedProducts.slice(0, 100);
 
       await writeClient
         .withConfig({useCdn: false})
@@ -111,6 +135,8 @@ export const writePopularCategories = async (userId: string, productId: string, 
     let updatedPopularCategories = dereferencedCategories;
     updatedPopularCategories = [...dereferencedCategories, ...popularCategories];
 
+    updatedPopularCategories = updatedPopularCategories.slice(0, 100);
+
     await writeClient
       .withConfig({useCdn: false})
       .patch(userId)
@@ -127,7 +153,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
     if (!userId) {
       throw new Error("No user ID provided");
     }
-    
+
     const myKey = nanoid();
     const newSearch = {
       query: searchQuery,
@@ -135,11 +161,18 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       _key: myKey,
     }
 
+    let recentSearches = await fetchRecentSearches(userId);
+    console.log("Recent searches", recentSearches);
+    let updatedRecentSearches = recentSearches;
+
+    updatedRecentSearches = [newSearch, ...updatedRecentSearches];
+    updatedRecentSearches = updatedRecentSearches.slice(0,100);
+    console.log("updated recent searhces", updatedRecentSearches);
+
     await writeClient
       .withConfig({useCdn: false})
       .patch(userId)
-      .setIfMissing({recentSearches: []})
-      .prepend("recentSearches", [newSearch])
+      .set({"recentSearches": updatedRecentSearches})
       .commit();
     
   } catch (error) {
@@ -148,17 +181,24 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
   }
 }
 
-export const writeReview = async (userId: string, review: ReviewType) => {
-  console.log("Review", review);
+export const writeReview = async (userId: string, productId: string, review: ReviewType) => {
+  console.log("Review has been received", review);
+  console.log("Product Id", productId);
+  console.log("User ID", userId);
   try {
-    console.log("User ID", userId);
     if (!userId) {
-      console.log("No user Id provided")
+      console.error("No user Id provided")
       throw new Error("No user ID provided");
     }
+    if (!productId) {
+      console.error("No product Id provided");
+      throw new Error("No product Id provided");
+    }
+
+    console.log("Review", review);
 
     const reviewInfo = {
-      rating: review.rating,
+      mainRating: review.mainRating,
       wouldRecommend: review.wouldRecommend,
       review: review.review,
       reviewTitle: review.reviewTitle,
@@ -173,22 +213,51 @@ export const writeReview = async (userId: string, review: ReviewType) => {
     }
     console.log("Review Info",  reviewInfo);
     const myKey = nanoid();
-    const newReview = await writeClient.create({
+    console.log("My Key", myKey);
+    const mySlug = slugify(`${reviewInfo.nickname}-${reviewInfo.reviewTitle}-${userId.slice(-4)}`, 
+      {lower: true, 
+      strict: true});
+
+    const newReview = {
       _type: "reviews",
+      _id: myKey,
       _key: myKey,
+      slug: {
+        _type: "slug",
+        current: mySlug
+      },
+      user: {_type: 'user', _ref: userId},
+      product: {_type: 'product', _ref: productId},
       ...reviewInfo
-    })
+    }
 
     console.log("New Review", newReview);
-    await writeClient
-      .withConfig({useCdn: false})
-      .patch(userId)
-      .setIfMissing({userReviews: []})
-      .prepend("userReviews", [{_type: "reference", _ref: newReview._id}])
-      .commit();
+
+    
+    const transaction = writeClient
+      .transaction()
+      .create(newReview)
+      .patch(userId, (patch) => 
+        patch.prepend("userReviews", [{_type: 'reference', _ref: newReview._id, _key: nanoid()}])
+      ).patch(productId, (patch) => 
+        patch.prepend("productReviews", [{_type: 'reference', _ref: newReview._id, _key: nanoid()}])
+      );
+
+    const result = await transaction.commit();
+
+    return parseServerActionResponse({
+      ...result,
+      error: '',
+      status: 'SUCCESS'
+    });
   } catch (error) {
     console.error("Error writing review", error);
-    return
+
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: error
+    })
+    
   }
 }
 

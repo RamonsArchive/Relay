@@ -1,12 +1,11 @@
 import React from "react";
-import { ReviewType } from "@/globalTypes";
 import { formatDate } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import { urlFor } from "@/sanity/lib/client";
+import { ReviewType } from "@/globalTypes";
 
 const ReviewCard = ({ productReview }: { productReview: ReviewType }) => {
-  const { reviewTitle, rating, review, photo, nickname, _createdAt } =
-    productReview;
+  const { reviewTitle, review, photo, nickname, _createdAt } = productReview;
   return (
     <div className="flex flex-col w-full gap-2">
       <div className="flex flex-col ">
@@ -18,7 +17,7 @@ const ReviewCard = ({ productReview }: { productReview: ReviewType }) => {
         <div className="flex flex-row font-plex-sans items-center text-[18px]">
           <ReviewStars reviews={productReview} />
           <p className="font-plex-sans font-light text-[14px]">
-            {formatDate(_createdAt)}
+            {formatDate(_createdAt as string)}
           </p>
         </div>
       </div>

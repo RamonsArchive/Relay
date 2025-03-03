@@ -31,17 +31,6 @@ export const colors = defineType({
       },
       validation: (Rule) => Rule.required().error("Color name is required."),
     }),
-
-    defineField({
-      name: "slug",
-      title: "Slug",
-      type: "slug",
-      options: {
-        source: "name", // ✅ Auto-generates slug from color name
-        maxLength: 96,
-      },
-    }),
-
     defineField({
       name: "hexCode",
       title: "Hex Code",
@@ -58,6 +47,16 @@ export const colors = defineType({
       title: "Alternative Names",
       type: "array",
       of: [{ type: "string" }],
+    }),
+    defineField({
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: {
+          source: (doc) => `${doc.nickname}-${doc.reviewTitle}-${doc._id.slice(-4)}`,
+          maxLength: 80,
+      },
+      validation: (Rule) => Rule.required(),
     }),
   ],
 

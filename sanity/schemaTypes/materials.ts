@@ -41,15 +41,15 @@ export const materials = defineType({
       },
       validation: (Rule) => Rule.required().error("Material name is required."),
     }),
-
     defineField({
       name: "slug",
       title: "Slug",
       type: "slug",
       options: {
-        source: "name", // ✅ Auto-generates slug from material name
-        maxLength: 96,
+          source: (doc) => `${doc.nickname}-${doc.reviewTitle}-${doc._id.slice(-4)}`,
+          maxLength: 80,
       },
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {

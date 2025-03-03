@@ -114,8 +114,8 @@ export const product = defineType({
             ]
         }),
         defineField({
-            name: 'reviews',
-            title: 'Reviews',
+            name: 'productReviews',
+            title: 'Product Reviews',
             type: 'array',
             of: [{type: 'reference', to: [{type: 'reviews'}]}],
         }),

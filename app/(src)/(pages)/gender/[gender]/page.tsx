@@ -64,7 +64,7 @@ const page = async ({
                   product={product}
                   isHearted={heartedProductsIds.includes(product?._id)}
                   callbackUrl={callbackUrl}
-                  user={userId}
+                  user={user}
                 />
               ))
             ) : (

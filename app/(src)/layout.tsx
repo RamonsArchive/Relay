@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { ContextProvider } from "@/app/context/context";
 import React from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
+import { Toaster } from "sonner";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
@@ -21,6 +22,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         <div className="footer-wrapper">
           <Footer />
         </div>
+        <Toaster richColors />
       </ContextProvider>
     </main>
   );

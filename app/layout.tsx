@@ -51,8 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className={`${plexSans.variable} antialiased`}>{children}</body>
-     
+      <body className={`${plexSans.variable} antialiased`}>{children}</body>
     </html>
   );
 }

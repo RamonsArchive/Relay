@@ -8,6 +8,7 @@ import {
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
   GET_TOP_REVIEWS,
+  GET_USER_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
 } from "@/sanity/lib/queries";
 import { Suspense } from "react";
@@ -30,8 +31,9 @@ const page = async ({ params }: { params: { id: string } }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
+  console.log(" Product User Id", userId);
   const path = (await params).id || "/";
-  const productIdString = path.toString();
+  const productId = path.toString();
   const callbackUrl = `/product/${path}`;
   if (!path) {
     throw new Error("No path provided");
@@ -39,9 +41,8 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   console.log(`Path in product page: ${path}`);
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-
   const imagesPlusProductDetails = await client.fetch(
-    PRODUCT_PAGE_INFORMATION(path as string)
+    PRODUCT_PAGE_INFORMATION(productId)
   );
 
   const {
@@ -62,6 +63,10 @@ const page = async ({ params }: { params: { id: string } }) => {
   let getRecentlyViewedProducts = null;
   let dereferencedRecenltyViewedProducts = null;
   let heartedProducts = [];
+  let userReviews = [];
+
+  console.log("Reviews", reviews);
+
   if (userId) {
     const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
     dereferencedRecenltyViewedProducts = await client
@@ -71,15 +76,22 @@ const page = async ({ params }: { params: { id: string } }) => {
       });
     dereferencedRecenltyViewedProducts =
       dereferencedRecenltyViewedProducts.recentlyViewedProducts;
+    console.log(
+      "dereferencedRecntlviewedProducts",
+      dereferencedRecenltyViewedProducts
+    );
     getRecentlyViewedProducts = await fetchRecentyViewedProducts(userId);
     await handleRecentyViewedProductsWrite(
-      productIdString,
+      productId,
       userId,
       getRecentlyViewedProducts
     );
     heartedProducts = await fetchHeartedProducts(userId);
-    writePopularCategories(userId, productIdString, categories);
+    writePopularCategories(userId, productId, categories);
+    const userReviewsQuery = await GET_USER_REVIEWS();
+    //userReviews = reviews.filter();
   }
+  //console.log("User REviews", userReviews);
 
   const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
 
@@ -122,9 +134,9 @@ const page = async ({ params }: { params: { id: string } }) => {
                     <div className="pr-5">
                       <ProductHeart
                         isHearted={heartedProducts?.includes(
-                          productIdString.toString()
+                          productId.toString()
                         )}
-                        productIdString={productIdString}
+                        productId={productId}
                         userId={userId}
                         callbackUrl={callbackUrl}
                       />
@@ -224,7 +236,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                       <ProductCard
                         key={index}
                         product={product}
-                        isHearted={product?._id.includes(productIdString)}
+                        isHearted={product?._id.includes(productId)}
                         callbackUrl={callbackUrl}
                         user={user}
                       />

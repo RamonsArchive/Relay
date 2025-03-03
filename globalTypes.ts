@@ -1,5 +1,5 @@
 import { SanityDocument } from "sanity";
-import { Product, Collections, Reviews, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop } from "./sanity.types";
+import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop, Slug } from "./sanity.types";
 import { Categories } from "./sanity/types";
 
 export type ProductType = Pick<
@@ -72,12 +72,11 @@ Product,
 };
 
 
-export type ReviewType = Pick<
-  Reviews,
-  "_id"> & {
+export type ReviewType = {
     _id?: string
+    slug?: Slug;
     _createdAt?: string;
-    rating?: number;
+    mainRating?: number;
     wouldRecommend?: boolean;
     review?: string;
     reviewTitle?: string;
@@ -99,6 +98,29 @@ export type ReviewType = Pick<
     };
     nickname?: string;
     email?: string;
+  };
+
+  export type SanityImage = {
+    _type: "image";
+    asset: {
+      _type: "reference";
+      _ref: string;
+      _weak?: boolean;
+    };
+    hotspot?: {
+      _type: "sanity.imageHotspot";
+      x: number;
+      y: number;
+      height: number;
+      width: number;
+    };
+    crop?: {
+      _type: "sanity.imageCrop";
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    };
   };
 
 

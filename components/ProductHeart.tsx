@@ -8,12 +8,12 @@ import { handleHeartWrite } from "@/sanity/lib/actions";
 
 const ProductPageHeart = ({
   isHearted,
-  productIdString,
+  productId,
   userId,
   callbackUrl,
 }: {
   isHearted: boolean;
-  productIdString: string;
+  productId: string;
   userId: string | null;
   callbackUrl: string;
 }) => {
@@ -22,7 +22,7 @@ const ProductPageHeart = ({
 
   useEffect(() => {
     setHearted(isHearted);
-  }, [isHearted, userId, productIdString]);
+  }, [isHearted, userId, productId]);
 
   useEffect(() => {
     //if (heartOnCallBack.current) return;
@@ -49,7 +49,7 @@ const ProductPageHeart = ({
 
     if (
       Cookies.get("heartedProductId") &&
-      Cookies.get("heartedProductId") == productIdString
+      Cookies.get("heartedProductId") == productId
     ) {
       // setHeart();
       setTimeout(() => {
@@ -61,14 +61,14 @@ const ProductPageHeart = ({
   const toggleHeart = async () => {
     if (!userId) {
       // get product Id
-      Cookies.set("heartedProductId", productIdString, { expires: 1 });
+      Cookies.set("heartedProductId", productId, { expires: 1 });
       router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
       return;
     }
     try {
       const newHearted = !hearted;
       setHearted(newHearted);
-      await handleHeartWrite(userId, productIdString, newHearted as boolean);
+      await handleHeartWrite(userId, productId, newHearted as boolean);
       router.refresh();
     } catch (error) {
       console.error("Failed to execute hearted action:", error);

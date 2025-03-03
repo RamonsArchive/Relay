@@ -32,9 +32,10 @@ export const collections = defineType({
             title: "Slug",
             type: "slug",
             options: {
-              source: "title", // Generates from the product title
-              maxLength: 96,
+                source: (doc) => `${doc.nickname}-${doc.reviewTitle}-${doc._id.slice(-4)}`,
+                maxLength: 80,
             },
+            validation: (Rule) => Rule.required(),
           }),
     ],
     preview: {

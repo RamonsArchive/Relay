@@ -4,7 +4,7 @@ import Google from "next-auth/providers/google"
 import { writeClient } from "@/sanity/lib/write-client"
 import { parseServerActionResponse } from "@/lib/utils";
 import { AdapterUser } from "next-auth/adapters";
-import { uploadImageToSanity } from "./sanity/lib/actions";
+import { uploadImageStringToSanity } from "./sanity/lib/actions";
 import { client } from "./sanity/lib/client";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          if (!userExists) {
           let sanityImageRef = null;
           if (user.image) {
-            const sanityImageId = await uploadImageToSanity(user.image as string);
+            const sanityImageId = await uploadImageStringToSanity(user.image as string);
             if (sanityImageId) {
               sanityImageRef = {
                 _type: 'image',

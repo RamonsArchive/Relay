@@ -21,6 +21,7 @@ const Home = async ({
   console.log("Session", session);
   const user = session?.user;
   const userId = user?.id || null;
+  console.log("Home page User Id", userId);
 
   const path = params.slug || "/";
   console.log(`Path: ${path}`);
