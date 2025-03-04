@@ -76,6 +76,20 @@ export type ReviewType = {
     _id?: string
     slug?: Slug;
     _createdAt?: string;
+    _updatedAt?: string;
+    user?: {
+      _ref: string;
+      _id?: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "user";
+    };
+    product?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "product";
+    };
     mainRating?: number;
     wouldRecommend?: boolean;
     review?: string;

@@ -6,6 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: string) {
+  console.log("Date", date);
   return new Date(date).toLocaleDateString('en-us', {
     month: 'long',
     day: 'numeric',
@@ -18,9 +19,9 @@ export function getNumberOfReviews(amount: number) {
 }
 
 export function getReviewRating (reviews: any) {
-  if (!reviews.length) return 0;
-  if (reviews.length === 1) return reviews[0]?.rating || 0;
-  const total = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+  if (reviews?.length === 0) return 0;
+  if (reviews.length === 1) return reviews[0]?.mainRating || 0;
+  const total = reviews.reduce((sum: number, review: any) => sum + review.mainRating, 0);
   return (total / reviews.length);
 }
 

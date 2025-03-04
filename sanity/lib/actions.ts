@@ -2,7 +2,7 @@
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
-import { fetchPopularCategories, fetchRecentSearches } from "./client";
+import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts } from "./client";
 import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse } from "@/lib/utils";
@@ -92,11 +92,13 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
       }
   } 
 
-  export const handleRecentyViewedProductsWrite = async (productId: string, userId: string, recentlyViewedProducts: any) => {
+  export const handleRecentyViewedProductsWrite = async (productId: string, userId: string) => {
     try {
       if (!userId || !productId) {
         throw new Error("No user ID provided");
       }
+
+      const recentlyViewedProducts = await fetchRecentyViewedProducts(userId);
       const myKey = nanoid();
 
       const productIdString = productId;
@@ -263,5 +265,39 @@ export const writeReview = async (userId: string, productId: string, review: Rev
     })
     
   }
+}
+
+export const writeReviewEdit = async (reviewId: string, editData: string) =>  {
+  try {
+    console.log("Review Id", reviewId);
+    console.log("Edit data", editData);
+    if (!reviewId) {
+      throw new Error("No review id provided");
+    }
+
+    const result = await writeClient
+      .withConfig({useCdn: false})
+      .patch(reviewId)
+      .set({
+        review: editData,
+      })
+      .commit();
+
+      console.log("Result", result);
+      
+
+      return parseServerActionResponse({
+        ...result,
+        error: "",
+        status: "SUCCESS",
+      })
+  } catch (error) {
+    console.error("Error writing review");
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: error
+    })
+  }
+  
 }
 

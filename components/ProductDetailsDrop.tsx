@@ -12,19 +12,27 @@ const ProductDetailsDrop = ({
   mainDetails,
   detailBullets,
   reviews,
-  topReviews,
+  selectedReviews,
+  userReview,
   productId,
 }: {
   mainDetails: string;
   detailBullets: string[];
   reviews: ReviewType[];
-  topReviews: ReviewType[];
+  selectedReviews: ReviewType[];
+  userReview: ReviewType;
   productId: string;
 }) => {
   const [droppedInfo, setDroppedInfo] = useState<Record<string, boolean>>({
     details: false,
     productReviews: false,
   });
+
+  const [editReview, setEditReview] = useState(false);
+
+  const handleToggleEdit = (current: boolean) => {
+    setEditReview(!current);
+  };
 
   const handleDropClick = (section: string) => {
     setDroppedInfo((prev) => ({
@@ -81,16 +89,31 @@ const ProductDetailsDrop = ({
             </div>
 
             <p className="flex font-plex-sans text-[18px] font-medium ">
-              <Link href={`/writeReview/${productId}`}>
-                <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
-                  Write a Review!
+              {userReview != null ? (
+                <span
+                  className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer"
+                  onClick={() => handleToggleEdit(editReview)}
+                >
+                  Edit Review
                 </span>
-              </Link>
+              ) : (
+                <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
+                  <Link href={`/writeReview/${productId}`}>
+                    Write a Review!
+                  </Link>
+                </span>
+              )}
             </p>
             <div className="flex flex-col pt-2 gap-8">
-              {topReviews ? (
-                topReviews.map((review: ReviewType, index: number) => (
-                  <ReviewCard productReview={review} key={index} />
+              {selectedReviews ? (
+                selectedReviews.map((review: ReviewType, index: number) => (
+                  <ReviewCard
+                    productReview={review}
+                    key={index}
+                    userReview={userReview}
+                    editReview={editReview}
+                    setEditReview={setEditReview}
+                  />
                 ))
               ) : (
                 <div className="font-plex-sans font-regular text-[20px]">

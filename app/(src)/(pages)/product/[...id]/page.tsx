@@ -8,7 +8,6 @@ import {
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
   GET_TOP_REVIEWS,
-  GET_USER_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
 } from "@/sanity/lib/queries";
 import { Suspense } from "react";
@@ -22,6 +21,7 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
+import { ReviewType } from "@/globalTypes";
 
 export const experimental_ppr = true;
 
@@ -60,12 +60,13 @@ const page = async ({ params }: { params: { id: string } }) => {
     reviews,
   } = imagesPlusProductDetails;
 
-  let getRecentlyViewedProducts = null;
-  let dereferencedRecenltyViewedProducts = null;
+  let dereferencedReviews = reviews;
+  let dereferencedRecenltyViewedProducts = [];
   let heartedProducts = [];
-  let userReviews = [];
+  let userReview = [];
 
   console.log("Reviews", reviews);
+  console.log("reivew type", Array.isArray(reviews));
 
   if (userId) {
     const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
@@ -80,20 +81,56 @@ const page = async ({ params }: { params: { id: string } }) => {
       "dereferencedRecntlviewedProducts",
       dereferencedRecenltyViewedProducts
     );
-    getRecentlyViewedProducts = await fetchRecentyViewedProducts(userId);
-    await handleRecentyViewedProductsWrite(
-      productId,
-      userId,
-      getRecentlyViewedProducts
-    );
+    await handleRecentyViewedProductsWrite(productId, userId);
     heartedProducts = await fetchHeartedProducts(userId);
     writePopularCategories(userId, productId, categories);
-    const userReviewsQuery = await GET_USER_REVIEWS();
-    //userReviews = reviews.filter();
-  }
-  //console.log("User REviews", userReviews);
 
-  const topReviews = await client.fetch(GET_TOP_REVIEWS(path as string));
+    if (dereferencedReviews?.length > 0) {
+      userReview = dereferencedReviews.filter(
+        (review: ReviewType) => review?.user?._id === userId
+      );
+      dereferencedReviews = dereferencedReviews.filter(
+        (review: ReviewType) => review?.user?._id !== userId
+      );
+    }
+  }
+
+  let selectedReviews = [];
+
+  if (dereferencedReviews?.length >= 3) {
+    const sortedReviews = [...dereferencedReviews].sort(
+      (a, b) =>
+        b.mainRating - a.mainRating ||
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    );
+
+    if (userReview.length === 0) {
+      const best = sortedReviews.slice(0, 2);
+      const worst = sortedReviews.slice(-1);
+      selectedReviews = [...best, ...worst];
+    } else {
+      const best = sortedReviews.slice(0, 1);
+      const worst = sortedReviews.slice(-1);
+      selectedReviews = [...userReview, ...best, ...worst];
+    }
+  } else {
+    if (!dereferencedReviews?.length) {
+      return;
+    }
+    const sortedReviews = [...dereferencedReviews].sort(
+      (a, b) =>
+        b.mainRating - a.mainRating ||
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    );
+    if (userReview.length === 0) {
+      selectedReviews = [...sortedReviews];
+    } else {
+      selectedReviews = [...userReview, ...sortedReviews];
+    }
+  }
+
+  console.log("User Review", userReview);
+  console.log("selectedReviews", selectedReviews);
 
   const parsedDescription = md.render(description);
 
@@ -212,7 +249,8 @@ const page = async ({ params }: { params: { id: string } }) => {
                   mainDetails={mainDetails}
                   detailBullets={detailBullets}
                   reviews={reviews}
-                  topReviews={topReviews.reviews}
+                  selectedReviews={selectedReviews}
+                  userReview={userReview[0]}
                   productId={path}
                 />
               </Suspense>

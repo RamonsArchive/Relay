@@ -363,6 +363,7 @@ export const PRODUCT_PAGE_INFORMATION = (productId: string) => {
     "detailBullets": details.detailBullets,
     "reviews": *[_type == "reviews" && references("${productId}")] | order(_createdAt desc) {
       _id,
+      _updatedAt,
       _createdAt,
       mainRating,
       wouldRecommend,
@@ -423,24 +424,4 @@ export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 10) =>
     } | order(_updatedAt desc) [0...${limit}]
   }`
 }
-
-export const GET_USER_REVIEWS = () =>  {
-  return `*[_type == "reviews" && author._ref == $userId && product._ref == $productIdString] {
-    _createdAt,
-    rating,
-    wouldRecommend,
-    review,
-    reviewTitle,
-    sizeRating,
-    widthRating,
-    comfortRating,
-    qualityRating,
-    valueRating,
-    photo,
-    nickname,
-    slug,
-    email
-  } | order(createdAt desc) [0...1]`
-}
-
 

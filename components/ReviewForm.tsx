@@ -7,7 +7,7 @@ import { Circle } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
-import { reviewSchmea } from "@/lib/validation";
+import { reviewSchema } from "@/lib/validation";
 import { z } from "zod";
 import { uploadImageToSanity, writeReview } from "@/sanity/lib/actions";
 import { SanityImage } from "@/globalTypes";
@@ -85,7 +85,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
       };
 
       console.log(reviewData);
-      await reviewSchmea.parseAsync(reviewData);
+      await reviewSchema.parseAsync(reviewData);
       console.log("Going to write Review");
       console.log("Before right reveiw here is revewData", reviewData);
       const result = await writeReview(

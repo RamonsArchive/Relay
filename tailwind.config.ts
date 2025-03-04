@@ -21,15 +21,15 @@ export default {
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {
-  				'100': '#85A8FB',
-  				'200': '#8BC6FF',
-  				'300': '#95989A',
+  				'100': '#85A8FB', // purpblue
+  				'200': '#8BC6FF', // light blue
+  				'300': '#95989A', // med gray
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
   			third: {
-  				'100': '#F7F7F7',
-  				'200': '#060934',
+  				'100': '#F7F7F7', // very light gray
+  				'200': '#060934', // rich dark blue
   				'300': '#01020a',
   				'400': '#333333'
   			},
