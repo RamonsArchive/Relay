@@ -14,6 +14,7 @@ import { SanityImage } from "@/globalTypes";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
+import { verifyNoUserReview } from "@/sanity/lib/client";
 
 const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
   const router = useRouter();
@@ -86,8 +87,16 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
       console.log(reviewData);
       await reviewSchema.parseAsync(reviewData);
-      console.log("Going to write Review");
-      console.log("Before right reveiw here is revewData", reviewData);
+      console.log("productId", productId);
+      console.log("user id", user?.id);
+      const existingReview = await verifyNoUserReview(productId[0], user?.id);
+      if (existingReview.status == "ERROR") {
+        toast.error("Error", {
+          description: "You already wrote a review for this product",
+        });
+        return existingReview;
+      }
+      console.log("existing user", existingReview);
       const result = await writeReview(
         user.id.toString(),
         productId.toString(),

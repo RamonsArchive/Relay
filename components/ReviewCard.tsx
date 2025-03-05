@@ -5,7 +5,8 @@ import { formatDate, parseServerActionResponse } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import { urlFor } from "@/sanity/lib/client";
 import { ReviewType } from "@/globalTypes";
-import { EllipsisVertical, Loader, Send } from "lucide-react";
+import { EllipsisVertical, Send } from "lucide-react";
+import Loader from "@/components/Loader";
 import { Textarea } from "./ui/textarea";
 import { editReviewSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
@@ -34,6 +35,7 @@ const ReviewCard = ({
   const [dropEllipse, setDropEllipse] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editSubmitButtonLoading, setEditSubmitButtonLoading] = useState(false);
+  const [deleteReviewLoader, setDeleteReviewLoader] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
   const ellipseDropRef = useRef<HTMLDivElement | null>(null);
@@ -66,6 +68,19 @@ const ReviewCard = ({
   const [isEditedReview, setIsEditedReview] = useState(
     _createdAt !== _updatedAt
   );
+  console.log(
+    parseServerActionResponse({
+      title: reviewTitle,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      isEdited: isEditedReview,
+    })
+  );
+  useEffect(() => {
+    if (_createdAt != _updatedAt) {
+      setIsEditedReview(true);
+    }
+  }, [_updatedAt]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -91,7 +106,7 @@ const ReviewCard = ({
     };
   }, []);
 
-  const handleEllipseSaveEdit = () => {
+  const handleEllipseEditSubmit = () => {
     console.log("Clicked ellipse save edit");
     console.log("Edit review", editReview);
     console.log("Form ref", formRef.current);
@@ -112,7 +127,7 @@ const ReviewCard = ({
   };
 
   const handleDeleteReview = async () => {
-    console.log("Should be deleting review");
+    setDeleteReviewLoader(true);
     try {
       const result = await deleteReview(
         _id as string,
@@ -124,15 +139,17 @@ const ReviewCard = ({
           description: "Your review has been successfully deleated",
         });
         setEditReview(false);
-        router.replace(`${productId}`);
+        //router.replace(`${productId}`);
+        router.refresh();
+        setDeleteReviewLoader(false);
       }
       console.log("Result", result);
       return result;
     } catch (error) {
+      setDeleteReviewLoader(false);
       toast.error("Error", {
         description: "Error deleting review",
       });
-      router.replace(`${productId}`);
     }
   };
 
@@ -153,7 +170,8 @@ const ReviewCard = ({
         });
 
         setEditReview(false);
-        router.replace(`${productId}`);
+        //router.replace(`${productId}`);
+        router.refresh();
       }
       return result;
     } catch (error) {
@@ -184,11 +202,12 @@ const ReviewCard = ({
 
   return (
     <div className="flex flex-col w-full gap-2">
-      {isPending && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
-          <Loader />
-        </div>
-      )}
+      {isPending ||
+        (deleteReviewLoader && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
+            <Loader />
+          </div>
+        ))}
       <div className="flex flex-col ">
         {reviewTitle && (
           <h2 className="font-plex-sans font-medium text-[20px]">
@@ -217,7 +236,7 @@ const ReviewCard = ({
                 >
                   <button
                     className="block w-full text-left px-4 py-2 hover:bg-gray-700 rounded"
-                    onClick={handleEllipseSaveEdit}
+                    onClick={handleEllipseEditSubmit}
                   >
                     {editReview ? "Submit Edit" : "Edit Review"}
                   </button>

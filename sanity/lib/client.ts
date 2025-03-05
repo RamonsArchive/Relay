@@ -1,6 +1,7 @@
 import { createClient } from 'next-sanity'
 import  imageUrlBuilder  from '@sanity/image-url'
 import { apiVersion, dataset, projectId } from '../env'
+import { parseServerActionResponse } from '@/lib/utils'
 
 export const client = createClient({
   projectId,
@@ -72,6 +73,54 @@ export const fetchRecentSearches = async (userId: string) => {
     return result.recentSearches || [];
   } catch (error) {
 
+  }
+}
+
+export const verifyNoUserReview = async (productId: string, userId: string) => {
+  try {
+    console.log("product id", productId);
+    console.log("user Id", userId);
+     if (!productId) {
+      console.error("No productId provided");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No productId provided"
+      })
+    }
+    if (!userId) {
+      console.error("No userId provided");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No userId provided"
+      })
+    }
+
+    const query = `[_type == "reviews" && defined(slug) && product._ref == $productId && user._ref == $userId][0]`
+    const existingReview = await client.fetch(`[_type == "reviews" && defined(slug) && product._ref == "${productId}" && user._ref == "${userId}"][0]`)
+    //const existingReview = await client.fetch(query, {productId, userId,}); //, {cache: 'no-store'}
+
+    console.log("Existing user in client", existingReview);
+
+    if (existingReview) {
+      console.error("User has already written a review for this product.")
+      return parseServerActionResponse({
+        ...existingReview,
+        status: "ERROR",
+        error: "You have already written a review for this product.",
+      });
+    }
+
+    return parseServerActionResponse({
+      ...existingReview,
+      status: "SUCCESS",
+      error: "",
+    })
+
+  } catch (error) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: error
+    })
   }
 }
 

@@ -2,7 +2,7 @@
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
-import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts } from "./client";
+import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "./client";
 import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse } from "@/lib/utils";
@@ -184,10 +184,8 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
 }
 
 export const writeReview = async (userId: string, productId: string, review: ReviewType) => {
-  console.log("Review has been received", review);
-  console.log("Product Id", productId);
-  console.log("User ID", userId);
   try {
+    
     if (!userId) {
       console.error("No user Id provided")
       throw new Error("No user ID provided");
@@ -197,7 +195,13 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       throw new Error("No product Id provided");
     }
 
-    console.log("Review", review);
+    const existingReview = await verifyNoUserReview(productId, userId);
+    if (existingReview.status == "ERROR") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "You already wrote a review for this product"
+      })
+    }
 
     const reviewInfo = {
       mainRating: review.mainRating,
