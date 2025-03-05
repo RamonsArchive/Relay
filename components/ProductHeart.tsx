@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { handleHeartWrite } from "@/sanity/lib/actions";
 
-const ProductPageHeart = ({
+const ProductHeart = ({
   isHearted,
   productId,
   userId,
@@ -86,4 +86,4 @@ const ProductPageHeart = ({
   );
 };
 
-export default ProductPageHeart;
+export default ProductHeart;

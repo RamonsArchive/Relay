@@ -298,6 +298,54 @@ export const writeReviewEdit = async (reviewId: string, editData: string) =>  {
       error: error
     })
   }
-  
+}
+
+export const deleteReview = async (reviewId: string, productId: string, userId: string) => {
+  console.log("In delete reviwe in actions");
+  try {
+    if (!reviewId) {
+      console.error("No review id provided");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No review id provided"
+      })
+    }
+    if (!productId) {
+      console.error("No product id provided");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No product id provided"
+      })
+    }
+
+    if (!userId) {
+      console.error("No user id provided");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No user id provided"
+      })
+    }
+
+    const result = await writeClient
+      .withConfig({useCdn: false})
+      .transaction()
+      .patch(productId, (patch) => patch.unset([`productReviews[_ref=="${reviewId}"]`]))
+      .patch(userId, (patch) => patch.unset([`userReviews[_ref=="${reviewId}"]`]))
+      .delete(reviewId)
+      .commit()
+
+    return parseServerActionResponse({
+      ...result,
+      error: "",
+      status: "SUCCESS",
+    })
+
+  } catch (error) {
+    console.error("Error deleting review")
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: error,
+    })
+  }
 }
 

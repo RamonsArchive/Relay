@@ -22,3 +22,8 @@ export const reviewSchema = z.object({
     nickname: z.string().min(3).max(50),
     email: z.string().email(),
 })
+
+
+export const editReviewSchema = z.object({
+  review: z.string().min(10).max(20000),
+})

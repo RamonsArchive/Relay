@@ -33,7 +33,7 @@ const ProductCard = ({
         <div className="absolute top-2 right-2 cursor-pointer">
           <ProductHeart
             isHearted={isHearted}
-            productIdString={_id}
+            productId={_id}
             userId={user?.id}
             callbackUrl={callbackUrl}
           />

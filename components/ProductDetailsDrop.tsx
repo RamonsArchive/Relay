@@ -94,7 +94,7 @@ const ProductDetailsDrop = ({
                   className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer"
                   onClick={() => handleToggleEdit(editReview)}
                 >
-                  Edit Review
+                  {editReview ? "Stop Editing" : "Edit Review"}
                 </span>
               ) : (
                 <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
@@ -108,6 +108,7 @@ const ProductDetailsDrop = ({
               {selectedReviews ? (
                 selectedReviews.map((review: ReviewType, index: number) => (
                   <ReviewCard
+                    productId={productId}
                     productReview={review}
                     key={index}
                     userReview={userReview}

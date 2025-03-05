@@ -86,6 +86,7 @@ export type ReviewType = {
     };
     product?: {
       _ref: string;
+      _id?: string
       _type: "reference";
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "product";
