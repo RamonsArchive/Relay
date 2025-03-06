@@ -405,7 +405,7 @@ export const GET_TOP_REVIEWS = (id: string) => {
   }`
 }
 
-export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 10) => {
+export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 11) => {
    return `*[_type == "user" && _id == $userId][0] {
    "recentlyViewedProducts": recentlyViewedProducts[]->{
     _id,

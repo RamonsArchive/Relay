@@ -95,9 +95,9 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
       })
     }
 
-    const query = `[_type == "reviews" && defined(slug) && product._ref == $productId && user._ref == $userId][0]`
-    const existingReview = await client.fetch(`[_type == "reviews" && defined(slug) && product._ref == "${productId}" && user._ref == "${userId}"][0]`)
-    //const existingReview = await client.fetch(query, {productId, userId,}); //, {cache: 'no-store'}
+    const query = `*[_type == "reviews" && defined(slug) && product._ref == $productId && user._ref == $userId][0]`
+    //const existingReview = await client.fetch(`[_type == "reviews" && defined(slug) && product._ref == "${productId}" && user._ref == "${userId}"][0]`)
+    const existingReview = await client.fetch(query, {productId, userId,}); //, {cache: 'no-store'}
 
     console.log("Existing user in client", existingReview);
 

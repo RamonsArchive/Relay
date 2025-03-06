@@ -19,6 +19,7 @@
     "@sanity/vision": "^3.72.1",
     "@tailwindcss/typography": "github:tailwindcss/typography",
     "@types/axios": "^0.9.36",
+    "@upstash/ratelimit": "^2.0.5",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

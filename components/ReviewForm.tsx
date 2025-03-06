@@ -94,6 +94,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         toast.error("Error", {
           description: "You already wrote a review for this product",
         });
+        router.push(`/product/${productId}`);
         return existingReview;
       }
       console.log("existing user", existingReview);

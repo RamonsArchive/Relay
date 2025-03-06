@@ -21,7 +21,7 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
-import { ReviewType } from "@/globalTypes";
+import { ProductType, ReviewType } from "@/globalTypes";
 
 export const experimental_ppr = true;
 
@@ -61,26 +61,23 @@ const page = async ({ params }: { params: { id: string } }) => {
   } = imagesPlusProductDetails;
 
   let dereferencedReviews = reviews;
-  let dereferencedRecenltyViewedProducts = [];
+  let recentlyViewedProds = [];
   let heartedProducts = [];
   let userReview = [];
 
-  console.log("Reviews", reviews);
-  console.log("reivew type", Array.isArray(reviews));
-
   if (userId) {
     const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
-    dereferencedRecenltyViewedProducts = await client
+    recentlyViewedProds = await client
       .withConfig({ useCdn: false })
       .fetch(query, {
         userId,
       });
-    dereferencedRecenltyViewedProducts =
-      dereferencedRecenltyViewedProducts.recentlyViewedProducts;
-    console.log(
-      "dereferencedRecntlviewedProducts",
-      dereferencedRecenltyViewedProducts
+    recentlyViewedProds = recentlyViewedProds.recentlyViewedProducts;
+
+    recentlyViewedProds = recentlyViewedProds.filter(
+      (prod: ProductType) => prod._id != productId
     );
+
     await handleRecentyViewedProductsWrite(productId, userId);
     heartedProducts = await fetchHeartedProducts(userId);
     writePopularCategories(userId, productId, categories);
@@ -265,9 +262,8 @@ const page = async ({ params }: { params: { id: string } }) => {
         <div className="w-full overflow-x-auto overflow-y-hidden whitespace-nowrap h-[475px]">
           <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
             <Suspense fallback={<div>Loading products... </div>}>
-              {dereferencedRecenltyViewedProducts &&
-              dereferencedRecenltyViewedProducts.length > 0 ? (
-                dereferencedRecenltyViewedProducts
+              {recentlyViewedProds?.length > 0 ? (
+                recentlyViewedProds
                   .slice(0, 10)
                   .map((product: any, index: number) => {
                     return (

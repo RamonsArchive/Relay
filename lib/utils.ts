@@ -46,3 +46,12 @@ export function readFileAsDataURL (file: File): Promise<string> {
 }
 
 
+export const sanitizeSanityId = (id: string): string | null => {
+  const trimmedId = id.trim();
+  if (/^[a-zA-Z0-9\-_]{16,40}$/.test(trimmedId)) {
+    console.log("Trimmed id", trimmedId);
+    return trimmedId;
+  }
+
+  return null;
+};

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { handleHeartWrite } from "@/sanity/lib/actions";
+import { toast } from "sonner";
 
 const ProductHeart = ({
   isHearted,
@@ -35,14 +36,23 @@ const ProductHeart = ({
       const heartedProductId = Cookies.get("heartedProductId");
       try {
         setHearted(true);
-        await handleHeartWrite(
+        const result = await handleHeartWrite(
           userId as string,
           heartedProductId as string,
           !isHearted
         );
+
+        if (result.status == "SUCCESS") {
+          toast.success("Success", {
+            description: "Product has been hearted successfully",
+          });
+        }
         Cookies.remove("heartedProductId");
       } catch (error) {
         setHearted(false);
+        toast.error("Error", {
+          description: "Product was unable to be hearted",
+        });
         Cookies.remove("heartedProductId");
       }
     };
@@ -63,15 +73,45 @@ const ProductHeart = ({
       // get product Id
       Cookies.set("heartedProductId", productId, { expires: 1 });
       router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+      toast.info("Please sign in", {
+        description: "Sign in to save heart",
+      });
       return;
     }
     try {
       const newHearted = !hearted;
       setHearted(newHearted);
-      await handleHeartWrite(userId, productId, newHearted as boolean);
-      router.refresh();
+      console.log("user id", userId);
+      console.log("product id", productId);
+      const result = await handleHeartWrite(
+        userId,
+        productId,
+        newHearted as boolean
+      );
+      console.log("Heart result", result);
+      if (result.status == "SUCCESS") {
+        if (hearted) {
+          toast.success("Success", {
+            description: "Product has been unhearted successfully",
+          });
+        } else {
+          toast.success("Success", {
+            description: "Product has been hearted successfully",
+          });
+        }
+        router.refresh();
+      } else {
+        setHearted(!newHearted);
+        toast.error("Error", {
+          description: "Product has not able to be hearted",
+        });
+      }
     } catch (error) {
+      setHearted(hearted);
       console.error("Failed to execute hearted action:", error);
+      toast.error("Error", {
+        description: "Product was unable to be hearted or unhearted",
+      });
     }
   };
 

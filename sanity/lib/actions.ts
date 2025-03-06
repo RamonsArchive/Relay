@@ -6,6 +6,9 @@ import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts
 import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse } from "@/lib/utils";
+import {auth} from "@/auth";
+import { sanitizeSanityId } from "@/lib/utils";
+import { rateLimiter } from "@/lib/rateLimiter";
 
 
 export const uploadImageToSanity = async (imageFile: File) => {
@@ -57,37 +60,88 @@ export const uploadImageStringToSanity = async (imageUrl: string) => {
 };
 
 export const handleHeartWrite = async (userId: string, productId: string, hearted: boolean) => {  
-   const userIdString = userId;
-   if (!userIdString || !productId) {
-    throw new Error("No user ID provided");
+   const session = await auth();
+   const sessionId = session?.user?.id;
+   const sanitizedUserId = sanitizeSanityId(userId);
+   const sanitizedProductId = sanitizeSanityId(productId);
+
+   if (!sanitizedUserId || !sanitizedProductId) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Malformed user or product id"
+    })
+   }
+
+   if (!session || sanitizedUserId != sessionId) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Unauthorized request"
+    })
+   }
+
+   if (sessionId != sanitizedUserId) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Unauthorized access to another users data"
+    })
+   }
+
+   const {success} = await rateLimiter.limit(
+    sanitizedUserId
+  )
+   if (!success) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Too many requests. Please try again later"
+    })
    }
 
     if (!hearted) {
       try {
-      await writeClient.withConfig({useCdn: false})
-      .patch(userIdString)
-      .unset([`heartedProducts[_ref=="${productId}"]`])
+      const result = await writeClient.withConfig({useCdn: false})
+      .patch(sanitizedUserId)
+      .unset([`heartedProducts[_ref=="${sanitizedProductId}"]`])
       .commit();
+
+      return parseServerActionResponse({
+        ...result,
+        status: "SUCCESS",
+        error: ""
+      })
     } catch (error) {
         console.error("Error setting the heart", error);
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Failed to remove heart"
+        })
       }
     } else {
         try {
             const mykey = nanoid();
             const newProductReference = {
                 _type: "reference",
-                _ref: productId,
+                _ref: sanitizedProductId,
                 _key: mykey,
             }
-            await writeClient
+            const result = await writeClient
                 .withConfig({useCdn: false})
-                .patch(userIdString)
+                .patch(sanitizedUserId)
                 .setIfMissing({heartedProducts: []})
                 .append("heartedProducts", [newProductReference])
                 .commit();
+                
+            return parseServerActionResponse({
+              ...result,
+              status: "SUCCESS",
+              error: ""
+            })
         }
          catch (error) {
             console.error("Error removing the heart", error);
+            return parseServerActionResponse({
+              status: "ERROR",
+              error: "Failed to add heart"
+            })
         }
       }
   } 
@@ -195,7 +249,7 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       throw new Error("No product Id provided");
     }
 
-    const existingReview = await verifyNoUserReview(productId, userId);
+   const existingReview = await verifyNoUserReview(productId, userId);
     if (existingReview.status == "ERROR") {
       return parseServerActionResponse({
         status: "ERROR",
