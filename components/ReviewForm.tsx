@@ -31,18 +31,18 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
     const photoFile = formData.get("photo");
     console.log("photoFile", photoFile);
     let photoRef = null;
-    if (photoFile instanceof File) {
-      if (photoFile instanceof File) {
-        if (photoFile.size > 5 * 1024 * 1024) {
-          console.error("File is too large! Must be under 5MB.");
-          setErrors({ photo: "File size exceeds 5MB limit." });
-          return {
-            ...prevState,
-            error: "File size exceeds 5MB limit.",
-            status: "ERROR",
-          };
-        }
+    if (photoFile instanceof File && photoFile.size > 0) {
+      if (photoFile.size > 5 * 1024 * 1024) {
+        console.error("File is too large! Must be under 5MB.");
+        setErrors({ photo: "File size exceeds 5MB limit." });
+        return {
+          ...prevState,
+          error: "File size exceeds 5MB limit.",
+          status: "ERROR",
+        };
       }
+
+      console.log("Type of photo file", photoFile);
       try {
         //const imageUrl = await readFileAsDataURL(photoFile);
         //console.log("imageUrl", imageUrl);

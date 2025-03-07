@@ -139,8 +139,14 @@ const ReviewCard = ({
           description: "Your review has been successfully deleated",
         });
         setEditReview(false);
-        //router.replace(`${productId}`);
         router.refresh();
+        setDeleteReviewLoader(false);
+      }
+
+      if (result.status === "ERROR") {
+        toast.error("Error", {
+          description: "Error deleting Review.",
+        });
         setDeleteReviewLoader(false);
       }
       console.log("Result", result);
@@ -170,7 +176,6 @@ const ReviewCard = ({
         });
 
         setEditReview(false);
-        //router.replace(`${productId}`);
         router.refresh();
       }
       return result;

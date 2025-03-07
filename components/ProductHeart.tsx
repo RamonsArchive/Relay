@@ -51,7 +51,8 @@ const ProductHeart = ({
       } catch (error) {
         setHearted(false);
         toast.error("Error", {
-          description: "Product was unable to be hearted",
+          description:
+            "Product was unable to be hearted. Please try again later",
         });
         Cookies.remove("heartedProductId");
       }
@@ -103,14 +104,16 @@ const ProductHeart = ({
       } else {
         setHearted(!newHearted);
         toast.error("Error", {
-          description: "Product has not able to be hearted",
+          description:
+            "Product has not able to be hearted. Please try again later",
         });
       }
     } catch (error) {
       setHearted(hearted);
       console.error("Failed to execute hearted action:", error);
       toast.error("Error", {
-        description: "Product was unable to be hearted or unhearted",
+        description:
+          "Product was unable to be hearted or unhearted. Please try again later",
       });
     }
   };

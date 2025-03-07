@@ -33,7 +33,10 @@ const page = async ({ params }: { params: { id: string } }) => {
   const userId = user?.id || null;
   console.log(" Product User Id", userId);
   const path = (await params).id || "/";
+  console.log("path", path);
   const productId = path.toString();
+  console.log("type of produt id", typeof productId);
+  console.log("Should be prdouct id", productId);
   const callbackUrl = `/product/${path}`;
   if (!path) {
     throw new Error("No path provided");
@@ -248,7 +251,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                   reviews={reviews}
                   selectedReviews={selectedReviews}
                   userReview={userReview[0]}
-                  productId={path}
+                  productId={productId}
                 />
               </Suspense>
             </div>

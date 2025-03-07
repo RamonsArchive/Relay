@@ -47,6 +47,10 @@ export function readFileAsDataURL (file: File): Promise<string> {
 
 
 export const sanitizeSanityId = (id: string): string | null => {
+  if (typeof id !== "string") {
+    console.error("Invalid ID type:", id);
+    return null;
+  }
   const trimmedId = id.trim();
   if (/^[a-zA-Z0-9\-_]{16,40}$/.test(trimmedId)) {
     console.log("Trimmed id", trimmedId);
@@ -54,4 +58,20 @@ export const sanitizeSanityId = (id: string): string | null => {
   }
 
   return null;
+};
+
+export const sanitizeSearchQuery = (query: string): string | null => {
+  const trimmedQuery = query.trim();
+
+  if (trimmedQuery.length === 0) {
+    return null;
+  }
+  
+  const maxLength = 100;
+  if (trimmedQuery.length > maxLength) {
+    return null;
+  }
+
+  const escapedQuery = trimmedQuery.replace(/[<>"'&]/g, ""); 
+  return escapedQuery;
 };
