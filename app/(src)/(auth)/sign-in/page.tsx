@@ -10,7 +10,7 @@ const SignInPage = () => {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   return (
-    <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300">
+    <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden">
       <div className="flex flex-col max-w-[400px] max-h-[550px] w-[80%] h-[80%] font-plex-sans border border-gray-300 shadow-lg items-center gap-10 ">
         <div className="flex flex-col gap-5 py-[25%] w-full items-center">
           <Link href="/">

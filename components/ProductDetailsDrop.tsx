@@ -6,7 +6,9 @@ import { getNumberOfReviews } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import ReviewCard from "./ReviewCard";
 import { ReviewType } from "@/globalTypes";
+import ViewReviews from "@/components/ViewReviews";
 import Link from "next/link";
+import { SanityImage } from "@/globalTypes";
 
 const ProductDetailsDrop = ({
   mainDetails,
@@ -15,6 +17,9 @@ const ProductDetailsDrop = ({
   selectedReviews,
   userReview,
   productId,
+  mainImage,
+  title,
+  cost,
 }: {
   mainDetails: string;
   detailBullets: string[];
@@ -22,16 +27,27 @@ const ProductDetailsDrop = ({
   selectedReviews: ReviewType[];
   userReview: ReviewType;
   productId: string;
+  mainImage: SanityImage;
+  title: string;
+  cost: string;
 }) => {
+  console.log("Title", title);
+  console.log("cost", cost);
   const [droppedInfo, setDroppedInfo] = useState<Record<string, boolean>>({
     details: false,
     productReviews: false,
   });
 
   const [editReview, setEditReview] = useState(false);
+  const [viewReviews, setViewReviews] = useState(false);
 
   const handleToggleEdit = (current: boolean) => {
     setEditReview(!current);
+  };
+
+  const handleToggleViewMoreReviews = () => {
+    console.log("Setting the opositive of setViewRevies");
+    setViewReviews(!viewReviews);
   };
 
   const handleDropClick = (section: string) => {
@@ -122,11 +138,31 @@ const ProductDetailsDrop = ({
                 </div>
               )}
             </div>
-            <p className="flex font-plex-sans text-[18px] font-medium ">
-              <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
-                More Reviews
-              </span>
-            </p>
+
+            <div className="flex font-plex-sans text-[18px] font-medium ">
+              {viewReviews ? (
+                <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-50">
+                  <ViewReviews
+                    reviews={reviews}
+                    userReview={userReview}
+                    viewReviews={viewReviews}
+                    setViewReviews={setViewReviews}
+                    mainImage={mainImage}
+                    title={title}
+                    cost={cost}
+                  />
+                </div>
+              ) : (
+                <button
+                  className="h-auto"
+                  onClick={handleToggleViewMoreReviews}
+                >
+                  <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
+                    More Reviews
+                  </span>
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

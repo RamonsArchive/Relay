@@ -228,19 +228,30 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Width Rating</label>
-          <div className="flex flex-row gap-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={24}
-                className={`cursor-pointer ${i < widthRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setWidthRating(i + 1)}
-              />
-            ))}
+          <div className="flex flex-row gap-5">
+            <Circle
+              size={24}
+              className={`${widthRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setWidthRating(1)}
+            />
+            <span>Runs Skinny</span>
+            <Circle
+              size={24}
+              className={`${widthRating == 2 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setWidthRating(2)}
+            />
+            <span>True to Width</span>
+
+            <Circle
+              size={24}
+              className={`${widthRating == 3 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setWidthRating(3)}
+            />
+            <span>Runs Wide</span>
           </div>
           {errors.widthRating && (
             <span className="product-write-error">
-              Rating must be from 1 to 5 stars
+              Must check one of the three options
             </span>
           )}
           <input type="hidden" name="widthRating" value={widthRating} />
@@ -248,19 +259,30 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Comfort Rating</label>
-          <div className="flex flex-row gap-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={24}
-                className={`cursor-pointer ${i < comfortRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setComfortRating(i + 1)}
-              />
-            ))}
+          <div className="flex flex-row gap-5">
+            <Circle
+              size={24}
+              className={`${comfortRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setComfortRating(1)}
+            />
+            <span>Uncomfortable</span>
+            <Circle
+              size={24}
+              className={`${comfortRating == 2 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setComfortRating(2)}
+            />
+            <span>Average</span>
+
+            <Circle
+              size={24}
+              className={`${comfortRating == 3 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setComfortRating(3)}
+            />
+            <span>Very Comfortable</span>
           </div>
           {errors.comfortRating && (
             <span className="product-write-error">
-              Rating must be from 1 to 5 stars
+              Must check on of the three options
             </span>
           )}
           <input type="hidden" name="comfortRating" value={comfortRating} />
@@ -268,19 +290,30 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Size Rating</label>
-          <div className="flex flex-row gap-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={24}
-                className={`cursor-pointer ${i < sizeRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setSizeRating(i + 1)}
-              />
-            ))}
+          <div className="flex flex-row gap-5">
+            <Circle
+              size={24}
+              className={`${sizeRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setSizeRating(1)}
+            />
+            <span>Runs small</span>
+            <Circle
+              size={24}
+              className={`${sizeRating == 2 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setSizeRating(2)}
+            />
+            <span>True to Size</span>
+
+            <Circle
+              size={24}
+              className={`${sizeRating == 3 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setSizeRating(3)}
+            />
+            <span>Runs Big</span>
           </div>
           {errors.sizeRating && (
             <span className="product-write-error">
-              Rating must be from 1 to 5 stars
+              Must check on of the three options
             </span>
           )}
           <input type="hidden" name="sizeRating" value={sizeRating} />
@@ -288,19 +321,30 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Quality Rating</label>
-          <div className="flex flex-row gap-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={24}
-                className={`cursor-pointer ${i < qualityRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setQualityRating(i + 1)}
-              />
-            ))}
+          <div className="flex flex-row gap-5">
+            <Circle
+              size={24}
+              className={`${qualityRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setQualityRating(1)}
+            />
+            <span>Poor</span>
+            <Circle
+              size={24}
+              className={`${qualityRating == 2 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setQualityRating(2)}
+            />
+            <span>Average</span>
+
+            <Circle
+              size={24}
+              className={`${qualityRating == 3 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setQualityRating(3)}
+            />
+            <span>Great</span>
           </div>
           {errors.qualityRating && (
             <span className="product-write-error">
-              Rating must be from 1 to 5 stars
+              Must check one of the three options
             </span>
           )}
           <input type="hidden" name="qualityRating" value={qualityRating} />
@@ -308,19 +352,30 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Value Rating</label>
-          <div className="flex flex-row gap-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={24}
-                className={`cursor-pointer ${i < valueRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
-                onClick={() => setValueRating(i + 1)}
-              />
-            ))}
+          <div className="flex flex-row gap-5">
+            <Circle
+              size={24}
+              className={`${valueRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setValueRating(1)}
+            />
+            <span>Poor</span>
+            <Circle
+              size={24}
+              className={`${valueRating == 2 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setValueRating(2)}
+            />
+            <span>Average</span>
+
+            <Circle
+              size={24}
+              className={`${valueRating == 3 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+              onClick={() => setValueRating(3)}
+            />
+            <span>Great</span>
           </div>
           {errors.valueRating && (
             <span className="product-write-error">
-              Rating must be from 1 to 5 stars
+              Must check one of the three options
             </span>
           )}
           <input type="hidden" name="valueRating" value={valueRating} />

@@ -1,10 +1,5 @@
 import ProductImages from "@/components/ProductImages";
-import {
-  client,
-  fetchHeartedProducts,
-  fetchRecentyViewedProducts,
-  urlFor,
-} from "@/sanity/lib/client";
+import { client, fetchHeartedProducts, urlFor } from "@/sanity/lib/client";
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
   GET_TOP_REVIEWS,
@@ -22,6 +17,8 @@ import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
 import { ProductType, ReviewType } from "@/globalTypes";
+import { after } from "next/server";
+import { parseServerActionResponse } from "@/lib/utils";
 
 export const experimental_ppr = true;
 
@@ -47,6 +44,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(productId)
   );
+  // console.log("Imageplus", imagesPlusProductDetails);
 
   const {
     title,
@@ -63,41 +61,66 @@ const page = async ({ params }: { params: { id: string } }) => {
     reviews,
   } = imagesPlusProductDetails;
 
-  let dereferencedReviews = reviews;
+  console.log("Title", title);
+  console.log("cost", cost);
+
+  let dereferencedReviews = reviews || [];
   let recentlyViewedProds = [];
   let heartedProducts = [];
   let userReview = [];
 
   if (userId) {
-    const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
-    recentlyViewedProds = await client
-      .withConfig({ useCdn: false })
-      .fetch(query, {
-        userId,
+    try {
+      const query = await GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS();
+      recentlyViewedProds = await client
+        .withConfig({ useCdn: false })
+        .fetch(query, {
+          userId,
+        });
+      recentlyViewedProds = recentlyViewedProds.recentlyViewedProducts;
+
+      recentlyViewedProds = recentlyViewedProds.filter(
+        (prod: ProductType) => prod._id != productId
+      );
+      heartedProducts = await fetchHeartedProducts(userId);
+
+      if (dereferencedReviews?.length > 0) {
+        userReview = dereferencedReviews.filter(
+          (review: ReviewType) => review?.user?._id === userId
+        );
+        dereferencedReviews = dereferencedReviews.filter(
+          (review: ReviewType) => review?.user?._id !== userId
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      console.log("There was an error");
+      return parseServerActionResponse({
+        status: "ERROR",
       });
-    recentlyViewedProds = recentlyViewedProds.recentlyViewedProducts;
-
-    recentlyViewedProds = recentlyViewedProds.filter(
-      (prod: ProductType) => prod._id != productId
-    );
-
-    await handleRecentyViewedProductsWrite(productId, userId);
-    heartedProducts = await fetchHeartedProducts(userId);
-    writePopularCategories(userId, productId, categories);
-
-    if (dereferencedReviews?.length > 0) {
-      userReview = dereferencedReviews.filter(
-        (review: ReviewType) => review?.user?._id === userId
-      );
-      dereferencedReviews = dereferencedReviews.filter(
-        (review: ReviewType) => review?.user?._id !== userId
-      );
     }
+
+    console.log("After usrId");
+
+    /*after(async () => {
+      try {
+        await handleRecentyViewedProductsWrite(productId, userId);
+        await writePopularCategories(userId, productId, categories);
+      } catch (error) {
+        console.error(error);
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Internal server error",
+        });
+      }
+    });*/
   }
 
   let selectedReviews = [];
 
+  console.log("right before derefenced reviews");
   if (dereferencedReviews?.length >= 3) {
+    console.log("more than three reviews");
     const sortedReviews = [...dereferencedReviews].sort(
       (a, b) =>
         b.mainRating - a.mainRating ||
@@ -114,8 +137,10 @@ const page = async ({ params }: { params: { id: string } }) => {
       selectedReviews = [...userReview, ...best, ...worst];
     }
   } else {
+    console.log("less than three reivews");
     if (!dereferencedReviews?.length) {
-      return;
+      console.log("Returning cause no reviews");
+      selectedReviews = [];
     }
     const sortedReviews = [...dereferencedReviews].sort(
       (a, b) =>
@@ -129,6 +154,7 @@ const page = async ({ params }: { params: { id: string } }) => {
     }
   }
 
+  console.log("After no reviews");
   console.log("User Review", userReview);
   console.log("selectedReviews", selectedReviews);
 
@@ -252,6 +278,9 @@ const page = async ({ params }: { params: { id: string } }) => {
                   selectedReviews={selectedReviews}
                   userReview={userReview[0]}
                   productId={productId}
+                  mainImage={mainImage}
+                  title={title}
+                  cost={cost}
                 />
               </Suspense>
             </div>
