@@ -144,3 +144,12 @@ export type categoriesType = Pick<
   "_id"> & {
     name: string | null;
   };
+
+export type ReviewStatsType = {
+  normalizedSize: number;
+  normalizedComfort: number;
+  averageWouldRecommend: number;
+  normalizedWidth: number;
+  normalizedQuality: number;
+  normalizedValue: number;
+}

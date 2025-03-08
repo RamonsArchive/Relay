@@ -16,9 +16,9 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
-import { ProductType, ReviewType } from "@/globalTypes";
+import { ProductType, ReviewStatsType, ReviewType } from "@/globalTypes";
 import { after } from "next/server";
-import { parseServerActionResponse } from "@/lib/utils";
+import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 
 export const experimental_ppr = true;
 
@@ -68,6 +68,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   let recentlyViewedProds = [];
   let heartedProducts = [];
   let userReview = [];
+  const reviewStats = ReviewSliderStats(reviews);
 
   if (userId) {
     try {
@@ -102,18 +103,21 @@ const page = async ({ params }: { params: { id: string } }) => {
 
     console.log("After usrId");
 
-    /*after(async () => {
-      try {
-        await handleRecentyViewedProductsWrite(productId, userId);
-        await writePopularCategories(userId, productId, categories);
-      } catch (error) {
-        console.error(error);
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Internal server error",
-        });
-      }
-    });*/
+    after(() => {
+      const callback = async () => {
+        try {
+          await handleRecentyViewedProductsWrite(productId, userId);
+          await writePopularCategories(userId, productId, categories);
+        } catch (error) {
+          console.error(error);
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: "Internal server error",
+          });
+        }
+      };
+      callback();
+    });
   }
 
   let selectedReviews = [];
@@ -153,10 +157,6 @@ const page = async ({ params }: { params: { id: string } }) => {
       selectedReviews = [...userReview, ...sortedReviews];
     }
   }
-
-  console.log("After no reviews");
-  console.log("User Review", userReview);
-  console.log("selectedReviews", selectedReviews);
 
   const parsedDescription = md.render(description);
 
@@ -281,6 +281,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                   mainImage={mainImage}
                   title={title}
                   cost={cost}
+                  reviewStats={reviewStats}
                 />
               </Suspense>
             </div>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getNumberOfReviews } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import ReviewCard from "./ReviewCard";
-import { ReviewType } from "@/globalTypes";
+import { ReviewStatsType, ReviewType } from "@/globalTypes";
 import ViewReviews from "@/components/ViewReviews";
 import Link from "next/link";
 import { SanityImage } from "@/globalTypes";
@@ -20,6 +20,7 @@ const ProductDetailsDrop = ({
   mainImage,
   title,
   cost,
+  reviewStats,
 }: {
   mainDetails: string;
   detailBullets: string[];
@@ -30,6 +31,7 @@ const ProductDetailsDrop = ({
   mainImage: SanityImage;
   title: string;
   cost: string;
+  reviewStats: ReviewStatsType;
 }) => {
   console.log("Title", title);
   console.log("cost", cost);
@@ -37,6 +39,8 @@ const ProductDetailsDrop = ({
     details: false,
     productReviews: false,
   });
+
+  console.log("Review stats drop dwon details", reviewStats);
 
   const [editReview, setEditReview] = useState(false);
   const [viewReviews, setViewReviews] = useState(false);
@@ -150,6 +154,7 @@ const ProductDetailsDrop = ({
                     mainImage={mainImage}
                     title={title}
                     cost={cost}
+                    reviewStats={reviewStats}
                   />
                 </div>
               ) : (

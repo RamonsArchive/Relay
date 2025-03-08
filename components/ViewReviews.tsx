@@ -1,5 +1,5 @@
 "use client";
-import { ReviewType } from "@/globalTypes";
+import { ReviewStatsType, ReviewType } from "@/globalTypes";
 import React from "react";
 import { useEffect } from "react";
 import { SanityImage } from "@/globalTypes";
@@ -19,6 +19,7 @@ interface Props {
   mainImage: SanityImage;
   title: string;
   cost: string;
+  reviewStats: ReviewStatsType;
 }
 
 const ViewReviews = ({
@@ -29,6 +30,7 @@ const ViewReviews = ({
   mainImage,
   title,
   cost,
+  reviewStats,
 }: Props) => {
   const [sortDropDown, setSortDropDown] = useState(false);
   const [sortDropDownTitle, setSortDropDownTitle] = useState<
@@ -41,6 +43,8 @@ const ViewReviews = ({
   ]);
   const [searchFilter, setSearchFilter] = useState("");
   const [filterRating, setFilterRating] = useState(-1);
+
+  console.log("Review stats view reviews", reviewStats);
 
   const handleSortDropDownToggle = (toggle: number) => {};
   console.log("Main Image", mainImage);
@@ -94,7 +98,7 @@ const ViewReviews = ({
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <ReviewSummarySliders reviews={reviews} />
+          <ReviewSummarySliders reviews={reviews} reviewStats={reviewStats} />
         </div>
         <div className="flex flex-col w-full">
           <p className="font-plex-sants text-medium text-[16px]">

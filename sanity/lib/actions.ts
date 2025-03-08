@@ -221,8 +221,12 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
 
   export const handleRecentyViewedProductsWrite = async (productId: string, userId: string) => {
     try {
-      const session = await auth();
-      const sessionId = session?.user?.id;
+      if (!userId) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Unauthorized request"
+        })
+      }
       const productIdSanitized = sanitizeSanityId(productId);
       const userIdSanitized = sanitizeSanityId(userId);
 
@@ -232,14 +236,6 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
           error: "Malformed product ID or user ID"
         })
       }
-
-      if (!session || sessionId != userIdSanitized) {
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Unauthorised request"
-        })
-      }
-
       const {success} = await rateLimiter.limit(`${userIdSanitized}:recentlyViewedProduct`);
       if (!success) {
         return parseServerActionResponse({
@@ -280,8 +276,12 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
 
 export const writePopularCategories = async (userId: string, productId: string, categories: categoriesType[]) => {
   try {
-    const session = await auth();
-    const sessionId = session?.user?.id
+    if (!userId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
     const userIdSanitized = sanitizeSanityId(userId);
     const productIdSanitized = sanitizeSanityId(productId);
 
@@ -293,13 +293,6 @@ export const writePopularCategories = async (userId: string, productId: string, 
       return parseServerActionResponse({
         status: "ERROR",
         error: "Malformed user ID or productID"
-      })
-    }
-
-    if (!session || sessionId !== userIdSanitized) {
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "Unauthorized request"
       })
     }
 
@@ -334,7 +327,7 @@ export const writePopularCategories = async (userId: string, productId: string, 
     updatedPopularCategories = updatedPopularCategories.slice(0, 100);
 
     await writeClient
-      .withConfig({useCdn: false})
+      .withConfig({useCdn: true})
       .patch(userIdSanitized)
       .set({"popularCategories": updatedPopularCategories})
       .commit();
@@ -406,7 +399,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
     console.log("updated recent searhces", updatedRecentSearches);
 
     await writeClient
-      .withConfig({useCdn: false})
+      .withConfig({useCdn: true})
       .patch(userIdSanitized)
       .set({"recentSearches": updatedRecentSearches})
       .commit();

@@ -1,3 +1,4 @@
+import { ReviewType } from "@/globalTypes"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -75,3 +76,44 @@ export const sanitizeSearchQuery = (query: string): string | null => {
   const escapedQuery = trimmedQuery.replace(/[<>"'&]/g, ""); 
   return escapedQuery;
 };
+
+export const ReviewSliderStats = (reviews: ReviewType[]) => {
+  const totalReviews = reviews.length || 1;
+  const averageSize =
+    reviews.reduce((sum, r) => sum + (r.sizeRating || 2), 0) / totalReviews;
+  console.log("true average size", averageSize);
+  const averageComfort =
+    reviews.reduce((sum, r) => sum + (r.comfortRating || 2), 0) / totalReviews;
+  const averageWouldRecommend =
+    reviews.reduce((sum, r) => sum + (r.wouldRecommend === true ? 1 : 0), 0) /
+    totalReviews;
+  const averageWidth =
+    reviews.reduce((sum, r) => sum + (r.widthRating || 2), 0) / totalReviews;
+  const averageQuality =
+    reviews.reduce((sum, r) => sum + (r.qualityRating || 2), 0) / totalReviews;
+  const averageValue =
+    reviews.reduce((sum, r) => sum + (r.valueRating || 2), 0) / totalReviews;
+
+  const normalizeRating = (rating: number) => (rating - 1) / 2;
+
+  const normalizedSize = normalizeRating(averageSize);
+  const normalizedComfort = normalizeRating(averageComfort);
+  const normalizedWidth = normalizeRating(averageWidth);
+  const normalizedQuality = normalizeRating(averageQuality);
+  const normalizedValue = normalizeRating(averageValue);
+
+  console.log("Average size", averageSize);
+  console.log("normalized size", normalizedSize);
+  console.log("Average Comfort", averageComfort);
+  console.log("normalized comfort", normalizedComfort);
+  console.log("average would reccomend", averageWouldRecommend);
+  return {
+    normalizedSize: normalizeRating(averageSize),
+    normalizedComfort: normalizeRating(averageComfort),
+    averageWouldRecommend: averageWouldRecommend,
+    normalizedWidth: normalizeRating(averageWidth),
+    normalizedQuality: normalizeRating(averageQuality),
+    normalizedValue: normalizeRating(averageValue),
+    
+  }
+}
