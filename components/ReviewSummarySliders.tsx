@@ -8,7 +8,6 @@ interface Props {
 }
 
 const ReviewSummarySliders = ({ reviews, reviewStats }: Props) => {
-  console.log("Review stats in slider", reviewStats);
   const {
     normalizedSize,
     normalizedComfort,
@@ -39,7 +38,7 @@ const ReviewSummarySliders = ({ reviews, reviewStats }: Props) => {
         label="Would others recommend?"
         subTitleOne="Wouldn't"
         subTitleTwo="Probably"
-        subTitleThree="Very Likely"
+        subTitleThree="Yes!"
         value={averageWouldRecommend}
         type="boolean"
       />

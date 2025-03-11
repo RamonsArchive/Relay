@@ -114,6 +114,38 @@ export const ReviewSliderStats = (reviews: ReviewType[]) => {
     normalizedWidth: normalizeRating(averageWidth),
     normalizedQuality: normalizeRating(averageQuality),
     normalizedValue: normalizeRating(averageValue),
-    
   }
+}
+
+
+export const getNumReviewsPerStar = (reviews: ReviewType[]) => {
+  if (!reviews) {
+    return {
+      fiveStar: 0,
+      fourStar: 0,
+      threeStar: 0,
+      twoStar: 0,
+      oneStar: 0
+    }
+  }
+  return reviews.reduce((acc: any, review: ReviewType) => {
+    const rating = review.mainRating;
+    if (rating === 1) acc.oneStar++;
+    if (rating === 2) acc.twoStar++;
+    if (rating === 3) acc.threeStar++;
+    if (rating === 4) acc.fourStar++;
+    if (rating === 5) acc.fiveStar++;
+    return acc;
+  }, {
+    fiveStar: 0,
+    fourStar: 0,
+    threeStar: 0,
+    twoStar: 0,
+    oneStar: 0
+  })
+}
+
+export const handleUpdateReviews = (type: string) => {
+  const newReviews = null;
+  //if (type === "")
 }

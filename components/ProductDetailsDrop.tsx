@@ -33,14 +33,10 @@ const ProductDetailsDrop = ({
   cost: string;
   reviewStats: ReviewStatsType;
 }) => {
-  console.log("Title", title);
-  console.log("cost", cost);
   const [droppedInfo, setDroppedInfo] = useState<Record<string, boolean>>({
     details: false,
     productReviews: false,
   });
-
-  console.log("Review stats drop dwon details", reviewStats);
 
   const [editReview, setEditReview] = useState(false);
   const [viewReviews, setViewReviews] = useState(false);
@@ -145,12 +141,14 @@ const ProductDetailsDrop = ({
 
             <div className="flex font-plex-sans text-[18px] font-medium ">
               {viewReviews ? (
-                <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-50">
+                <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-10">
                   <ViewReviews
                     reviews={reviews}
                     userReview={userReview}
                     viewReviews={viewReviews}
                     setViewReviews={setViewReviews}
+                    editReview={editReview}
+                    setEditReview={setEditReview}
                     mainImage={mainImage}
                     title={title}
                     cost={cost}

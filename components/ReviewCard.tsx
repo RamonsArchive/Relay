@@ -54,28 +54,11 @@ const ReviewCard = ({
       : productUserId == userReviewId
         ? true
         : false;
-  console.log("Product user id", productUserId);
-  console.log("user review id", userReviewId);
-
-  console.log(
-    parseServerActionResponse({
-      productUserId: productUserId,
-      userReviewId: userReviewId,
-      title: reviewTitle,
-    })
-  );
 
   const [isEditedReview, setIsEditedReview] = useState(
     _createdAt !== _updatedAt
   );
-  console.log(
-    parseServerActionResponse({
-      title: reviewTitle,
-      createdAt: _createdAt,
-      updatedAt: _updatedAt,
-      isEdited: isEditedReview,
-    })
-  );
+
   useEffect(() => {
     if (_createdAt != _updatedAt) {
       setIsEditedReview(true);
@@ -107,9 +90,6 @@ const ReviewCard = ({
   }, []);
 
   const handleEllipseEditSubmit = () => {
-    console.log("Clicked ellipse save edit");
-    console.log("Edit review", editReview);
-    console.log("Form ref", formRef.current);
     if (editReview && formRef.current) {
       formRef.current.requestSubmit();
       // setEditReview(false);
@@ -149,7 +129,6 @@ const ReviewCard = ({
         });
         setDeleteReviewLoader(false);
       }
-      console.log("Result", result);
       return result;
     } catch (error) {
       setDeleteReviewLoader(false);
@@ -162,13 +141,9 @@ const ReviewCard = ({
   const handleFromSubmit = async (prevState: any, formData: FormData) => {
     try {
       const editData = formData.get("review");
-      console.log("Edit Data", editData);
-      console.log("Edit data type", typeof editData);
       await editReviewSchema.parse({ review: editData });
-      console.log("Going to write edit", editData);
 
       const result = await writeReviewEdit(_id as string, editData as string);
-      console.log("Result", result);
       if (result.status === "SUCCESS") {
         setEditSubmitButtonLoading(false);
         toast.success("Success", {
@@ -215,7 +190,7 @@ const ReviewCard = ({
         ))}
       <div className="flex flex-col ">
         {reviewTitle && (
-          <h2 className="font-plex-sans font-medium text-[20px]">
+          <h2 className="font-plex-sans font-medium text-[24px]">
             {reviewTitle.slice(0, 50)}
           </h2>
         )}
@@ -265,8 +240,8 @@ const ReviewCard = ({
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <p className="font-plex-sans font-regular text-[18px]">{nickname}</p>
+      <div className="flex flex-col gap-5">
+        <p className="font-plex-sans font-light text-[16px] pt-3">{nickname}</p>
         {editReview != false && reviewIsUserReview ? (
           <div>
             <Form action={formAciton} ref={formRef} className="w-full h-auto">
@@ -282,27 +257,31 @@ const ReviewCard = ({
               {error != null && (
                 <span className="product-write-error">{error}</span>
               )}
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="w-full h-[30px]"
-                onClick={() => setEditSubmitButtonLoading(true)}
-              >
-                {editSubmitButtonLoading ? "Submitting..." : "Submit your Edit"}
-                <Send />
-              </Button>
-              <Button
-                type="button"
-                onClick={() => {
-                  handleDeleteEdit();
-                }}
-                disabled={isPending}
-                className="w-full h-[30px]"
-                variant="destructive"
-              >
-                Cancel Edit
-                <Ban />
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full max-w-[300px] h-[30px]"
+                  onClick={() => setEditSubmitButtonLoading(true)}
+                >
+                  {editSubmitButtonLoading
+                    ? "Submitting..."
+                    : "Submit your Edit"}
+                  <Send />
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    handleDeleteEdit();
+                  }}
+                  disabled={isPending}
+                  className="w-full max-w-[300px] h-[30px]"
+                  variant="destructive"
+                >
+                  Cancel Edit
+                  <Ban />
+                </Button>
+              </div>
             </Form>
           </div>
         ) : (
@@ -315,7 +294,7 @@ const ReviewCard = ({
             alt="review photo"
             width={200}
             height={250}
-            className="object-contain w-full h-full overflow-hidden"
+            className="object-contain w-full h-full max-w-[400px] max-h-[600px] overflow-hidden"
           />
         )}
       </div>

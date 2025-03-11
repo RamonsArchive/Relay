@@ -18,7 +18,7 @@ const Slider = ({
   type = "default",
 }: Props) => {
   return (
-    <div className="flex flex-col w-full mb-2 gap-3">
+    <div className="flex flex-col w-full mb-2 gap-3 h-[50px] sm:h-auto">
       <p className="font-plex-sans font-medium text-[16px]">{label}</p>
       <div className="relative w-full bg-gray-300 h-3 rounded-md">
         <div
@@ -26,7 +26,7 @@ const Slider = ({
           style={{ width: `${value * 100}%` }}
         ></div>
       </div>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between pt-1 sm:pt-0">
         <p className="font-plex-sans font-regular text-[12px]">{subTitleOne}</p>
         <p className="font-plex-sans font-regular text-[12px]">{subTitleTwo}</p>
         <p className="font-plex-sans font-regular text-[12px]">

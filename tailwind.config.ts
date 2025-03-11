@@ -14,9 +14,11 @@ export default {
   		},
   		colors: {
   			primary: {
-  				'100': '#FFE8F0',
+  				'100': '#FFE8F0', // light pink
   				'200': '#004BFE',
   				'300': '#5982DA',
+				'400': '#ff95ba', // rich darker pink
+				'500': '#ffbcd3', // rich light pink
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
