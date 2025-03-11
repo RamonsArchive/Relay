@@ -29,6 +29,7 @@ import Form from "next/form";
 import ReviewCard from "./ReviewCard";
 
 interface Props {
+  userId: string | null;
   reviews: ReviewType[];
   userReview: ReviewType;
   viewReviews: boolean;
@@ -42,6 +43,7 @@ interface Props {
 }
 
 const ViewReviews = ({
+  userId,
   reviews,
   userReview,
   viewReviews,
@@ -464,6 +466,7 @@ const ViewReviews = ({
                 className="flex h-auto w-full gap-1 border-b-[2px] pb-8 border-borderColor-100"
               >
                 <ReviewCard
+                  userId={userId}
                   productId={review.product?._ref as string}
                   productReview={review}
                   userReview={userReview}

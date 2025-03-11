@@ -16,6 +16,7 @@ const ProductDetailsDrop = ({
   reviews,
   selectedReviews,
   userReview,
+  userId,
   productId,
   mainImage,
   title,
@@ -27,6 +28,7 @@ const ProductDetailsDrop = ({
   reviews: ReviewType[];
   selectedReviews: ReviewType[];
   userReview: ReviewType;
+  userId: string | null;
   productId: string;
   mainImage: SanityImage;
   title: string;
@@ -124,6 +126,7 @@ const ProductDetailsDrop = ({
               {selectedReviews ? (
                 selectedReviews.map((review: ReviewType, index: number) => (
                   <ReviewCard
+                    userId={userId}
                     productId={productId}
                     productReview={review}
                     key={index}
@@ -143,6 +146,7 @@ const ProductDetailsDrop = ({
               {viewReviews ? (
                 <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-10">
                   <ViewReviews
+                    userId={userId}
                     reviews={reviews}
                     userReview={userReview}
                     viewReviews={viewReviews}

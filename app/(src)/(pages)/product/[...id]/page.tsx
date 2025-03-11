@@ -277,6 +277,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                   reviews={reviews}
                   selectedReviews={selectedReviews}
                   userReview={userReview[0]}
+                  userId={userId}
                   productId={productId}
                   mainImage={mainImage}
                   title={title}

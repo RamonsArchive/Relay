@@ -607,11 +607,6 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
   const userIdSanitized = sanitizeSanityId(userId);
   const reviewIdSanitized = sanitizeSanityId(reviewId);
 
-  console.log("product id", productId);
-  console.log("user id", userId);
-  console.log("santiized user id", userIdSanitized);
-  console.log("santized product id", productIdSanitized);
-
   if (!productIdSanitized || !userIdSanitized || !reviewIdSanitized) {
     return parseServerActionResponse({
       status: "ERROR",
@@ -654,28 +649,6 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
 
   console.log("In delete reviwe in actions");
   try {
-    if (!reviewId) {
-      console.error("No review id provided");
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "No review id provided"
-      })
-    }
-    if (!productId) {
-      console.error("No product id provided");
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "No product id provided"
-      })
-    }
-
-    if (!userId) {
-      console.error("No user id provided");
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "No user id provided"
-      })
-    }
 
     const result = await writeClient
       .withConfig({useCdn: false})
@@ -696,6 +669,80 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
     return parseServerActionResponse({
       status: "ERROR",
       error: "Internal server error",
+    })
+  }
+}
+
+export const writeFlaggedReview = async (userId: string, reviewId: string, flagReason: string) => {
+
+  if (!flagReason) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "No flag reason provided"
+    })
+  }
+
+  const session = await auth();
+  const sessionId = session?.user?.id;
+  const userIdSanitized = sanitizeSanityId(userId);
+  const reviewIdSanitized = sanitizeSanityId(reviewId);
+
+  if (!userIdSanitized || !reviewIdSanitized) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Malformed user ID or review ID"
+    })
+  }
+
+  if (!session || sessionId != userIdSanitized) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Unauthorized request"
+    })
+  }
+
+  const existingReview = await client.fetch(`*[_type == "reviews" && _id == $reviewIdSanitized][0]`, {reviewIdSanitized});
+
+  if (!existingReview) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Review not found"
+    })
+  }
+
+  const { success } = await rateLimiter.limit(`${userIdSanitized}:writeFlaggedReview`);
+  if (!success) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Too many requests. Please try again later"
+    })
+  }
+
+  try {
+    const newReviewFlag = {
+      _type: "flaggedReviews",
+      review: {_type: "reference", _ref: reviewIdSanitized},
+      flaggedBy: {_type: "reference", _ref: userIdSanitized},
+      flagReason: flagReason,
+      createdAt: new Date().toISOString(),
+      moderationStatus: "pending",
+    }
+
+    const result = await writeClient
+      .withConfig({useCdn: true})
+      .create(newReviewFlag)
+
+    return parseServerActionResponse({
+      ...result,
+      status: "SUCCESS",
+      error: ""
+    })
+
+  } catch (error) {
+    console.error(error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
     })
   }
 }

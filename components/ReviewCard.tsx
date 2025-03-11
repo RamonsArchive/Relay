@@ -14,17 +14,23 @@ import { toast } from "sonner";
 import { z } from "zod";
 import Form from "next/form";
 import { Button } from "./ui/button";
-import { deleteReview, writeReviewEdit } from "@/sanity/lib/actions";
-import { Ban } from "lucide-react";
+import {
+  deleteReview,
+  writeFlaggedReview,
+  writeReviewEdit,
+} from "@/sanity/lib/actions";
+import { Ban, Flag, Check } from "lucide-react";
 import Image from "next/image";
 
 const ReviewCard = ({
+  userId,
   productId,
   productReview,
   userReview,
   editReview,
   setEditReview,
 }: {
+  userId: string | null;
   productId: string;
   productReview: ReviewType;
   userReview: ReviewType;
@@ -36,10 +42,26 @@ const ReviewCard = ({
   const [error, setError] = useState<string | null>(null);
   const [editSubmitButtonLoading, setEditSubmitButtonLoading] = useState(false);
   const [deleteReviewLoader, setDeleteReviewLoader] = useState(false);
+  const [dropFlag, setDropFlag] = useState(false);
+
+  const [flagged, setFlagged] = useState(false);
+  const [flagPending, setFlagPending] = useState(false);
+  const [flaggedReason, setFlaggedReason] = useState<string>("");
+  const flaggedReasons = [
+    "Inappropriate",
+    "Misleading",
+    "Hate Speech",
+    "Harassment",
+    "Violence",
+    "Spam",
+    "Other",
+  ];
 
   const formRef = useRef<HTMLFormElement>(null);
   const ellipseDropRef = useRef<HTMLDivElement | null>(null);
   const ellipseRef = useRef<HTMLDivElement | null>(null);
+  const flaggedRef = useRef<HTMLDivElement | null>(null);
+  const flaggedDropDownRef = useRef<HTMLDivElement | null>(null);
 
   const { reviewTitle, review, photo, nickname, _createdAt, _updatedAt, _id } =
     productReview;
@@ -67,16 +89,30 @@ const ReviewCard = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const isClickInsideOuter = ellipseRef.current?.contains(
+      const ellipseClickedOuter = ellipseRef.current?.contains(
         event.target as Node
       );
-      const isClickInsideInner = ellipseDropRef.current?.contains(
+      const ellipseClickedInner = ellipseDropRef.current?.contains(
         event.target as Node
       );
-      if (!isClickInsideOuter && !isClickInsideInner) {
+
+      const flagClickedOuter = flaggedRef.current?.contains(
+        event.target as Node
+      );
+      const flagClickedInner = flaggedDropDownRef.current?.contains(
+        event.target as Node
+      );
+
+      if (!ellipseClickedOuter && !ellipseClickedInner) {
         setDropEllipse(false);
-      } else if (isClickInsideOuter && !isClickInsideInner) {
+      } else if (ellipseClickedOuter && !ellipseClickedInner) {
         setDropEllipse((prev) => !prev);
+      }
+
+      if (!flagClickedOuter && !flagClickedInner) {
+        setDropFlag(false);
+      } else if (flagClickedOuter && !flagClickedInner) {
+        setDropFlag((prev) => !prev);
       }
     };
 
@@ -175,6 +211,67 @@ const ReviewCard = ({
     }
   };
 
+  const handleSubmitFlagReview = async () => {
+    setFlagPending(true);
+    setFlagged(true);
+
+    if (!flaggedReason) {
+      setFlagged(false);
+      setDropFlag(false);
+      setFlagPending(false);
+      setFlaggedReason("");
+      return toast.error("Error", {
+        description: "Please select a reason to flag the review",
+      });
+    }
+
+    try {
+      if (!userId) {
+        console.log("Going to sign in");
+        router.push(
+          `/sign-in?callbackUrl=/product/${encodeURIComponent(productId)}`
+        );
+        toast.info("Please sign in", {
+          description: "Sign in to continue flagging the review",
+        });
+        setFlagged(false);
+        return;
+      }
+      console.log("make sure not an array", productId);
+      const result = await writeFlaggedReview(userId, productId, flaggedReason);
+
+      if (result.status === "SUCCESS") {
+        setFlagPending(false);
+        setDropFlag(false);
+        setFlaggedReason("");
+        toast.success("Success", {
+          description: "Review has been flagged successfully",
+        });
+        return parseServerActionResponse({
+          status: "SUCCESS",
+          error: "",
+        });
+      }
+      setFlagged(false);
+      setFlagPending(false);
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "An unexpected error occured",
+      });
+    } catch (error) {
+      console.error(error);
+      setFlagged(false);
+      setFlagPending(false);
+      toast.error("Error", {
+        description: "An unexpected error occured. Please try again",
+      });
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "An unexpected Error",
+      });
+    }
+  };
+
   const [state, formAciton, isPending] = useActionState(handleFromSubmit, {
     error: "",
     status: "INITIAL",
@@ -206,6 +303,64 @@ const ReviewCard = ({
               isEditedReview ? (_updatedAt as string) : (_createdAt as string)
             )}
           </p>
+          <div className="relative" ref={flaggedRef}>
+            <Flag
+              className={`h-6 w-6 cursor-pointer hover:text-gray-600 transition duration-200 ${flagged ? "fill-primary-400" : "fill-none"}`}
+            />
+
+            {dropFlag && (
+              <div
+                className="absolute z-50 min-w-[150px] right-0 mt-2 w-32 text-white bg-third-200 rounded-md shadow-lg font-plex-sans font-regular text-[12px] text-left"
+                ref={flaggedDropDownRef}
+              >
+                {Object.entries(flaggedReasons).map(([key, value], index) => (
+                  <button
+                    key={index}
+                    className="block w-full text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"
+                    onClick={() =>
+                      setFlaggedReason((prev) => (value !== prev ? value : ""))
+                    }
+                  >
+                    <div className="flex flex-row items-center p-1">
+                      {flaggedReason == value && (
+                        <Check
+                          width={14}
+                          height={14}
+                          className="no-shrink mr-2"
+                        />
+                      )}
+                      {value}
+                    </div>
+                  </button>
+                ))}
+                <div className="flex flex-col ">
+                  <Button
+                    type="button"
+                    className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left transition hover:bg-gray-700 duration-200"
+                    onClick={handleSubmitFlagReview}
+                    disabled={flagPending}
+                  >
+                    {flagPending ? "Flagging..." : "Submit Flag"}
+
+                    <Send />
+                  </Button>
+                  <Button
+                    type="button"
+                    className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left"
+                    variant="destructive"
+                    disabled={flagPending}
+                    onClick={() => {
+                      setDropFlag(false);
+                      setFlaggedReason("");
+                    }}
+                  >
+                    Cancel Flag
+                    <Ban />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
           {reviewIsUserReview && (
             <div className="relative" ref={ellipseRef}>
               <EllipsisVertical className="w-8 h-8 cursor-pointer hover:text-gray-600 transition duration-200" />
