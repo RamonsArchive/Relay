@@ -1,5 +1,5 @@
 "use client";
-import { ReviewStatsType, ReviewType } from "@/globalTypes";
+import { FlaggedReviewType, ReviewStatsType, ReviewType } from "@/globalTypes";
 import React, { useActionState } from "react";
 import { useEffect, useRef } from "react";
 import { SanityImage } from "@/globalTypes";
@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Form from "next/form";
 import ReviewCard from "./ReviewCard";
+import { revalidateFlaggedReviews } from "@/lib/serverActions";
 
 interface Props {
   userId: string | null;
@@ -40,6 +41,7 @@ interface Props {
   title: string;
   cost: string;
   reviewStats: ReviewStatsType;
+  flaggedReviews: FlaggedReviewType[];
 }
 
 const ViewReviews = ({
@@ -54,7 +56,10 @@ const ViewReviews = ({
   title,
   cost,
   reviewStats,
+  flaggedReviews,
 }: Props) => {
+  //revalidateFlaggedReviews();
+  console.log("Flagged Reviews", flaggedReviews);
   const [reviewContent, setReviewContent] = useState(reviews);
   console.log("Review content", reviewContent);
   const [sortDropDown, setSortDropDown] = useState(false);
@@ -458,23 +463,22 @@ const ViewReviews = ({
           </div>
         </div>
         <div className="grid cols-1 sm:cols-2 md:cols-3 lg:cols-4 gap-8 pt-1">
-          {Object.entries(paginatedReviews)
-            .slice(0, 10)
-            .map(([key, review], index) => (
-              <div
-                key={index}
-                className="flex h-auto w-full gap-1 border-b-[2px] pb-8 border-borderColor-100"
-              >
-                <ReviewCard
-                  userId={userId}
-                  productId={review.product?._ref as string}
-                  productReview={review}
-                  userReview={userReview}
-                  editReview={editReview}
-                  setEditReview={setEditReview}
-                />
-              </div>
-            ))}
+          {paginatedReviews.slice(0, 10).map((review, index) => (
+            <div
+              key={index}
+              className="flex h-auto w-full gap-1 border-b-[2px] pb-8 border-borderColor-100"
+            >
+              <ReviewCard
+                userId={userId}
+                productId={review.product?._id as string}
+                productReview={review}
+                userReview={userReview}
+                editReview={editReview}
+                setEditReview={setEditReview}
+                flaggedReviews={flaggedReviews}
+              />
+            </div>
+          ))}
         </div>
         <div className="flex justify-center gap-2 mt-5">
           <button

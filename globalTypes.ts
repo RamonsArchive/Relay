@@ -115,6 +115,27 @@ export type ReviewType = {
     email?: string;
   };
 
+
+  export type FlaggedReviewType = {
+    _id: string;
+    review?: {
+      _ref: string;
+      _id: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "reviews";
+    };
+    flaggedBy?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "user";
+    };
+    flagReason?: "inappropriate" | "misleading" | "hateSpeech" | "harassment" | "violence" | "spam" | "other";
+    createdAt?: string;
+    moderationStatus?: "pending" | "reviewed" | "removed";
+  }
+
   export type SanityImage = {
     _type: "image";
     asset: {

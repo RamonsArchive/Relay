@@ -3,6 +3,7 @@ import { client, fetchHeartedProducts, urlFor } from "@/sanity/lib/client";
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
   GET_TOP_REVIEWS,
+  GET_USER_FLAGGED_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
 } from "@/sanity/lib/queries";
 import { Suspense } from "react";
@@ -68,6 +69,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   let recentlyViewedProds = [];
   let heartedProducts = [];
   let userReview = [];
+  let flaggedReviews = [];
   const reviewStats = ReviewSliderStats(reviews);
 
   if (userId) {
@@ -93,6 +95,13 @@ const page = async ({ params }: { params: { id: string } }) => {
           (review: ReviewType) => review?.user?._id !== userId
         );
       }
+
+      const flagQuery = GET_USER_FLAGGED_REVIEWS();
+      flaggedReviews = await client
+        .withConfig({ useCdn: false })
+        .fetch(flagQuery, { userId }, { next: { tags: ["flagged-reviews"] } });
+
+      console.log("Flagged reviews", flaggedReviews);
     } catch (error) {
       console.error(error);
       console.log("There was an error");
@@ -283,6 +292,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                   title={title}
                   cost={cost}
                   reviewStats={reviewStats}
+                  flaggedReviews={flaggedReviews}
                 />
               </Suspense>
             </div>

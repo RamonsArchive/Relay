@@ -68,6 +68,29 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type FlaggedReviews = {
+  _id: string;
+  _type: "flaggedReviews";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  review?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "reviews";
+  };
+  flaggedBy?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "user";
+  };
+  flagReason?: "inappropriate" | "misleading" | "hateSpeech" | "harassment" | "violence" | "spam" | "other";
+  createdAt?: string;
+  moderationStatus?: "pending" | "reviewed" | "removed";
+};
+
 export type Categories = {
   _id: string;
   _type: "categories";
@@ -397,5 +420,5 @@ export type SanityImageMetadata = {
 
 export type Markdown = string;
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Categories | Materials | Colors | Brands | Reviews | Collections | Product | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | FlaggedReviews | Categories | Materials | Colors | Brands | Reviews | Collections | Product | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;

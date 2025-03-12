@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getNumberOfReviews } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import ReviewCard from "./ReviewCard";
-import { ReviewStatsType, ReviewType } from "@/globalTypes";
+import { FlaggedReviewType, ReviewStatsType, ReviewType } from "@/globalTypes";
 import ViewReviews from "@/components/ViewReviews";
 import Link from "next/link";
 import { SanityImage } from "@/globalTypes";
@@ -22,6 +22,7 @@ const ProductDetailsDrop = ({
   title,
   cost,
   reviewStats,
+  flaggedReviews,
 }: {
   mainDetails: string;
   detailBullets: string[];
@@ -34,6 +35,7 @@ const ProductDetailsDrop = ({
   title: string;
   cost: string;
   reviewStats: ReviewStatsType;
+  flaggedReviews: FlaggedReviewType[];
 }) => {
   const [droppedInfo, setDroppedInfo] = useState<Record<string, boolean>>({
     details: false,
@@ -133,6 +135,7 @@ const ProductDetailsDrop = ({
                     userReview={userReview}
                     editReview={editReview}
                     setEditReview={setEditReview}
+                    flaggedReviews={flaggedReviews}
                   />
                 ))
               ) : (
@@ -157,6 +160,7 @@ const ProductDetailsDrop = ({
                     title={title}
                     cost={cost}
                     reviewStats={reviewStats}
+                    flaggedReviews={flaggedReviews}
                   />
                 </div>
               ) : (

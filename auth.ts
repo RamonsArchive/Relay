@@ -48,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
          return true; // allow sign in
       } catch (error) {
-        console.error(parseServerActionResponse({err: error, status: "ERROR"}));
+        console.error(parseServerActionResponse({status: "ERROR", error: "INTERNAL SERVER ERROR"}));
         return false; // block sign
       }
     },

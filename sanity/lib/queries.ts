@@ -425,3 +425,13 @@ export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 11) =>
   }`
 }
 
+export const GET_USER_FLAGGED_REVIEWS = () => {
+  return `*[_type == "flaggedReviews" && references($userId)] {
+    _id,
+    moderationStatus,
+    "review": review -> {
+      _id,
+    }
+  }`
+}
+

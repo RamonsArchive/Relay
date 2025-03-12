@@ -747,3 +747,67 @@ export const writeFlaggedReview = async (userId: string, reviewId: string, flagR
   }
 }
 
+export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) => { 
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const flaggedReviewIdSanitized = sanitizeSanityId(flaggedReviewId);
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    console.log("sessionId", sessionId);
+    console.log("userIdSanitized", userIdSanitized);
+
+    if (!flaggedReviewIdSanitized || !userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Malformed user ID or flagged review ID"
+      })
+    }
+
+    if (!session || sessionId != userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const existingReview = await client.fetch(`*[_type == "flaggedReviews" && review._ref == $flaggedReviewIdSanitized && flaggedBy._ref == $userIdSanitized][0]`, {flaggedReviewIdSanitized, userIdSanitized});
+    const existingReviewID = existingReview?._id;
+    if (!existingReview) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Flagged review not found"
+      })
+    }
+
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:deleteReviewFlag`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+    
+    const result = await writeClient
+      .withConfig({useCdn: false})
+      .transaction()
+      .patch(existingReviewID, (patch) => patch.unset(["flaggedBy", "review" ]))
+      .delete(existingReviewID)
+      .commit();
+      
+    return parseServerActionResponse({
+      ...result,
+      status: "SUCCESS",
+      error: ""
+    });
+
+
+  } catch (error) {
+    console.error("Error deleting review flag", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+}
+

@@ -4,10 +4,22 @@ import { handleSignIn } from "@/lib/serverActions";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const SignInPage = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const [fullCallbackUrl, setFullCallbackUrl] = useState(callbackUrl);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFullCallbackUrl(new URL(callbackUrl, window.location.origin).href);
+    }
+  }, [callbackUrl]);
+
+  console.log("First callback url", callbackUrl);
+  console.log("Full callback url", fullCallbackUrl);
 
   return (
     <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden">
@@ -25,7 +37,7 @@ const SignInPage = () => {
             Please sign in to continue
           </p>
           <form
-            action={() => handleSignIn(callbackUrl)}
+            action={() => handleSignIn(fullCallbackUrl)}
             className="sign-in-button bg-primary-200 text-white w-full"
           >
             <button type="submit" className="w-full h-full">

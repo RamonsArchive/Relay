@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { formatDate, parseServerActionResponse } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import { urlFor } from "@/sanity/lib/client";
-import { ReviewType } from "@/globalTypes";
+import { FlaggedReviewType, ReviewType } from "@/globalTypes";
 import { EllipsisVertical, Send } from "lucide-react";
 import Loader from "@/components/Loader";
 import { Textarea } from "./ui/textarea";
@@ -16,11 +16,14 @@ import Form from "next/form";
 import { Button } from "./ui/button";
 import {
   deleteReview,
+  deleteReviewFlag,
   writeFlaggedReview,
   writeReviewEdit,
 } from "@/sanity/lib/actions";
 import { Ban, Flag, Check } from "lucide-react";
 import Image from "next/image";
+import Cookies from "js-cookie";
+import { revalidateFlaggedReviews } from "@/lib/serverActions";
 
 const ReviewCard = ({
   userId,
@@ -29,6 +32,7 @@ const ReviewCard = ({
   userReview,
   editReview,
   setEditReview,
+  flaggedReviews,
 }: {
   userId: string | null;
   productId: string;
@@ -36,11 +40,18 @@ const ReviewCard = ({
   userReview: ReviewType;
   editReview: boolean;
   setEditReview: React.Dispatch<React.SetStateAction<boolean>>;
+  flaggedReviews: FlaggedReviewType[];
 }) => {
+  const { reviewTitle, review, photo, nickname, _createdAt, _updatedAt, _id } =
+    productReview;
+
+  console.log("productreview id", _id);
+  console.log("flaggedReviews", flaggedReviews);
+
   const router = useRouter();
   const [dropEllipse, setDropEllipse] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editSubmitButtonLoading, setEditSubmitButtonLoading] = useState(false);
+  const [editReviewLoader, setEditReviewLoader] = useState(false);
   const [deleteReviewLoader, setDeleteReviewLoader] = useState(false);
   const [dropFlag, setDropFlag] = useState(false);
 
@@ -63,8 +74,6 @@ const ReviewCard = ({
   const flaggedRef = useRef<HTMLDivElement | null>(null);
   const flaggedDropDownRef = useRef<HTMLDivElement | null>(null);
 
-  const { reviewTitle, review, photo, nickname, _createdAt, _updatedAt, _id } =
-    productReview;
   const [reviewText, setReviewText] = useState(review);
 
   const productUserId = productReview?.user?._id || "";
@@ -80,6 +89,13 @@ const ReviewCard = ({
   const [isEditedReview, setIsEditedReview] = useState(
     _createdAt !== _updatedAt
   );
+
+  useEffect(() => {
+    const isFlagged = flaggedReviews.some((review) => {
+      return review.review?._id === productReview._id;
+    });
+    setFlagged(isFlagged);
+  }, [flaggedReviews, productReview]);
 
   useEffect(() => {
     if (_createdAt != _updatedAt) {
@@ -125,6 +141,84 @@ const ReviewCard = ({
     };
   }, []);
 
+  useEffect(() => {
+    const setFlag = async () => {
+      console.log("passed cookies check for flag");
+      if (flagged) {
+        Cookies.remove("flaggedReviewId");
+        Cookies.remove("flaggedReason");
+        toast.success("Success", {
+          description: "Review has been already flagged successfully",
+        });
+        return;
+      }
+      console.log("flagging review");
+      const flaggedReviewIdCookie = Cookies.get("flaggedReviewId");
+      const flaggedReasonCookie = Cookies.get("flaggedReason");
+      try {
+        setFlagged(true);
+        setFlagPending(true);
+        const result = await writeFlaggedReview(
+          userId as string,
+          flaggedReviewIdCookie as string,
+          flaggedReasonCookie as string
+        );
+
+        Cookies.remove("flaggedReviewId");
+        Cookies.remove("flaggedReason");
+        if (result.status == "SUCCESS") {
+          console.log("Review has been flagged successfully");
+          setFlagPending(false);
+          setFlaggedReason("");
+          toast.success("Success", {
+            description: "Review has been flagged successfully",
+          });
+
+          return parseServerActionResponse({
+            status: "SUCCESS",
+            error: "",
+          });
+        }
+
+        console.log("An unexpected error occured while flagging from cookies");
+
+        setFlagged(false);
+        setFlagPending(false);
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Internal Server Error",
+        });
+      } catch (error) {
+        console.log("Error flagging from cookies");
+        setFlagged(false);
+        setFlagPending(false);
+        Cookies.remove("flaggedReviewId");
+        Cookies.remove("flaggedReason");
+        toast.error("Error", {
+          description: "An unexpected error occured. Please try again",
+        });
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "An unexpected error occured. Please try again",
+        });
+      }
+    };
+    console.log("Will be evaluating cookeies for flagging");
+    const CookieFlaggedReview = Cookies.get("flaggedReviewId");
+    const CookieFlaggedReason = Cookies.get("flaggedReason");
+    console.log("CookieFlaggedReview", CookieFlaggedReview);
+    console.log("CookieFlaggedReason", CookieFlaggedReason);
+    if (
+      Cookies.get("flaggedReviewId") &&
+      Cookies.get("flaggedReviewId") == _id &&
+      Cookies.get("flaggedReason") != ""
+    ) {
+      setTimeout(() => {
+        setFlag();
+      }, 0);
+    }
+  }, []);
+
   const handleEllipseEditSubmit = () => {
     if (editReview && formRef.current) {
       formRef.current.requestSubmit();
@@ -150,6 +244,7 @@ const ReviewCard = ({
         productId,
         userReviewId as string
       );
+      setDropEllipse(false);
       if (result.status === "SUCCESS") {
         toast.success("Success", {
           description: "Your review has been successfully deleated",
@@ -167,6 +262,7 @@ const ReviewCard = ({
       }
       return result;
     } catch (error) {
+      setDropEllipse(false);
       setDeleteReviewLoader(false);
       toast.error("Error", {
         description: "Error deleting review",
@@ -180,8 +276,8 @@ const ReviewCard = ({
       await editReviewSchema.parse({ review: editData });
 
       const result = await writeReviewEdit(_id as string, editData as string);
+      setEditReviewLoader(false);
       if (result.status === "SUCCESS") {
-        setEditSubmitButtonLoading(false);
         toast.success("Success", {
           description: "Congrats, your review has been successfully edited",
         });
@@ -192,6 +288,7 @@ const ReviewCard = ({
       return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
+        setEditReviewLoader(false);
         setError("Please enter a valid review between 10 to 2000 characters");
         toast.error("Error", {
           description: "Please check your input and try again",
@@ -199,6 +296,7 @@ const ReviewCard = ({
 
         return { ...prevState, error: "Validation Failed", status: "ERROR" };
       } else {
+        setEditReviewLoader(false);
         toast.error("Error", {
           description: "An unexpected error occured. Please try again",
         });
@@ -226,24 +324,31 @@ const ReviewCard = ({
     }
 
     try {
+      setDropFlag(false);
       if (!userId) {
         console.log("Going to sign in");
-        router.push(
-          `/sign-in?callbackUrl=/product/${encodeURIComponent(productId)}`
-        );
-        toast.info("Please sign in", {
+        setFlagged(false);
+        setFlagPending(false);
+        console.log("path ", productId);
+        Cookies.set("flaggedReviewId", _id as string, { expires: 1 });
+        Cookies.set("flaggedReason", flaggedReason, { expires: 1 });
+        const callbackUrl = `/product/${productId}`;
+        router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        return toast.info("Please sign in", {
           description: "Sign in to continue flagging the review",
         });
-        setFlagged(false);
-        return;
       }
-      console.log("make sure not an array", productId);
-      const result = await writeFlaggedReview(userId, productId, flaggedReason);
+      const result = await writeFlaggedReview(
+        userId,
+        _id as string,
+        flaggedReason.toLowerCase()
+      );
+      console.log("result for flaggin", result);
 
       if (result.status === "SUCCESS") {
         setFlagPending(false);
-        setDropFlag(false);
         setFlaggedReason("");
+        revalidateFlaggedReviews();
         toast.success("Success", {
           description: "Review has been flagged successfully",
         });
@@ -254,6 +359,7 @@ const ReviewCard = ({
       }
       setFlagged(false);
       setFlagPending(false);
+      revalidateFlaggedReviews();
       return parseServerActionResponse({
         status: "ERROR",
         error: "An unexpected error occured",
@@ -262,6 +368,49 @@ const ReviewCard = ({
       console.error(error);
       setFlagged(false);
       setFlagPending(false);
+      revalidateFlaggedReviews();
+      toast.error("Error", {
+        description: "An unexpected error occured. Please try again",
+      });
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "An unexpected Error",
+      });
+    }
+  };
+
+  const handleDeleteFlag = async () => {
+    try {
+      setFlagPending(true);
+      const result = await deleteReviewFlag(userId as string, _id as string);
+      console.log("result for deleting flag", result);
+      if (result.status === "SUCCESS") {
+        setFlagPending(false);
+        setFlagged(false);
+        setDropFlag(false);
+        toast.success("Success", {
+          description: "Flag has been successfully deleted",
+        });
+        revalidateFlaggedReviews();
+        return parseServerActionResponse({
+          status: "SUCCESS",
+          error: "",
+        });
+      }
+      setFlagPending(false);
+      setFlagged(true);
+      revalidateFlaggedReviews();
+      toast.error("Error", {
+        description: "An unexpected error occured",
+      });
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "An unexpected error occured",
+      });
+    } catch (error) {
+      setDropFlag(false);
+      setFlagPending(false);
+      revalidateFlaggedReviews();
       toast.error("Error", {
         description: "An unexpected error occured. Please try again",
       });
@@ -279,12 +428,11 @@ const ReviewCard = ({
 
   return (
     <div className="flex flex-col w-full gap-2">
-      {isPending ||
-        (deleteReviewLoader && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
-            <Loader />
-          </div>
-        ))}
+      {(isPending || editReviewLoader || flagPending || deleteReviewLoader) && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
+          <Loader />
+        </div>
+      )}
       <div className="flex flex-col ">
         {reviewTitle && (
           <h2 className="font-plex-sans font-medium text-[24px]">
@@ -313,51 +461,75 @@ const ReviewCard = ({
                 className="absolute z-50 min-w-[150px] right-0 mt-2 w-32 text-white bg-third-200 rounded-md shadow-lg font-plex-sans font-regular text-[12px] text-left"
                 ref={flaggedDropDownRef}
               >
-                {Object.entries(flaggedReasons).map(([key, value], index) => (
-                  <button
-                    key={index}
-                    className="block w-full text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"
-                    onClick={() =>
-                      setFlaggedReason((prev) => (value !== prev ? value : ""))
-                    }
-                  >
-                    <div className="flex flex-row items-center p-1">
-                      {flaggedReason == value && (
-                        <Check
-                          width={14}
-                          height={14}
-                          className="no-shrink mr-2"
-                        />
-                      )}
-                      {value}
-                    </div>
-                  </button>
-                ))}
-                <div className="flex flex-col ">
-                  <Button
-                    type="button"
-                    className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left transition hover:bg-gray-700 duration-200"
-                    onClick={handleSubmitFlagReview}
-                    disabled={flagPending}
-                  >
-                    {flagPending ? "Flagging..." : "Submit Flag"}
+                {!flagged ? (
+                  <div>
+                    {Object.entries(flaggedReasons).map(
+                      ([key, value], index) => (
+                        <button
+                          key={index}
+                          className="block w-full text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"
+                          onClick={() =>
+                            setFlaggedReason((prev) =>
+                              value !== prev ? value : ""
+                            )
+                          }
+                        >
+                          <div className="flex flex-row items-center p-1">
+                            {flaggedReason == value && (
+                              <Check
+                                width={14}
+                                height={14}
+                                className="no-shrink mr-2"
+                              />
+                            )}
+                            {value}
+                          </div>
+                        </button>
+                      )
+                    )}
+                    <div className="flex flex-col ">
+                      <Button
+                        type="button"
+                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left transition hover:bg-gray-700 duration-200"
+                        onClick={handleSubmitFlagReview}
+                        disabled={flagPending}
+                      >
+                        {flagPending ? "Flagging..." : "Submit Flag"}
 
-                    <Send />
-                  </Button>
+                        <Send />
+                      </Button>
+                      <Button
+                        type="button"
+                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left"
+                        variant="destructive"
+                        disabled={flagPending}
+                        onClick={() => {
+                          setDropFlag(false);
+                          setFlaggedReason("");
+                        }}
+                      >
+                        Cancel Flag
+                        <Ban />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
                   <Button
                     type="button"
                     className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left"
                     variant="destructive"
                     disabled={flagPending}
-                    onClick={() => {
-                      setDropFlag(false);
-                      setFlaggedReason("");
-                    }}
+                    onClick={() => handleDeleteFlag()}
                   >
-                    Cancel Flag
-                    <Ban />
+                    {flagPending ? (
+                      "Deleting ..."
+                    ) : (
+                      <>
+                        Delete Flag <Ban />
+                      </>
+                    )}
                   </Button>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -417,11 +589,9 @@ const ReviewCard = ({
                   type="submit"
                   disabled={isPending}
                   className="w-full max-w-[300px] h-[30px]"
-                  onClick={() => setEditSubmitButtonLoading(true)}
+                  onClick={() => setEditReviewLoader(true)}
                 >
-                  {editSubmitButtonLoading
-                    ? "Submitting..."
-                    : "Submit your Edit"}
+                  {editReviewLoader ? "Submitting..." : "Submit your Edit"}
                   <Send />
                 </Button>
                 <Button
