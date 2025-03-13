@@ -86,7 +86,7 @@ export type FlaggedReviews = {
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "user";
   };
-  flagReason?: "inappropriate" | "misleading" | "hateSpeech" | "harassment" | "violence" | "spam" | "other";
+  flagReason?: "inappropriate" | "misleading" | "hatespeech" | "harassment" | "violence" | "spam" | "other";
   createdAt?: string;
   moderationStatus?: "pending" | "reviewed" | "removed";
 };

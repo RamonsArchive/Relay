@@ -26,7 +26,7 @@ export const flaggedReviews = defineType({
                 list: [
                     { title: "Inappropriate", value: "inappropriate" },
                     { title: "Misleading", value: "misleading" },
-                    { title: "Hate Speech", value: "hateSpeech" },
+                    { title: "Hate Speech", value: "hatespeech" },
                     { title: "Harassment", value: "harassment" },
                     { title: "Violence", value: "violence" },
                     { title: "Spam", value: "spam" },

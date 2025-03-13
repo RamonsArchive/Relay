@@ -191,7 +191,7 @@ const page = async ({ params }: { params: { id: string } }) => {
               </div>
             </Suspense>
 
-            <div className="flex flex-col w-full overflow-y-auto">
+            <div className="flex flex-col w-full overflow-y-auto scrollbar-hidden scroll-smooth">
               <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
                 <div>
                   <div className="flex justify-between items-center">
@@ -306,7 +306,7 @@ const page = async ({ params }: { params: { id: string } }) => {
           <p className="font-plex-sans font-medium text-[30px] pl-5">
             Recently Viewed Products
           </p>
-          <div className="w-full overflow-x-auto overflow-y-hidden whitespace-nowrap h-[475px]">
+          <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
             <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
               <Suspense fallback={<div>Loading products... </div>}>
                 {recentlyViewedProds?.length > 0 ? (

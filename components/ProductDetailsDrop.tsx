@@ -147,23 +147,21 @@ const ProductDetailsDrop = ({
 
             <div className="flex font-plex-sans text-[18px] font-medium ">
               {viewReviews ? (
-                <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-10">
-                  <ViewReviews
-                    userId={userId}
-                    productId={productId}
-                    reviews={reviews}
-                    userReview={userReview}
-                    viewReviews={viewReviews}
-                    setViewReviews={setViewReviews}
-                    editReview={editReview}
-                    setEditReview={setEditReview}
-                    mainImage={mainImage}
-                    title={title}
-                    cost={cost}
-                    reviewStats={reviewStats}
-                    flaggedReviews={flaggedReviews}
-                  />
-                </div>
+                <ViewReviews
+                  userId={userId}
+                  productId={productId}
+                  reviews={reviews}
+                  userReview={userReview}
+                  viewReviews={viewReviews}
+                  setViewReviews={setViewReviews}
+                  editReview={editReview}
+                  setEditReview={setEditReview}
+                  mainImage={mainImage}
+                  title={title}
+                  cost={cost}
+                  reviewStats={reviewStats}
+                  flaggedReviews={flaggedReviews}
+                />
               ) : (
                 <button
                   className="h-auto"

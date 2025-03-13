@@ -45,8 +45,6 @@ const ReviewCard = ({
   const { reviewTitle, review, photo, nickname, _createdAt, _updatedAt, _id } =
     productReview;
 
-  console.log("Product Id", productId);
-
   const router = useRouter();
   const [dropEllipse, setDropEllipse] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -258,10 +256,14 @@ const ReviewCard = ({
           description: "Sign in to continue flagging the review",
         });
       }
+      const flaggedReasonSanitized = flaggedReason
+        .toLowerCase()
+        .replace(/\s+/g, "");
+      console.log("Flagging review", flaggedReasonSanitized);
       const result = await writeFlaggedReview(
         userId,
         _id as string,
-        flaggedReason.toLowerCase()
+        flaggedReasonSanitized
       );
       console.log("result for flaggin", result);
 
@@ -353,32 +355,32 @@ const ReviewCard = ({
           <Loader />
         </div>
       )}
-      <div className="flex flex-col ">
+      <div className="flex flex-col gap-1">
         {reviewTitle && (
-          <h2 className="font-plex-sans font-medium text-[24px]">
+          <h2 className="font-plex-sans font-medium text-[22px] sm:text-[24px]">
             {reviewTitle.slice(0, 50)}
           </h2>
         )}
         <div className="flex flex-row font-plex-sans items-center text-[18px] gap-2">
           <ReviewStars reviews={productReview} />
           {isEditedReview && (
-            <span className="font-plex-sans font-light text-[12px] pr-2">
+            <span className="font-plex-sans font-light text-[10px] sm:text-[12px] pr-2">
               Edited
             </span>
           )}
-          <p className="font-plex-sans font-light text-[14px]">
+          <p className="font-plex-sans font-light text-[12px] sm:text-[14px]">
             {formatDate(
               isEditedReview ? (_updatedAt as string) : (_createdAt as string)
             )}
           </p>
           <div className="relative" ref={flaggedRef}>
             <Flag
-              className={`h-6 w-6 cursor-pointer hover:text-gray-600 transition duration-200 ${flagged ? "fill-primary-400" : "fill-none"}`}
+              className={`h-5 w-5 sm:h-6 sm:w-6 cursor-pointer hover:text-gray-600 transition duration-200 ${flagged ? "fill-primary-400" : "fill-none"}`}
             />
 
             {dropFlag && (
               <div
-                className="absolute z-50 min-w-[150px] right-0 mt-2 w-32 text-white bg-third-200 rounded-md shadow-lg font-plex-sans font-regular text-[12px] text-left"
+                className="absolute z-50 min-w-[150px] right-0 mt-2 w-32 text-white bg-third-200 rounded-md shadow-lg font-plex-sans font-regular text-left"
                 ref={flaggedDropDownRef}
               >
                 {!flagged ? (
@@ -387,7 +389,7 @@ const ReviewCard = ({
                       ([key, value], index) => (
                         <button
                           key={index}
-                          className="block w-full text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"
+                          className="block w-full text-[10px] sm:text-[12px] text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"
                           onClick={() =>
                             setFlaggedReason((prev) =>
                               value !== prev ? value : ""
@@ -396,11 +398,7 @@ const ReviewCard = ({
                         >
                           <div className="flex flex-row items-center p-1">
                             {flaggedReason == value && (
-                              <Check
-                                width={14}
-                                height={14}
-                                className="no-shrink mr-2"
-                              />
+                              <Check className="w-7 h-7 sm:w-8 sm:h-8 no-shrink mr-2" />
                             )}
                             {value}
                           </div>
@@ -410,7 +408,7 @@ const ReviewCard = ({
                     <div className="flex flex-col ">
                       <Button
                         type="button"
-                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left transition hover:bg-gray-700 duration-200"
+                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[12px] sm:text-[14px] text-left transition hover:bg-gray-700 duration-200"
                         onClick={handleSubmitFlagReview}
                         disabled={flagPending}
                       >
@@ -420,7 +418,7 @@ const ReviewCard = ({
                       </Button>
                       <Button
                         type="button"
-                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left"
+                        className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[12px] sm:text-[14px] text-left"
                         variant="destructive"
                         disabled={flagPending}
                         onClick={() => {
@@ -436,7 +434,7 @@ const ReviewCard = ({
                 ) : (
                   <Button
                     type="button"
-                    className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[14px] text-left"
+                    className="w-full max-w-[300px] h-[30px] font-plex-sans font-regular text-[12px] sm:text-[14px] text-left"
                     variant="destructive"
                     disabled={flagPending}
                     onClick={() => handleDeleteFlag()}
@@ -455,7 +453,7 @@ const ReviewCard = ({
           </div>
           {reviewIsUserReview && (
             <div className="relative" ref={ellipseRef}>
-              <EllipsisVertical className="w-8 h-8 cursor-pointer hover:text-gray-600 transition duration-200" />
+              <EllipsisVertical className="w-7 h-7 sm:w-8 sm:h-8 cursor-pointer hover:text-gray-600 transition duration-200" />
               {dropEllipse && (
                 <div
                   className="absolute right-0 mt-2 w-32 text-white bg-third-200 rounded-md shadow-lg p-2 space-y-1 font-plex-sans font-regular text-[12px]"
@@ -488,7 +486,9 @@ const ReviewCard = ({
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        <p className="font-plex-sans font-light text-[16px] pt-3">{nickname}</p>
+        <p className="font-plex-sans font-light text-[14px] sm:text-[16px] pt-3">
+          {nickname}
+        </p>
         {editReview != false && reviewIsUserReview ? (
           <div>
             <Form action={formAciton} ref={formRef} className="w-full h-auto">
@@ -530,7 +530,9 @@ const ReviewCard = ({
             </Form>
           </div>
         ) : (
-          <p className="font-plex-sans font-regular text-[20px]">{review}</p>
+          <p className="font-plex-sans font-regular text-[18px] sm:text-[20px]">
+            {review}
+          </p>
         )}
 
         {photo && (

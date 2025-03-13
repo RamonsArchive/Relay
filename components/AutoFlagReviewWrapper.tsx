@@ -23,10 +23,13 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
       console.log("Auto-flagging review...");
 
       const flagReview = async () => {
+        const flaggedReasonSanitized = flaggedReason
+          .toLowerCase()
+          .replace(/\s+/g, "");
         const result = await writeFlaggedReview(
           userId,
           flaggedReviewId,
-          flaggedReason
+          flaggedReasonSanitized
         );
 
         if (result.status === "SUCCESS") {

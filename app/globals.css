@@ -30,6 +30,10 @@ html, body {
   @apply min-h-screen;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer utilities {
 
   .flex-center {

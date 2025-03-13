@@ -435,7 +435,7 @@
             },
             {
               "type": "string",
-              "value": "hateSpeech"
+              "value": "hatespeech"
             },
             {
               "type": "string",
