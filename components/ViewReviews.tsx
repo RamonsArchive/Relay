@@ -31,6 +31,7 @@ import { revalidateFlaggedReviews } from "@/lib/serverActions";
 
 interface Props {
   userId: string | null;
+  productId: string;
   reviews: ReviewType[];
   userReview: ReviewType;
   viewReviews: boolean;
@@ -46,6 +47,7 @@ interface Props {
 
 const ViewReviews = ({
   userId,
+  productId,
   reviews,
   userReview,
   viewReviews,
@@ -470,7 +472,7 @@ const ViewReviews = ({
             >
               <ReviewCard
                 userId={userId}
-                productId={review.product?._id as string}
+                productId={productId}
                 productReview={review}
                 userReview={userReview}
                 editReview={editReview}

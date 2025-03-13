@@ -37,17 +37,6 @@ const SearchPopUp = ({ session, setClicked }: Props) => {
   useEffect(() => {
     if (query && query !== oldQuery.current) {
       setClicked(false);
-      if (session) {
-        console.log("Going to write recent search history");
-        const userId = session.user?.id;
-        async () => {
-          try {
-            writeRecentSearch(userId as string, query);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-      }
       setInputValue("");
       resetFilters();
     }
@@ -61,9 +50,18 @@ const SearchPopUp = ({ session, setClicked }: Props) => {
         return;
       }
       console.log("Query", query);
+      const userId = session?.user?.id;
+      if (userId) {
+        try {
+          await writeRecentSearch(userId, query);
+        } catch (error) {
+          console.error(error);
+        }
+      }
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       resetFilters();
       setInputValue("");
+
       return query;
     } catch (error) {
       return {

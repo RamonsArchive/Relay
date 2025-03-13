@@ -150,6 +150,7 @@ const ProductDetailsDrop = ({
                 <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-10">
                   <ViewReviews
                     userId={userId}
+                    productId={productId}
                     reviews={reviews}
                     userReview={userReview}
                     viewReviews={viewReviews}

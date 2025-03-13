@@ -341,12 +341,17 @@ export const writePopularCategories = async (userId: string, productId: string, 
 };
 
 export const writeRecentSearch = async (userId: string, searchQuery: string) => {
+  console.log("In write recent search");
   try {
+    console.log("search query", searchQuery);
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
     const sanitizedSearchQuery = sanitizeSearchQuery(searchQuery);
+    console.log("sanitized search query", sanitizedSearchQuery);
+    console.log("sanitized user id", userIdSanitized);
     
+
     if (!userIdSanitized || !sanitizedSearchQuery) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -354,6 +359,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       })
     }
 
+    console.log("Passed malformed user id or search query");
     if (!session || sessionId != userIdSanitized) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -368,6 +374,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       })
      }
 
+     console.log("About to go to rate limiter");
     const { success } = await rateLimiter.limit(userIdSanitized);
 
     if (!success) {
@@ -390,6 +397,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       _key: myKey,
     }
 
+    console.log("About to fetch recent searches");
     let recentSearches = await fetchRecentSearches(userIdSanitized);
     console.log("Recent searches", recentSearches);
     let updatedRecentSearches = recentSearches;
@@ -398,11 +406,25 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
     updatedRecentSearches = updatedRecentSearches.slice(0,100);
     console.log("updated recent searhces", updatedRecentSearches);
 
-    await writeClient
+    const result = await writeClient
       .withConfig({useCdn: true})
       .patch(userIdSanitized)
       .set({"recentSearches": updatedRecentSearches})
-      .commit();
+      .commit()
+      .catch(err => console.error("Sanity patch failed", err));
+
+    if (!result) {
+      console.error("Sanity update failed", result);
+      return parseServerActionResponse({ status: "ERROR", error: "Sanity update failed" });
+    }
+    console.log("REsult for recent searches", result);
+    console.error("Result for recent searches", result);
+
+    return parseServerActionResponse({
+      ...result,
+      status: "SUCCESS",
+      error: "",
+    })
     
   } catch (error) {
     console.error("errro with recent searches", error);
@@ -787,7 +809,7 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
         error: "Too many requests. Please try again later"
       })
     }
-    
+
     const result = await writeClient
       .withConfig({useCdn: false})
       .transaction()

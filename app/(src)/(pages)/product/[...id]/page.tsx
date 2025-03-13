@@ -20,6 +20,7 @@ import ProductCard from "@/components/ProductCard";
 import { ProductType, ReviewStatsType, ReviewType } from "@/globalTypes";
 import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
+import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
 
 export const experimental_ppr = true;
 
@@ -179,155 +180,158 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   /* TODO: Use useActionState to handle the button clicks */
   return (
-    <div className="flex flex-col max-w-screen">
-      <div className="product-page-wrapper">
-        <div className="product-page">
-          <Suspense fallback={<div>Loading...</div>}>
-            <div className="product-page-image-container">
-              <ProductImages images={imagesPlusProductDetails} />
-            </div>
-          </Suspense>
+    <>
+      <AutoFlagReviewWrapper userId={userId} />
+      <div className="flex flex-col max-w-screen">
+        <div className="product-page-wrapper">
+          <div className="product-page">
+            <Suspense fallback={<div>Loading...</div>}>
+              <div className="product-page-image-container">
+                <ProductImages images={imagesPlusProductDetails} />
+              </div>
+            </Suspense>
 
-          <div className="flex flex-col w-full overflow-y-auto">
-            <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
-              <div>
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
-                    <Image
-                      src={urlFor(brands[0]?.logo).url()}
-                      alt="brand logo"
-                      width={80}
-                      height={50}
-                      className="object-contain w-12 h-12"
-                    />
-                    <p>{capitalizeBrand(brands[0])}</p>
-                  </div>
-                  <Suspense fallback={<div>Heart</div>}>
-                    <div className="pr-5">
-                      <ProductHeart
-                        isHearted={heartedProducts?.includes(
-                          productId.toString()
-                        )}
-                        productId={productId}
-                        userId={userId}
-                        callbackUrl={callbackUrl}
+            <div className="flex flex-col w-full overflow-y-auto">
+              <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
+                <div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
+                      <Image
+                        src={urlFor(brands[0]?.logo).url()}
+                        alt="brand logo"
+                        width={80}
+                        height={50}
+                        className="object-contain w-12 h-12"
                       />
+                      <p>{capitalizeBrand(brands[0])}</p>
                     </div>
-                  </Suspense>
-                </div>
-                <div className="flex flex-col">
-                  <p className="font-plex-sans font-bold text-[28px]">
-                    {title}
-                  </p>
-                  {categories &&
-                    categories.length > 0 &&
-                    categories.map((obj: any, index: number) => (
-                      <p
-                        key={index}
-                        className="font-plex-sans font-regular text-[18px]"
-                      >
-                        {obj.name}
-                      </p>
-                    ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="font-plex-sans font-regular text-[16px]">
-                  ${cost}
-                </p>
-              </div>
-              <div className="w-full pt-2">
-                <div className="product-sizebutton-grid ">
-                  {allSizes.map((size: string, index: number) => {
-                    const stockItem = stock.find(
-                      (item: any) => item.size === size.toLowerCase()
-                    );
-                    const isAvaliable = stockItem?.quantity > 0;
-
-                    return (
-                      <button
-                        className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
-                        key={index}
-                        disabled={!isAvaliable}
-                      >
-                        <span>{size}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex w-full pt-10">
-                <h3 className="">
-                  {parsedDescription ? (
-                    <article
-                      className="prose font-plex-sans font-regular text-[20px]"
-                      dangerouslySetInnerHTML={{ __html: parsedDescription }}
-                    />
-                  ) : (
-                    <p className="font-plex-sans font-regular text-[20px]">
-                      No description available
+                    <Suspense fallback={<div>Heart</div>}>
+                      <div className="pr-5">
+                        <ProductHeart
+                          isHearted={heartedProducts?.includes(
+                            productId.toString()
+                          )}
+                          productId={productId}
+                          userId={userId}
+                          callbackUrl={callbackUrl}
+                        />
+                      </div>
+                    </Suspense>
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="font-plex-sans font-bold text-[28px]">
+                      {title}
                     </p>
-                  )}
-                </h3>
+                    {categories &&
+                      categories.length > 0 &&
+                      categories.map((obj: any, index: number) => (
+                        <p
+                          key={index}
+                          className="font-plex-sans font-regular text-[18px]"
+                        >
+                          {obj.name}
+                        </p>
+                      ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-plex-sans font-regular text-[16px]">
+                    ${cost}
+                  </p>
+                </div>
+                <div className="w-full pt-2">
+                  <div className="product-sizebutton-grid ">
+                    {allSizes.map((size: string, index: number) => {
+                      const stockItem = stock.find(
+                        (item: any) => item.size === size.toLowerCase()
+                      );
+                      const isAvaliable = stockItem?.quantity > 0;
+
+                      return (
+                        <button
+                          className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
+                          key={index}
+                          disabled={!isAvaliable}
+                        >
+                          <span>{size}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex w-full pt-10">
+                  <h3 className="">
+                    {parsedDescription ? (
+                      <article
+                        className="prose font-plex-sans font-regular text-[20px]"
+                        dangerouslySetInnerHTML={{ __html: parsedDescription }}
+                      />
+                    ) : (
+                      <p className="font-plex-sans font-regular text-[20px]">
+                        No description available
+                      </p>
+                    )}
+                  </h3>
+                </div>
+                <div className="flex flex-col w-full gap-4 pt-5">
+                  <button className="product-buy-buttons bg-primary-200 text-white">
+                    Add to Cart
+                  </button>
+                  <button className="product-buy-buttons bg-secondary-200">
+                    Purchase Now
+                  </button>
+                </div>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProductDetailsDrop
+                    mainDetails={mainDetails}
+                    detailBullets={detailBullets}
+                    reviews={reviews}
+                    selectedReviews={selectedReviews}
+                    userReview={userReview[0]}
+                    userId={userId}
+                    productId={productId}
+                    mainImage={mainImage}
+                    title={title}
+                    cost={cost}
+                    reviewStats={reviewStats}
+                    flaggedReviews={flaggedReviews}
+                  />
+                </Suspense>
               </div>
-              <div className="flex flex-col w-full gap-4 pt-5">
-                <button className="product-buy-buttons bg-primary-200 text-white">
-                  Add to Cart
-                </button>
-                <button className="product-buy-buttons bg-secondary-200">
-                  Purchase Now
-                </button>
-              </div>
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProductDetailsDrop
-                  mainDetails={mainDetails}
-                  detailBullets={detailBullets}
-                  reviews={reviews}
-                  selectedReviews={selectedReviews}
-                  userReview={userReview[0]}
-                  userId={userId}
-                  productId={productId}
-                  mainImage={mainImage}
-                  title={title}
-                  cost={cost}
-                  reviewStats={reviewStats}
-                  flaggedReviews={flaggedReviews}
-                />
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col w-full min-h-0">
+          <p className="font-plex-sans font-medium text-[30px] pl-5">
+            Recently Viewed Products
+          </p>
+          <div className="w-full overflow-x-auto overflow-y-hidden whitespace-nowrap h-[475px]">
+            <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
+              <Suspense fallback={<div>Loading products... </div>}>
+                {recentlyViewedProds?.length > 0 ? (
+                  recentlyViewedProds
+                    .slice(0, 10)
+                    .map((product: any, index: number) => {
+                      return (
+                        <ProductCard
+                          key={index}
+                          product={product}
+                          isHearted={product?._id.includes(productId)}
+                          callbackUrl={callbackUrl}
+                          user={user}
+                        />
+                      );
+                    })
+                ) : (
+                  <div>No recently viewed products</div>
+                )}
               </Suspense>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full min-h-0">
-        <p className="font-plex-sans font-medium text-[30px] pl-5">
-          Recently Viewed Products
-        </p>
-        <div className="w-full overflow-x-auto overflow-y-hidden whitespace-nowrap h-[475px]">
-          <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
-            <Suspense fallback={<div>Loading products... </div>}>
-              {recentlyViewedProds?.length > 0 ? (
-                recentlyViewedProds
-                  .slice(0, 10)
-                  .map((product: any, index: number) => {
-                    return (
-                      <ProductCard
-                        key={index}
-                        product={product}
-                        isHearted={product?._id.includes(productId)}
-                        callbackUrl={callbackUrl}
-                        user={user}
-                      />
-                    );
-                  })
-              ) : (
-                <div>No recently viewed products</div>
-              )}
-            </Suspense>
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

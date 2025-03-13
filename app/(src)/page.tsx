@@ -18,7 +18,6 @@ const Home = async ({
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const session = await auth();
-  console.log("Session", session);
   const user = session?.user;
   const userId = user?.id || null;
   console.log("Home page User Id", userId);
@@ -41,12 +40,8 @@ const Home = async ({
   if (queryParams.toString()) {
     callbackUrl += `?${queryParams.toString()}`;
   }
-  console.log(`Callback URL: ${callbackUrl}`);
 
-  console.log("User email", user?.email);
-  console.log("User id", userId);
   const heartedProductsIds = await fetchHeartedProducts(userId);
-  console.log("Hearted Products", heartedProductsIds);
   const products = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProductsIds)
   );

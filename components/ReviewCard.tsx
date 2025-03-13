@@ -45,8 +45,7 @@ const ReviewCard = ({
   const { reviewTitle, review, photo, nickname, _createdAt, _updatedAt, _id } =
     productReview;
 
-  console.log("productreview id", _id);
-  console.log("flaggedReviews", flaggedReviews);
+  console.log("Product Id", productId);
 
   const router = useRouter();
   const [dropEllipse, setDropEllipse] = useState(false);
@@ -139,84 +138,6 @@ const ReviewCard = ({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, []);
-
-  useEffect(() => {
-    const setFlag = async () => {
-      console.log("passed cookies check for flag");
-      if (flagged) {
-        Cookies.remove("flaggedReviewId");
-        Cookies.remove("flaggedReason");
-        toast.success("Success", {
-          description: "Review has been already flagged successfully",
-        });
-        return;
-      }
-      console.log("flagging review");
-      const flaggedReviewIdCookie = Cookies.get("flaggedReviewId");
-      const flaggedReasonCookie = Cookies.get("flaggedReason");
-      try {
-        setFlagged(true);
-        setFlagPending(true);
-        const result = await writeFlaggedReview(
-          userId as string,
-          flaggedReviewIdCookie as string,
-          flaggedReasonCookie as string
-        );
-
-        Cookies.remove("flaggedReviewId");
-        Cookies.remove("flaggedReason");
-        if (result.status == "SUCCESS") {
-          console.log("Review has been flagged successfully");
-          setFlagPending(false);
-          setFlaggedReason("");
-          toast.success("Success", {
-            description: "Review has been flagged successfully",
-          });
-
-          return parseServerActionResponse({
-            status: "SUCCESS",
-            error: "",
-          });
-        }
-
-        console.log("An unexpected error occured while flagging from cookies");
-
-        setFlagged(false);
-        setFlagPending(false);
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Internal Server Error",
-        });
-      } catch (error) {
-        console.log("Error flagging from cookies");
-        setFlagged(false);
-        setFlagPending(false);
-        Cookies.remove("flaggedReviewId");
-        Cookies.remove("flaggedReason");
-        toast.error("Error", {
-          description: "An unexpected error occured. Please try again",
-        });
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "An unexpected error occured. Please try again",
-        });
-      }
-    };
-    console.log("Will be evaluating cookeies for flagging");
-    const CookieFlaggedReview = Cookies.get("flaggedReviewId");
-    const CookieFlaggedReason = Cookies.get("flaggedReason");
-    console.log("CookieFlaggedReview", CookieFlaggedReview);
-    console.log("CookieFlaggedReason", CookieFlaggedReason);
-    if (
-      Cookies.get("flaggedReviewId") &&
-      Cookies.get("flaggedReviewId") == _id &&
-      Cookies.get("flaggedReason") != ""
-    ) {
-      setTimeout(() => {
-        setFlag();
-      }, 0);
-    }
   }, []);
 
   const handleEllipseEditSubmit = () => {
@@ -329,7 +250,6 @@ const ReviewCard = ({
         console.log("Going to sign in");
         setFlagged(false);
         setFlagPending(false);
-        console.log("path ", productId);
         Cookies.set("flaggedReviewId", _id as string, { expires: 1 });
         Cookies.set("flaggedReason", flaggedReason, { expires: 1 });
         const callbackUrl = `/product/${productId}`;
