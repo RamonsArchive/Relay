@@ -41,10 +41,11 @@ const Home = async ({
     callbackUrl += `?${queryParams.toString()}`;
   }
 
-  const heartedProductsIds = await fetchHeartedProducts(userId);
+  const heartedProducts = await fetchHeartedProducts(userId);
   const products = await client.fetch(
-    PAGE_QUERY(path, query, filters, heartedProductsIds)
+    PAGE_QUERY(path, query, filters, heartedProducts)
   );
+  console.log("Products", products);
 
   return (
     <main className="content-page">
@@ -64,7 +65,7 @@ const Home = async ({
                 <ProductCard
                   key={product?._id}
                   product={product}
-                  isHearted={heartedProductsIds.includes(product?._id)}
+                  isHearted={heartedProducts.includes(product?._id)}
                   callbackUrl={callbackUrl}
                   user={user}
                 />

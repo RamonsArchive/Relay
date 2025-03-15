@@ -18,6 +18,8 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
     console.log("Checking flagged review cookies...");
     const flaggedReviewId = Cookies.get("flaggedReviewId");
     const flaggedReason = Cookies.get("flaggedReason");
+    Cookies.remove("flaggedReviewId");
+    Cookies.remove("flaggedReason");
 
     if (flaggedReviewId && flaggedReason) {
       console.log("Auto-flagging review...");
@@ -43,14 +45,8 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
               "Review was unable to be flagged. Please try again later",
           });
         }
-
-        Cookies.remove("flaggedReviewId");
-        Cookies.remove("flaggedReason");
       };
-
       flagReview();
-      Cookies.remove("flaggedReviewId");
-      Cookies.remove("flaggedReason");
     }
 
     return () => {}; // ✅ Return an empty function to satisfy React's cleanup requirement

@@ -1,5 +1,10 @@
 "use client";
-import { handleSignIn, handleSignOut } from "@/lib/serverActions";
+import {
+  handleSignIn,
+  handleSignOut,
+  revalidateFlaggedReviews,
+  revalidateHeartedProducts,
+} from "@/lib/serverActions";
 import React, { useActionState } from "react";
 import { useState } from "react";
 import Image from "next/image";
@@ -33,9 +38,13 @@ const ManageSession = ({ session }: { session: any }) => {
       if (isLoggedIn) {
         setIsLoggedIn(false);
         handleSignOut();
+        revalidateFlaggedReviews();
+        revalidateHeartedProducts();
       } else {
         setIsLoggedIn(true);
         handleSignIn(callbackUrl);
+        revalidateFlaggedReviews();
+        revalidateHeartedProducts();
       }
       console.log(`Is still logged in ${user}`);
     } catch (error) {
@@ -50,11 +59,14 @@ const ManageSession = ({ session }: { session: any }) => {
       <div>
         {isLoggedIn ? (
           <form action={formAction}>
-            <button type="submit">
+            <button
+              type="submit"
+              className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 "
+            >
               <Image
                 src={user?.image || ""}
                 alt={user?.name}
-                className="rounded-full w-11 h-11 object-cover"
+                className="rounded-full object-cover"
                 width={48}
                 height={48}
               />

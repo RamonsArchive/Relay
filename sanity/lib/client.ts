@@ -15,8 +15,8 @@ export const fetchHeartedProducts = async (userId: string | null) => {
     return [];
   }
   try {
-    const query = `*[_type == "user" && userId == "${userId}"][0].heartedProducts[]._ref`;
-    const heartedProducts = await client.fetch(query);
+    const query = `*[_type == "user" && userId == $userId][0].heartedProducts[]._ref`;
+    const heartedProducts = await client.withConfig({useCdn: false}).fetch(query, {userId}, { next: { tags: ['hearted-products'] } });
     return heartedProducts || [];
   } catch (error) {
     console.error("Error fetching hearted products", error);

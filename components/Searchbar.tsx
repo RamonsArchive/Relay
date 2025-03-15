@@ -5,7 +5,13 @@ import ReactDOM from "react-dom"; // create a portal to top level of the dom
 import { X, Search } from "lucide-react";
 import { Session } from "next-auth";
 
-const Searchbar = ({ session }: { session: Session | null }) => {
+const Searchbar = ({
+  session,
+  compactMode = false,
+}: {
+  session: Session | null;
+  compactMode?: boolean;
+}) => {
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -38,19 +44,34 @@ const Searchbar = ({ session }: { session: Session | null }) => {
     setClicked(!clicked);
   };
 
+  console.log("Compact mode", compactMode);
+
   return (
     <>
-      <div className="search-form">
-        <Search size="18px" className="" />
-        <input
-          name="query"
-          className="search-input"
-          placeholder="Search..."
-          onClick={handleformClick}
-          readOnly
-        ></input>
-        <X size="22px" strokeWidth={1.1} />
-      </div>
+      {compactMode ? (
+        <div className="navbar-icon-compact" onClick={() => setClicked(true)}>
+          <Search className="size-[22px] sm:size-[26px] md:size-[30px]" />
+        </div>
+      ) : (
+        /* Full Search Bar */
+        <div
+          className="flex items-center gap-2 border border-black border-[1px] rounded-full px-3 py-1 cursor-pointer md:flex hidden"
+          onClick={() => setClicked(true)}
+        >
+          <Search size="18px" />
+          <input
+            name="query"
+            className="bg-transparent outline-none w-full placeholder-gray-400"
+            placeholder="Search..."
+            readOnly
+          />
+          <X
+            size="22px"
+            strokeWidth={1.1}
+            className="text-gray-500 hover:text-black transition"
+          />
+        </div>
+      )}
       {clicked &&
         typeof window !== "undefined" &&
         ReactDOM.createPortal(

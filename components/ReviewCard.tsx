@@ -398,7 +398,7 @@ const ReviewCard = ({
                         >
                           <div className="flex flex-row items-center p-1">
                             {flaggedReason == value && (
-                              <Check className="w-7 h-7 sm:w-8 sm:h-8 no-shrink mr-2" />
+                              <Check className="w-3 h-3 sm:w-4 sm:h-4 no-shrink mr-2" />
                             )}
                             {value}
                           </div>

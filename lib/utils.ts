@@ -96,17 +96,6 @@ export const ReviewSliderStats = (reviews: ReviewType[]) => {
 
   const normalizeRating = (rating: number) => (rating - 1) / 2;
 
-  const normalizedSize = normalizeRating(averageSize);
-  const normalizedComfort = normalizeRating(averageComfort);
-  const normalizedWidth = normalizeRating(averageWidth);
-  const normalizedQuality = normalizeRating(averageQuality);
-  const normalizedValue = normalizeRating(averageValue);
-
-  console.log("Average size", averageSize);
-  console.log("normalized size", normalizedSize);
-  console.log("Average Comfort", averageComfort);
-  console.log("normalized comfort", normalizedComfort);
-  console.log("average would reccomend", averageWouldRecommend);
   return {
     normalizedSize: normalizeRating(averageSize),
     normalizedComfort: normalizeRating(averageComfort),

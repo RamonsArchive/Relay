@@ -15,3 +15,8 @@ export const revalidateFlaggedReviews = async () => {
   console.log("Revalidating flagged reviews.........................");
   revalidateTag("flagged-reviews");
 };
+
+export const revalidateHeartedProducts = async () => {
+  console.log("Revalidating hearted products.........................");
+  revalidateTag("hearted-products");
+}

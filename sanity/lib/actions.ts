@@ -144,6 +144,9 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
    const sessionId = session?.user?.id;
    const userIdSanitized = sanitizeSanityId(userId);
    const productIdSanitized = sanitizeSanityId(productId);
+   console.log("userId sani", userIdSanitized);
+  console.log("productId sani", productIdSanitized);
+  console.log("hearted", hearted);
 
    if (!userIdSanitized || !productIdSanitized) {
     return parseServerActionResponse({
@@ -152,12 +155,15 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
     })
    }
 
+   console.log("passed asnitized check");
    if (!session || userIdSanitized !== sessionId) {
     return parseServerActionResponse({
       status: "ERROR",
       error: "Unauthorized request"
     })
    }
+
+   console.log("passed auth check")
 
    const {success} = await rateLimiter.limit(
     `${userIdSanitized}:heartWrite`
@@ -169,8 +175,11 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
     })
    }
 
+   console.log("passed rate limiter check");
+
     if (!hearted) {
       try {
+      console.log("In the try block");
       const result = await writeClient.withConfig({useCdn: false})
       .patch(userIdSanitized)
       .unset([`heartedProducts[_ref=="${productIdSanitized}"]`])
@@ -359,7 +368,6 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       })
     }
 
-    console.log("Passed malformed user id or search query");
     if (!session || sessionId != userIdSanitized) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -374,7 +382,6 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       })
      }
 
-     console.log("About to go to rate limiter");
     const { success } = await rateLimiter.limit(userIdSanitized);
 
     if (!success) {
@@ -397,14 +404,11 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       _key: myKey,
     }
 
-    console.log("About to fetch recent searches");
     let recentSearches = await fetchRecentSearches(userIdSanitized);
-    console.log("Recent searches", recentSearches);
     let updatedRecentSearches = recentSearches;
 
     updatedRecentSearches = [newSearch, ...updatedRecentSearches];
     updatedRecentSearches = updatedRecentSearches.slice(0,100);
-    console.log("updated recent searhces", updatedRecentSearches);
 
     const result = await writeClient
       .withConfig({useCdn: true})
@@ -417,7 +421,6 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       console.error("Sanity update failed", result);
       return parseServerActionResponse({ status: "ERROR", error: "Sanity update failed" });
     }
-    console.log("REsult for recent searches", result);
     console.error("Result for recent searches", result);
 
     return parseServerActionResponse({
@@ -496,7 +499,6 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       nickname: review.nickname,
       email: review.email,
     }
-    console.log("Review Info",  reviewInfo);
     const nanoidSafe = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 21);
     const myKey = nanoidSafe();
     const mySlug = slugify(`${reviewInfo.nickname}-${reviewInfo.reviewTitle}-${userIdSanitized.slice(-4)}`, 
@@ -515,8 +517,6 @@ export const writeReview = async (userId: string, productId: string, review: Rev
       product: {_type: "reference", _ref: productIdSanitized.toString()},
       ...reviewInfo
     }
-
-    console.log("New Review", newReview);
 
     const transaction = writeClient
       .transaction()
@@ -605,9 +605,6 @@ export const writeReviewEdit = async (reviewId: string, editData: string) =>  {
       })
       .commit();
 
-      console.log("Result", result);
-      
-
       return parseServerActionResponse({
         ...result,
         error: "",
@@ -669,7 +666,6 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
     })
   }
 
-  console.log("In delete reviwe in actions");
   try {
 
     const result = await writeClient

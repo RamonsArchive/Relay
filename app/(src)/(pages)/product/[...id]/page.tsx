@@ -17,7 +17,7 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
-import { ProductType, ReviewStatsType, ReviewType } from "@/globalTypes";
+import { ProductType, ReviewType } from "@/globalTypes";
 import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
@@ -315,9 +315,9 @@ const page = async ({ params }: { params: { id: string } }) => {
                     .map((product: any, index: number) => {
                       return (
                         <ProductCard
-                          key={index}
+                          key={product._id}
                           product={product}
-                          isHearted={product?._id.includes(productId)}
+                          isHearted={heartedProducts.includes(product._id)}
                           callbackUrl={callbackUrl}
                           user={user}
                         />

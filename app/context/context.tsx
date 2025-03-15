@@ -36,6 +36,7 @@ export const ContextProvider = ({
   const searchParams = useSearchParams();
   const path = usePathname();
   const query: string | undefined = searchParams.get("query") || "";
+  console.log("Query in context provider", query);
   const filterParams = searchParams.get("f") || "";
   const [backButtonClicked, setBackButtonClicked] = useState(false);
 
@@ -67,8 +68,10 @@ export const ContextProvider = ({
   }, []);
 
   useEffect(() => {
+    console.log("Checking if filters are saved in session storage");
     const savedToggledCategoryFilters = sessionStorage.getItem("filters");
     if (savedToggledCategoryFilters) return;
+    console.log("Setting default filters since no session storage");
     setDefaultFilters();
   }, []);
 
@@ -89,12 +92,17 @@ export const ContextProvider = ({
       console.log("Path includes /sign-in or /product or /writeReview");
       return;
     }
+    //router.refresh();
 
     const clickedFilters = Object.values(selectedFilters)
       .flat()
       .filter(Boolean)
       .join(",");
     console.log("Clicked filters", clickedFilters);
+
+    /* const alreadyQueryParams = new URLSearchParams(window.location.search);
+    const existingQuery = alreadyQueryParams.get("query") || ""; // Ensure it's a string
+    console.log("Existing query", existingQuery); */
 
     let newQueryParams = path;
     const queryParams = new URLSearchParams();
@@ -176,6 +184,7 @@ export const ContextProvider = ({
   }, [query, filterParams]);
 
   const resetFilters = () => {
+    console.log("Resetting filters");
     sessionStorage.removeItem("selectedFilters");
     sessionStorage.removeItem("filters");
     setSelectedFilters({});
@@ -276,6 +285,7 @@ export const ContextProvider = ({
   };
 
   const setDefaultFilters = () => {
+    console.log("Setting default filters");
     getDynamicFilters().then((data) => {
       const formattedFilters = Object.entries(data).reduce(
         (acc, [key, values]) => {
@@ -289,6 +299,7 @@ export const ContextProvider = ({
   };
 
   const toggleCategory = (category: string) => {
+    console.log("toggeling category");
     setFilters((prev) => ({
       ...prev,
       [category]: {
