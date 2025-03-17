@@ -20,3 +20,8 @@ export const revalidateHeartedProducts = async () => {
   console.log("Revalidating hearted products.........................");
   revalidateTag("hearted-products");
 }
+
+export const revalidateRecentSearches = async () => {
+  console.log("Revalidating recently searched.........................");
+  revalidateTag("recent-searches");
+}

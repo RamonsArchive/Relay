@@ -18,6 +18,9 @@ import { Session } from "next-auth";
 import { writeRecentSearch } from "@/sanity/lib/actions";
 import Loader from "./Loader";
 import { RecentSearches } from "@/globalTypes";
+import { revalidateRecentSearches } from "@/lib/serverActions";
+import { startTransition } from "react";
+import { start } from "repl";
 
 // TODO: Implement RECENTS
 
@@ -31,9 +34,11 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
-  const [searchHistory, setSearchHistory] = useState(
-    recentSearches?.recentSearches || []
-  );
+
+  console.log("recentSearches in pop up", recentSearches);
+  const [searchHistory, setSearchHistory] = useState(recentSearches);
+
+  console.log("Search history", searchHistory);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -47,6 +52,14 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
     }
     oldQuery.current = query;
   }, [query]);
+
+  const updateSearchHistory = (query: string) => {
+    console.log("Query", query);
+    if (!query) {
+      return;
+    }
+    setSearchHistory((prev) => prev.filter((item) => item.query !== query));
+  };
 
   const handleFromSubmit = async (prevState: any, formData: FormData) => {
     try {
@@ -70,7 +83,8 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
         }
       }
       setInputValue("");
-
+      setClicked(false);
+      revalidateRecentSearches();
       return query;
     } catch (error) {
       return {
@@ -88,7 +102,7 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
   });
 
   return (
-    <main className="fixed top-0 left-0 h-full md:h-[60vh] w-full z-50 py-3 px-3 bg-white-300 shadow-md shadow-third-300 text-third-300">
+    <main className="fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 py-3 px-3 bg-white-300 shadow-md shadow-third-300 text-third-300">
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-51">
           <Loader />
@@ -135,30 +149,48 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
             <SearchBarReset setInputValue={setInputValue} />
           </div>
         </Form>
-        <div className="flex flex-col justify-center items-center w-full mt-4 gap-y-5 text-center">
-          <div className="text-md font-light self-start">Recent Searches</div>
-          {searchHistory.length > 0 ? (
-            searchHistory.map((queryObj, index) =>
-              queryObj.query ? (
-                <div key={index}>
-                  <button
-                    className="px-3 py-2 font-plex-sans text-primary-400 font-semibold hover:underline hover:scale-105 transition duration-200 ease-in-out"
-                    onClick={() => {
-                      setInputValue(queryObj.query as string);
-                      document
-                        .getElementById("search-form")
-                        ?.dispatchEvent(new Event("submit"));
-                    }}
-                  >
-                    {queryObj.query as string}
-                  </button>
-                </div>
-              ) : null
-            )
-          ) : (
-            <p className="text-gray-500 text-sm">No recent searches</p>
-          )}
-          <div className="text-md font-light self-start">Popular Searches</div>
+        <div className="flex flex-col justify-center items-center w-full mt-10 gap-y-5 text-center">
+          <div className="flex flex-col gap-y-4">
+            <div className="font-plex-sans font-light text-md sm:text-lg text-left ">
+              Recent Searches
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {searchHistory.length > 0 ? (
+                searchHistory.map((queryObj, index) =>
+                  queryObj.query ? (
+                    <div
+                      key={index}
+                      className="flex flex-row items-center gap-2 font-plex-sans text-white px-3 py-2 bg-gray-500 rounded-full hover:bg-gray-400 transition duration-200 ease-in-out"
+                    >
+                      <button
+                        className=""
+                        onClick={async () => {
+                          setInputValue(queryObj.query as string);
+                          const formData = new FormData();
+                          formData.append("query", queryObj.query as string);
+                          startTransition(() => {
+                            formAction(formData);
+                          });
+                        }}
+                      >
+                        {queryObj.query as string}
+                      </button>
+                      <button
+                        className="transition hover:scale-125 duration-200 ease-in-out"
+                        onClick={() =>
+                          updateSearchHistory(queryObj.query as string)
+                        }
+                      >
+                        <X className="size-[12px] sm:size-[15px]" />
+                      </button>
+                    </div>
+                  ) : null
+                )
+              ) : (
+                <p className="text-gray-500 text-sm">No recent searches</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </main>

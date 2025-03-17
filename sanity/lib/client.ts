@@ -83,10 +83,10 @@ export const fetchRecentSearchesSix = async (userId: string) => {
     return [];
   }
   try {
-    const query = `*[_type == "user" && userId == "${userId}"]{
+    const query = `*[_type == "user" && userId == $userId][0]{
       recentSearches[0...6]
     }`
-    const result = await client.withConfig({useCdn: false}).fetch(query);
+    const result = await client.withConfig({useCdn: false}).fetch(query, {userId}, { next: { tags: ['recent-searches'] }});
     return result.recentSearches || [];
   } catch (error) {
 
