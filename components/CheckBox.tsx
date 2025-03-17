@@ -30,21 +30,3 @@ const CheckBox = ({ option, category, isChecked, onToggle }: Props) => {
 };
 
 export default CheckBox;
-
-/*<div className="flex flex-col ">
-      <div
-        className="flex flex-row gap-2 items-start"
-        onClick={() => {
-          handleClick();
-        }}
-      >
-        <div className="shrink-0">
-          <Square className="cursor-pointer " size="20px">
-            {checkedFilters[options] && <Check className="h-4 w-4" />}
-          </Square>
-        </div>
-        <div className="flex-1 min-w-0 whitespace-normal break-words">
-          <span>{options}</span>
-        </div>
-      </div>
-    </div> */

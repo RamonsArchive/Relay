@@ -1,19 +1,18 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-const SearchBarReset = () => {
+interface Props {
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SearchBarReset = ({ setInputValue }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const reset = () => {
-    const form = document.querySelector(
-      ".search-form-popup"
-    ) as HTMLFormElement;
-    if (form) {
-      form.reset();
-    }
+    setInputValue("");
     const newParams = new URLSearchParams(searchParams.toString());
     if (newParams.has("query")) {
       newParams.delete("query");
@@ -23,7 +22,7 @@ const SearchBarReset = () => {
   };
   return (
     <X
-      size="32px"
+      size="25px"
       strokeWidth={1.1}
       className="cursor-pointer"
       onClick={reset}

@@ -2,7 +2,7 @@
 import Footer from "@/components/Footer";
 import { getDynamicFilters } from "@/lib/filters";
 import { useSearchParams, usePathname } from "next/navigation";
-import { createContext, useEffect, useState, useRef } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -289,7 +289,10 @@ export const ContextProvider = ({
     getDynamicFilters().then((data) => {
       const formattedFilters = Object.entries(data).reduce(
         (acc, [key, values]) => {
-          acc[key] = { expanded: false, options: values };
+          acc[key] = {
+            expanded: false,
+            options: Array.isArray(values) ? values.flat() : values,
+          };
           return acc;
         },
         {} as Record<string, { expanded: boolean; options: string[] }>

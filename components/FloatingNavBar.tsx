@@ -6,8 +6,15 @@ import { Session } from "next-auth";
 import { Heart, Menu } from "lucide-react";
 import { ShoppingBasket } from "lucide-react";
 import ManageSession from "./ManageSession";
+import { RecentSearches } from "@/globalTypes";
 
-const FloatingNavBar = ({ session }: { session: Session | null }) => {
+const FloatingNavBar = ({
+  session,
+  recentSearches,
+}: {
+  session: Session | null;
+  recentSearches: RecentSearches;
+}) => {
   const compactMode = true;
   return (
     <nav className="flex flex-row gap-3 justify-between items-center w-full md:hidden">
@@ -35,7 +42,11 @@ const FloatingNavBar = ({ session }: { session: Session | null }) => {
         <span className="max-w-[15px]">Relay stands with Palestine</span>
       </div>
       <div className="flex items-center sm:gap-2 ml-auto">
-        <Searchbar session={session} compactMode={compactMode} />
+        <Searchbar
+          session={session}
+          compactMode={compactMode}
+          recentSearches={recentSearches}
+        />
         <div className="navbar-icon-compact">
           <Link href="/collections/hearted">
             <Heart className="size-[22px] sm:size-[25px] " />

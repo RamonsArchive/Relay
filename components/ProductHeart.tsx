@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Heart } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { handleHeartWrite } from "@/sanity/lib/actions";
@@ -28,43 +28,49 @@ const ProductHeart = ({
 
   useEffect(() => {
     router.refresh();
-    //if (heartOnCallBack.current) return;
     const setHeart = async () => {
       console.log("Heart on callback");
       const heartedProductId = Cookies.get("heartedProductId");
       const newHearted = !hearted;
       Cookies.remove("heartedProductId");
 
-      // heartOnCallBack.current = true;
       if (hearted) {
         console.log("Hearted is true returning early");
         toast.info("Product is already hearted", {
           description: "Looks like this product is already hearted :)",
         });
-        Cookies.remove("heartedProductId");
+        return;
+      }
+
+      if (!userId) {
+        console.log("User id is not present, returning early");
         return;
       }
 
       try {
         console.log("Hearted product id right in try", heartedProductId);
-        console.log("Hearted product id right in try", hearted);
-        console.log("type of hearted", typeof hearted);
-        console.log("type of hearted product id", typeof heartedProductId);
-        console.log("type of user id", typeof userId);
-        console.log("userId", userId);
-        console.log("Hearted opposite", !hearted);
+        console.log("Hearted status:", hearted);
+        console.log("Type of hearted:", typeof hearted);
+        console.log("Type of heartedProductId:", typeof heartedProductId);
+        console.log("Type of userId:", typeof userId);
+        console.log("UserId:", userId);
+        console.log("Hearted opposite:", !hearted);
+
         setHearted(newHearted);
         console.log("SHOULD BE NEW HEARTED TRUE", newHearted);
-        console.log("right before handleHeartWrite");
+
+        console.log("Right before handleHeartWrite");
         const result = await handleHeartWrite(
           userId as string,
           heartedProductId as string,
           newHearted
         );
         console.log("Right after handleHeartWrite");
+
         revalidateHeartedProducts();
+
         if (result.status === "SUCCESS") {
-          console.log("Heart is successfull on callback should toast");
+          console.log("Heart is successful on callback, should toast");
           toast.success("Success", {
             description: "Product has been hearted successfully",
           });
@@ -76,6 +82,7 @@ const ProductHeart = ({
               "Product was unable to be hearted. Please try again later",
           });
         }
+        return result;
       } catch (error) {
         setHearted(!newHearted);
         revalidateHeartedProducts();
@@ -85,12 +92,10 @@ const ProductHeart = ({
         });
       }
     };
-
     if (
       Cookies.get("heartedProductId") &&
       Cookies.get("heartedProductId") == productId
     ) {
-      // setHeart();
       setTimeout(() => {
         setHeart();
       }, 0);

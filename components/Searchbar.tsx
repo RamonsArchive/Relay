@@ -4,13 +4,16 @@ import SearchPopUp from "./SearchPopUp";
 import ReactDOM from "react-dom"; // create a portal to top level of the dom
 import { X, Search } from "lucide-react";
 import { Session } from "next-auth";
+import { RecentSearches } from "@/globalTypes";
 
 const Searchbar = ({
   session,
   compactMode = false,
+  recentSearches,
 }: {
   session: Session | null;
   compactMode?: boolean;
+  recentSearches: RecentSearches;
 }) => {
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -76,7 +79,11 @@ const Searchbar = ({
         typeof window !== "undefined" &&
         ReactDOM.createPortal(
           <div ref={popupRef}>
-            <SearchPopUp session={session} setClicked={setClicked} />
+            <SearchPopUp
+              session={session}
+              setClicked={setClicked}
+              recentSearches={recentSearches}
+            />
           </div>,
           document.body
         )}

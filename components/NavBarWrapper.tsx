@@ -9,8 +9,15 @@ import { ShoppingBasket } from "lucide-react";
 import { Menu } from "lucide-react";
 import { Session } from "next-auth";
 import FloatingNavBar from "./FloatingNavBar";
+import { RecentSearches } from "@/globalTypes";
 
-const NavBarWrapper = ({ session }: { session: Session | null }) => {
+const NavBarWrapper = ({
+  session,
+  recentSearches,
+}: {
+  session: Session | null;
+  recentSearches: any;
+}) => {
   return (
     <header className="p-1 md:p-2 bg-white-300 max-h-[5rem] md:max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
       <nav className="hidden md:flex md:flex-row md:gap-4 md:items-center">
@@ -76,13 +83,13 @@ const NavBarWrapper = ({ session }: { session: Session | null }) => {
             <ManageSession session={session} />
           </div>
           <div className="flex justify-self-end self-end">
-            <Searchbar session={session} />
+            <Searchbar session={session} recentSearches={recentSearches} />
           </div>
         </div>
       </nav>
       {/* Mobile Nav */}
       <div className="md:hidden">
-        <FloatingNavBar session={session} />
+        <FloatingNavBar session={session} recentSearches={recentSearches} />
       </div>
     </header>
   );

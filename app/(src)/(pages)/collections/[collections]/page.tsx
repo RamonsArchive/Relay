@@ -21,9 +21,11 @@ const page = async ({
   const user = sesson?.user;
   const userId = user?.id || null;
   console.log("Collections User Id", userId);
-  const entirePath = await params;
 
-  const heartedProductsIds = await fetchHeartedProducts(userId);
+  let heartedProducts = [];
+  if (userId) {
+    heartedProducts = await fetchHeartedProducts(userId);
+  }
   const path = (await params).collections || "/";
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
@@ -42,7 +44,7 @@ const page = async ({
   }
 
   const collectionProducts = await client.fetch(
-    PAGE_QUERY(path, query, filters, heartedProductsIds)
+    PAGE_QUERY(path, query, filters, heartedProducts)
   );
 
   return (
@@ -63,7 +65,7 @@ const page = async ({
                 <ProductCard
                   key={product?._id}
                   product={product}
-                  isHearted={heartedProductsIds.includes(product?._id)}
+                  isHearted={heartedProducts.includes(product?._id)}
                   user={user}
                   callbackUrl={callbackUrl}
                 />

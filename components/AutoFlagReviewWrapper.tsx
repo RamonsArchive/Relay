@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 import { writeFlaggedReview } from "@/sanity/lib/actions";
 import { toast } from "sonner";
 import { revalidateFlaggedReviews } from "@/lib/serverActions";
-import { parseServerActionResponse } from "@/lib/utils";
 
 const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
   console.log("AutoFlagReviewWrapper userId", userId);
@@ -49,10 +48,10 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
       flagReview();
     }
 
-    return () => {}; // ✅ Return an empty function to satisfy React's cleanup requirement
+    return () => {};
   }, [userId]);
 
-  return null; // ✅ Ensure it returns null instead of an object
+  return null;
 };
 
 export default AutoFlagReviewWrapper;

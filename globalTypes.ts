@@ -174,3 +174,12 @@ export type ReviewStatsType = {
   normalizedQuality: number;
   normalizedValue: number;
 }
+
+
+export type RecentSearches = {
+  recentSearches?: Array<{
+    query?: string;
+    timestamp?: number;
+    _key: string;
+  }>;
+}

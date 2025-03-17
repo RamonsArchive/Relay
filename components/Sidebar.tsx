@@ -1,12 +1,7 @@
 "use client";
 import { useContext, useEffect } from "react";
-import { useState } from "react";
 import CheckBox from "./CheckBox";
-import { getDynamicFilters } from "@/lib/filters";
-import { useRouter } from "next/navigation";
 import { Context } from "@/app/context/context";
-import { usePathname } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Sidebar = () => {

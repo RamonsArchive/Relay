@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
-import Mobilebar from "./Mobilebar";
 
 const SidebarWrapper = () => {
   const path = usePathname();
@@ -19,9 +18,6 @@ const SidebarWrapper = () => {
     <div>
       <div className={`${isNoSideBarPage ? "w-0 hidden" : "side-bar"}`}>
         <Sidebar />
-      </div>
-      <div>
-        <Mobilebar />
       </div>
     </div>
   );

@@ -1,11 +1,10 @@
 import ProductCard from "@/components/ProductCard";
-import { client } from "@/sanity/lib/client";
+import { client, fetchHeartedProducts } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { ShoppingCart } from "lucide-react";
 import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
-import { fetchHeartedProducts } from "@/sanity/lib/client";
 import { auth } from "@/auth";
 
 export const experimental_ppr = true;
@@ -41,7 +40,10 @@ const Home = async ({
     callbackUrl += `?${queryParams.toString()}`;
   }
 
-  const heartedProducts = await fetchHeartedProducts(userId);
+  let heartedProducts = [];
+  if (userId) {
+    heartedProducts = (await fetchHeartedProducts(userId)) || [];
+  }
   const products = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProducts)
   );

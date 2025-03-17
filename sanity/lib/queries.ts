@@ -1,9 +1,9 @@
 
 /*TODO: Fix the cost function  */
-export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProductsIds: string[]) => {
+export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProducts: string[]) => {
   const pageType = path.split("/")[0]; // first part of the path
   const pageEnd = path.split("/").pop(); // last part of the path
-  const optimizedHeartedProductsIds = `[${heartedProductsIds.map(id => `"${id}"`).join(", ")}]`;
+  const optimizedHeartedProductsIds = `[${heartedProducts.map(id => `"${id}"`).join(", ")}]`;
 
   console.log(`Page Type: ${pageType}`);
   console.log(`Page End: ${pageEnd}`);

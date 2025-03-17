@@ -1,6 +1,4 @@
 import Footer from "@/components/Footer";
-import Sidebar from "@/components/Sidebar";
-import Mobilebar from "@/components/Mobilebar";
 import Navbar from "@/components/Navbar";
 import { ContextProvider } from "@/app/context/context";
 import React from "react";

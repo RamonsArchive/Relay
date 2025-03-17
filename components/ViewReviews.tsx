@@ -1,18 +1,13 @@
 "use client";
 import { FlaggedReviewType, ReviewStatsType, ReviewType } from "@/globalTypes";
-import React, { useActionState } from "react";
+import React from "react";
 import { useEffect, useRef } from "react";
 import { SanityImage } from "@/globalTypes";
 import Image from "next/image";
-import { client, urlFor } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/client";
 import ReviewStars from "./ReviewStars";
-import {
-  getNumberOfReviews,
-  parseServerActionResponse,
-  getNumReviewsPerStar,
-  handleUpdateReviews,
-} from "@/lib/utils";
-import { CircleX, Star } from "lucide-react";
+import { getNumberOfReviews, getNumReviewsPerStar } from "@/lib/utils";
+import { Star } from "lucide-react";
 import ReviewSummarySliders from "./ReviewSummarySliders";
 import { useState } from "react";
 import {

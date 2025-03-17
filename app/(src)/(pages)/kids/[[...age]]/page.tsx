@@ -41,9 +41,12 @@ const page = async ({
   }
 
   //const finalQuery = parseSearchParams(query, filters);
-  const heartedProductsIds = await fetchHeartedProducts(userId);
+  let heartedProducts = [];
+  if (userId) {
+    heartedProducts = await fetchHeartedProducts(userId);
+  }
   const genderProducts = await client.fetch(
-    PAGE_QUERY(path, query, filters, heartedProductsIds)
+    PAGE_QUERY(path, query, filters, heartedProducts)
   );
 
   return (
@@ -64,7 +67,7 @@ const page = async ({
                 <ProductCard
                   key={product?._id}
                   product={product}
-                  isHearted={heartedProductsIds.includes(product?._id)}
+                  isHearted={heartedProducts.includes(product?._id)}
                   callbackUrl={callbackUrl}
                   user={user}
                 />
