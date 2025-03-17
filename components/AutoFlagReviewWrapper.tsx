@@ -45,7 +45,9 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
           });
         }
       };
-      flagReview();
+      if (Cookies.get("flaggedReviewId") && Cookies.get("flaggedReason")) {
+        flagReview();
+      }
     }
 
     return () => {};

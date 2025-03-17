@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { Context } from "@/app/context/context";
 import { useSearchParams } from "next/navigation";
 import { Session } from "next-auth";
-//import { writeRecentSearch } from "@/sanity/lib/actions";
+import { writeRecentSearch } from "@/sanity/lib/actions";
 import Loader from "./Loader";
 import { RecentSearches } from "@/globalTypes";
 
@@ -31,7 +31,9 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
-  const searchHistory = recentSearches?.recentSearches || [];
+  const [searchHistory, setSearchHistory] = useState(
+    recentSearches?.recentSearches || []
+  );
 
   const [inputValue, setInputValue] = useState("");
 
@@ -60,13 +62,13 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
       resetFilters();
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       console.log("After push");
-      /*if (userId) {
+      if (userId) {
         try {
           await writeRecentSearch(userId, query);
         } catch (error) {
           console.error(error);
         }
-      }*/
+      }
       setInputValue("");
 
       return query;

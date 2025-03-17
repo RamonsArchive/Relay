@@ -36,7 +36,6 @@ export const ContextProvider = ({
   const searchParams = useSearchParams();
   const path = usePathname();
   const query: string | undefined = searchParams.get("query") || "";
-  console.log("Query in context provider", query);
   const filterParams = searchParams.get("f") || "";
   const [backButtonClicked, setBackButtonClicked] = useState(false);
 

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import NavBarWrapper from "./NavBarWrapper";
-//import { fetchRecentSearches } from "@/sanity/lib/client";
+import { fetchRecentSearchesSix } from "@/sanity/lib/client";
 
 export const experimental_ppr = true;
 
@@ -9,14 +9,14 @@ const Navbar = async () => {
   const session = await auth();
   const userId = session?.user?.id || "";
   let recentSearches = [];
-  /*if (userId) {
-    recentSearches = await fetchRecentSearches(userId);
+  if (userId) {
+    recentSearches = await fetchRecentSearchesSix(userId);
   }
-  console.log("Recent searches", recentSearches);*/
+  console.log("Recent searches", recentSearches);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <NavBarWrapper session={session} recentSearches={[]} />
+      <NavBarWrapper session={session} recentSearches={recentSearches} />
     </Suspense>
   );
 };

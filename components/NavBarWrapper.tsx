@@ -16,7 +16,7 @@ const NavBarWrapper = ({
   recentSearches,
 }: {
   session: Session | null;
-  recentSearches: any;
+  recentSearches: RecentSearches;
 }) => {
   return (
     <header className="p-1 md:p-2 bg-white-300 max-h-[5rem] md:max-h-[8rem] h-[100%] border-b-[1px] border-borderColor-100 text-color-primary-200">
