@@ -64,7 +64,7 @@ const ManageSession = ({ session }: { session: any }) => {
               className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 "
             >
               <Image
-                src={user?.image || ""}
+                src={user?.image}
                 alt={user?.name}
                 className="rounded-full object-cover"
                 width={48}

@@ -693,6 +693,7 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
 
 export const writeFlaggedReview = async (userId: string, reviewId: string, flagReason: string) => {
 
+  console.log("In write flagged review");
   if (!flagReason) {
     return parseServerActionResponse({
       status: "ERROR",
@@ -700,6 +701,7 @@ export const writeFlaggedReview = async (userId: string, reviewId: string, flagR
     })
   }
 
+  console.log("flag reason", flagReason);
   const session = await auth();
   const sessionId = session?.user?.id;
   const userIdSanitized = sanitizeSanityId(userId);

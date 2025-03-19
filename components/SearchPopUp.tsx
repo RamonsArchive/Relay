@@ -26,19 +26,22 @@ import { start } from "repl";
 
 interface Props {
   session: Session | null;
+  clicked: boolean;
   setClicked: React.Dispatch<React.SetStateAction<boolean>>;
   recentSearches: RecentSearches;
 }
 
-const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
+const SearchPopUp = ({
+  session,
+  clicked,
+  setClicked,
+  recentSearches,
+}: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
-  console.log("recentSearches in pop up", recentSearches);
   const [searchHistory, setSearchHistory] = useState(recentSearches);
-
-  console.log("Search history", searchHistory);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -54,7 +57,6 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
   }, [query]);
 
   const updateSearchHistory = (query: string) => {
-    console.log("Query", query);
     if (!query) {
       return;
     }
@@ -102,9 +104,11 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
   });
 
   return (
-    <main className="fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 py-3 px-3 bg-white-300 shadow-md shadow-third-300 text-third-300">
+    <main
+      className={`fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 p-3 bg-white-300 shadow-md shadow-third-300 text-third-300 transform transition-all duration-300 ease-in-out ${clicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+    >
       {isPending && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-51">
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-[999]">
           <Loader />
         </div>
       )}
@@ -120,10 +124,10 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
           </Link>
         </div>
 
-        <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary-400 transition hover:bg-primary-500 duration-200 ease-in-out">
+        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
           <X
             size="30px"
-            className="cursor-pointer text-white"
+            className="cursor-pointer text-gray-600"
             strokeWidth={1}
             onClick={() => setClicked(false)}
           />
@@ -149,13 +153,13 @@ const SearchPopUp = ({ session, setClicked, recentSearches }: Props) => {
             <SearchBarReset setInputValue={setInputValue} />
           </div>
         </Form>
-        <div className="flex flex-col justify-center items-center w-full mt-10 gap-y-5 text-center">
+        <div className="flex flex-col justify-center items-center w-full max-w-lg mt-10 gap-y-5 text-center">
           <div className="flex flex-col gap-y-4">
-            <div className="font-plex-sans font-light text-md sm:text-lg text-left ">
+            <div className="font-plex-sans font-regular text-md sm:text-lg text-left ">
               Recent Searches
             </div>
             <div className="flex flex-wrap gap-3">
-              {searchHistory.length > 0 ? (
+              {searchHistory && searchHistory.length > 0 ? (
                 searchHistory.map((queryObj, index) =>
                   queryObj.query ? (
                     <div

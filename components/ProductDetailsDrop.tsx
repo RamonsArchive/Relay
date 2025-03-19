@@ -145,24 +145,24 @@ const ProductDetailsDrop = ({
               )}
             </div>
 
+            <ViewReviews
+              userId={userId}
+              productId={productId}
+              reviews={reviews}
+              userReview={userReview}
+              viewReviews={viewReviews}
+              setViewReviews={setViewReviews}
+              editReview={editReview}
+              setEditReview={setEditReview}
+              mainImage={mainImage}
+              title={title}
+              cost={cost}
+              reviewStats={reviewStats}
+              flaggedReviews={flaggedReviews}
+            />
+
             <div className="flex font-plex-sans text-[18px] font-medium ">
-              {viewReviews ? (
-                <ViewReviews
-                  userId={userId}
-                  productId={productId}
-                  reviews={reviews}
-                  userReview={userReview}
-                  viewReviews={viewReviews}
-                  setViewReviews={setViewReviews}
-                  editReview={editReview}
-                  setEditReview={setEditReview}
-                  mainImage={mainImage}
-                  title={title}
-                  cost={cost}
-                  reviewStats={reviewStats}
-                  flaggedReviews={flaggedReviews}
-                />
-              ) : (
+              {!viewReviews && (
                 <button
                   className="h-auto"
                   onClick={handleToggleViewMoreReviews}

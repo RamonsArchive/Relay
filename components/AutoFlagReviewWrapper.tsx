@@ -21,8 +21,6 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
     Cookies.remove("flaggedReason");
 
     if (flaggedReviewId && flaggedReason) {
-      console.log("Auto-flagging review...");
-
       const flagReview = async () => {
         const flaggedReasonSanitized = flaggedReason
           .toLowerCase()
@@ -32,6 +30,8 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
           flaggedReviewId,
           flaggedReasonSanitized
         );
+
+        console.log("Flagged review result", result);
 
         if (result.status === "SUCCESS") {
           toast.success("Success", {
@@ -45,9 +45,8 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
           });
         }
       };
-      if (Cookies.get("flaggedReviewId") && Cookies.get("flaggedReason")) {
-        flagReview();
-      }
+      console.log("Flagging review...");
+      flagReview();
     }
 
     return () => {};

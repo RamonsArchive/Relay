@@ -7,6 +7,8 @@ import { Heart, Menu } from "lucide-react";
 import { ShoppingBasket } from "lucide-react";
 import ManageSession from "./ManageSession";
 import { RecentSearches } from "@/globalTypes";
+import MenuOptions from "./MenuOptions";
+import NavBarHeart from "./NavBarHeart";
 
 const FloatingNavBar = ({
   session,
@@ -47,11 +49,7 @@ const FloatingNavBar = ({
           compactMode={compactMode}
           recentSearches={recentSearches}
         />
-        <div className="navbar-icon-compact">
-          <Link href="/collections/hearted">
-            <Heart className="size-[22px] sm:size-[25px] " />
-          </Link>
-        </div>
+        <NavBarHeart />
         <div className="p-2">
           <ManageSession session={session} />
         </div>
@@ -63,9 +61,8 @@ const FloatingNavBar = ({
             />
           </Link>
         </div>
-        <div className="navbar-icon-compact">
-          <Menu className="size-[24px] sm:size-[30px]" />
-        </div>
+
+        <MenuOptions />
       </div>
     </nav>
   );

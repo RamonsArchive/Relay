@@ -75,18 +75,15 @@ const Searchbar = ({
           />
         </div>
       )}
-      {clicked &&
-        typeof window !== "undefined" &&
-        ReactDOM.createPortal(
-          <div ref={popupRef}>
-            <SearchPopUp
-              session={session}
-              setClicked={setClicked}
-              recentSearches={recentSearches}
-            />
-          </div>,
-          document.body
-        )}
+
+      <div ref={popupRef}>
+        <SearchPopUp
+          session={session}
+          clicked={clicked}
+          setClicked={setClicked}
+          recentSearches={recentSearches}
+        />
+      </div>
     </>
   );
 };

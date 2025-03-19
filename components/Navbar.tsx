@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import NavBarWrapper from "./NavBarWrapper";
-import { fetchRecentSearchesSix } from "@/sanity/lib/client";
+import { fetchRecentSearchesFew } from "@/sanity/lib/client";
 
 export const experimental_ppr = true;
 
@@ -10,7 +10,7 @@ const Navbar = async () => {
   const userId = session?.user?.id || "";
   let recentSearches = [];
   if (userId) {
-    recentSearches = await fetchRecentSearchesSix(userId);
+    recentSearches = await fetchRecentSearchesFew(userId);
   }
   console.log("Recent searches", recentSearches);
 
