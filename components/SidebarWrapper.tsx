@@ -15,10 +15,8 @@ const SidebarWrapper = () => {
   }, [path]);
 
   return (
-    <div>
-      <div className={`${isNoSideBarPage ? "w-0 hidden" : "side-bar"}`}>
-        <Sidebar />
-      </div>
+    <div className={`${isNoSideBarPage ? "w-0 hidden opacity-0" : "side-bar"}`}>
+      <Sidebar />
     </div>
   );
 };

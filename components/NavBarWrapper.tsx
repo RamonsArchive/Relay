@@ -11,6 +11,7 @@ import FloatingNavBar from "./FloatingNavBar";
 import { RecentSearches } from "@/globalTypes";
 import { useState, useEffect, useRef } from "react";
 import { set } from "sanity";
+import NavBarHeart from "./NavBarHeart";
 
 const NavBarWrapper = ({
   session,
@@ -71,8 +72,8 @@ const NavBarWrapper = ({
             </div>
           </div>
 
-          <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 flex-nowrap font-semibold md:text-[20px]">
-            <div className="flex gap-x-10 whitespace-nowrap">
+          <div className="flex flex-1 flex-col jusitfy-center items-center gap-y-4 flex-nowrap font-medium md:text-[20px]">
+            <div className="flex gap-x-8 whitespace-nowrap">
               <Link href="/gender/men" className="hover-grow-color">
                 <span>Men</span>
               </Link>
@@ -86,7 +87,7 @@ const NavBarWrapper = ({
                 <span>Unisex</span>
               </Link>
             </div>
-            <div className="flex gap-x-10 whitespace-nowrap">
+            <div className="flex gap-x-8 whitespace-nowrap">
               <Link href="/collections/featured" className="hover-grow-color">
                 <span>Featured</span>
               </Link>
@@ -108,12 +109,20 @@ const NavBarWrapper = ({
             </div>
           </div>
           <div className="flex flex-1 flex-col md:gap-y-3">
-            <div className="flex flex-row ml-auto gap-x-4 items-center">
-              <Link href="/collections/hearted" className="hover-grow-color">
-                <Heart className="w-6 h-6 md:w-8 sm:h-8" />
+            <div className="flex flex-row ml-auto gap-x-1 items-center">
+              <Link href="/collections/hearted" className="">
+                <NavBarHeart />
               </Link>
-              <ShoppingBasket className="w-6 h-6 md:w-8 md:h-8" />
-              <ManageSession session={session} />
+
+              <div className="navbar-icon-compact">
+                <ShoppingBasket
+                  strokeWidth={1.4}
+                  className="size-[26px] sm:size-[32px] md:size-[36px]"
+                />
+              </div>
+              <div className="p-2">
+                <ManageSession session={session} />
+              </div>
             </div>
             <div className="flex justify-self-end self-end">
               <Searchbar session={session} recentSearches={recentSearches} />
@@ -122,15 +131,15 @@ const NavBarWrapper = ({
         </nav>
         {/* Mobile Nav */}
       </header>
-      <div className="md:hidden fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
+      <div className="md:hidden fixed top-0 h-[4rem] left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
         <FloatingNavBar session={session} recentSearches={recentSearches} />
       </div>
 
-      {isScrolled && (
-        <header className="hidden md:block max-h-[5rem] fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
-          <FloatingNavBar session={session} recentSearches={recentSearches} />
-        </header>
-      )}
+      <header
+        className={`hidden md:block h-[4rem] fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50 transform transition-all ease-in-all duration-300 ${isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      >
+        <FloatingNavBar session={session} recentSearches={recentSearches} />
+      </header>
     </>
   );
 };

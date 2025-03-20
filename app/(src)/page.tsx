@@ -59,7 +59,7 @@ const Home = async ({
         </div>
         <ContentTitle />
       </div>
-      <div className="product-container overflow-y-auto">
+      <div className="product-container overflow-y-auto scrollbar-hidden">
         <Suspense fallback={<div>Loading...</div>}>
           <ul className="product-grid">
             {products.length > 0 ? (

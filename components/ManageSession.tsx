@@ -61,7 +61,7 @@ const ManageSession = ({ session }: { session: any }) => {
           <form action={formAction}>
             <button
               type="submit"
-              className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 "
+              className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 cursor-pointer"
             >
               <Image
                 src={user?.image}

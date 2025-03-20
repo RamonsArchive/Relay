@@ -112,7 +112,7 @@ const MenuOptions = () => {
   return (
     <div>
       {loader && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-[999]">
+        <div className="fixed top-0 left-0 w-full inset-0 h-full flex items-center justify-center bg-gray-100 bg-opacity-70 z-[999]">
           <Loader />
         </div>
       )}
@@ -120,7 +120,7 @@ const MenuOptions = () => {
         className="navbar-icon-compact"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
-        <Menu className="size-[24px] sm:size-[30px]" />
+        <Menu className="size-[24px] sm:size-[28px] md:size-[32px]" />
       </button>
 
       <div

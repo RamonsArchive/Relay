@@ -19,7 +19,7 @@ const FloatingNavBar = ({
 }) => {
   const compactMode = true;
   return (
-    <nav className="flex flex-row gap-3 justify-between items-center w-full md:hidden">
+    <nav className="flex flex-row gap-3 justify-between items-center w-full">
       <div className="w-10 h-15 shrink-0">
         <Link href="/" className="">
           <Image
@@ -43,7 +43,7 @@ const FloatingNavBar = ({
         </div>
         <span className="max-w-[15px]">Relay stands with Palestine</span>
       </div>
-      <div className="flex items-center sm:gap-2 ml-auto">
+      <div className="flex items-center sm:gap-1 ml-auto mr-1">
         <Searchbar
           session={session}
           compactMode={compactMode}
@@ -57,7 +57,7 @@ const FloatingNavBar = ({
           <Link href="/">
             <ShoppingBasket
               strokeWidth={1.4}
-              className="size-[26px] sm:size-[30px]"
+              className="size-[26px] sm:size-[32px] md:size-[36px]"
             />
           </Link>
         </div>

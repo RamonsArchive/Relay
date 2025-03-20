@@ -182,7 +182,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <AutoFlagReviewWrapper userId={userId} />
-      <div className="flex flex-col max-w-screen">
+      <div className="flex flex-col max-w-screen pt-[4rem] md:pt-[0]">
         <div className="product-page-wrapper">
           <div className="product-page">
             <Suspense fallback={<div>Loading...</div>}>

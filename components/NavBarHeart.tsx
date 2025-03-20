@@ -50,7 +50,7 @@ const NavBarHeart = () => {
   return (
     <>
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-[999] overflow-hidden">
+        <div className="fixed top-0 left-0 w-full h-full inset-0 bg-gray-100 bg-opacity-70 z-[999] overflow-hidden">
           <Loader />
         </div>
       )}
@@ -58,7 +58,7 @@ const NavBarHeart = () => {
       <div className="navbar-icon-compact">
         <Link href="/collections/hearted">
           <Heart
-            className="size-[22px] sm:size-[25px] "
+            className="size-[22px] sm:size-[25px] md:size-[30px]"
             onClick={handleHeartClick}
           />
         </Link>

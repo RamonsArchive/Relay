@@ -76,7 +76,7 @@ const Searchbar = ({
         </div>
       )}
 
-      <div ref={popupRef}>
+      <div ref={popupRef} className={`${clicked ? "none" : "hidden"}`}>
         <SearchPopUp
           session={session}
           clicked={clicked}
