@@ -110,9 +110,7 @@ const NavBarWrapper = ({
           </div>
           <div className="flex flex-1 flex-col md:gap-y-3">
             <div className="flex flex-row ml-auto gap-x-1 items-center">
-              <Link href="/collections/hearted" className="">
-                <NavBarHeart />
-              </Link>
+              <NavBarHeart />
 
               <div className="navbar-icon-compact">
                 <ShoppingBasket

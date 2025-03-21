@@ -6,6 +6,7 @@ import { ProductType } from "@/globalTypes";
 import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
 import { auth } from "@/auth";
+import FiltersShort from "@/components/FiltersShort";
 
 export const experimental_ppr = true;
 
@@ -51,14 +52,12 @@ const Home = async ({
 
   return (
     <main className="content-page">
-      <div className="flex flex-1 p-5">
-        <div className="absolute top-5 right-5">
-          <div className="cart-background">
-            <ShoppingCart size={36} className="text-white" />
-          </div>
-        </div>
-        <ContentTitle />
-      </div>
+      <Suspense fallback={<div>Filters...</div>}>
+        <FiltersShort />
+      </Suspense>
+
+      <ContentTitle />
+
       <div className="product-container overflow-y-auto scrollbar-hidden">
         <Suspense fallback={<div>Loading...</div>}>
           <ul className="product-grid">

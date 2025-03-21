@@ -28,7 +28,11 @@ const ContentTitle = () => {
     title = `Results for: ${title.charAt(0).toUpperCase() + title.slice(1)}`;
   }
 
-  return <p className="font-plex-sans font-bold text-[35px]">{title}</p>;
+  return (
+    <p className="pl-5 mt-[0] sm:mt-[5rem] md:mt-[1rem] font-plex-sans font-semibold text-[24px] sm:text-[28px] md:text-[30px]">
+      {title}
+    </p>
+  );
 };
 
 export default ContentTitle;

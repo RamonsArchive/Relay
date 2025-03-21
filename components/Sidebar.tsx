@@ -27,13 +27,13 @@ const Sidebar = () => {
 
   return (
     <>
-      <aside className="hidden sm:flex flex-col w-full h-full pb-10 gap-5 items-center pt-[4rem] md:pt-[0]  scrollbar-hidden">
+      <aside className="hidden sm:flex flex-col w-full h-full pb-10 gap-5 items-center pt-[4rem] md:pt-[0] scrollbar-hidden">
         <div className="flex items-center justify-center w-full py-3 sticky top-0 bg-white-300 z-2 ">
           <span className="font-plext-sans font-semibold items-center text-[22px]">
             Filters
           </span>
         </div>
-        <div className="flex flex-col gap-5 pb-5 items-center w-full font-plex-sans font-medium text-[20px]">
+        <div className="flex flex-col gap-5 pb-5 items-center w-full font-plex-sans font-medium text-[20px] scrollbar-hidden">
           {Object.entries(filters).map(
             ([category, { expanded, options }], index, arr) => (
               <div
@@ -54,7 +54,7 @@ const Sidebar = () => {
                   </div>
                 </button>
                 <div
-                  className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-auto" : "max-h-0 overflow-hidden"}`}
+                  className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-[500px]" : "max-h-0 pointer-events-none overflow-hidden"}`}
                 >
                   {options.map((option, index) => (
                     <CheckBox
@@ -73,7 +73,7 @@ const Sidebar = () => {
         </div>
       </aside>
 
-      <nav className="flex flex-row w-full mt-[4rem] items-center justify-end overflow-x-auto sm:hidden gap-5 p-3">
+      <nav className="flex flex-row w-full mt-[4rem] items-center justify-end overflow-x-auto sm:hidden gap-5 pt-3 pr-3">
         <div className="flex items-center justify-center px-3 py-1 rounded-full bg-gray-500 shadow-sm hover:bg-gray-400 transition duration-200 ease-in-out">
           <button
             onClick={() => setMobileFiltersClicked(!mobileFiltersClicked)}

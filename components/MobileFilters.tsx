@@ -21,7 +21,7 @@ const MobileFilters = ({
 
   return (
     <div
-      className={`flex flex-col fixed top-0 left-0 w-full h-full bg-white-300 p-3 gap-5 overflow-y-auto z-50 transform transition-all duration-300 ease-in-out scrollbar-hidden ${mobileFiltersClicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      className={`flex flex-col fixed top-0 left-0 w-full h-full bg-white-300 p-3 gap-5 overflow-y-auto z-[999] transform transition-all duration-300 ease-in-out scrollbar-hidden ${mobileFiltersClicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
     >
       <div className="flex w-full items-center">
         <div className="flex items-center ml-auto p-1 rounded-full bg-gray-500 hover:bg-gray-400 transition duration-200 ease-in-out">
@@ -45,7 +45,10 @@ const MobileFilters = ({
               key={category}
               className={`flex flex-col w-full gap-2 px-4 ${index != arr.length - 1 ? "border-b-[1px] pb-4 border-borderColor-100" : ""}`}
             >
-              <button onClick={() => toggleCategory(category)}>
+              <button
+                className="flex w-full h-full"
+                onClick={() => toggleCategory(category)}
+              >
                 <div className="flex flex-row items-center w-full justify-between font-plex-sans xs:text-[18px] sm:text-[22px] font-semibold gap-x-2">
                   <span>
                     {category.slice(0, 1).toUpperCase() + category.slice(1)}
@@ -58,7 +61,7 @@ const MobileFilters = ({
                 </div>
               </button>
               <div
-                className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-auto" : "max-h-0"}`}
+                className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-[500px]" : "max-h-0 pointer-events-none overflow-hidden"}`}
               >
                 {options.map((option, index) => (
                   <CheckBox

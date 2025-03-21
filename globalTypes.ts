@@ -19,6 +19,7 @@ export type ProductType = Pick<
     materials: Array<string> | null;
     hearted: boolean | null;
     collections: Array<{_id: string, _key: string, title: string}> | null;
+    cost: number
 };
 
 export type HeartCollectionType = Pick<Collections, "_id" & "title"> & {

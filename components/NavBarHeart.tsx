@@ -50,7 +50,7 @@ const NavBarHeart = () => {
   return (
     <>
       {loading && (
-        <div className="fixed top-0 left-0 w-full h-full inset-0 bg-gray-100 bg-opacity-70 z-[999] overflow-hidden">
+        <div className="fixed top-0 left-0 w-full inset-0 h-full flex items-center justify-center bg-gray-100 bg-opacity-70 z-[999]">
           <Loader />
         </div>
       )}

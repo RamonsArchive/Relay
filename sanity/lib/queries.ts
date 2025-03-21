@@ -22,6 +22,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
         _id,
         title,
         mainImage,
+        cost,
         "materials": materials[]->{
           _id,
           _key,
@@ -125,6 +126,7 @@ const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: s
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,
@@ -173,6 +175,7 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,
@@ -234,6 +237,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,
@@ -259,6 +263,7 @@ const constructNonHomePage = (paramConditions: string, optimizedHeartedProductsI
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,
@@ -309,6 +314,7 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,

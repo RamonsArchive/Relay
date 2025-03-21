@@ -112,19 +112,23 @@ const SearchPopUp = ({
           <Loader />
         </div>
       )}
-      <div className="flex justify-between items center w-full">
-        <div className="cursor-pointer" onClick={() => setClicked(false)}>
+      <div className="relative flex justify-between items-center w-full">
+        <div
+          className="sm:h-16 cursor-pointer cursor-pointer"
+          onClick={() => setClicked(false)}
+        >
           <Link href="/">
             <Image
               src="/assets/logo/logo-png.png"
               alt="logo"
-              width={60}
-              height={40}
+              width={50}
+              height={50}
+              className="object-cover"
             />
           </Link>
         </div>
 
-        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
+        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 self-start ease-in-out">
           <X
             size="30px"
             className="cursor-pointer text-gray-600"
@@ -134,7 +138,7 @@ const SearchPopUp = ({
         </button>
       </div>
 
-      <div className="flex flex-col items-center justify-center flex-1 w-full px-4">
+      <div className="flex flex-col items-center justify-center flex-1 w-full px-4 pt-8">
         <Form action={formAction} className="w-full max-w-lg" id="search-form">
           <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 shadow-sm w-full">
             <button type="submit" disabled={isPending}>
