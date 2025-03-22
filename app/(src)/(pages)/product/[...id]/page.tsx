@@ -21,6 +21,8 @@ import { ProductType, ReviewType } from "@/globalTypes";
 import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
+import MobileProductImages from "@/components/MobileProductImages";
+import MobileProductSize from "@/components/MobileProductSize";
 
 export const experimental_ppr = true;
 
@@ -62,6 +64,9 @@ const page = async ({ params }: { params: { id: string } }) => {
     detailBullets,
     reviews,
   } = imagesPlusProductDetails;
+
+  const imageMain = mainImage;
+  const galleryImages = imagesPlusProductDetails.imageGallery;
 
   console.log("Title", title);
   console.log("cost", cost);
@@ -182,12 +187,15 @@ const page = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <AutoFlagReviewWrapper userId={userId} />
-      <div className="flex flex-col max-w-screen pt-[4rem] md:pt-[0]">
+      <div className="hidden sm:flex sm:flex-col max-w-screen pt-[4rem] md:pt-[0]">
         <div className="product-page-wrapper">
           <div className="product-page">
             <Suspense fallback={<div>Loading...</div>}>
               <div className="product-page-image-container">
-                <ProductImages images={imagesPlusProductDetails} />
+                <ProductImages
+                  imageMain={imageMain}
+                  galleryImages={galleryImages}
+                />
               </div>
             </Suspense>
 
@@ -328,6 +336,64 @@ const page = async ({ params }: { params: { id: string } }) => {
                 )}
               </Suspense>
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="sm:hidden max-w-screen pt-[4rem] md:pt-[0] ">
+        <div className="product-page-wrapper">
+          <div className="flex flex-col p-5">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-3 xs:gap-5 font-plex-sans font-bold text-[16px] xs:text-[18px] items-center">
+                <Image
+                  src={urlFor(brands[0]?.logo).url()}
+                  alt="brand logo"
+                  width={80}
+                  height={50}
+                  quality={100}
+                  className="object-contain w-8 h-8 xs:w-10 xs:h-10"
+                />
+                <p>{capitalizeBrand(brands[0])}</p>
+              </div>
+              <Suspense fallback={<div>Heart</div>}>
+                <div className="sm:pr-5">
+                  <ProductHeart
+                    isHearted={heartedProducts?.includes(productId.toString())}
+                    productId={productId}
+                    userId={userId}
+                    callbackUrl={callbackUrl}
+                  />
+                </div>
+              </Suspense>
+            </div>
+
+            <div className="flex flex-col">
+              <p className="font-plex-sans font-bold text-[22px] xs:text-[24px]">
+                {title}
+              </p>
+              {categories &&
+                categories.length > 0 &&
+                categories.map((obj: any, index: number) => (
+                  <p
+                    key={index}
+                    className="font-plex-sans font-regular text-[14px] xs:text-[16px]"
+                  >
+                    {obj.name}
+                  </p>
+                ))}
+            </div>
+            <p className="font-plex-sans font-regular text-[16px] xx:text-[18px]">
+              ${cost}
+            </p>
+          </div>
+          <MobileProductImages
+            imageMain={imageMain}
+            galleryImages={galleryImages}
+          />
+          <div className="flex flex-col w-full p-5">
+            <p className="font-plex-sans font-medium text-[16px] xx:text-[18px]">
+              Select Size
+            </p>
+            <MobileProductSize stock={imagesPlusProductDetails.stock} />
           </div>
         </div>
       </div>

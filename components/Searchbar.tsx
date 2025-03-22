@@ -47,8 +47,6 @@ const Searchbar = ({
     setClicked(!clicked);
   };
 
-  console.log("Compact mode", compactMode);
-
   return (
     <>
       {compactMode ? (

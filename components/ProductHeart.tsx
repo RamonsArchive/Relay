@@ -156,8 +156,7 @@ const ProductHeart = ({
   return (
     <div onClick={toggleHeart} className="cursor-pointer">
       <Heart
-        size={24}
-        className={hearted ? "text-primary-200" : "text-black"}
+        className={`size-[20] sm:size-[24] ${hearted ? "text-primary-200" : "text-black"}`}
         fill={hearted ? "#004BFE" : "none"}
       />
     </div>

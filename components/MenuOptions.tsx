@@ -44,8 +44,6 @@ const MenuOptions = () => {
   }, [loader]);
 
   useEffect(() => {
-    console.log("Path ref", prevPath.current);
-    console.log("Path", path);
     prevPath.current = path;
     let loaderClosed = false;
     if (path == prevPath.current) {
@@ -61,7 +59,6 @@ const MenuOptions = () => {
 
     // for error handling
     if (!loaderClosed) {
-      console.log("Closing loader using timeout");
       const timeout = setTimeout(() => {
         setLoader(false);
       }, 1000);
@@ -79,15 +76,12 @@ const MenuOptions = () => {
   };
 
   const handleClickOutside = (event: any) => {
-    console.log("clicked");
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      console.log("Clicked outside");
       setMenuOpen(false);
     }
   };
 
   useEffect(() => {
-    console.log("Menu open", menuOpen);
     if (menuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("touchstart", handleClickOutside);
@@ -133,10 +127,7 @@ const MenuOptions = () => {
               size="30px"
               className="cursor-pointer text-gray-600"
               strokeWidth={1}
-              onClick={() => {
-                console.log("Clicked");
-                setMenuOpen(false);
-              }}
+              onClick={() => setMenuOpen(false)}
             />
           </button>
         </div>

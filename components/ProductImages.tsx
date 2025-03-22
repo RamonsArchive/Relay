@@ -4,19 +4,25 @@ import { useState } from "react";
 import { ProductPageType } from "@/globalTypes";
 import { urlFor } from "@/sanity/lib/client";
 import Image from "next/image";
+import { SanityImage } from "@/globalTypes";
 
-const ProductImages = ({ images }: { images: ProductPageType }) => {
-  const { mainImage, imageGallery } = images;
-  const constantMainImage = mainImage;
+const ProductImages = ({
+  imageMain,
+  galleryImages,
+}: {
+  imageMain: SanityImage;
+  galleryImages: SanityImage[];
+}) => {
+  const constantMainImage = imageMain;
 
-  const [frontImage, setFrontImage] = useState(mainImage);
+  const [frontImage, setFrontImage] = useState(imageMain);
   return (
-    <div className="flex flex-row gap-5 w-full ">
+    <div className="hidden sm:flex flex-row gap-5 w-full ">
       <div className="min-w-[100px] p-2 align-center">
         <ul className="flex flex-col items-center gap-4 relative">
           <li
             className="h-[50px]"
-            onMouseEnter={() => setFrontImage(mainImage)}
+            onMouseEnter={() => setFrontImage(imageMain)}
           >
             <Image
               src={urlFor(constantMainImage).url()}
@@ -26,7 +32,7 @@ const ProductImages = ({ images }: { images: ProductPageType }) => {
               className="object-cover w-full h-full overflow-y-auto"
             />
           </li>
-          {imageGallery?.map((image, key) => (
+          {galleryImages?.map((image, key) => (
             <li
               key={key}
               className="h-[50px]"

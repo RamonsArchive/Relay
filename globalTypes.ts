@@ -176,6 +176,14 @@ export type ReviewStatsType = {
   normalizedValue: number;
 }
 
+export type ProductStockType = Array<{
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+    quantity?: number;
+    _type: "stockItem";
+    _key: string;
+  }>;
+
+
 
 export type RecentSearches = Array<{
   query?: string;

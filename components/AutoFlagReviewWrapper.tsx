@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { revalidateFlaggedReviews } from "@/lib/serverActions";
 
 const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
-  console.log("AutoFlagReviewWrapper userId", userId);
   const [hasRun, setHasRun] = useState(false);
 
   useEffect(() => {
@@ -14,7 +13,6 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
       return;
     }
     setHasRun(true);
-    console.log("Checking flagged review cookies...");
     const flaggedReviewId = Cookies.get("flaggedReviewId");
     const flaggedReason = Cookies.get("flaggedReason");
     Cookies.remove("flaggedReviewId");
@@ -31,8 +29,6 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
           flaggedReasonSanitized
         );
 
-        console.log("Flagged review result", result);
-
         if (result.status === "SUCCESS") {
           toast.success("Success", {
             description: "Review has been flagged successfully",
@@ -45,7 +41,6 @@ const AutoFlagReviewWrapper = ({ userId }: { userId: string | null }) => {
           });
         }
       };
-      console.log("Flagging review...");
       flagReview();
     }
 
