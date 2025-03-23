@@ -21,13 +21,13 @@ const ReviewStars = ({
       <div className="flex flex-row gap-3 items-center">
         {averageRating % 1 == 0 ? (
           <p
-            className={`font-plex-sans ${size != 24 ? "text-[26px]" : "text-[22px]"}`}
+            className={`font-plex-sans text-[20px] sm:text-[22px] md:text-[24px]`}
           >
             {averageRating}
           </p>
         ) : (
           <p
-            className={`font-plex-sans ${size != 24 ? "text-[26px]" : "text-[22px]"}`}
+            className={`font-plex-sans text-[20px] sm:text-[22px] md:text-[24px]`}
           >
             {averageRating.toFixed(1)}
           </p>

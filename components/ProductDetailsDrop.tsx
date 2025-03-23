@@ -68,7 +68,9 @@ const ProductDetailsDrop = ({
           className="product-drop-block"
           onClick={() => handleDropClick("details")}
         >
-          <p>Details</p>
+          <p className="font-plex-sans text-[22px] sm:text-[24px] md:text-[26px]">
+            Details
+          </p>
           {droppedInfo.details ? (
             <ChevronUp size={24} />
           ) : (
@@ -77,7 +79,7 @@ const ProductDetailsDrop = ({
         </div>
 
         {droppedInfo.details && (
-          <div className="flex flex-col w-full font-plex-sans font-regular text-[18px] gap-4">
+          <div className="flex flex-col w-full font-plex-sans font-regular text-[16px] sm:text-[18px] gap-4">
             <p>{mainDetails}</p>
             <ul className="list-disc list-inside">
               {detailBullets.map((bullet: string, index: number) => (
@@ -92,7 +94,9 @@ const ProductDetailsDrop = ({
           className="product-drop-block"
           onClick={() => handleDropClick("productReviews")}
         >
-          <p>Reviews ({reviews.length})</p>
+          <p className="font-plex-sans text-[22px] sm:text-[24px] md:text-[26px]">
+            Reviews ({reviews.length})
+          </p>
           {droppedInfo.productReviews ? (
             <ChevronUp size={24} />
           ) : (
@@ -101,7 +105,7 @@ const ProductDetailsDrop = ({
         </div>
         {droppedInfo.productReviews && (
           <div className="flex flex-col gap-5">
-            <div className="font-plex-sans font-light text-[19px]">
+            <div className="font-plex-sans font-light text-[14px] sm:text-[16px] md:text-[19px]">
               <span>{getNumberOfReviews(reviews.length)}</span>
             </div>
             <div>
@@ -111,13 +115,13 @@ const ProductDetailsDrop = ({
             <p className="flex font-plex-sans text-[18px] font-medium ">
               {userReview != null ? (
                 <span
-                  className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer"
+                  className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer font-plex-sans text-[16px] sm:text-[18px] lg:text-[20px]"
                   onClick={() => handleToggleEdit(editReview)}
                 >
                   {editReview ? "Stop Editing" : "Edit Review"}
                 </span>
               ) : (
-                <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
+                <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer font-plex-sans text-[16px] sm:text-[18px] lg:text-[20px]">
                   <Link href={`/writeReview/${productId}`}>
                     Write a Review!
                   </Link>
@@ -167,7 +171,7 @@ const ProductDetailsDrop = ({
                   className="h-auto"
                   onClick={handleToggleViewMoreReviews}
                 >
-                  <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer">
+                  <span className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer font-plex-sans text-[16px] sm:text-[18px] lg:text-[20px]">
                     More Reviews
                   </span>
                 </button>

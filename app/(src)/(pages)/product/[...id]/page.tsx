@@ -23,6 +23,8 @@ import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
 import MobileProductImages from "@/components/MobileProductImages";
 import MobileProductSize from "@/components/MobileProductSize";
+import MobileProductBuyButtons from "@/components/MobileProductBuyButtons";
+import ProductOptionsProvider from "@/app/context/ProductOptionsContext";
 
 export const experimental_ppr = true;
 
@@ -186,217 +188,257 @@ const page = async ({ params }: { params: { id: string } }) => {
   /* TODO: Use useActionState to handle the button clicks */
   return (
     <>
-      <AutoFlagReviewWrapper userId={userId} />
-      <div className="hidden sm:flex sm:flex-col max-w-screen pt-[4rem] md:pt-[0]">
-        <div className="product-page-wrapper">
-          <div className="product-page">
-            <Suspense fallback={<div>Loading...</div>}>
-              <div className="product-page-image-container">
-                <ProductImages
-                  imageMain={imageMain}
-                  galleryImages={galleryImages}
-                />
-              </div>
-            </Suspense>
-
-            <div className="flex flex-col w-full overflow-y-auto scrollbar-hidden scroll-smooth">
-              <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
-                <div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
-                      <Image
-                        src={urlFor(brands[0]?.logo).url()}
-                        alt="brand logo"
-                        width={80}
-                        height={50}
-                        className="object-contain w-12 h-12"
-                      />
-                      <p>{capitalizeBrand(brands[0])}</p>
-                    </div>
-                    <Suspense fallback={<div>Heart</div>}>
-                      <div className="pr-5">
-                        <ProductHeart
-                          isHearted={heartedProducts?.includes(
-                            productId.toString()
-                          )}
-                          productId={productId}
-                          userId={userId}
-                          callbackUrl={callbackUrl}
-                        />
-                      </div>
-                    </Suspense>
-                  </div>
-                  <div className="flex flex-col">
-                    <p className="font-plex-sans font-bold text-[28px]">
-                      {title}
-                    </p>
-                    {categories &&
-                      categories.length > 0 &&
-                      categories.map((obj: any, index: number) => (
-                        <p
-                          key={index}
-                          className="font-plex-sans font-regular text-[18px]"
-                        >
-                          {obj.name}
-                        </p>
-                      ))}
-                  </div>
-                </div>
-
-                <div>
-                  <p className="font-plex-sans font-regular text-[16px]">
-                    ${cost}
-                  </p>
-                </div>
-                <div className="w-full pt-2">
-                  <div className="product-sizebutton-grid ">
-                    {allSizes.map((size: string, index: number) => {
-                      const stockItem = stock.find(
-                        (item: any) => item.size === size.toLowerCase()
-                      );
-                      const isAvaliable = stockItem?.quantity > 0;
-
-                      return (
-                        <button
-                          className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
-                          key={index}
-                          disabled={!isAvaliable}
-                        >
-                          <span>{size}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="flex w-full pt-10">
-                  <h3 className="">
-                    {parsedDescription ? (
-                      <article
-                        className="prose font-plex-sans font-regular text-[20px]"
-                        dangerouslySetInnerHTML={{ __html: parsedDescription }}
-                      />
-                    ) : (
-                      <p className="font-plex-sans font-regular text-[20px]">
-                        No description available
-                      </p>
-                    )}
-                  </h3>
-                </div>
-                <div className="flex flex-col w-full gap-4 pt-5">
-                  <button className="product-buy-buttons bg-primary-200 text-white">
-                    Add to Cart
-                  </button>
-                  <button className="product-buy-buttons bg-secondary-200">
-                    Purchase Now
-                  </button>
-                </div>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <ProductDetailsDrop
-                    mainDetails={mainDetails}
-                    detailBullets={detailBullets}
-                    reviews={reviews}
-                    selectedReviews={selectedReviews}
-                    userReview={userReview[0]}
-                    userId={userId}
-                    productId={productId}
-                    mainImage={mainImage}
-                    title={title}
-                    cost={cost}
-                    reviewStats={reviewStats}
-                    flaggedReviews={flaggedReviews}
+      <ProductOptionsProvider>
+        <AutoFlagReviewWrapper userId={userId} />
+        <div className="hidden sm:flex sm:flex-col max-w-screen pt-[4rem] md:pt-[0]">
+          <div className="product-page-wrapper">
+            <div className="product-page">
+              <Suspense fallback={<div>Loading...</div>}>
+                <div className="product-page-image-container">
+                  <ProductImages
+                    imageMain={imageMain}
+                    galleryImages={galleryImages}
                   />
+                </div>
+              </Suspense>
+
+              <div className="flex flex-col w-full overflow-y-auto scrollbar-hidden scroll-smooth">
+                <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
+                        <Image
+                          src={urlFor(brands[0]?.logo).url()}
+                          alt="brand logo"
+                          width={80}
+                          height={50}
+                          className="object-contain w-12 h-12"
+                        />
+                        <p>{capitalizeBrand(brands[0])}</p>
+                      </div>
+                      <Suspense fallback={<div>Heart</div>}>
+                        <div className="pr-5">
+                          <ProductHeart
+                            isHearted={heartedProducts?.includes(
+                              productId.toString()
+                            )}
+                            productId={productId}
+                            userId={userId}
+                            callbackUrl={callbackUrl}
+                          />
+                        </div>
+                      </Suspense>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="font-plex-sans font-bold text-[28px]">
+                        {title}
+                      </p>
+                      {categories &&
+                        categories.length > 0 &&
+                        categories.map((obj: any, index: number) => (
+                          <p
+                            key={index}
+                            className="font-plex-sans font-regular text-[18px]"
+                          >
+                            {obj.name}
+                          </p>
+                        ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="font-plex-sans font-regular text-[16px]">
+                      ${cost}
+                    </p>
+                  </div>
+                  <div className="w-full pt-2">
+                    <div className="product-sizebutton-grid ">
+                      {allSizes.map((size: string, index: number) => {
+                        const stockItem = stock.find(
+                          (item: any) => item.size === size.toLowerCase()
+                        );
+                        const isAvaliable = stockItem?.quantity > 0;
+
+                        return (
+                          <button
+                            className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
+                            key={index}
+                            disabled={!isAvaliable}
+                          >
+                            <span>{size}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex w-full pt-10">
+                    <h3 className="">
+                      {parsedDescription ? (
+                        <article
+                          className="prose font-plex-sans font-regular text-[20px]"
+                          dangerouslySetInnerHTML={{
+                            __html: parsedDescription,
+                          }}
+                        />
+                      ) : (
+                        <p className="font-plex-sans font-regular text-[20px]">
+                          No description available
+                        </p>
+                      )}
+                    </h3>
+                  </div>
+                  <div className="flex flex-col w-full gap-4 pt-5">
+                    <button className="product-buy-buttons bg-primary-200 text-white">
+                      Add to Cart
+                    </button>
+                    <button className="product-buy-buttons bg-secondary-200">
+                      Purchase Now
+                    </button>
+                  </div>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ProductDetailsDrop
+                      mainDetails={mainDetails}
+                      detailBullets={detailBullets}
+                      reviews={reviews}
+                      selectedReviews={selectedReviews}
+                      userReview={userReview[0]}
+                      userId={userId}
+                      productId={productId}
+                      mainImage={mainImage}
+                      title={title}
+                      cost={cost}
+                      reviewStats={reviewStats}
+                      flaggedReviews={flaggedReviews}
+                    />
+                  </Suspense>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col w-full min-h-0">
+            <p className="font-plex-sans font-medium text-[30px] pl-5">
+              Recently Viewed Products
+            </p>
+            <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
+              <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
+                <Suspense fallback={<div>Loading products... </div>}>
+                  {recentlyViewedProds?.length > 0 ? (
+                    recentlyViewedProds
+                      .slice(0, 10)
+                      .map((product: any, index: number) => {
+                        return (
+                          <ProductCard
+                            key={product._id}
+                            product={product}
+                            isHearted={heartedProducts.includes(product._id)}
+                            callbackUrl={callbackUrl}
+                            user={user}
+                          />
+                        );
+                      })
+                  ) : (
+                    <div>No recently viewed products</div>
+                  )}
                 </Suspense>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col w-full min-h-0">
-          <p className="font-plex-sans font-medium text-[30px] pl-5">
-            Recently Viewed Products
-          </p>
-          <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
-            <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
-              <Suspense fallback={<div>Loading products... </div>}>
-                {recentlyViewedProds?.length > 0 ? (
-                  recentlyViewedProds
-                    .slice(0, 10)
-                    .map((product: any, index: number) => {
-                      return (
-                        <ProductCard
-                          key={product._id}
-                          product={product}
-                          isHearted={heartedProducts.includes(product._id)}
-                          callbackUrl={callbackUrl}
-                          user={user}
-                        />
-                      );
-                    })
-                ) : (
-                  <div>No recently viewed products</div>
-                )}
-              </Suspense>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="sm:hidden max-w-screen pt-[4rem] md:pt-[0] ">
-        <div className="product-page-wrapper">
-          <div className="flex flex-col p-5">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-3 xs:gap-5 font-plex-sans font-bold text-[16px] xs:text-[18px] items-center">
-                <Image
-                  src={urlFor(brands[0]?.logo).url()}
-                  alt="brand logo"
-                  width={80}
-                  height={50}
-                  quality={100}
-                  className="object-contain w-8 h-8 xs:w-10 xs:h-10"
-                />
-                <p>{capitalizeBrand(brands[0])}</p>
-              </div>
-              <Suspense fallback={<div>Heart</div>}>
-                <div className="sm:pr-5">
-                  <ProductHeart
-                    isHearted={heartedProducts?.includes(productId.toString())}
-                    productId={productId}
-                    userId={userId}
-                    callbackUrl={callbackUrl}
+        <div className="sm:hidden max-w-screen pt-[4rem] md:pt-[0] scrollbar-hidden">
+          <div className="product-page-wrapper scrollbar-hidden">
+            <div className="flex flex-col p-5">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-3 xs:gap-5 font-plex-sans font-bold text-[16px] xs:text-[18px] items-center">
+                  <Image
+                    src={urlFor(brands[0]?.logo).url()}
+                    alt="brand logo"
+                    width={80}
+                    height={50}
+                    quality={100}
+                    className="object-contain w-8 h-8 xs:w-10 xs:h-10"
                   />
+                  <p>{capitalizeBrand(brands[0])}</p>
                 </div>
+                <Suspense fallback={<div>Heart</div>}>
+                  <div className="sm:pr-5">
+                    <ProductHeart
+                      isHearted={heartedProducts?.includes(
+                        productId.toString()
+                      )}
+                      productId={productId}
+                      userId={userId}
+                      callbackUrl={callbackUrl}
+                    />
+                  </div>
+                </Suspense>
+              </div>
+
+              <div className="flex flex-col">
+                <p className="font-plex-sans font-bold text-[22px] xs:text-[24px]">
+                  {title}
+                </p>
+                {categories &&
+                  categories.length > 0 &&
+                  categories.map((obj: any, index: number) => (
+                    <p
+                      key={index}
+                      className="font-plex-sans font-regular text-[14px] xs:text-[16px]"
+                    >
+                      {obj.name}
+                    </p>
+                  ))}
+              </div>
+              <p className="font-plex-sans font-regular text-[16px] xx:text-[18px]">
+                ${cost}
+              </p>
+            </div>
+            <Suspense fallback={<div>Loading Product Images...</div>}>
+              <MobileProductImages
+                imageMain={imageMain}
+                galleryImages={galleryImages}
+              />
+            </Suspense>
+            <div className="flex flex-col w-full p-5">
+              <p className="font-plex-sans font-medium text-[16px] xx:text-[18px]">
+                Select Size
+              </p>
+              <Suspense fallback={<div>Loading Product Sizes...</div>}>
+                <MobileProductSize stock={imagesPlusProductDetails.stock} />
               </Suspense>
             </div>
+            <MobileProductBuyButtons stock={imagesPlusProductDetails.stock} />
 
-            <div className="flex flex-col">
-              <p className="font-plex-sans font-bold text-[22px] xs:text-[24px]">
-                {title}
-              </p>
-              {categories &&
-                categories.length > 0 &&
-                categories.map((obj: any, index: number) => (
-                  <p
-                    key={index}
-                    className="font-plex-sans font-regular text-[14px] xs:text-[16px]"
-                  >
-                    {obj.name}
-                  </p>
-                ))}
+            <div className="flex items-center justify-center text-wrap mt-10 px-5">
+              {parsedDescription ? (
+                <article
+                  className="font-plex-sans font-regular text-[18px] xs:text-[20px]"
+                  dangerouslySetInnerHTML={{ __html: parsedDescription }}
+                />
+              ) : (
+                <p className="font-plex-sans font-regular text-[18px] xs:text-[20px]">
+                  No description available
+                </p>
+              )}
             </div>
-            <p className="font-plex-sans font-regular text-[16px] xx:text-[18px]">
-              ${cost}
-            </p>
-          </div>
-          <MobileProductImages
-            imageMain={imageMain}
-            galleryImages={galleryImages}
-          />
-          <div className="flex flex-col w-full p-5">
-            <p className="font-plex-sans font-medium text-[16px] xx:text-[18px]">
-              Select Size
-            </p>
-            <MobileProductSize stock={imagesPlusProductDetails.stock} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <ProductDetailsDrop
+                mainDetails={mainDetails}
+                detailBullets={detailBullets}
+                reviews={reviews}
+                selectedReviews={selectedReviews}
+                userReview={userReview[0]}
+                userId={userId}
+                productId={productId}
+                mainImage={mainImage}
+                title={title}
+                cost={cost}
+                reviewStats={reviewStats}
+                flaggedReviews={flaggedReviews}
+              />
+            </Suspense>
           </div>
         </div>
-      </div>
+      </ProductOptionsProvider>
     </>
   );
 };

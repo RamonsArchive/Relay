@@ -284,7 +284,7 @@ const ViewReviews = ({
   return (
     <>
       <div
-        className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-30 transform transition-all duration-300 ease-in-out ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+        className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
         <div className="flex flex-col gap-5 h-[100vh] w-full p-5 overflow-y-auto scrollbar-hidden">
           <div className="flex flex-row justify-between">
@@ -501,13 +501,13 @@ const ViewReviews = ({
                 }}
                 disabled={currentPage === 1}
               >
-                <ChevronLeft width={20} height={20} />
+                <ChevronLeft className="size-[18px] sm:size-[20px]" />
               </button>
 
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
-                  className={`px-3 py-1 rounded-full ${currentPage === i + 1 ? "bg-gray-500 text-white" : "transition hover:bg-gray-300 duration-200 ease-in-out"}`}
+                  className={`px-3 py-1 rounded-full text-[18px] sm:text-[20px] ${currentPage === i + 1 ? "bg-gray-500 text-white" : "transition hover:bg-gray-300 duration-200 ease-in-out"}`}
                   onClick={() => {
                     setCurrentPage(i + 1);
                     handlePageScroll();
@@ -525,7 +525,7 @@ const ViewReviews = ({
                 }}
                 disabled={currentPage === totalPages}
               >
-                <ChevronRight width={20} height={20} />
+                <ChevronRight className="size-[18px] sm:size-[20px]" />
               </button>
             </div>
           </div>
