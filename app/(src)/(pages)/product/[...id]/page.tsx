@@ -22,10 +22,10 @@ import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
 import MobileProductImages from "@/components/MobileProductImages";
-import MobileProductSize from "@/components/MobileProductSize";
-import MobileProductBuyButtons from "@/components/MobileProductBuyButtons";
+import ProductSizeButtons from "@/components/ProductSizeButtons";
+import ProductBuyButtons from "@/components/ProductBuyButtons";
 import ProductOptionsProvider from "@/app/context/ProductOptionsContext";
-import MobileProductColor from "@/components/MobileProductColor";
+import ProductColorButtons from "@/components/ProductColorButtons";
 import ProductQuantity from "@/components/ProductQuantity";
 import ProductQauntity from "@/components/ProductQuantity";
 
@@ -200,109 +200,115 @@ const page = async ({ params }: { params: { id: string } }) => {
     <>
       <ProductOptionsProvider>
         <AutoFlagReviewWrapper userId={userId} />
-        <div className="hidden sm:flex sm:flex-col max-w-screen pt-[4rem] md:pt-[0]">
-          <div className="product-page-wrapper">
-            <div className="product-page">
+        <div className="hidden md:flex md:flex-col max-w-screen pt-[4rem] md:pt-[0]">
+          <div className="flex flex-row w-full mt-5">
+            <div className="flex w-[60%] pr-5">
               <Suspense fallback={<div>Loading...</div>}>
-                <div className="product-page-image-container">
-                  <ProductImages
-                    imageMain={imageMain}
-                    galleryImages={galleryImages}
-                  />
-                </div>
+                <ProductImages
+                  imageMain={imageMain}
+                  galleryImages={galleryImages}
+                />
               </Suspense>
+            </div>
 
-              <div className="flex flex-col w-full overflow-y-auto scrollbar-hidden scroll-smooth">
-                <div className="flex flex-col pl-5 gap-y-5 w-[90%]">
-                  <div>
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
-                        <Image
-                          src={urlFor(brands[0]?.logo).url()}
-                          alt="brand logo"
-                          width={80}
-                          height={50}
-                          className="object-contain w-12 h-12"
-                        />
-                        <p>{capitalizeBrand(brands[0])}</p>
-                      </div>
-                      <Suspense fallback={<div>Heart</div>}>
-                        <div className="pr-5">
-                          <ProductHeart
-                            isHearted={heartedProducts?.includes(
-                              productId.toString()
-                            )}
-                            productId={productId}
-                            userId={userId}
-                            callbackUrl={callbackUrl}
-                          />
-                        </div>
-                      </Suspense>
-                    </div>
-                    <div className="flex flex-col">
-                      <p className="font-plex-sans font-bold text-[28px]">
-                        {title}
-                      </p>
-                      {categories &&
-                        categories.length > 0 &&
-                        categories.map((obj: any, index: number) => (
-                          <p
-                            key={index}
-                            className="font-plex-sans font-regular text-[18px]"
-                          >
-                            {obj.name}
-                          </p>
-                        ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="font-plex-sans font-regular text-[16px]">
-                      ${cost}
-                    </p>
-                  </div>
-                  <div className="w-full pt-2"></div>
-                  <div className="flex w-full pt-10">
-                    <h3 className="">
-                      {parsedDescription ? (
-                        <article
-                          className="prose font-plex-sans font-regular text-[20px]"
-                          dangerouslySetInnerHTML={{
-                            __html: parsedDescription,
-                          }}
-                        />
-                      ) : (
-                        <p className="font-plex-sans font-regular text-[20px]">
-                          No description available
-                        </p>
-                      )}
-                    </h3>
-                  </div>
-                  <div className="flex flex-col w-full gap-4 pt-5">
-                    <button className="product-buy-buttons bg-primary-200 text-white">
-                      Add to Cart
-                    </button>
-                    <button className="product-buy-buttons bg-secondary-200">
-                      Purchase Now
-                    </button>
-                  </div>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <ProductDetailsDrop
-                      mainDetails={mainDetails}
-                      detailBullets={detailBullets}
-                      reviews={reviews}
-                      selectedReviews={selectedReviews}
-                      userReview={userReview[0]}
-                      userId={userId}
-                      productId={productId}
-                      mainImage={mainImage}
-                      title={title}
-                      cost={cost}
-                      reviewStats={reviewStats}
-                      flaggedReviews={flaggedReviews}
+            <div className="flex flex-col w-[40%] h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hidden scroll-smooth">
+              <div className="flex flex-col pl-3 lg:pl-5 gap-y-3 w-[90%] overflow-y-auto scrollbar-hidden">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
+                    <Image
+                      src={urlFor(brands[0]?.logo).url()}
+                      alt="brand logo"
+                      width={80}
+                      height={50}
+                      className="object-contain w-12 h-12"
                     />
+                    <p>{capitalizeBrand(brands[0])}</p>
+                  </div>
+                  <Suspense fallback={<div>Heart</div>}>
+                    <div className="pr-5">
+                      <ProductHeart
+                        isHearted={heartedProducts?.includes(
+                          productId.toString()
+                        )}
+                        productId={productId}
+                        userId={userId}
+                        callbackUrl={callbackUrl}
+                      />
+                    </div>
                   </Suspense>
                 </div>
+                <div className="flex flex-col">
+                  <p className="font-plex-sans font-bold text-[28px]">
+                    {title}
+                  </p>
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.map((obj: any, index: number) => (
+                      <p
+                        key={index}
+                        className="font-plex-sans font-regular text-[18px]"
+                      >
+                        {obj.name}
+                      </p>
+                    ))}
+                </div>
+
+                <div>
+                  <p className="font-plex-sans font-regular text-[16px]">
+                    ${cost}
+                  </p>
+                </div>
+                <div className="flex w-full pt-10">
+                  {parsedDescription ? (
+                    <article
+                      className="prose font-plex-sans font-regular text-[20px]"
+                      dangerouslySetInnerHTML={{
+                        __html: parsedDescription,
+                      }}
+                    />
+                  ) : (
+                    <p className="font-plex-sans font-regular text-[20px]">
+                      No description available
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-1 w-full pt-5">
+                  <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
+                    Select Color
+                  </p>
+                  <ProductColorButtons variants={variants} />
+                </div>
+                <div className="flex flex-col gap-1 w-full pt-5">
+                  <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
+                    Select Size
+                  </p>
+                  <ProductSizeButtons variants={variants} />
+                </div>
+                <div className="flex flex-col w-full pt-5 gap-3">
+                  <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
+                    Quantity
+                  </p>
+                  <ProductQuantity variants={variants} />
+                </div>
+                <div className="flex flex-col w-full gap-4 pt-10">
+                  <ProductBuyButtons variants={variants} />
+                </div>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProductDetailsDrop
+                    mainDetails={mainDetails}
+                    detailBullets={detailBullets}
+                    reviews={reviews}
+                    selectedReviews={selectedReviews}
+                    userReview={userReview[0]}
+                    userId={userId}
+                    productId={productId}
+                    mainImage={mainImage}
+                    title={title}
+                    cost={cost}
+                    reviewStats={reviewStats}
+                    flaggedReviews={flaggedReviews}
+                  />
+                </Suspense>
               </div>
             </div>
           </div>
@@ -335,7 +341,7 @@ const page = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-        <div className="sm:hidden max-w-screen pt-[4rem] md:pt-[0] scrollbar-hidden">
+        <div className="md:hidden max-w-screen pt-[4rem] md:pt-[0] pb-10 scrollbar-hidden">
           <div className="product-page-wrapper scrollbar-hidden">
             <div className="flex flex-col p-5">
               <div className="flex justify-between items-center">
@@ -389,28 +395,27 @@ const page = async ({ params }: { params: { id: string } }) => {
                 galleryImages={galleryImages}
               />
             </Suspense>
-            <div className="flex flex-col w-full p-5">
+            <div className="flex flex-col w-full p-5 mt-5">
               <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
                 Select Color
               </p>
-              <MobileProductColor variants={variants} />
+              <ProductColorButtons variants={variants} />
             </div>
             <div className="flex flex-col w-full p-5">
-              <p className="font-plex-sans font-medium text-[16px] xx:text-[18px]">
+              <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
                 Select Size
               </p>
               <Suspense fallback={<div>Loading Product Sizes...</div>}>
-                <MobileProductSize
-                  variants={imagesPlusProductDetails.variants}
-                />
+                <ProductSizeButtons variants={variants} />
               </Suspense>
             </div>
-            <div className="flex w-full p-5">
+            <div className="flex flex-col w-full p-5 gap-3">
+              <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
+                Quantity
+              </p>
               <ProductQuantity variants={variants} />
             </div>
-            <MobileProductBuyButtons
-              variants={imagesPlusProductDetails.variants}
-            />
+            <ProductBuyButtons variants={variants} />
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">
               {parsedDescription ? (

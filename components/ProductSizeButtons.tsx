@@ -1,14 +1,20 @@
 "use client";
 import React from "react";
 import { ProductStockType, VariantItemType, VariantType } from "@/globalTypes";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
 
-const MobileProductSize = ({ variants }: { variants: VariantType }) => {
+const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
   console.log("variants", variants);
   const { selectedSize, setSelectedSize, selectedColor } = useContext(
     ProductOptionsContext
   );
+
+  useEffect(() => {
+    if (!selectedSize && variantsForColor.length > 0) {
+      setSelectedSize(variantsForColor[0].size as string);
+    }
+  }, [selectedColor, variants]);
 
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
@@ -18,7 +24,7 @@ const MobileProductSize = ({ variants }: { variants: VariantType }) => {
   console.log("seelcted size", selectedSize);
 
   const variantsForColor = variants.filter((variant: VariantItemType) => {
-    if (!variant.color?.name) return {};
+    if (!variant.color?.name) return false;
     return variant.color?.name.toLowerCase() === selectedColor.toLowerCase();
   });
   console.log("variantsForColor", variantsForColor);
@@ -48,4 +54,4 @@ const MobileProductSize = ({ variants }: { variants: VariantType }) => {
   );
 };
 
-export default MobileProductSize;
+export default ProductSizeButtons;

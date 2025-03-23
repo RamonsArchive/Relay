@@ -5,7 +5,7 @@ import { ColorType } from "@/globalTypes";
 import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
 import { getUniqeColors } from "@/lib/utils";
 
-const MobileProductColor = ({ variants }: { variants: any }) => {
+const ProductColorButtons = ({ variants }: { variants: any }) => {
   const { selectedColor, setSelectedColor } = useContext(ProductOptionsContext);
 
   const uniqueColors = getUniqeColors(variants);
@@ -40,4 +40,4 @@ const MobileProductColor = ({ variants }: { variants: any }) => {
   );
 };
 
-export default MobileProductColor;
+export default ProductColorButtons;

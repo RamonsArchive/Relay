@@ -357,7 +357,7 @@ const ReviewCard = ({
       )}
       <div className="flex flex-col gap-1">
         {reviewTitle && (
-          <h2 className="font-plex-sans font-medium text-[20px] sm:text-[22px] md:text-[20px]">
+          <h2 className="font-plex-sans font-medium text-[20px] sm:text-[22px] md:text-[20px] lg:text-[22px]">
             {reviewTitle.slice(0, 50)}
           </h2>
         )}

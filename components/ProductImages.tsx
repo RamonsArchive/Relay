@@ -17,11 +17,11 @@ const ProductImages = ({
 
   const [frontImage, setFrontImage] = useState(imageMain);
   return (
-    <div className="hidden sm:flex flex-row gap-5 w-full ">
-      <div className="min-w-[100px] p-2 align-center">
-        <ul className="flex flex-col items-center gap-4 relative">
+    <div className="hidden md:flex flex-row gap-5 w-full pl-[10%]">
+      <div className="min-w-[75px] p-2 align-center">
+        <ul className="flex flex-col items-center gap-2 lg:gap-4 relative">
           <li
-            className="h-[50px]"
+            className="h-[50px] lg:h-[75px]"
             onMouseEnter={() => setFrontImage(imageMain)}
           >
             <Image
@@ -29,13 +29,13 @@ const ProductImages = ({
               alt="product image"
               width={75}
               height={75}
-              className="object-cover w-full h-full overflow-y-auto"
+              className="object-contain w-full h-full"
             />
           </li>
           {galleryImages?.map((image, key) => (
             <li
               key={key}
-              className="h-[50px]"
+              className="h-[50px] lg:h-[75px]"
               onMouseEnter={() => setFrontImage(image)}
             >
               <Image
@@ -43,14 +43,14 @@ const ProductImages = ({
                 alt="product image"
                 width={75}
                 height={75}
-                className="object-contain w-full h-full overflow-y-auto"
+                className="object-contain w-full h-full"
               />
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="relative min-w-[350px] w-full h-[650px] overflow-hidden">
+      <div className="relative min-w-[300px] w-full h-[650px] lg:h-[700px] overflow-hidden">
         <Image
           src={urlFor(frontImage).url()}
           alt="main image"

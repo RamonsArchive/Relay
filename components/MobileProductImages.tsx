@@ -41,7 +41,7 @@ const MobileProductImages = ({
   };
 
   return (
-    <div className="w-full sm:hidden">
+    <div className="w-full md:hidden">
       <div
         className="relative w-full aspect-square h-auto max-h-[300px] overflow-hidden"
         onTouchStart={onTouchStart}
