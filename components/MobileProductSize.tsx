@@ -1,12 +1,14 @@
 "use client";
 import React from "react";
-import { ProductStockType } from "@/globalTypes";
+import { ProductStockType, VariantItemType, VariantType } from "@/globalTypes";
 import { useContext } from "react";
 import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
 
-const MobileProductSize = ({ stock }: { stock: ProductStockType }) => {
-  console.log("Stock", stock);
-  const { selectedSize, setSelectedSize } = useContext(ProductOptionsContext);
+const MobileProductSize = ({ variants }: { variants: VariantType }) => {
+  console.log("variants", variants);
+  const { selectedSize, setSelectedSize, selectedColor } = useContext(
+    ProductOptionsContext
+  );
 
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
@@ -14,19 +16,26 @@ const MobileProductSize = ({ stock }: { stock: ProductStockType }) => {
     setSelectedSize(size);
   };
   console.log("seelcted size", selectedSize);
+
+  const variantsForColor = variants.filter((variant: VariantItemType) => {
+    if (!variant.color?.name) return {};
+    return variant.color?.name.toLowerCase() === selectedColor.toLowerCase();
+  });
+  console.log("variantsForColor", variantsForColor);
   return (
     <div className="flex flex-wrap w-full gap-3 pt-2">
       {allSizes.map((size, index) => {
-        const stockItem = stock.find((s) => s.size === size.toLowerCase());
-        const stockQuantity = stockItem?.quantity || 0;
-        console.log("StockItem", stockItem);
-        console.log("stockQuantity", stockQuantity);
+        const variantForSize = variantsForColor.find(
+          (variant: any) => variant.size === size.toLowerCase()
+        );
+
+        const quantity = variantForSize ? variantForSize.quantity : 0;
         return (
           <div
             key={index}
-            className={`px-2 py-0.5 font-plex-sans font-regular text-[16px] xs:text-[18px] rounded-md border-[2px] border-gray-300 ${stockQuantity > 0 ? "cursor-pointer" : "bg-gray-300 text-gray-500 disabled"}`}
+            className={`px-2 py-0.5 font-plex-sans font-regular text-[16px] xs:text-[18px] rounded-md border-[2px] border-gray-300 ${(quantity as number) > 0 ? "cursor-pointer" : "bg-gray-300 text-gray-500 disabled"}`}
             onClick={() => {
-              if (stockQuantity > 0) {
+              if ((quantity as number) > 0) {
                 handleSetSize(size);
               }
             }}

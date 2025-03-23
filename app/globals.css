@@ -169,7 +169,7 @@ html {
   }
 
   .product-page-wrapper {
-    @apply flex flex-col w-full h-full h-[calc(100vh-8rem)] overflow-y-auto;
+    @apply flex flex-col w-full h-full overflow-y-auto;
   }
   .product-page {
     @apply flex flex-row p-5 w-full h-[calc(100vh-8rem)];

@@ -19,7 +19,7 @@ const ProductCard = ({
 }) => {
   const { _id, title, mainImage, materials, categories, cost } = product;
   return (
-    <li className="product-group w-full list-none">
+    <li className="product-group w-full shrink-0 list-none">
       <div className="relative w-full flex-[3] overflow-hidden rounded-sm">
         <Link href={`/product/${_id}`}>
           <Image

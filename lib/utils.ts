@@ -1,4 +1,4 @@
-import { ReviewType } from "@/globalTypes"
+import { ReviewType, VariantType } from "@/globalTypes"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -137,3 +137,16 @@ export const handleUpdateReviews = (type: string) => {
   const newReviews = null;
   //if (type === "")
 }
+
+
+export const getUniqeColors = (variants: VariantType) => {
+  if (!variants) return [];
+  const uniqueMap: { [key: string]: any } = {};
+  variants.forEach((variant: any) => {
+    if (variant?.color && variant?.color?.name) {
+      uniqueMap[variant.color.name.toLowerCase()] = variant.color;
+    }
+  });
+
+  return Object.values(uniqueMap);
+};

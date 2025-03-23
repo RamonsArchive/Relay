@@ -113,6 +113,7 @@ export const product = defineType({
                 }
             ]
         }),
+        
         defineField({
             name: 'productReviews',
             title: 'Product Reviews',
@@ -120,61 +121,77 @@ export const product = defineType({
             of: [{type: 'reference', to: [{type: 'reviews'}]}],
         }),
         defineField({
-            name: 'stock',
-            title: 'Stock',
-            type: 'array',
+            name: "variants",
+            title: "Variants",
+            type: "array",
             of: [
               {
-                name: 'stockItem',
-                title: 'Stock Item',
-                type: 'object',
+                name: "variant",
+                title: "Variant",
+                type: "object",
                 fields: [
-                  {
+                  defineField({
                     name: "size",
                     title: "Size",
-                    type: 'string',
+                    type: "string",
                     options: {
-                      list: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'],
-                      layout: 'tags',
+                      list: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
+                      layout: "dropdown",
                     },
                     validation: (Rule) =>
                       Rule.required().custom((size) => {
-                        const allowedSizes = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'];
+                        const allowedSizes = [
+                          "xs",
+                          "s",
+                          "m",
+                          "l",
+                          "xl",
+                          "xxl",
+                          "xxxl",
+                        ];
                         if (!allowedSizes.includes(size as string)) {
-                          return `"${size}" is not a valid size. Allowed sizes: ${allowedSizes.join(', ')}`;
+                          return `"${size}" is not a valid size. Allowed sizes: ${allowedSizes.join(
+                            ", "
+                          )}`;
                         }
                         return true;
                       }),
-                  },
-                  {
+                  }),
+                  defineField({
+                    name: "color",
+                    title: "Color",
+                    type: "reference",
+                    to: [{ type: "colors" }],
+                    validation: (Rule) => Rule.required(),
+                  }),
+                  defineField({
                     name: "quantity",
                     title: "Quantity",
-                    type: 'number',
+                    type: "number",
                     validation: (Rule) =>
                       Rule.required()
                         .min(0)
                         .integer()
                         .error("Quantity must be a whole number and at least 0"),
-                  },
+                  }),
                 ],
               },
             ],
             validation: (Rule) =>
-              Rule.custom((stockItems) => {
-                if (!Array.isArray(stockItems)) return "Stock must be an array.";
-          
-                const seenSizes = new Set();
-                for (const item of stockItems as any) {
-                  if (!item.size || item.quantity < 0) {
-                    return "Each stock item must have a size and quantity.";
+              Rule.custom((variants) => {
+                if (!Array.isArray(variants)) return "Variants must be an array.";
+                const seenVariants = new Set();
+                for (const variant of variants as any) {
+                  if (!variant.size || !variant.color || variant.quantity < 0) {
+                    return "Each variant must have a size, a color, and a quantity.";
                   }
-          
-                  if (seenSizes.has(item.size)) {
-                    return `Duplicate size detected: "${item.size}". Each size should be unique.`;
+                  // Create a unique key for the combination of size and color.
+                  const key = `${variant.size}-${variant.color._ref}`;
+                  if (seenVariants.has(key)) {
+                    return `Duplicate variant detected: ${key}. Each variant should be unique.`;
                   }
-                  seenSizes.add(item.size);
+                  seenVariants.add(key);
                 }
-          
                 return true;
               }),
           }),

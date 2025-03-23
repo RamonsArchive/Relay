@@ -25,6 +25,9 @@ import MobileProductImages from "@/components/MobileProductImages";
 import MobileProductSize from "@/components/MobileProductSize";
 import MobileProductBuyButtons from "@/components/MobileProductBuyButtons";
 import ProductOptionsProvider from "@/app/context/ProductOptionsContext";
+import MobileProductColor from "@/components/MobileProductColor";
+import ProductQuantity from "@/components/ProductQuantity";
+import ProductQauntity from "@/components/ProductQuantity";
 
 export const experimental_ppr = true;
 
@@ -54,8 +57,9 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const {
     title,
-    stock,
+    variants,
     cost,
+    colors,
     description,
     materials,
     mainImage,
@@ -69,6 +73,12 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const imageMain = mainImage;
   const galleryImages = imagesPlusProductDetails.imageGallery;
+
+  console.log("variants in product page", variants);
+  /*console.log(
+    "colors",
+    variants.map((variant: any) => variant.color.name)
+  );*/
 
   console.log("Title", title);
   console.log("cost", cost);
@@ -251,26 +261,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                       ${cost}
                     </p>
                   </div>
-                  <div className="w-full pt-2">
-                    <div className="product-sizebutton-grid ">
-                      {allSizes.map((size: string, index: number) => {
-                        const stockItem = stock.find(
-                          (item: any) => item.size === size.toLowerCase()
-                        );
-                        const isAvaliable = stockItem?.quantity > 0;
-
-                        return (
-                          <button
-                            className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
-                            key={index}
-                            disabled={!isAvaliable}
-                          >
-                            <span>{size}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  <div className="w-full pt-2"></div>
                   <div className="flex w-full pt-10">
                     <h3 className="">
                       {parsedDescription ? (
@@ -399,14 +390,27 @@ const page = async ({ params }: { params: { id: string } }) => {
               />
             </Suspense>
             <div className="flex flex-col w-full p-5">
+              <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
+                Select Color
+              </p>
+              <MobileProductColor variants={variants} />
+            </div>
+            <div className="flex flex-col w-full p-5">
               <p className="font-plex-sans font-medium text-[16px] xx:text-[18px]">
                 Select Size
               </p>
               <Suspense fallback={<div>Loading Product Sizes...</div>}>
-                <MobileProductSize stock={imagesPlusProductDetails.stock} />
+                <MobileProductSize
+                  variants={imagesPlusProductDetails.variants}
+                />
               </Suspense>
             </div>
-            <MobileProductBuyButtons stock={imagesPlusProductDetails.stock} />
+            <div className="flex w-full p-5">
+              <ProductQuantity variants={variants} />
+            </div>
+            <MobileProductBuyButtons
+              variants={imagesPlusProductDetails.variants}
+            />
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">
               {parsedDescription ? (
@@ -436,6 +440,34 @@ const page = async ({ params }: { params: { id: string } }) => {
                 flaggedReviews={flaggedReviews}
               />
             </Suspense>
+            <div className="flex flex-col gap-1 w-full text-start mt-16">
+              <p className="font-plex-sans font-medium text-[24px] sm:text-[26px] pl-5">
+                Recently Viewed Products
+              </p>
+              <div className="w-full flex flex-nowrap px-5 overflow-x-auto scrollbar-hidden whitespace-nowrap h-atuo gap-3 pt-2 pb-5">
+                <Suspense fallback={<div>Loading products... </div>}>
+                  {recentlyViewedProds?.length > 0 ? (
+                    recentlyViewedProds
+                      .slice(0, 10)
+                      .map((product: any, index: number) => {
+                        return (
+                          <div className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]">
+                            <ProductCard
+                              key={product._id}
+                              product={product}
+                              isHearted={heartedProducts.includes(product._id)}
+                              callbackUrl={callbackUrl}
+                              user={user}
+                            />
+                          </div>
+                        );
+                      })
+                  ) : (
+                    <div>No recently viewed products</div>
+                  )}
+                </Suspense>
+              </div>
+            </div>
           </div>
         </div>
       </ProductOptionsProvider>
@@ -444,3 +476,22 @@ const page = async ({ params }: { params: { id: string } }) => {
 };
 
 export default page;
+
+/* <div className="product-sizebutton-grid ">
+                      {allSizes.map((size: string, index: number) => {
+                        const stockItem = stock.find(
+                          (item: any) => item.size === size.toLowerCase()
+                        );
+                        const isAvaliable = stockItem?.quantity > 0;
+
+                        return (
+                          <button
+                            className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
+                            key={index}
+                            disabled={!isAvaliable}
+                          >
+                            <span>{size}</span>
+                          </button>
+                        );
+                      })}
+                    </div> */

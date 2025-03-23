@@ -116,6 +116,18 @@ export type ReviewType = {
     email?: string;
   };
 
+  export type ColorType = {
+    _id: string;
+    _type: "colors";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: "black" | "white" | "gray" | "beige" | "navy" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "brown" | "olive" | "orange" | "teal" | "maroon";
+    hexCode?: string;
+    altNames?: Array<string>;
+    slug?: Slug;
+  };
+
 
   export type FlaggedReviewType = {
     _id: string;
@@ -135,6 +147,22 @@ export type ReviewType = {
     flagReason?: "inappropriate" | "misleading" | "hateSpeech" | "harassment" | "violence" | "spam" | "other";
     createdAt?: string;
     moderationStatus?: "pending" | "reviewed" | "removed";
+  }
+
+  export type VariantType = Array<{
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+    color?: ColorType;
+    quantity?: number;
+    _type: "variant";
+    _key: string;
+  }>;
+
+  export type VariantItemType = {
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+    color?: ColorType;
+    quantity?: number;
+    _type: "variant";
+    _key: string;
   }
 
   export type SanityImage = {

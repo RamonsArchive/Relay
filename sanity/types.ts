@@ -111,18 +111,6 @@ export type Materials = {
   slug?: Slug;
 };
 
-export type Colors = {
-  _id: string;
-  _type: "colors";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: "black" | "white" | "gray" | "beige" | "navy" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "brown" | "olive" | "orange" | "teal" | "maroon";
-  hexCode?: string;
-  altNames?: Array<string>;
-  slug?: Slug;
-};
-
 export type Brands = {
   _id: string;
   _type: "brands";
@@ -260,10 +248,16 @@ export type Product = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "reviews";
   }>;
-  stock?: Array<{
-    size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+  variants?: Array<{
+    size?: "xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl";
+    color?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "colors";
+    };
     quantity?: number;
-    _type: "stockItem";
+    _type: "variant";
     _key: string;
   }>;
   collections?: Array<{
@@ -301,6 +295,18 @@ export type Product = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "categories";
   }>;
+};
+
+export type Colors = {
+  _id: string;
+  _type: "colors";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: "black" | "white" | "gray" | "beige" | "navy" | "red" | "blue" | "green" | "yellow" | "purple" | "pink" | "brown" | "olive" | "orange" | "teal" | "maroon";
+  hexCode?: string;
+  altNames?: Array<string>;
+  slug?: Slug;
 };
 
 export type Slug = {
@@ -420,5 +426,5 @@ export type SanityImageMetadata = {
 
 export type Markdown = string;
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | FlaggedReviews | Categories | Materials | Colors | Brands | Reviews | Collections | Product | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | FlaggedReviews | Categories | Materials | Brands | Reviews | Collections | Product | Colors | Slug | User | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Markdown;
 export declare const internalGroqTypeReferenceTo: unique symbol;

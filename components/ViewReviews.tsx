@@ -87,8 +87,6 @@ const ViewReviews = ({
     currentPage * reviewsPerPage
   );
 
-  console.log("Paginated reviews", paginatedReviews);
-
   useEffect(() => {
     if (viewReviews) {
       document.body.style.overflow = "hidden";

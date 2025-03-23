@@ -341,9 +341,25 @@ export const PRODUCT_PAGE_INFORMATION = (productId: string) => {
     mainImage,
     imageGallery,
     title,
-    stock,
     cost,
     description,
+    "variants": variants[]{
+     _id,
+     size,
+     quantity,
+     "color": color -> {
+       _id,
+       _key,
+       name,
+       hexCode,
+     },
+    },
+    "colors": colors[]->{
+      _id,
+      _key,
+      name,
+      hex,
+    },
     "materials": materials[]->{
       _id,
       _key,

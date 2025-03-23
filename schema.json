@@ -764,141 +764,6 @@
     }
   },
   {
-    "name": "colors",
-    "type": "document",
-    "attributes": {
-      "_id": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_type": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string",
-          "value": "colors"
-        }
-      },
-      "_createdAt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_updatedAt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_rev": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "name": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "union",
-          "of": [
-            {
-              "type": "string",
-              "value": "black"
-            },
-            {
-              "type": "string",
-              "value": "white"
-            },
-            {
-              "type": "string",
-              "value": "gray"
-            },
-            {
-              "type": "string",
-              "value": "beige"
-            },
-            {
-              "type": "string",
-              "value": "navy"
-            },
-            {
-              "type": "string",
-              "value": "red"
-            },
-            {
-              "type": "string",
-              "value": "blue"
-            },
-            {
-              "type": "string",
-              "value": "green"
-            },
-            {
-              "type": "string",
-              "value": "yellow"
-            },
-            {
-              "type": "string",
-              "value": "purple"
-            },
-            {
-              "type": "string",
-              "value": "pink"
-            },
-            {
-              "type": "string",
-              "value": "brown"
-            },
-            {
-              "type": "string",
-              "value": "olive"
-            },
-            {
-              "type": "string",
-              "value": "orange"
-            },
-            {
-              "type": "string",
-              "value": "teal"
-            },
-            {
-              "type": "string",
-              "value": "maroon"
-            }
-          ]
-        },
-        "optional": true
-      },
-      "hexCode": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "altNames": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "array",
-          "of": {
-            "type": "string"
-          }
-        },
-        "optional": true
-      },
-      "slug": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "slug"
-        },
-        "optional": true
-      }
-    }
-  },
-  {
     "name": "brands",
     "type": "document",
     "attributes": {
@@ -1876,7 +1741,7 @@
         },
         "optional": true
       },
-      "stock": {
+      "variants": {
         "type": "objectAttribute",
         "value": {
           "type": "array",
@@ -1894,15 +1759,15 @@
                     },
                     {
                       "type": "string",
-                      "value": "sm"
+                      "value": "s"
                     },
                     {
                       "type": "string",
-                      "value": "md"
+                      "value": "m"
                     },
                     {
                       "type": "string",
-                      "value": "lg"
+                      "value": "l"
                     },
                     {
                       "type": "string",
@@ -1920,6 +1785,36 @@
                 },
                 "optional": true
               },
+              "color": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "object",
+                  "attributes": {
+                    "_ref": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "_type": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "string",
+                        "value": "reference"
+                      }
+                    },
+                    "_weak": {
+                      "type": "objectAttribute",
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "optional": true
+                    }
+                  },
+                  "dereferencesTo": "colors"
+                },
+                "optional": true
+              },
               "quantity": {
                 "type": "objectAttribute",
                 "value": {
@@ -1931,7 +1826,7 @@
                 "type": "objectAttribute",
                 "value": {
                   "type": "string",
-                  "value": "stockItem"
+                  "value": "variant"
                 }
               }
             },
@@ -2167,6 +2062,141 @@
               }
             }
           }
+        },
+        "optional": true
+      }
+    }
+  },
+  {
+    "name": "colors",
+    "type": "document",
+    "attributes": {
+      "_id": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_type": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string",
+          "value": "colors"
+        }
+      },
+      "_createdAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_updatedAt": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "_rev": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        }
+      },
+      "name": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "black"
+            },
+            {
+              "type": "string",
+              "value": "white"
+            },
+            {
+              "type": "string",
+              "value": "gray"
+            },
+            {
+              "type": "string",
+              "value": "beige"
+            },
+            {
+              "type": "string",
+              "value": "navy"
+            },
+            {
+              "type": "string",
+              "value": "red"
+            },
+            {
+              "type": "string",
+              "value": "blue"
+            },
+            {
+              "type": "string",
+              "value": "green"
+            },
+            {
+              "type": "string",
+              "value": "yellow"
+            },
+            {
+              "type": "string",
+              "value": "purple"
+            },
+            {
+              "type": "string",
+              "value": "pink"
+            },
+            {
+              "type": "string",
+              "value": "brown"
+            },
+            {
+              "type": "string",
+              "value": "olive"
+            },
+            {
+              "type": "string",
+              "value": "orange"
+            },
+            {
+              "type": "string",
+              "value": "teal"
+            },
+            {
+              "type": "string",
+              "value": "maroon"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "hexCode": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "altNames": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "slug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "slug"
         },
         "optional": true
       }
