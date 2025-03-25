@@ -329,7 +329,8 @@ const ViewReviews = ({
             </div>
             <div className="relative flex flex-col w-full gap-3 pt-5">
               <p className="font-plex-sants text-medium text-[16px]">
-                Showing {(currentPage - 1) * reviewsPerPage + 1}-
+                Showing{" "}
+                {totalPages === 0 ? 0 : (currentPage - 1) * reviewsPerPage + 1}-
                 {Math.min(currentPage * reviewsPerPage, reviewContent.length)}{" "}
                 of {reviewContent.length} reviews
               </p>
@@ -516,7 +517,7 @@ const ViewReviews = ({
               ))}
 
               <button
-                className={`px-3 py-1 rounded-full ${currentPage === totalPages ? "text-gray-400 pointer-events-none" : "text-black transition hover:opacity-60 duration-200 ease-in-out"}`}
+                className={`px-3 py-1 rounded-full ${currentPage === totalPages || totalPages == 0 ? "text-gray-400 pointer-events-none" : "text-black transition hover:opacity-60 duration-200 ease-in-out"}`}
                 onClick={() => {
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages));
                   handlePageScroll();

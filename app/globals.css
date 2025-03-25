@@ -189,7 +189,7 @@ html {
   }
 
   .product-drop {
-    @apply flex flex-col font-plex-sans font-medium w-full mt-5  px-5 sm:mt-0 md:px-0 text-[24px] pt-5 gap-4
+    @apply flex flex-col font-plex-sans font-medium w-full mt-5 px-5 sm:mt-0 md:px-0 text-[24px] pt-5 gap-4
   }
 
   .product-drop-section {
@@ -204,15 +204,15 @@ html {
     @apply flex flex-col w-full gap-3
   }
   .product-write-label {
-    @apply font-plex-sans font-regular text-[20px] 
+    @apply font-plex-sans font-regular text-[16px] sm:text-[18px] md:text-[20px] 
   }
 
   .product-write-error {
-    @apply text-red-500 text-[14px] ;
+    @apply text-red-500 text-[12px] text-[12px] sm:text-[14px] md:text-[16px] ;
   }
 
   .sign-in-button {
-    @apply font-plex-sans font-bold md:text-[20px] sm:text-[16] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-110 hover:scale-125;
+    @apply font-plex-sans font-bold sm:text-[20px] sm:text-[16] md:text-[16px] text-nowrap rounded-full px-2 py-3 max-w-[175px] flex items-center justify-center transition-transform duration-200 ease-in-out scale-110 hover:scale-125;
   }
 
   

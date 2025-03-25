@@ -4,7 +4,7 @@ export const reviewSchema = z.object({
     mainRating: z.number().int().min(1).max(5),
     wouldRecommend: z.boolean(),
     review: z.string().min(10).max(2000),
-    reviewTitle: z.string().min(5).max(100),
+    reviewTitle: z.string().min(3).max(100),
     sizeRating: z.number().int().min(1).max(3),
     widthRating: z.number().int().min(1).max(3),
     comfortRating: z.number().int().min(1).max(3),

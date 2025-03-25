@@ -17,11 +17,11 @@ const WriteReview = async ({ params }: { params: { id: string } }) => {
 
   // if not authenticated, redirect to sign in
   return (
-    <div className="flex flex-row w-full h-[calc(100vh-8rem)]">
+    <div className="flex flex-row w-full pt-[4rem] md:pt-0 h-[calc(100vh-8rem)]">
       <Suspense fallback={<div>Loading review form... </div>}>
         <ReviewForm user={user} productId={productId} />
       </Suspense>
-      <div className="flex flex-col w-[50%] p-5 gap-8">
+      <div className="hidden md:flex flex-col w-[50%] p-5 gap-8">
         <div className="flex flex-col gap-3">
           <p className="font-plex-sans font-medium text-[20px]">
             Writing the perfect Review

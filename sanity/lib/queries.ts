@@ -433,6 +433,7 @@ export const GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS = (limit: number = 11) =>
     _id,
     title,
     mainImage,
+    cost,
     "materials": materials[]->{
       _id,
       _key,

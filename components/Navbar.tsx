@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import NavBarWrapper from "./NavBarWrapper";
-import { fetchRecentSearchesFew } from "@/sanity/lib/client";
+import { fetchRecentSearchesFew } from "@/lib/serverActions";
 
 export const experimental_ppr = true;
 

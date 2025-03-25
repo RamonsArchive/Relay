@@ -44,7 +44,7 @@ const ProductCard = ({
           <span className="font-plex-sans font-bold text-[15px] xs:text-[16px] sm:[text-[17px] lg:text-[22px]">
             {title}
           </span>
-          <span className="font-plex-sans font-light text-[12px] xs:text-[13px] sm:text-[14px] lg:text-[16px] ">
+          <span className="font-plex-sans font-light text-[12px] xs:text-[13px] sm:text-[14px] lg:text-[16px]">
             ${cost}
           </span>
           <div className="flex flex-wrap gap-x-1.5 font-plex-sans font-regular text-[13px] xs:text-[14px] sm:text-[15px] lg:text-[18px]">

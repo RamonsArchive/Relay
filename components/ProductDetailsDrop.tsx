@@ -63,7 +63,9 @@ const ProductDetailsDrop = ({
 
   return (
     <div className="product-drop">
-      <div className="product-drop-section">
+      <div
+        className={`flex flex-col border-b-[2px] pb-4 border-borderColor-100 ${droppedInfo.details ? "gap-4" : ""}`}
+      >
         <div
           className="product-drop-block"
           onClick={() => handleDropClick("details")}
@@ -78,18 +80,24 @@ const ProductDetailsDrop = ({
           )}
         </div>
 
-        {droppedInfo.details && (
-          <div className="flex flex-col w-full font-plex-sans font-regular text-[16px] sm:text-[18px] gap-4">
+        <div
+          className={`w-full transform transition-all duration-300 ease-in-out scrollbar-hidden ${droppedInfo.details ? "flex-col max-h-full gap-4" : "max-h-0 overflow-hidden"}`}
+        >
+          <div
+            className={`flex flex-col w-full font-plex-sans font-regular text-[16px] sm:text-[18px] gap-4 transform transition-all duration-200 ease-in-out ${droppedInfo.details ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+          >
             <p>{mainDetails}</p>
-            <ul className="list-disc list-inside">
+            <ul className={`list-disc list-inside`}>
               {detailBullets.map((bullet: string, index: number) => (
                 <li key={index}>{bullet}</li>
               ))}
             </ul>
           </div>
-        )}
+        </div>
       </div>
-      <div className="product-drop-section">
+      <div
+        className={`flex flex-col border-b-[2px] pb-4 border-borderColor-100 ${droppedInfo.productReviews ? "gap-4" : ""}`}
+      >
         <div
           className="product-drop-block"
           onClick={() => handleDropClick("productReviews")}
@@ -103,8 +111,12 @@ const ProductDetailsDrop = ({
             <ChevronDown size={24} />
           )}
         </div>
-        {droppedInfo.productReviews && (
-          <div className="flex flex-col gap-5">
+        <div
+          className={`flex transform transition-all duration-300 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "max-h-full" : "max-h-0 overflow-hidden"}`}
+        >
+          <div
+            className={`flex flex-col gap-5 transform transition-all duration-200 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "translate-y-0 opacity-100 " : "-translate-y-full opacity-0"}`}
+          >
             <div className="font-plex-sans font-light text-[14px] sm:text-[16px] md:text-[19px]">
               <span>{getNumberOfReviews(reviews.length)}</span>
             </div>
@@ -112,7 +124,7 @@ const ProductDetailsDrop = ({
               <ReviewStars reviews={reviews} />
             </div>
 
-            <p className="flex font-plex-sans text-[18px] font-medium ">
+            <p className="flex font-plex-sans text-[18px] font-medium">
               {userReview != null ? (
                 <span
                   className="underline underline-offset-4 hover:text-secondary-200 ease-in-out duration-200 cursor-pointer font-plex-sans text-[16px] sm:text-[18px] lg:text-[20px]"
@@ -128,7 +140,7 @@ const ProductDetailsDrop = ({
                 </span>
               )}
             </p>
-            <div className="flex flex-col pt-2 gap-8">
+            <div className={`flex flex-col pt-2 gap-8`}>
               {selectedReviews ? (
                 selectedReviews.map((review: ReviewType, index: number) => (
                   <ReviewCard
@@ -149,22 +161,6 @@ const ProductDetailsDrop = ({
               )}
             </div>
 
-            <ViewReviews
-              userId={userId}
-              productId={productId}
-              reviews={reviews}
-              userReview={userReview}
-              viewReviews={viewReviews}
-              setViewReviews={setViewReviews}
-              editReview={editReview}
-              setEditReview={setEditReview}
-              mainImage={mainImage}
-              title={title}
-              cost={cost}
-              reviewStats={reviewStats}
-              flaggedReviews={flaggedReviews}
-            />
-
             <div className="flex font-plex-sans text-[18px] font-medium ">
               {!viewReviews && (
                 <button
@@ -178,7 +174,22 @@ const ProductDetailsDrop = ({
               )}
             </div>
           </div>
-        )}
+        </div>
+        <ViewReviews
+          userId={userId}
+          productId={productId}
+          reviews={reviews}
+          userReview={userReview}
+          viewReviews={viewReviews}
+          setViewReviews={setViewReviews}
+          editReview={editReview}
+          setEditReview={setEditReview}
+          mainImage={mainImage}
+          title={title}
+          cost={cost}
+          reviewStats={reviewStats}
+          flaggedReviews={flaggedReviews}
+        />
       </div>
     </div>
   );

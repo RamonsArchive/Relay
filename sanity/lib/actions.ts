@@ -2,7 +2,8 @@
 import axios from "axios"; // Import the 'axios' library
 import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
-import { client, fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "./client";
+import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
+import { client } from "@/sanity/lib/client";
 import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
@@ -439,6 +440,7 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
 }
 
 export const writeReview = async (userId: string, productId: string, review: ReviewType) => {
+  
   try {
     const session = await auth();
     const sessionId = session?.user?.id;

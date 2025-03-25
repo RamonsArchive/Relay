@@ -105,7 +105,7 @@ const SearchPopUp = ({
 
   return (
     <main
-      className={`fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 p-3 bg-white-300 shadow-md shadow-third-300 text-third-300 transform transition-all duration-300 ease-in-out ${clicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      className={`fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 p-3 bg-white-300 shadow-sm shadow-third-300 text-third-300 transform transition-all duration-300 ease-in-out ${clicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
     >
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-[999]">
@@ -128,12 +128,14 @@ const SearchPopUp = ({
           </Link>
         </div>
 
-        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 self-start ease-in-out">
+        <button
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 self-start ease-in-out active:bg-gray-400"
+          onClick={() => setClicked(false)}
+        >
           <X
             size="30px"
             className="cursor-pointer text-gray-600"
             strokeWidth={1}
-            onClick={() => setClicked(false)}
           />
         </button>
       </div>

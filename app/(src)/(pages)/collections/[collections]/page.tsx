@@ -2,12 +2,13 @@ import React from "react";
 import ContentTitle from "@/components/ContentTitle";
 import ProductCard from "@/components/ProductCard";
 import { ProductType } from "@/globalTypes";
-import { client, fetchHeartedProducts } from "@/sanity/lib/client";
+import { fetchHeartedProducts } from "@/lib/serverActions";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import { ShoppingCart } from "lucide-react";
 import FiltersShort from "@/components/FiltersShort";
+import { client } from "@/sanity/lib/client";
 
 const experimental_ppr = true;
 

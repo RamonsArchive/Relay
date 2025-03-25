@@ -14,7 +14,7 @@ import { SanityImage } from "@/globalTypes";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
-import { verifyNoUserReview } from "@/sanity/lib/client";
+import { verifyNoUserReview } from "@/lib/serverActions";
 
 const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
   const router = useRouter();
@@ -74,7 +74,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         mainRating: Number(formData.get("mainRating")) || undefined,
         wouldRecommend: reccomendBoolean,
         review: formData.get("review")?.toString() || undefined,
-        reviewTitle: formData.get("title")?.toString() || undefined,
+        reviewTitle: formData.get("reviewTitle")?.toString() || undefined,
         sizeRating: Number(formData.get("sizeRating")) || undefined,
         widthRating: Number(formData.get("widthRating")) || undefined,
         comfortRating: Number(formData.get("comfortRating")) || undefined,
@@ -90,6 +90,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
       console.log("productId", productId);
       console.log("user id", user?.id);
       const existingReview = await verifyNoUserReview(productId[0], user?.id);
+      console.log("existing review", existingReview);
       if (existingReview.status == "ERROR") {
         toast.error("Error", {
           description: "You already wrote a review for this product",
@@ -109,11 +110,15 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
           description: "Congrats, your review was a success",
         });
         router.push(`/product/${productId}`);
+      } else {
+        toast.error("Error", {
+          description: "An unexpected error occured. Please try again",
+        });
+        router.refresh();
       }
-
-      //return result;
     } catch (errors) {
       console.log("Error before righting error");
+      console.error(errors);
       if (errors instanceof z.ZodError) {
         const fieldErrors = errors.flatten().fieldErrors;
         setErrors(fieldErrors as unknown as Record<string, string>);
@@ -140,16 +145,17 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
   });
 
   return (
-    <div className="flex flex-col w-[50%] h-full overflow-y-auto items-center gap-5 p-5 pb-10">
+    <div className="flex flex-col w-full items-center md:w-[50%] h-full overflow-y-auto justify-start gap-5 pb-10 scrollbar-hidden">
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
           <Loader />
         </div>
       )}
-      <h1 className="font-plex-sans font-medium text-[28px]">
-        Write your Review!
-      </h1>
-      <Form action={formAction} className="flex flex-col gap-8">
+
+      <Form action={formAction} className="flex flex-col gap-8 p-5">
+        <h1 className="flex font-plex-sans font-medium justify-start text-[22px] sm:text-[24px] md:text-[28px]">
+          Write your Review!
+        </h1>
         <div className="product-write-section">
           <label className="product-write-label ">Overall Rating</label>
           <div className="flex flex-row gap-3">
@@ -174,7 +180,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
           <label className="product-write-label">
             Would you Reccomend this Product?
           </label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 font-plex-sans text-[14px] text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${wouldRecommend == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -198,37 +204,38 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label">Share your Experience</label>
-          <span className="font-plex sans font-light text-[14px]">
+          <span className="font-plex sans font-light text-[12px] sm:text-[14px]">
             Tell other's about the product
           </span>
           <Textarea
             id="description"
             name="review"
             placeholder="Your Review"
-            className="w-full h-28"
+            className="w-full h-20 sm:h-28 text-[14px] sm:text-[16px] font-plex-sans max-w-lg"
             required
           />
           {errors.review && (
             <span className="product-write-error">{errors.review}</span>
           )}
-          <span className="font-plex sans font-light text-[14px]">
+          <span className="font-plex sans font-light text-[12px] sm:text-[14px]">
             Write a one sentence opinion of the product for the review title.
           </span>
           <Input
             id="title"
-            name="title"
+            name="reviewTitle"
             type="title"
             placeholder="Review title"
+            className="text-[14px] sm:text-[16px] font-plex-sans max-w-lg"
             required
           />
-          {errors.title && (
-            <span className="product-write-error">{errors.title}</span>
+          {errors.reviewTitle && (
+            <span className="product-write-error">{errors.reviewTitle}</span>
           )}
         </div>
 
         <div className="product-write-section">
           <label className="product-write-label ">Width Rating</label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 font-plex-sans text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${widthRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -259,7 +266,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Comfort Rating</label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 font-plex-sans text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${comfortRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -290,7 +297,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Size Rating</label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 font-plex-sans text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${sizeRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -321,7 +328,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Quality Rating</label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${qualityRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -352,7 +359,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
         <div className="product-write-section">
           <label className="product-write-label ">Value Rating</label>
-          <div className="flex flex-row gap-5">
+          <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 text-[12px] sm:text-[14px] md:text-[16px]">
             <Circle
               size={24}
               className={`${valueRating == 1 ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
@@ -385,7 +392,13 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
           <label className="product-write-label">
             Optional Photo of the product
           </label>
-          <Input id="photo" name="photo" type="file" placeholder="photo" />
+          <Input
+            id="photo"
+            name="photo"
+            type="file"
+            placeholder="photo"
+            className="text-[14px] sm:text-[16px] font-plex-sans max-w-lg"
+          />
           {errors.photo && (
             <span className="product-write-error">{errors.photo}</span>
           )}
@@ -398,6 +411,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
             name="nickname"
             type="title"
             placeholder="nickname"
+            className="text-[14px] sm:text-[16px] font-plex-sans max-w-lg"
             required
           />
           {errors.nickname && (
@@ -413,6 +427,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
             type="email"
             placeholder="email"
             defaultValue={user?.email || ""}
+            className="text-[14px] sm:text-[16px] font-plex-sans max-w-lg"
             required
           />
           {errors.email && (
@@ -420,7 +435,11 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
           )}
         </div>
 
-        <Button type="submit" disabled={isPending} className="w-full h-[40px]">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="w-full max-w-lg h-[40px]"
+        >
           {isPending ? "Submitting..." : "Submit your Review"}
           <Send />
         </Button>

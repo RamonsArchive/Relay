@@ -1,5 +1,6 @@
 import ProductImages from "@/components/ProductImages";
-import { client, fetchHeartedProducts, urlFor } from "@/sanity/lib/client";
+import { fetchHeartedProducts } from "@/lib/serverActions";
+import { client, urlFor } from "@/sanity/lib/client";
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
   GET_TOP_REVIEWS,
@@ -75,13 +76,6 @@ const page = async ({ params }: { params: { id: string } }) => {
   const galleryImages = imagesPlusProductDetails.imageGallery;
 
   console.log("variants in product page", variants);
-  /*console.log(
-    "colors",
-    variants.map((variant: any) => variant.color.name)
-  );*/
-
-  console.log("Title", title);
-  console.log("cost", cost);
 
   let dereferencedReviews = reviews || [];
   let recentlyViewedProds = [];
@@ -312,17 +306,17 @@ const page = async ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-full min-h-0">
+          <div className="flex gap-3 flex-col w-full min-h-0 pb-5 pt-10">
             <p className="font-plex-sans font-medium text-[30px] pl-5">
               Recently Viewed Products
             </p>
             <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
-              <div className="flex flex-nowrap w-max gap-5 min-h-[375px] p-5">
+              <div className="flex flex-nowrap w-max gap-5 min-h-[375px] px-5">
                 <Suspense fallback={<div>Loading products... </div>}>
                   {recentlyViewedProds?.length > 0 ? (
                     recentlyViewedProds
                       .slice(0, 10)
-                      .map((product: any, index: number) => {
+                      .map((product: ProductType) => {
                         return (
                           <ProductCard
                             key={product._id}
@@ -445,32 +439,37 @@ const page = async ({ params }: { params: { id: string } }) => {
                 flaggedReviews={flaggedReviews}
               />
             </Suspense>
-            <div className="flex flex-col gap-1 w-full text-start mt-16">
+            <div className="flex flex-col gap-1 w-full text-start mt-16 min-h-0">
               <p className="font-plex-sans font-medium text-[24px] sm:text-[26px] pl-5">
                 Recently Viewed Products
               </p>
-              <div className="w-full flex flex-nowrap px-5 overflow-x-auto scrollbar-hidden whitespace-nowrap h-atuo gap-3 pt-2 pb-5">
-                <Suspense fallback={<div>Loading products... </div>}>
-                  {recentlyViewedProds?.length > 0 ? (
-                    recentlyViewedProds
-                      .slice(0, 10)
-                      .map((product: any, index: number) => {
-                        return (
-                          <div className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]">
-                            <ProductCard
-                              key={product._id}
-                              product={product}
-                              isHearted={heartedProducts.includes(product._id)}
-                              callbackUrl={callbackUrl}
-                              user={user}
-                            />
-                          </div>
-                        );
-                      })
-                  ) : (
-                    <div>No recently viewed products</div>
-                  )}
-                </Suspense>
+
+              <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
+                <div className="w-max flex flex flex-nowrap px-5 h-atuo gap-3 pt-2 pb-5 min-h-[200px]">
+                  <Suspense fallback={<div>Loading products... </div>}>
+                    {recentlyViewedProds?.length > 0 ? (
+                      recentlyViewedProds
+                        .slice(0, 10)
+                        .map((product: any, index: number) => {
+                          return (
+                            <div className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]">
+                              <ProductCard
+                                key={product._id}
+                                product={product}
+                                isHearted={heartedProducts.includes(
+                                  product._id
+                                )}
+                                callbackUrl={callbackUrl}
+                                user={user}
+                              />
+                            </div>
+                          );
+                        })
+                    ) : (
+                      <div>No recently viewed products</div>
+                    )}
+                  </Suspense>
+                </div>
               </div>
             </div>
           </div>
@@ -481,22 +480,3 @@ const page = async ({ params }: { params: { id: string } }) => {
 };
 
 export default page;
-
-/* <div className="product-sizebutton-grid ">
-                      {allSizes.map((size: string, index: number) => {
-                        const stockItem = stock.find(
-                          (item: any) => item.size === size.toLowerCase()
-                        );
-                        const isAvaliable = stockItem?.quantity > 0;
-
-                        return (
-                          <button
-                            className={`h-[50p]x w-[65px] border-rounded-[10px] ${isAvaliable ? "border-[1px] border-third-200" : " border-[1px] border-thrid-200 bg-secondary-300"}`}
-                            key={index}
-                            disabled={!isAvaliable}
-                          >
-                            <span>{size}</span>
-                          </button>
-                        );
-                      })}
-                    </div> */

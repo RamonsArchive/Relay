@@ -74,14 +74,12 @@ const Searchbar = ({
         </div>
       )}
 
-      <div ref={popupRef} className={`${clicked ? "none" : "hidden"}`}>
-        <SearchPopUp
-          session={session}
-          clicked={clicked}
-          setClicked={setClicked}
-          recentSearches={recentSearches}
-        />
-      </div>
+      <SearchPopUp
+        session={session}
+        clicked={clicked}
+        setClicked={setClicked}
+        recentSearches={recentSearches}
+      />
     </>
   );
 };

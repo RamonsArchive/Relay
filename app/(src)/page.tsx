@@ -1,5 +1,6 @@
 import ProductCard from "@/components/ProductCard";
-import { client, fetchHeartedProducts } from "@/sanity/lib/client";
+import { fetchHeartedProducts } from "@/lib/serverActions";
+import { client } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { ShoppingCart } from "lucide-react";
 import { ProductType } from "@/globalTypes";
