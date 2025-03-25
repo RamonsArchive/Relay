@@ -473,7 +473,7 @@ const ViewReviews = ({
                 ))}
               </div>
             </div>
-            <div className="grid cols-1 sm:cols-2 md:cols-3 lg:cols-4 gap-8 pt-1">
+            <div className="grid cols-1 sm:cols-2 md:cols-3 lg:cols-4 gap-8 pt-5">
               {paginatedReviews.slice(0, 10).map((review, index) => (
                 <div
                   key={index}

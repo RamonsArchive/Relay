@@ -112,10 +112,10 @@ const ProductDetailsDrop = ({
           )}
         </div>
         <div
-          className={`flex transform transition-all duration-300 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "max-h-full" : "max-h-0 overflow-hidden"}`}
+          className={`flex transform w-full transition-all duration-300 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "max-h-full" : "max-h-0 overflow-hidden"}`}
         >
           <div
-            className={`flex flex-col gap-5 transform transition-all duration-200 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "translate-y-0 opacity-100 " : "-translate-y-full opacity-0"}`}
+            className={`flex flex-col w-full gap-5 transform transition-all duration-200 ease-in-out scrollbar-hidden ${droppedInfo.productReviews ? "translate-y-0 opacity-100 " : "-translate-y-full opacity-0"}`}
           >
             <div className="font-plex-sans font-light text-[14px] sm:text-[16px] md:text-[19px]">
               <span>{getNumberOfReviews(reviews.length)}</span>

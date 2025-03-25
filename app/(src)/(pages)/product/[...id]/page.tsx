@@ -3,7 +3,6 @@ import { fetchHeartedProducts } from "@/lib/serverActions";
 import { client, urlFor } from "@/sanity/lib/client";
 import {
   GET_DEREFERENCED_RECENTLY_VIEWED_PRODUCTS,
-  GET_TOP_REVIEWS,
   GET_USER_FLAGGED_REVIEWS,
   PRODUCT_PAGE_INFORMATION,
 } from "@/sanity/lib/queries";
@@ -444,27 +443,25 @@ const page = async ({ params }: { params: { id: string } }) => {
                 Recently Viewed Products
               </p>
 
-              <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
+              <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap ">
                 <div className="w-max flex flex flex-nowrap px-5 h-atuo gap-3 pt-2 pb-5 min-h-[200px]">
                   <Suspense fallback={<div>Loading products... </div>}>
                     {recentlyViewedProds?.length > 0 ? (
-                      recentlyViewedProds
-                        .slice(0, 10)
-                        .map((product: any, index: number) => {
-                          return (
-                            <div className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]">
-                              <ProductCard
-                                key={product._id}
-                                product={product}
-                                isHearted={heartedProducts.includes(
-                                  product._id
-                                )}
-                                callbackUrl={callbackUrl}
-                                user={user}
-                              />
-                            </div>
-                          );
-                        })
+                      recentlyViewedProds.slice(0, 10).map((product: any) => {
+                        return (
+                          <div
+                            key={product._id}
+                            className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]"
+                          >
+                            <ProductCard
+                              product={product}
+                              isHearted={heartedProducts.includes(product._id)}
+                              callbackUrl={callbackUrl}
+                              user={user}
+                            />
+                          </div>
+                        );
+                      })
                     ) : (
                       <div>No recently viewed products</div>
                     )}

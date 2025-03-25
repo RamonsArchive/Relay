@@ -34,7 +34,7 @@ const ProductQuantity = ({ variants }: { variants: VariantType }) => {
 
   return (
     <div className="flex flex-row items-center justify-start ">
-      <div className="flex items-center justify-between border-[1px] border-gray-500 rounded-sm w-full max-w-sm gap-3 h-[50px] sm:h-[60px]">
+      <div className="flex items-center justify-between border-[1px] border-gray-500 rounded-sm w-full max-w-sm gap-5 h-[50px] sm:h-[60px]">
         <button
           className={`flex w-full h-full items-center justify-center transition duration-200 ease-in-out ${quantity === 1 ? " bg-gray-300 pointer-events-none" : "cursor-pointer active:bg-gray-100"}`}
           onClick={() => handleSetQuantity(quantity - 1)}

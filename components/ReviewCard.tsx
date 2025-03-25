@@ -24,6 +24,7 @@ import { Ban, Flag, Check } from "lucide-react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import { revalidateFlaggedReviews } from "@/lib/serverActions";
+import LoaderOverlay from "./LoaderOverlay";
 
 const ReviewCard = ({
   userId,
@@ -351,9 +352,7 @@ const ReviewCard = ({
   return (
     <div className="flex flex-col w-full gap-2">
       {(isPending || editReviewLoader || flagPending || deleteReviewLoader) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-[999]">
-          <Loader />
-        </div>
+        <LoaderOverlay />
       )}
       <div className="flex flex-col gap-1">
         {reviewTitle && (
