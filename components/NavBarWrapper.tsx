@@ -4,13 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
 import ManageSession from "./ManageSession";
-import { Heart } from "lucide-react";
 import { ShoppingBasket } from "lucide-react";
 import { Session } from "next-auth";
 import FloatingNavBar from "./FloatingNavBar";
 import { RecentSearches } from "@/globalTypes";
 import { useState, useEffect, useRef } from "react";
-import { set } from "sanity";
 import NavBarHeart from "./NavBarHeart";
 
 const NavBarWrapper = ({
