@@ -27,15 +27,16 @@ const SignInPage = () => {
               src="/assets/logo/logo-png.png"
               alt="Brand Logo"
               width={130}
-              height={100}
+              height={130}
             />
           </Link>
-          <p className="font-plex-sans font-medium text-[20px] text-black">
+
+          <p className="font-plex-sans font-medium text-[16px] md:text-[20px] text-black">
             Please sign in to continue
           </p>
           <form
             action={() => handleSignIn(fullCallbackUrl)}
-            className="sign-in-button bg-primary-200 text-white w-full"
+            className="sign-in-button bg-primary-200 text-white font-plex-sans text-[16px] md:text-[20px] w-full"
           >
             <button type="submit" className="w-full h-full">
               Sign in
