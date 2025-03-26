@@ -56,7 +56,9 @@ const page = async ({
         <FiltersShort />
       </Suspense>
 
+      <Suspense fallback={<div>Loading Title...</div>}>
       <ContentTitle />
+      </Suspense>
 
       <div className="product-container">
         <Suspense fallback={<div>Loading...</div>}>

@@ -52,7 +52,9 @@ const Home = async ({
         <FiltersShort />
       </Suspense>
 
+    <Suspense fallback={<div>Loading Title...</div>}>
       <ContentTitle />
+      </Suspense>
 
       <div className="product-container overflow-y-auto scrollbar-hidden">
         <Suspense fallback={<div>Loading...</div>}>
