@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import SearchPopUp from "./SearchPopUp";
 import { X, Search } from "lucide-react";
 import { Session } from "next-auth";
@@ -68,13 +68,14 @@ const Searchbar = ({
           />
         </div>
       )}
-
+      <Suspense fallback={null} >
       <SearchPopUp
         session={session}
         clicked={clicked}
         setClicked={setClicked}
         recentSearches={recentSearches}
       />
+      </Suspense>
     </>
   );
 };

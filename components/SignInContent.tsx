@@ -15,7 +15,7 @@ const SignInContent = () => {
         setFullCallbackUrl(new URL(callbackUrl, window.location.origin).href);
       }
     }, [callbackUrl]);
-    
+
   return (
     <>
         <p className="font-plex-sans font-medium text-[16px] md:text-[20px] text-black">

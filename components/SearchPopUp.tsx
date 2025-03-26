@@ -9,6 +9,7 @@ import React, {
   useContext,
   useEffect,
   useRef,
+  Suspense,
 } from "react";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -156,7 +157,9 @@ const SearchPopUp = ({
               disabled={isPending}
             ></input>
 
+          <Suspense fallback={<div> reset search </div>}>
             <SearchBarReset setInputValue={setInputValue} />
+          </Suspense>
           </div>
         </Form>
         <div className="flex flex-col justify-center items-center w-full max-w-lg mt-10 gap-y-5 text-center">

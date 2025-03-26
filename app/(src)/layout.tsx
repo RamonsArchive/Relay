@@ -4,10 +4,12 @@ import { ContextProvider } from "@/app/context/context";
 import React, { Suspense } from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
 import { Toaster } from "sonner";
+import LoaderOverlay from "@/components/LoaderOverlay";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
+      <Suspense fallback={<LoaderOverlay />}>
       <ContextProvider>
         <Suspense fallback={<div>Loading...</div>}>
         <Navbar />
@@ -30,6 +32,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         </div>
         <Toaster richColors />
       </ContextProvider>
+      </Suspense>
     </main>
   );
 };

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
@@ -114,24 +114,32 @@ const NavBarWrapper = ({
                 />
               </div>
               <div className="p-2">
+                <Suspense fallback={<div> Profile </div>}>
                 <ManageSession session={session} />
+                </Suspense>
               </div>
             </div>
             <div className="flex justify-self-end self-end">
+              <Suspense fallback={<div> Search </div>}>
               <Searchbar session={session} recentSearches={recentSearches} />
+              </Suspense>
             </div>
           </div>
         </nav>
         {/* Mobile Nav */}
       </header>
       <div className="md:hidden fixed top-0 h-[4rem] left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
+        <Suspense fallback={<div> Search </div>}>
         <FloatingNavBar session={session} recentSearches={recentSearches} />
+        </Suspense>
       </div>
 
       <header
         className={`hidden md:block h-[4rem] fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50 transform transition-all ease-in-all duration-300 ${isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
+        <Suspense fallback={<div> Search </div>}>
         <FloatingNavBar session={session} recentSearches={recentSearches} />
+        </Suspense>
       </header>
     </>
   );

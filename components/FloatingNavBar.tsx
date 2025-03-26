@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import Searchbar from "./Searchbar";
 import { Session } from "next-auth";
 import { ShoppingBasket } from "lucide-react";
@@ -43,14 +43,18 @@ const FloatingNavBar = ({
         <span className="max-w-[15px]">Relay stands with Palestine</span>
       </div>
       <div className="flex items-center sm:gap-1 ml-auto mr-1">
+        <Suspense fallback={<div>Loading... </div>}>
         <Searchbar
           session={session}
           compactMode={compactMode}
           recentSearches={recentSearches}
         />
+        </Suspense>
         <NavBarHeart />
         <div className="p-2">
+          <Suspense fallback={<div>Loading... </div>}>
           <ManageSession session={session} />
+          </Suspense>
         </div>
         <div className="navbar-icon-compact">
           <Link href="/">
