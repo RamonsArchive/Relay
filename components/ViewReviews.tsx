@@ -392,7 +392,7 @@ const ViewReviews = ({
                     {filterDropDown && (
                       <div className="flex flex-col" ref={filterDropDownRef}>
                         {Object.entries(numReviewsPerStar).map(
-                          ([_, value], index) => (
+                          ([_key, value], index) => (
                             <div
                               key={index}
                               className="flex items-center gap-0 sm:gap-2 p-2 hover:bg-gray-200 cursor-pointer"
@@ -405,7 +405,7 @@ const ViewReviews = ({
                                 )}
                               </div>
 
-                              {Array.from({ length: 5 }).map((_, i) => (
+                              {Array.from({ length: 5 }).map((_key, i) => (
                                 <Star
                                   key={i}
                                   className={`className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${
@@ -440,7 +440,7 @@ const ViewReviews = ({
                     </p>
                   </div>
                 )}
-                {Object.entries(filterVisual).map(([_, text], index) => (
+                {Object.entries(filterVisual).map(([_key, text], index) => (
                   <div
                     key={index}
                     className="flex items-center justify-center gap-3 font-plex-sans font-regular text-[13px] px-2 py-1 rounded-full transition hover:bg-gray-300 duration-200 ease-in-out cursor-pointer"
@@ -484,7 +484,7 @@ const ViewReviews = ({
                 <ChevronLeft className="size-[18px] sm:size-[20px]" />
               </button>
 
-              {Array.from({ length: totalPages }, (_, i) => (
+              {Array.from({ length: totalPages }, (_key, i) => (
                 <button
                   key={i}
                   className={`px-3 py-1 rounded-full text-[18px] sm:text-[20px] ${currentPage === i + 1 ? "bg-gray-500 text-white" : "transition hover:bg-gray-300 duration-200 ease-in-out"}`}

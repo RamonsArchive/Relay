@@ -34,7 +34,7 @@ const ReviewStars = ({
         )}
 
         <div className="flex">
-          {Array.from({ length: fullStars }).map((_, index) => (
+          {Array.from({ length: fullStars }).map((_key, index) => (
             <Star
               key={index}
               size={size}
@@ -57,7 +57,7 @@ const ReviewStars = ({
             </div>
           )}
 
-          {Array.from({ length: emptyStars }).map((_, index) => (
+          {Array.from({ length: emptyStars }).map((_key, index) => (
             <Star key={index} size={size} className="text-gray-300" />
           ))}
         </div>

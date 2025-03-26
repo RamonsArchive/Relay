@@ -7,9 +7,9 @@ import { client } from "@/sanity/lib/client";
 import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
 import { auth } from "@/auth";
-import { ShoppingCart } from "lucide-react";
 import FiltersShort from "@/components/FiltersShort";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
 
 const page = async ({

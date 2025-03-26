@@ -275,6 +275,7 @@ export type ReviewCount = {
   twoStar: number;
   oneStar: number;
 }
+
 export type ActionState = {
   status: "INITIAL" | "PENDING" | "SUCCESS" | "ERROR";
   error: string;

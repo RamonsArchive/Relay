@@ -63,7 +63,7 @@ const ManageSession = ({ session }: { session: Session | null }) => {
     }
   };
 
-  const [state, formAction, isPending] = useActionState(handleFormSubmit, {
+  const [_state, formAction, isPending] = useActionState(handleFormSubmit, {
     status: "INITIAL",
     error: "",
   });

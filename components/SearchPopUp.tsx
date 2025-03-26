@@ -98,7 +98,7 @@ const SearchPopUp = ({
   };
 
   /* TODO: ADD A LOADING SCREEN USING REACT.PORTAL TO THE HOME PAGE */
-  const [state, formAction, isPending] = useActionState(handleFromSubmit, {
+  const [_state, formAction, isPending] = useActionState(handleFromSubmit, {
     error: "",
     status: "INITIAL",
   });

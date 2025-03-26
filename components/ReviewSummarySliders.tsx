@@ -1,4 +1,4 @@
-import { ReviewStatsType, ReviewType } from "@/globalTypes";
+import { ReviewStatsType } from "@/globalTypes";
 import React from "react";
 import Slider from "@/components/Slider";
 

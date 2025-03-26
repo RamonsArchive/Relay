@@ -53,7 +53,7 @@ const MobileProductImages = ({
           className="object-cover"
         />
         <div className="absolute bottom-4 left-0 right-0 flex justify-center mt-2">
-          {mobileImages.map((_, index) => (
+          {mobileImages.map((_key, index) => (
             <div
               key={index}
               className={`w-2 h-2 mx-1 rounded-full ${index == currentIndex ? "bg-gray-800" : "bg-gray-300"}`}

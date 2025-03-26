@@ -136,7 +136,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
     }
   };
 
-  const [state, formAction, isPending] = useActionState(handleFormSubmit, {
+  const [_state, formAction, isPending] = useActionState(handleFormSubmit, {
     error: "",
     status: "INITIAL",
   });
@@ -160,7 +160,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
           <div className="product-write-section">
             <label className="product-write-label ">Overall Rating</label>
             <div className="flex flex-row gap-3">
-              {[...Array(5)].map((_, i) => (
+              {[...Array(5)].map((_key, i) => (
                 <Star
                   key={i}
                   className={`cursor-pointer size-[24px] md:size-[28px] ${i < mainRating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}

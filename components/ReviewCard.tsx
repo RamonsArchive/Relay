@@ -345,7 +345,7 @@ const ReviewCard = ({
     }
   };
 
-  const [state, formAciton, isPending] = useActionState(handleFromSubmit, {
+  const [_state, formAciton, isPending] = useActionState(handleFromSubmit, {
     error: "",
     status: "INITIAL",
   });
@@ -386,7 +386,7 @@ const ReviewCard = ({
                 {!flagged ? (
                   <div>
                     {Object.entries(flaggedReasons).map(
-                      ([_, value], index) => (
+                      ([, value], index) => (
                         <button
                           key={index}
                           className="block w-full text-[10px] sm:text-[12px] text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"

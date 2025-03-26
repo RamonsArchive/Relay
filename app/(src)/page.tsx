@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { auth } from "@/auth";
 import FiltersShort from "@/components/FiltersShort";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const experimental_ppr = true;
 
 const Home = async ({
