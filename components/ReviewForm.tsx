@@ -51,7 +51,6 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
 
       try {
         const uploadImageId = await uploadImageToSanity(photoFile);
-
         if (uploadImageId) {
           photoRef = {
             _type: "image",

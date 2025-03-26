@@ -1,11 +1,12 @@
 import React, { Suspense } from "react";
 import { redirect } from "next/navigation";
-import ReviewForm from "@/components/ReviewForm";
 import { auth } from "@/auth";
+import ReviewFormWrapper from "@/components/ReviewFormWrapper";
 
 export const experimental_ppr = true;
 
 const WriteReview = async ({ params }: { params: Promise<{ id: string }> }) => {
+
   const productId = (await params).id || "/";
   const session = await auth();
   const user = session?.user;
@@ -15,11 +16,10 @@ const WriteReview = async ({ params }: { params: Promise<{ id: string }> }) => {
     );
   }
 
-  // if not authenticated, redirect to sign in
   return (
     <div className="flex flex-row w-full pt-[4rem] md:pt-0 h-[calc(100vh-8rem)]">
       <Suspense fallback={<div>Loading review form... </div>}>
-        <ReviewForm user={user} productId={productId} />
+        <ReviewFormWrapper user={user} productId={productId} />
       </Suspense>
       <div className="hidden md:flex flex-col w-[50%] p-5 gap-8">
         <div className="flex flex-col gap-3">
