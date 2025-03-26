@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
@@ -16,7 +16,9 @@ const SidebarWrapper = () => {
 
   return (
     <div className={`${isNoSideBarPage ? "w-0 hidden opacity-0" : "side-bar"}`}>
+      <Suspense fallback={<div>Loading...</div>}>
       <Sidebar />
+      </Suspense>
     </div>
   );
 };

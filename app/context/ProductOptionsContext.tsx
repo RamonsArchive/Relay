@@ -22,8 +22,6 @@ export const ProductOptionsContext = createContext<ProductOptionsContextType>({
   setQuantity: () => {},
 });
 
-//export const useProductOptions = () => useContext(ProductOptionsContext);
-
 const ProductOptionsProvider = ({
   children,
 }: {

@@ -170,7 +170,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    <>
       <ProductOptionsProvider>
         <AutoFlagReviewWrapper userId={userId} />
         <div className="hidden md:flex md:flex-col max-w-screen pt-[4rem] md:pt-[0]">
@@ -467,7 +466,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </ProductOptionsProvider>
-    </>
     </Suspense>
   );
 };

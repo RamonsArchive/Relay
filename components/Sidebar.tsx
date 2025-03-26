@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import CheckBox from "./CheckBox";
 import { Context } from "@/app/context/context";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -83,10 +83,12 @@ const Sidebar = () => {
           </button>
         </div>
 
+        <Suspense fallback={<div>Filters...</div>}>
         <MobileFilters
           mobileFiltersClicked={mobileFiltersClicked}
           setMobileFiltersClicked={setMobileFiltersClicked}
         />
+        </Suspense>
       </nav>
     </>
   );
