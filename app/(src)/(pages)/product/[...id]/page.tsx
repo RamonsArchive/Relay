@@ -169,7 +169,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
     <>
       <ProductOptionsProvider>
         <AutoFlagReviewWrapper userId={userId} />
@@ -249,22 +248,31 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
                     Select Color
                   </p>
-                  <ProductColorButtons variants={variants} />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ProductColorButtons variants={variants} />
+                  </Suspense>
                 </div>
                 <div className="flex flex-col gap-1 w-full pt-5">
                   <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
                     Select Size
                   </p>
+                  <Suspense fallback={<div>Loading...</div>}>
                   <ProductSizeButtons variants={variants} />
+                  </Suspense>
                 </div>
                 <div className="flex flex-col w-full pt-5 gap-3">
                   <p className="font-plex-sans font-medium text-[18px] lg:text-[20px]">
                     Quantity
                   </p>
+                  <Suspense fallback={<div>Loading...</div>}>
                   <ProductQuantity variants={variants} />
+                  </Suspense>
                 </div>
+                
                 <div className="flex flex-col w-full gap-4 pt-10">
+                  <Suspense fallback={<div>Loading...</div>}>
                   <ProductBuyButtons variants={variants} />
+                  </Suspense>
                 </div>
                 <Suspense fallback={<div>Loading...</div>}>
                   <ProductDetailsDrop
@@ -329,8 +337,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   />
                   <p>{capitalizeBrand(brands[0])}</p>
                 </div>
-                <Suspense fallback={<div>Heart</div>}>
                   <div className="sm:pr-5">
+                  <Suspense fallback={<div>Heart</div>}>
                     <ProductHeart
                       isHearted={heartedProducts?.includes(
                         productId.toString()
@@ -339,8 +347,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                       userId={userId}
                       callbackUrl={callbackUrl}
                     />
+                    </Suspense>
                   </div>
-                </Suspense>
               </div>
 
               <div className="flex flex-col">
@@ -386,9 +394,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
                 Quantity
               </p>
+              <Suspense fallback={<div>Loading Product Quantity...</div>}>
               <ProductQuantity variants={variants} />
+              </Suspense>
             </div>
+            <Suspense fallback={<div>Loading...</div>}>
             <ProductBuyButtons variants={variants} />
+            </Suspense>
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">
               {parsedDescription ? (
@@ -453,7 +465,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </ProductOptionsProvider>
     </>
-    </Suspense>
   );
 };
 
