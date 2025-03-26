@@ -1,22 +1,9 @@
-"use client";
 import React, { Suspense } from "react";
-import { handleSignIn } from "@/lib/serverActions";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import SignInContent from "@/components/SignInContent";
 
 const SignInPage = () => {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
-
-  const [fullCallbackUrl, setFullCallbackUrl] = useState(callbackUrl);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setFullCallbackUrl(new URL(callbackUrl, window.location.origin).href);
-    }
-  }, [callbackUrl]);
 
   return (
     <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden">
@@ -31,18 +18,8 @@ const SignInPage = () => {
             />
           </Link>
 
-          <p className="font-plex-sans font-medium text-[16px] md:text-[20px] text-black">
-            Please sign in to continue
-          </p>
-          <Suspense fallback={<div>Loading...</div>}>
-          <form
-            action={() => handleSignIn(fullCallbackUrl)}
-            className="sign-in-button bg-primary-200 text-white font-plex-sans text-[16px] md:text-[20px] w-full"
-          >
-            <button type="submit" className="w-full h-full">
-              Sign in
-            </button>
-          </form>
+          <Suspense fallback={<div>Loading... </div>}>
+          <SignInContent />
           </Suspense>
         </div>
       </div>
