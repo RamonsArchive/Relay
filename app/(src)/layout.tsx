@@ -18,7 +18,9 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
           </Suspense>
 
           <div className="content-wrapper">
+            <Suspense fallback={<div>Loading...</div>}>
             <div className="content-container">{children}</div>
+            </Suspense>
           </div>
         </div>
         <div className="footer-wrapper">
