@@ -32,11 +32,11 @@ export const experimental_ppr = true;
 
 const md = markdownit();
 
-const page = async ({ params }: { params: { id: string } }) => {
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
-  const path = params.id || "/";
+  const path = (await params).id || "/";
   const productId = path.toString();
   const callbackUrl = `/product/${path}`;
   if (!path) {

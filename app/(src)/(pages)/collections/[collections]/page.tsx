@@ -16,7 +16,7 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: { collections?: string };
+  params: Promise<{ collections?: string }>;
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const sesson = await auth();
@@ -27,7 +27,7 @@ const page = async ({
   if (userId) {
     heartedProducts = await fetchHeartedProducts(userId);
   }
-  const path = params.collections || "/";
+  const path = (await params).collections || "/";
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 

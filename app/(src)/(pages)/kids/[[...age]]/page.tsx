@@ -16,14 +16,14 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: { age?: string[] };
+  params: Promise<{ age?: string[] }>;
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
 
-  const pathArray = params.age || [];
+  const pathArray = (await params).age || [];
   const path = ["kids", ...pathArray].join("/");
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";

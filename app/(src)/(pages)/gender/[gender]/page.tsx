@@ -16,7 +16,7 @@ const page = async ({
   params,
   searchParams,
 }: {
-  params: { gender?: string };
+  params: Promise<{ gender?: string }>;
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const sesson = await auth();
@@ -27,7 +27,7 @@ const page = async ({
   if (userId) {
     heartedProducts = await fetchHeartedProducts(userId);
   }
-  const path = params.gender || "/";
+  const path = (await params).gender || "/";
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 

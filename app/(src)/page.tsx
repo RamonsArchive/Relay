@@ -15,14 +15,14 @@ const Home = async ({
   params,
   searchParams,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
   searchParams: Promise<{ query?: string; f?: string }>;
 }) => {
   const session = await auth();
   const user = session?.user;
   const userId = user?.id || null;
 
-  const path = params.slug || "/";
+  const path = (await params).slug || "/";
 
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";

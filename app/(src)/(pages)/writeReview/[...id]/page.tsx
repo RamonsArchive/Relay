@@ -5,8 +5,8 @@ import { auth } from "@/auth";
 
 export const experimental_ppr = true;
 
-const WriteReview = async ({ params }: { params: { id: string } }) => {
-  const productId = params.id || "/";
+const WriteReview = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const productId = (await params).id || "/";
   const session = await auth();
   const user = session?.user;
   if (!user) {
