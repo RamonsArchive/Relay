@@ -12,7 +12,7 @@ const ProductColorButtons = ({ variants }: { variants: VariantType }) => {
 
   useEffect(() => {
     if (!selectedColor && uniqueColors.length > 0) {
-      setSelectedColor(uniqueColors[0].name);
+      setSelectedColor(uniqueColors[0].name as string);
     }
   }, [selectedColor, setSelectedColor, uniqueColors]);
 
