@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { handleSignIn } from "@/lib/serverActions";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -34,6 +34,7 @@ const SignInPage = () => {
           <p className="font-plex-sans font-medium text-[16px] md:text-[20px] text-black">
             Please sign in to continue
           </p>
+          <Suspense fallback={<div>Loading...</div>}>
           <form
             action={() => handleSignIn(fullCallbackUrl)}
             className="sign-in-button bg-primary-200 text-white font-plex-sans text-[16px] md:text-[20px] w-full"
@@ -42,6 +43,7 @@ const SignInPage = () => {
               Sign in
             </button>
           </form>
+          </Suspense>
         </div>
       </div>
     </main>
