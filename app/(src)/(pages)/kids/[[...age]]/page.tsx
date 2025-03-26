@@ -24,7 +24,6 @@ const page = async ({
   const userId = user?.id || null;
 
   const pathArray = (await params).age || [];
-  console.log(`Path Array: ${pathArray}`);
   const path = ["kids", ...pathArray].join("/");
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";

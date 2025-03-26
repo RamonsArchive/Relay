@@ -260,7 +260,6 @@ const ReviewCard = ({
       const flaggedReasonSanitized = flaggedReason
         .toLowerCase()
         .replace(/\s+/g, "");
-      console.log("Flagging review", flaggedReasonSanitized);
       const result = await writeFlaggedReview(
         userId,
         _id as string,

@@ -50,7 +50,6 @@ const ProductDetailsDrop = ({
   };
 
   const handleToggleViewMoreReviews = () => {
-    console.log("Setting the opositive of setViewRevies");
     setViewReviews(!viewReviews);
   };
 

@@ -141,7 +141,7 @@ html {
   }
 
   .product-grid {
-  @apply grid grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 gap-5 mb-20;
+  @apply grid grid-cols-2 2xl:grid-cols-4 lg:grid-cols-3 gap-5 mb-20;
   }
 
   .product-group {

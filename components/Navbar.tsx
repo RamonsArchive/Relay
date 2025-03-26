@@ -12,7 +12,6 @@ const Navbar = async () => {
   if (userId) {
     recentSearches = await fetchRecentSearchesFew(userId);
   }
-  console.log("Recent searches", recentSearches);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

@@ -37,23 +37,17 @@ const page = async ({ params }: { params: { id: string } }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
-  console.log(" Product User Id", userId);
   const path = (await params).id || "/";
-  console.log("path", path);
   const productId = path.toString();
-  console.log("type of produt id", typeof productId);
-  console.log("Should be prdouct id", productId);
   const callbackUrl = `/product/${path}`;
   if (!path) {
     throw new Error("No path provided");
   }
 
-  console.log(`Path in product page: ${path}`);
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(productId)
   );
-  // console.log("Imageplus", imagesPlusProductDetails);
 
   const {
     title,
@@ -73,8 +67,6 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const imageMain = mainImage;
   const galleryImages = imagesPlusProductDetails.imageGallery;
-
-  console.log("variants in product page", variants);
 
   let dereferencedReviews = reviews || [];
   let recentlyViewedProds = [];
@@ -111,17 +103,12 @@ const page = async ({ params }: { params: { id: string } }) => {
       flaggedReviews = await client
         .withConfig({ useCdn: false })
         .fetch(flagQuery, { userId }, { next: { tags: ["flagged-reviews"] } });
-
-      console.log("Flagged reviews", flaggedReviews);
     } catch (error) {
       console.error(error);
-      console.log("There was an error");
       return parseServerActionResponse({
         status: "ERROR",
       });
     }
-
-    console.log("After usrId");
 
     after(() => {
       const callback = async () => {
@@ -142,9 +129,7 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   let selectedReviews = [];
 
-  console.log("right before derefenced reviews");
   if (dereferencedReviews?.length >= 3) {
-    console.log("more than three reviews");
     const sortedReviews = [...dereferencedReviews].sort(
       (a, b) =>
         b.mainRating - a.mainRating ||

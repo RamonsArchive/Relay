@@ -22,6 +22,7 @@ export const getDynamicFilters = async () => {
   };
 
   return {
+    sortby: ["Newest", "Oldest", "Lowest Priced", "Highest Priced"],
     gender: ["Men", "Women", "Unisex"],
     kids: ["Boys", "Girls"],
     size: ["XS", "S", "M", "L", "XL", "XXL", "XXXL"],

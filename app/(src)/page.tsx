@@ -21,15 +21,11 @@ const Home = async ({
   const session = await auth();
   const user = session?.user;
   const userId = user?.id || null;
-  console.log("Home page User Id", userId);
 
   const path = params.slug || "/";
-  console.log(`Path: ${path}`);
 
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
-  console.log(`Query: ${query}`);
-  console.log(`Filters: ${filters}`);
 
   let callbackUrl = path;
 
@@ -49,7 +45,6 @@ const Home = async ({
   const products = await client.fetch(
     PAGE_QUERY(path, query, filters, heartedProducts)
   );
-  console.log("Products", products);
 
   return (
     <main className="content-page">

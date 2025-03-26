@@ -23,10 +23,7 @@ const ProductQuantity = ({ variants }: { variants: VariantType }) => {
       variant?.size?.toLowerCase() === selectedSize.toLowerCase()
   );
 
-  console.log("variantForColorSize", variantForColorSize);
-
   const totalQuantity = variantForColorSize?.quantity || 1;
-  console.log("Total quantity", totalQuantity);
 
   const handleSetQuantity = (quantity: number) => {
     setQuantity(quantity);

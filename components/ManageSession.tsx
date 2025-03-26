@@ -46,7 +46,6 @@ const ManageSession = ({ session }: { session: any }) => {
         revalidateFlaggedReviews();
         revalidateHeartedProducts();
       }
-      console.log(`Is still logged in ${user}`);
     } catch (error) {
       console.error("Failed to execute session action:", error);
       return;

@@ -28,7 +28,6 @@ const page = async ({
     heartedProducts = await fetchHeartedProducts(userId);
   }
   const path = (await params).gender || "/";
-  console.log(`Path: ${path}`);
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 

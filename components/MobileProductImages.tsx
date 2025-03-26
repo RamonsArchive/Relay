@@ -12,8 +12,6 @@ const MobileProductImages = ({
   imageMain: SanityImage;
   galleryImages: SanityImage[];
 }) => {
-  console.log("imageMain", imageMain);
-  console.log("galleryImages", galleryImages);
   const mobileImages = [imageMain, ...(galleryImages || [])];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);

@@ -22,7 +22,6 @@ const page = async ({
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
-  console.log("Collections User Id", userId);
 
   let heartedProducts = [];
   if (userId) {

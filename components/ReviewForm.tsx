@@ -29,7 +29,6 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     const photoFile = formData.get("photo");
-    console.log("photoFile", photoFile);
     let photoRef = null;
     if (photoFile instanceof File && photoFile.size > 0) {
       if (photoFile.size > 5 * 1024 * 1024) {
@@ -42,12 +41,8 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         };
       }
 
-      console.log("Type of photo file", photoFile);
       try {
-        //const imageUrl = await readFileAsDataURL(photoFile);
-        //console.log("imageUrl", imageUrl);
         const uploadImageId = await uploadImageToSanity(photoFile);
-        console.log("uploadImageId", uploadImageId);
 
         if (uploadImageId) {
           photoRef = {
@@ -85,12 +80,8 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         email: formData.get("email")?.toString() || undefined,
       };
 
-      console.log(reviewData);
       await reviewSchema.parseAsync(reviewData);
-      console.log("productId", productId);
-      console.log("user id", user?.id);
       const existingReview = await verifyNoUserReview(productId[0], user?.id);
-      console.log("existing review", existingReview);
       if (existingReview.status == "ERROR") {
         toast.error("Error", {
           description: "You already wrote a review for this product",
@@ -98,7 +89,6 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         router.push(`/product/${productId}`);
         return existingReview;
       }
-      console.log("existing user", existingReview);
       const result = await writeReview(
         user.id.toString(),
         productId.toString(),
@@ -117,7 +107,6 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         router.refresh();
       }
     } catch (errors) {
-      console.log("Error before righting error");
       console.error(errors);
       if (errors instanceof z.ZodError) {
         const fieldErrors = errors.flatten().fieldErrors;

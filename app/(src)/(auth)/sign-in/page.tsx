@@ -18,9 +18,6 @@ const SignInPage = () => {
     }
   }, [callbackUrl]);
 
-  console.log("First callback url", callbackUrl);
-  console.log("Full callback url", fullCallbackUrl);
-
   return (
     <main className="flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden">
       <div className="flex flex-col max-w-[400px] max-h-[550px] w-[80%] h-[80%] font-plex-sans border border-gray-300 shadow-lg items-center gap-10 ">

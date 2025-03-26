@@ -1,3 +1,4 @@
+import { getSpecialFilters } from "@/lib/utils";
 
 /*TODO: Fix the cost function  */
 export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProducts: string[]) => {
@@ -44,7 +45,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
       return constructQuerySearch(searchTerm, optimizedHeartedProductsIds);
     } else if (query == "") {
       console.log("FILTERS and home page");
-      return constructHomePageFilters(searchTerm, optimizedHeartedProductsIds);
+      return constructHomePageFilters(filtersArray, optimizedHeartedProductsIds);
     } else {
       console.log(`Query and filter no path`)
       return constructQueryPlusFilters(queryArray, filtersArray, optimizedHeartedProductsIds);
@@ -83,7 +84,7 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
    }
 
    console.log.apply("NO SEARCH TERM and FILTERS for non home page");
-   return constructNonHomePagePlusFilters(paramConditions, searchTerm, optimizedHeartedProductsIds);
+   return constructNonHomePagePlusFilters(paramConditions, filtersArray, optimizedHeartedProductsIds);
   
 };
 
@@ -147,9 +148,21 @@ const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: s
 }
 
 /* For homepage with filters */
-const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsIds: string) => {
-  const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
+const constructHomePageFilters = (filtersArray: string[], optimizedHeartedProductsIds: string) => {
+  console.log("Filters array", filtersArray);
+
+  const filterParams = filtersArray;
   console.log("HOME PAGE WITH FILTERS")
+
+  const keywords = filterParams.filter((keyword) => !["newest", "oldest", "lowest priced", "highest priced"].includes(keyword) && keyword.slice(0,1) !== "$");
+  console.log("keywords", keywords);
+
+  const specialFilterrs = getSpecialFilters(filterParams);
+  console.log("specialFilterrs", specialFilterrs);
+
+  const searchOrder = specialFilterrs.order;
+
+  console.log("SEARCH ORDER", searchOrder);
 
   const keywordConditions = keywords
     .map(
@@ -171,7 +184,10 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
 
   console.log("keywordConditions", keywordConditions);
 
-  return `*[_type == "product" && defined(slug) && (${keywordConditions})] | order(_createdAt desc) {
+  const filterClause = keywordConditions ? ` && (${keywordConditions})` : "";
+  const priceClause = specialFilterrs.priceFilter ? ` && (${specialFilterrs.priceFilter})` : "";
+
+  return `*[_type == "product" && defined(slug)${filterClause}${priceClause}] | ${searchOrder} {
     _id,
     title,
     mainImage,
@@ -196,7 +212,13 @@ const constructHomePageFilters = (searchTerm: string, optimizedHeartedProductsId
 }
 
 const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[], optimizedHeartedProductsIds: string) => {
-  const  keywordConditions = queryArray.map((keyword) => 
+  const filterParams = filtersArray;
+  const filterKeyWords = filterParams.filter((keyword) => !["newest", "oldest", "lowest priced", "highest priced"].includes(keyword) && keyword.slice(0,1) !== "$");
+  const specialFilterrs = getSpecialFilters(filterParams);
+
+  const searchOrder = specialFilterrs.order;
+
+  const keywordConditions = queryArray.map((keyword) => 
     `
     (
     title match "${keyword}*" ||
@@ -214,7 +236,7 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
   .join(" || ");
   console.log("keywordConditions", keywordConditions);
 
-  const filterConditions = filtersArray.map((filter) => 
+  const filterConditions = filterKeyWords.map((filter) => 
     `
     (
     title match "${filter}*" ||
@@ -233,7 +255,10 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
 
   console.log("filterConditions", filterConditions);
 
-  return `*[_type == "product" && defined(slug) && (${keywordConditions}) && (${filterConditions})] | order(_createdAt desc) {
+  const filterClause = filterConditions ? ` && (${filterConditions})` : "";
+  const priceClause = specialFilterrs.priceFilter ? ` && (${specialFilterrs.priceFilter})` : "";
+
+  return `*[_type == "product" && defined(slug) && (${keywordConditions})${filterClause}${priceClause}] | ${searchOrder} {
     _id,
     title,
     mainImage,
@@ -284,13 +309,15 @@ const constructNonHomePage = (paramConditions: string, optimizedHeartedProductsI
 }
 
 /* For non home pages pages with filters */
-const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: string, optimizedHeartedProductsIds: string) => {
-  const isNumeric = !isNaN(Number(searchTerm));
-  const costFilter = isNumeric ? `cost == ${Number(searchTerm)}` : "";
-  const keywords = searchTerm?.split(" ").filter((term) => term.trim() !== "");
+const constructNonHomePagePlusFilters = (paramConditions: string, filtersArray: string[], optimizedHeartedProductsIds: string) => {
+  const filterParams = filtersArray;
+  const filterKeyWords = filterParams.filter((keyword) => !["newest", "oldest", "lowest priced", "highest priced"].includes(keyword) && keyword.slice(0,1) !== "$");
+  const specialFilterrs = getSpecialFilters(filterParams);
+
+  const searchOrder = specialFilterrs.order;
 
   // Construct dynamic conditions for each keyword
-  const keywordConditions = keywords
+  const keywordConditions = filterKeyWords
     .map(
       (keyword) => `
         (
@@ -309,8 +336,10 @@ const constructNonHomePagePlusFilters = (paramConditions: string, searchTerm: st
     )
     .join(" && ");
 
-  return `*[_type == "product" && defined(slug) ${costFilter ? ` && ${costFilter}` : ""} && (
-    ${keywordConditions}) && (${paramConditions})] | order(_createdAt desc) {
+  const filterClause = keywordConditions ? ` && (${keywordConditions})` : "";
+  const priceClause = specialFilterrs.priceFilter ? ` && (${specialFilterrs.priceFilter})` : "";
+
+  return `*[_type == "product" && defined(slug)${filterClause}${priceClause} && (${paramConditions})] | ${searchOrder} {
     _id,
     title,
     mainImage,

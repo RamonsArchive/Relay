@@ -80,7 +80,6 @@ export const ReviewSliderStats = (reviews: ReviewType[]) => {
   const totalReviews = reviews.length || 1;
   const averageSize =
     reviews.reduce((sum, r) => sum + (r.sizeRating || 2), 0) / totalReviews;
-  console.log("true average size", averageSize);
   const averageComfort =
     reviews.reduce((sum, r) => sum + (r.comfortRating || 2), 0) / totalReviews;
   const averageWouldRecommend =
@@ -150,3 +149,41 @@ export const getUniqeColors = (variants: VariantType) => {
 
   return Object.values(uniqueMap);
 };
+
+export const getSpecialFilters = (keywords: string[]) => {
+  let defaultOrder = `order(_createdAt desc)`;
+
+  const result = {
+    order: defaultOrder,
+    priceFilter: "",
+    costRanges: [] as Array<[number, number]>,
+  }
+
+  
+  const order = keywords.filter((keyword) => {
+    const lower = keyword.toLowerCase();
+    return ["newest", "oldest", "lowest priced", "highest priced"].some((word) => lower.includes(word));
+  });
+  const lastOrder = order[order.length - 1]?.toLowerCase() || "";
+  if (lastOrder) {
+    result.order = 
+      lastOrder.includes("newest") ? `order(_createdAt desc)` :
+      lastOrder.includes("oldest") ? `order(_createdAt asc)` :
+      lastOrder.includes("lowest priced") ? `order(cost asc)` :
+      lastOrder.includes("highest priced") ? `order(cost desc)` : defaultOrder;
+  }
+
+
+  const priceRangePattern = /\$?(\d+)(?:\s*-\s*\$?)(\d+)/;
+  const ranges = keywords.map((keyword) => {
+    const match = keyword.match(priceRangePattern);
+    return match ? [parseInt(match[1]), parseInt(match[2])] : null
+  }).filter(Boolean) as Array<[number, number]>;
+
+  if (ranges.length > 0) {
+    result.costRanges = ranges;
+    result.priceFilter = ranges.map(([min, max]) => `cost >= ${min} && cost <= ${max}`).join(" || ");
+  }
+
+  return result; // saftey check
+}

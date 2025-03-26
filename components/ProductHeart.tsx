@@ -29,7 +29,6 @@ const ProductHeart = ({
   useEffect(() => {
     router.refresh();
     const setHeart = async () => {
-      console.log("Heart on callback");
       const heartedProductId = Cookies.get("heartedProductId");
       const newHearted = !hearted;
       Cookies.remove("heartedProductId");
@@ -48,16 +47,7 @@ const ProductHeart = ({
       }
 
       try {
-        console.log("Hearted product id right in try", heartedProductId);
-        console.log("Hearted status:", hearted);
-        console.log("Type of hearted:", typeof hearted);
-        console.log("Type of heartedProductId:", typeof heartedProductId);
-        console.log("Type of userId:", typeof userId);
-        console.log("UserId:", userId);
-        console.log("Hearted opposite:", !hearted);
-
         setHearted(newHearted);
-        console.log("SHOULD BE NEW HEARTED TRUE", newHearted);
 
         console.log("Right before handleHeartWrite");
         const result = await handleHeartWrite(
@@ -65,8 +55,6 @@ const ProductHeart = ({
           heartedProductId as string,
           newHearted
         );
-        console.log("Right after handleHeartWrite");
-
         revalidateHeartedProducts();
 
         if (result.status === "SUCCESS") {
@@ -115,8 +103,6 @@ const ProductHeart = ({
     try {
       const newHearted = !hearted;
       setHearted(newHearted);
-      console.log("user id", userId);
-      console.log("product id", productId);
       const result = await handleHeartWrite(
         userId,
         productId,

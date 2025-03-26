@@ -13,7 +13,6 @@ const Sidebar = () => {
   const [mobileFiltersClicked, setMobileFiltersClicked] = useState(false);
 
   useEffect(() => {
-    console.log("mobileFiltersClicked", mobileFiltersClicked);
     if (mobileFiltersClicked) {
       document.body.style.overflow = "hidden";
     } else {

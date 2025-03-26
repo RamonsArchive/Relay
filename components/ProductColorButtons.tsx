@@ -16,8 +16,6 @@ const ProductColorButtons = ({ variants }: { variants: any }) => {
     }
   }, [selectedColor, setSelectedColor, uniqueColors]);
 
-  console.log("variants", variants);
-
   return (
     <div className="flex flex-row gap-10 w-full mt-3">
       {uniqueColors.map((color: ColorType, index: number) => (

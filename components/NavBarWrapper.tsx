@@ -20,10 +20,8 @@ const NavBarWrapper = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const isScrolledRef = useRef(isScrolled);
-  console.log("isscrolled", isScrolled);
 
   useEffect(() => {
-    console.log("In scroll effect");
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const navbarHeight = document.querySelector("header")?.offsetHeight || 0;
@@ -31,7 +29,6 @@ const NavBarWrapper = ({
       if (newScrollState !== isScrolledRef.current) {
         setIsScrolled(newScrollState);
         isScrolledRef.current = newScrollState;
-        console.log("newscrollstate", newScrollState);
       }
     };
 

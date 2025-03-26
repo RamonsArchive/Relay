@@ -32,9 +32,6 @@ const ProductOptionsProvider = ({
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-  console.log("Selected Size", selectedSize);
-  console.log("Selected Color", selectedColor);
-  console.log("Selected Quantity", quantity);
 
   return (
     <ProductOptionsContext.Provider

@@ -97,7 +97,6 @@ const ViewReviews = ({
   });
 
   useEffect(() => {
-    console.log("I'm clicking");
     const handleClickOutsideSort = (event: MouseEvent | TouchEvent) => {
       const sortClickedOuter = sortDropRef.current?.contains(
         event.target as Node
@@ -146,9 +145,6 @@ const ViewReviews = ({
     stars: number[],
     query?: string
   ): ReviewType[] => {
-    console.log("Sort title", sort);
-    console.log("Stars", stars);
-    console.log("Query", query);
     let newReviews: ReviewType[] = [...reviews];
 
     if (query) {
@@ -170,43 +166,34 @@ const ViewReviews = ({
 
     switch (sort) {
       case "Most Recent":
-        console.log("rnning most recent");
         newReviews.sort(
           (a, b) => getRelevantDate(b).getTime() - getRelevantDate(a).getTime()
         );
         break;
       case "Oldest":
-        console.log("running oldest");
         newReviews.sort(
           (a, b) => getRelevantDate(a).getTime() - getRelevantDate(b).getTime()
         );
         break;
       case "Highest Rated":
-        console.log("rnning highest rating");
         newReviews.sort(
           (a, b) => (b.mainRating as number) - (a.mainRating as number)
         );
         break;
       case "Lowest Rated":
-        console.log("rnning lowest Rating");
         newReviews.sort(
           (a, b) => (a.mainRating as number) - (b.mainRating as number)
         );
         break;
     }
 
-    console.log("New reviews", newReviews);
-
     return newReviews;
   };
 
   useEffect(() => {
-    console.log("reviewContent", reviewContent);
-    console.log("new filter rating", filterRating);
     setReviewContent(
       updateReviews(selectedSort, filterRating, searchFilterInput)
     );
-    console.log("Review Content in use Effect", reviewContent);
   }, [selectedSort, filterRating, searchFilterInput]);
 
   const handleSortToggle = (title: string) => {
@@ -270,8 +257,6 @@ const ViewReviews = ({
     setTimeout(() => {
       const element = document.getElementById("view-review-container");
       if (element) {
-        console.log("Scrolling to element...");
-        console.log("Element", element);
         element.scrollIntoView({ behavior: "smooth", block: "end" });
       } else {
         console.warn("Element not found!");

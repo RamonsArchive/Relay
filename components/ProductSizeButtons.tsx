@@ -21,13 +21,11 @@ const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
   const handleSetSize = (size: string) => {
     setSelectedSize(size);
   };
-  console.log("seelcted size", selectedSize);
 
   const variantsForColor = variants.filter((variant: VariantItemType) => {
     if (!variant.color?.name) return false;
     return variant.color?.name.toLowerCase() === selectedColor.toLowerCase();
   });
-  console.log("variantsForColor", variantsForColor);
   return (
     <div className="flex flex-wrap w-full gap-3 pt-2">
       {allSizes.map((size, index) => {

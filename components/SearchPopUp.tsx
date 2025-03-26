@@ -65,15 +65,11 @@ const SearchPopUp = ({
 
   const handleFromSubmit = async (prevState: any, formData: FormData) => {
     try {
-      console.log("form data", formData);
-      console.log("is pending", isPending);
       const query = formData.get("query")?.toString().trim() || undefined;
       if (!query) {
         return;
       }
-      console.log("Query", query);
       const userId = session?.user?.id;
-      console.log("About to push");
       resetFilters();
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
       console.log("After push");
