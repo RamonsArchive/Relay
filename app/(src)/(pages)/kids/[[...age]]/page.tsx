@@ -23,7 +23,7 @@ const page = async ({
   const user = sesson?.user;
   const userId = user?.id || null;
 
-  const pathArray = (await params).age || [];
+  const pathArray = params.age || [];
   const path = ["kids", ...pathArray].join("/");
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";

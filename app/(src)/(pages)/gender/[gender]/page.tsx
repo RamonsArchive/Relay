@@ -27,7 +27,7 @@ const page = async ({
   if (userId) {
     heartedProducts = await fetchHeartedProducts(userId);
   }
-  const path = (await params).gender || "/";
+  const path = params.gender || "/";
   const query = (await searchParams).query || "";
   const filters = (await searchParams).f || "";
 

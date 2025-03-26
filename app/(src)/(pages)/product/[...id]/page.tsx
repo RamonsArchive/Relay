@@ -36,7 +36,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   const sesson = await auth();
   const user = sesson?.user;
   const userId = user?.id || null;
-  const path = (await params).id || "/";
+  const path = params.id || "/";
   const productId = path.toString();
   const callbackUrl = `/product/${path}`;
   if (!path) {

@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 export const experimental_ppr = true;
 
 const WriteReview = async ({ params }: { params: { id: string } }) => {
-  const productId = (await params).id || "/";
+  const productId = params.id || "/";
   const session = await auth();
   const user = session?.user;
   if (!user) {
