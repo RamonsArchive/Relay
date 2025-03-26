@@ -380,7 +380,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
                 Select Color
               </p>
+              <Suspense fallback={<div>Loading Product Colors...</div>}>
               <ProductColorButtons variants={variants} />
+              </Suspense>
             </div>
             <div className="flex flex-col w-full p-5">
               <p className="font-plex-sans font-medium text-[16px] xs:text-[18px]">
