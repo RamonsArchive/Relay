@@ -15,7 +15,6 @@ const Slider = ({
   subTitleTwo,
   subTitleThree,
   value,
-  type = "default",
 }: Props) => {
   return (
     <div className="flex flex-col w-full mb-2 gap-3 h-[50px] sm:h-auto">

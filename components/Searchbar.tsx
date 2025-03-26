@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import SearchPopUp from "./SearchPopUp";
-import ReactDOM from "react-dom"; // create a portal to top level of the dom
 import { X, Search } from "lucide-react";
 import { Session } from "next-auth";
 import { RecentSearches } from "@/globalTypes";
@@ -18,7 +17,7 @@ const Searchbar = ({
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: any) => {
+  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setClicked(false);
     }
@@ -42,10 +41,6 @@ const Searchbar = ({
       document.removeEventListener("keydown", handleEscapeKey); // Escape key support
     };
   }, [clicked]);
-
-  const handleformClick = (e: any) => {
-    setClicked(!clicked);
-  };
 
   return (
     <>

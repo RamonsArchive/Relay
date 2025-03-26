@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { ProductPageType } from "@/globalTypes";
 import { urlFor } from "@/sanity/lib/client";
 import Image from "next/image";
 import { SanityImage } from "@/globalTypes";

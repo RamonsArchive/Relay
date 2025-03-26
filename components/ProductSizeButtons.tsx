@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ProductStockType, VariantItemType, VariantType } from "@/globalTypes";
+import { VariantItemType, VariantType } from "@/globalTypes";
 import { useContext, useEffect } from "react";
 import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
 
@@ -30,7 +30,7 @@ const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
     <div className="flex flex-wrap w-full gap-3 pt-2">
       {allSizes.map((size, index) => {
         const variantForSize = variantsForColor.find(
-          (variant: any) => variant.size === size.toLowerCase()
+          (variant: VariantItemType) => variant.size === size.toLowerCase()
         );
 
         const quantity = variantForSize ? variantForSize.quantity : 0;

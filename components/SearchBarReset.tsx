@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 interface Props {
   setInputValue: React.Dispatch<React.SetStateAction<string>>;

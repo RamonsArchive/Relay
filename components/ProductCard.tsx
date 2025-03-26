@@ -3,8 +3,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/client";
-import { ProductType } from "@/globalTypes";
+import { CategoryType, ProductType, MaterialType } from "@/globalTypes";
 import ProductHeart from "./ProductHeart";
+import {User} from "next-auth";
 
 const ProductCard = ({
   product,
@@ -15,7 +16,7 @@ const ProductCard = ({
   product: ProductType;
   isHearted: boolean;
   callbackUrl: string;
-  user: any;
+  user: User | undefined;
 }) => {
   const { _id, title, mainImage, materials, categories, cost } = product;
   return (
@@ -34,7 +35,7 @@ const ProductCard = ({
           <ProductHeart
             isHearted={isHearted}
             productId={_id}
-            userId={user?.id}
+            userId={user?.id || ""}
             callbackUrl={callbackUrl}
           />
         </div>
@@ -50,14 +51,14 @@ const ProductCard = ({
           <div className="flex flex-wrap gap-x-1.5 font-plex-sans font-regular text-[13px] xs:text-[14px] sm:text-[15px] lg:text-[18px]">
             {materials &&
               materials.length > 0 &&
-              materials.map((obj: any, index: number) => (
+              materials.map((obj: MaterialType, index: number) => (
                 <span key={index}>{obj.name}</span>
               ))}
           </div>
           <div className="flex flex-wrap gap-x-1.5 font-plex-sans font-regular text-[13px] xs:text-[14px] sm:text-[15px] lg:text-[18px]">
             {categories &&
               categories.length > 0 &&
-              categories.map((obj: any, index: number) => (
+              categories.map((obj: CategoryType, index: number) => (
                 <span key={index}>{obj.name}</span>
               ))}
           </div>

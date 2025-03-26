@@ -1,4 +1,4 @@
-import { ReviewType, VariantType } from "@/globalTypes"
+import { ReviewType, VariantType, ReviewCount, ColorType, VariantItemType } from "@/globalTypes"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -18,10 +18,10 @@ export function getNumberOfReviews(amount: number) {
   return amount > 1 ? `${amount} reviews` : `${amount} review`
 }
 
-export function getReviewRating (reviews: any) {
+export function getReviewRating (reviews: ReviewType[]) {
   if (reviews?.length === 0) return 0;
   if (reviews.length === 1) return reviews[0]?.mainRating || 0;
-  const total = reviews.reduce((sum: number, review: any) => sum + review.mainRating, 0);
+  const total = reviews.reduce((sum: number, review: ReviewType) => sum + (review?.mainRating as number), 0);
   return (total / reviews.length);
 }
 
@@ -115,7 +115,7 @@ export const getNumReviewsPerStar = (reviews: ReviewType[]) => {
       oneStar: 0
     }
   }
-  return reviews.reduce((acc: any, review: ReviewType) => {
+  return reviews.reduce((acc: ReviewCount, review: ReviewType) => {
     const rating = review.mainRating;
     if (rating === 1) acc.oneStar++;
     if (rating === 2) acc.twoStar++;
@@ -132,16 +132,10 @@ export const getNumReviewsPerStar = (reviews: ReviewType[]) => {
   })
 }
 
-export const handleUpdateReviews = (type: string) => {
-  const newReviews = null;
-  //if (type === "")
-}
-
-
 export const getUniqeColors = (variants: VariantType) => {
   if (!variants) return [];
-  const uniqueMap: { [key: string]: any } = {};
-  variants.forEach((variant: any) => {
+  const uniqueMap: { [key: string]: ColorType } = {};
+  variants.forEach((variant: VariantItemType) => {
     if (variant?.color && variant?.color?.name) {
       uniqueMap[variant.color.name.toLowerCase()] = variant.color;
     }
@@ -151,7 +145,7 @@ export const getUniqeColors = (variants: VariantType) => {
 };
 
 export const getSpecialFilters = (keywords: string[]) => {
-  let defaultOrder = `order(_createdAt desc)`;
+  const defaultOrder = `order(_createdAt desc)`;
 
   const result = {
     order: defaultOrder,
@@ -159,7 +153,6 @@ export const getSpecialFilters = (keywords: string[]) => {
     costRanges: [] as Array<[number, number]>,
   }
 
-  
   const order = keywords.filter((keyword) => {
     const lower = keyword.toLowerCase();
     return ["newest", "oldest", "lowest priced", "highest priced"].some((word) => lower.includes(word));

@@ -1,5 +1,4 @@
 "use client";
-import Footer from "@/components/Footer";
 import { getDynamicFilters } from "@/lib/filters";
 import { useSearchParams, usePathname } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
@@ -202,7 +201,7 @@ export const ContextProvider = ({
       let numCurrentFiltersSelected = 0;
       Object.keys(updatedFilters).forEach((category) => {
         updatedFilters[category].forEach(
-          (value: string) => numCurrentFiltersSelected++
+          () => numCurrentFiltersSelected++
         );
       });
 

@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { Context } from "@/app/context/context";
 import { X } from "lucide-react";
 
 const FiltersShort = () => {
-  const { filters, selectedFilters, setSelectedFilters, toggleFilter } =
+  const { selectedFilters, toggleFilter } =
     useContext(Context);
 
   const hasFilters = Object.values(selectedFilters).some(

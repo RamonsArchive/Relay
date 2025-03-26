@@ -15,10 +15,10 @@ export type ProductType = Pick<
           [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
         };
     } | null;
-    categories: Array<string> | null;
-    materials: Array<string> | null;
+    categories: CategoryType[];
+    materials: MaterialType[];
     hearted: boolean | null;
-    collections: Array<{_id: string, _key: string, title: string}> | null;
+    collections: CollectionType[];
     cost: number
 };
 
@@ -127,7 +127,26 @@ export type ReviewType = {
     altNames?: Array<string>;
     slug?: Slug;
   };
+  
+  export type MaterialType = {
+    _id: string;
+    _type: "materials";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: "cotton" | "wool" | "linen" | "silk" | "cashmere" | "hemp" | "suede" | "leather" | "denim" | "polyester" | "nylon" | "spandex" | "rayon" | "fleece" | "acrylic" | "microfiber" | "gore-tex" | "neoprene" | "kevlar" | "coolmax" | "tencel (lyocell)" | "modal" | "organic cotton" | "recycled polyester" | "bamboo fabric" | "viscose";
+    slug?: Slug;
+  };
 
+  export type CollectionType = {
+    _id: string;
+    _type: "collections";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    title?: "new arrivals" | "featured" | "hearted" | "sale" | "best sellers";
+    slug?: Slug;
+  };
 
   export type FlaggedReviewType = {
     _id: string;
@@ -164,6 +183,37 @@ export type ReviewType = {
     _type: "variant";
     _key: string;
   }
+
+  export type BrandType = {
+    _id: string;
+    _type: "brands";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: "nike" | "adidas" | "puma" | "reebok" | "new balance" | "under armour" | "converse" | "vans" | "jordan" | "fila" | "asics" | "columbia" | "patagonia" | "the north face" | "levi's" | "h&m" | "zara" | "uniqlo" | "gucci" | "louis vuitton";
+    slug?: Slug;
+    logo?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
+
+  export type CategoryType = {
+    _id: string;
+    _type: "categories";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
+    name?: "accessories" | "activewear" | "bottoms" | "dresses" | "loungewear" | "outerwear" | "shoes" | "swimwear" | "tops" | "underwear" | "casual" | "formal" | "sportswear" | "streetwear" | "business casual" | "luxury";
+    slug?: Slug;
+  };
 
   export type SanityImage = {
     _type: "image";
@@ -212,9 +262,20 @@ export type ProductStockType = Array<{
   }>;
 
 
-
 export type RecentSearches = Array<{
   query?: string;
   timestamp?: number;
   _key: string;
 }>;
+
+export type ReviewCount = {
+  fiveStar: number;
+  fourStar: number;
+  threeStar: number;
+  twoStar: number;
+  oneStar: number;
+}
+export type ActionState = {
+  status: "INITIAL" | "PENDING" | "SUCCESS" | "ERROR";
+  error: string;
+}

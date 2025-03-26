@@ -1,8 +1,6 @@
 "use server";
 import { revalidateTag } from "next/cache";
 import { signIn, signOut } from '@/auth';
-import { createClient } from 'next-sanity'
-import { redirect } from 'next/dist/server/api-utils';
 import { parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
@@ -127,7 +125,7 @@ export const fetchRecentSearches = async (userId: string) => {
     const result = await client.fetch(query, {userIdSanitized});
     return result.recentSearches || [];
   } catch (error) {
-
+    console.error("Error fetching recent searches", error);
   }
 }
 
@@ -151,7 +149,7 @@ export const fetchRecentSearchesFew = async (userId: string) => {
     const result = await client.withConfig({useCdn: false}).fetch(query, {userIdSanitized}, { next: { tags: ['recent-searches'] }});
     return result.recentSearches || [];
   } catch (error) {
-
+    console.error("Error fetching recent searches", error);
   }
 }
 

@@ -75,7 +75,7 @@ const MenuOptions = () => {
     }
   };
 
-  const handleClickOutside = (event: any) => {
+  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setMenuOpen(false);
     }
@@ -97,10 +97,6 @@ const MenuOptions = () => {
 
   const handleLoader = () => {
     setLoader(true);
-    /*if (path == prevPath.current) {
-      setLoader(false);
-      setMenuOpen(false);
-    }*/
   };
 
   return (

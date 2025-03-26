@@ -4,9 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { formatDate, parseServerActionResponse } from "@/lib/utils";
 import ReviewStars from "./ReviewStars";
 import { urlFor } from "@/sanity/lib/client";
-import { FlaggedReviewType, ReviewType } from "@/globalTypes";
+import { FlaggedReviewType, ReviewType, ActionState } from "@/globalTypes";
 import { EllipsisVertical, Send } from "lucide-react";
-import Loader from "@/components/Loader";
 import { Textarea } from "./ui/textarea";
 import { editReviewSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
@@ -184,13 +183,14 @@ const ReviewCard = ({
     } catch (error) {
       setDropEllipse(false);
       setDeleteReviewLoader(false);
+      console.error(error);
       toast.error("Error", {
         description: "Error deleting review",
       });
     }
   };
 
-  const handleFromSubmit = async (prevState: any, formData: FormData) => {
+  const handleFromSubmit = async (prevState: ActionState, formData: FormData) => {
     try {
       const editData = formData.get("review");
       await editReviewSchema.parse({ review: editData });
@@ -209,6 +209,7 @@ const ReviewCard = ({
     } catch (error) {
       if (error instanceof z.ZodError) {
         setEditReviewLoader(false);
+        console.error(error);
         setError("Please enter a valid review between 10 to 2000 characters");
         toast.error("Error", {
           description: "Please check your input and try again",
@@ -333,6 +334,7 @@ const ReviewCard = ({
       setDropFlag(false);
       setFlagPending(false);
       revalidateFlaggedReviews();
+      console.error(error);
       toast.error("Error", {
         description: "An unexpected error occured. Please try again",
       });
@@ -384,7 +386,7 @@ const ReviewCard = ({
                 {!flagged ? (
                   <div>
                     {Object.entries(flaggedReasons).map(
-                      ([key, value], index) => (
+                      ([_, value], index) => (
                         <button
                           key={index}
                           className="block w-full text-[10px] sm:text-[12px] text-left px-4 py-2 transition hover:bg-gray-700 rounded duration-200 ease-in-out"

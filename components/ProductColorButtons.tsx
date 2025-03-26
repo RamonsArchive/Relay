@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { useContext, useEffect } from "react";
-import { ColorType } from "@/globalTypes";
+import { ColorType, VariantType } from "@/globalTypes";
 import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
 import { getUniqeColors } from "@/lib/utils";
 
-const ProductColorButtons = ({ variants }: { variants: any }) => {
+const ProductColorButtons = ({ variants }: { variants: VariantType }) => {
   const { selectedColor, setSelectedColor } = useContext(ProductOptionsContext);
 
   const uniqueColors = getUniqeColors(variants);

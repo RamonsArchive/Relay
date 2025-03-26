@@ -10,13 +10,14 @@ import { Send } from "lucide-react";
 import { reviewSchema } from "@/lib/validation";
 import { z } from "zod";
 import { uploadImageToSanity, writeReview } from "@/sanity/lib/actions";
-import { SanityImage } from "@/globalTypes";
+import { ActionState, SanityImage } from "@/globalTypes";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import { verifyNoUserReview } from "@/lib/serverActions";
+import { User} from "next-auth";
 
-const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
+const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
   const router = useRouter();
   const [errors, setErrors] = useState<Record<string, string | number>>({});
   const [mainRating, setMainRating] = useState(-1);
@@ -27,9 +28,16 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
   const [qualityRating, setQualityRating] = useState(-1);
   const [valueRating, setValueRating] = useState(-1);
 
-  const handleFormSubmit = async (prevState: any, formData: FormData) => {
+  const handleFormSubmit = async (prevState: ActionState, formData: FormData) => {
     const photoFile = formData.get("photo");
     let photoRef = null;
+    if (!user) {
+      return {
+        ...prevState,
+        error: "User not found",
+        status: "ERROR",
+      }
+    }
     if (photoFile instanceof File && photoFile.size > 0) {
       if (photoFile.size > 5 * 1024 * 1024) {
         console.error("File is too large! Must be under 5MB.");
@@ -81,7 +89,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
       };
 
       await reviewSchema.parseAsync(reviewData);
-      const existingReview = await verifyNoUserReview(productId[0], user?.id);
+      const existingReview = await verifyNoUserReview(productId[0], user?.id as string);
       if (existingReview.status == "ERROR") {
         toast.error("Error", {
           description: "You already wrote a review for this product",
@@ -90,7 +98,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
         return existingReview;
       }
       const result = await writeReview(
-        user.id.toString(),
+        (user?.id as string).toString(),
         productId.toString(),
         reviewData
       );
@@ -170,7 +178,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
           <div className="product-write-section">
             <label className="product-write-label">
-              Would you Reccomend this Product?
+              Would you Recommend this Product?
             </label>
             <div className="flex flex-row gap-2 sm:gap-3 lg:gap-4 font-plex-sans text-[14px] text-[12px] sm:text-[14px] md:text-[16px]">
               <Circle
@@ -195,8 +203,8 @@ const ReviewForm = ({ productId, user }: { productId: string; user: any }) => {
 
           <div className="product-write-section">
             <label className="product-write-label">Share your Experience</label>
-            <span className="font-plex sans font-light text-[12px] sm:text-[14px]">
-              Tell other's about the product
+            <span className="font-plex-sans font-light text-[12px] sm:text-[14px]">
+              Tell others about the product
             </span>
             <Textarea
               id="description"

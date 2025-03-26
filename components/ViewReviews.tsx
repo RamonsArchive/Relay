@@ -20,9 +20,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import Form from "next/form";
 import ReviewCard from "./ReviewCard";
-import { revalidateFlaggedReviews } from "@/lib/serverActions";
 
 interface Props {
   userId: string | null;
@@ -58,14 +56,13 @@ const ViewReviews = ({
   const [reviewContent, setReviewContent] = useState(reviews);
   const [sortDropDown, setSortDropDown] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Most Recent");
-  const [sortDropDownTitle, setSortDropDownTitle] = useState<
-    { title: string; value: number }[]
-  >([
+  const sortDropDownTitle = 
+  [
     { title: "Most Recent", value: 0 },
     { title: "Oldest", value: 1 },
     { title: "Highest Rated", value: 2 },
     { title: "Lowest Rated", value: 3 },
-  ]);
+  ]
   const [searchFilterInput, setSearchFilterInput] = useState("");
   const [filterDropDown, setFilterDropDown] = useState(false);
   const [filterRating, setFilterRating] = useState<number[]>([]);
@@ -82,7 +79,7 @@ const ViewReviews = ({
   const reviewsPerPage = 10;
   const totalPages = Math.ceil(reviewContent.length / reviewsPerPage);
 
-  let paginatedReviews = reviewContent.slice(
+  const paginatedReviews = reviewContent.slice(
     (currentPage - 1) * reviewsPerPage,
     currentPage * reviewsPerPage
   );
@@ -308,7 +305,6 @@ const ViewReviews = ({
             </div>
             <div className="flex items-center justify-center">
               <ReviewSummarySliders
-                reviews={reviews}
                 reviewStats={reviewStats}
               />
             </div>
@@ -337,7 +333,7 @@ const ViewReviews = ({
                   <div className="absolute left-0 mt-1 w-auto w-[125px] sm:w-[150px] bg-gray-100 shadow-md rounded-md z-50">
                     {sortDropDown && (
                       <div className="flex flex-col" ref={sortDropDropDownRef}>
-                        {sortDropDownTitle.map(({ title, value }, index) => (
+                        {sortDropDownTitle.map(({ title }, index) => (
                           <button
                             key={index}
                             onClick={() => {
@@ -396,7 +392,7 @@ const ViewReviews = ({
                     {filterDropDown && (
                       <div className="flex flex-col" ref={filterDropDownRef}>
                         {Object.entries(numReviewsPerStar).map(
-                          ([key, value], index) => (
+                          ([_, value], index) => (
                             <div
                               key={index}
                               className="flex items-center gap-0 sm:gap-2 p-2 hover:bg-gray-200 cursor-pointer"
@@ -444,7 +440,7 @@ const ViewReviews = ({
                     </p>
                   </div>
                 )}
-                {Object.entries(filterVisual).map(([key, text], index) => (
+                {Object.entries(filterVisual).map(([_, text], index) => (
                   <div
                     key={index}
                     className="flex items-center justify-center gap-3 font-plex-sans font-regular text-[13px] px-2 py-1 rounded-full transition hover:bg-gray-300 duration-200 ease-in-out cursor-pointer"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Fullscreen, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { getReviewRating } from "@/lib/utils";
 import { ReviewType } from "@/globalTypes";
 

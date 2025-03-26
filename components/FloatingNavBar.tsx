@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 import Searchbar from "./Searchbar";
 import { Session } from "next-auth";
-import { Heart, Menu } from "lucide-react";
 import { ShoppingBasket } from "lucide-react";
 import ManageSession from "./ManageSession";
 import { RecentSearches } from "@/globalTypes";

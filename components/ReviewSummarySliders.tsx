@@ -3,11 +3,10 @@ import React from "react";
 import Slider from "@/components/Slider";
 
 interface Props {
-  reviews: ReviewType[];
   reviewStats: ReviewStatsType;
 }
 
-const ReviewSummarySliders = ({ reviews, reviewStats }: Props) => {
+const ReviewSummarySliders = ({ reviewStats }: Props) => {
   const {
     normalizedSize,
     normalizedComfort,

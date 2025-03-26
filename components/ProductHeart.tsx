@@ -74,6 +74,7 @@ const ProductHeart = ({
       } catch (error) {
         setHearted(!newHearted);
         revalidateHeartedProducts();
+        console.error("Failed to execute hearted action:", error);
         toast.error("Error", {
           description:
             "Product was unable to be hearted. Please try again later",

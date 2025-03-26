@@ -10,17 +10,17 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { CircleX, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Context } from "@/app/context/context";
 import { useSearchParams } from "next/navigation";
 import { Session } from "next-auth";
 import { writeRecentSearch } from "@/sanity/lib/actions";
 import Loader from "./Loader";
-import { RecentSearches } from "@/globalTypes";
+import { ActionState, RecentSearches } from "@/globalTypes";
 import { revalidateRecentSearches } from "@/lib/serverActions";
 import { startTransition } from "react";
-import { start } from "repl";
+import { parseServerActionResponse } from "@/lib/utils";
 
 // TODO: Implement RECENTS
 
@@ -63,7 +63,7 @@ const SearchPopUp = ({
     setSearchHistory((prev) => prev.filter((item) => item.query !== query));
   };
 
-  const handleFromSubmit = async (prevState: any, formData: FormData) => {
+  const handleFromSubmit = async (prevState: ActionState, formData: FormData) => {
     try {
       const query = formData.get("query")?.toString().trim() || undefined;
       if (!query) {
@@ -83,8 +83,12 @@ const SearchPopUp = ({
       setInputValue("");
       setClicked(false);
       revalidateRecentSearches();
-      return query;
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        error: "",
+      })
     } catch (error) {
+      console.error(error)
       return {
         ...prevState,
         error: "An error occurred, please try again.",

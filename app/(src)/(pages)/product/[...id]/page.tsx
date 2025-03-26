@@ -17,7 +17,7 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
-import { ProductType, ReviewType } from "@/globalTypes";
+import { ProductType, ReviewType, BrandType, CategoryType } from "@/globalTypes";
 import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
@@ -27,7 +27,6 @@ import ProductBuyButtons from "@/components/ProductBuyButtons";
 import ProductOptionsProvider from "@/app/context/ProductOptionsContext";
 import ProductColorButtons from "@/components/ProductColorButtons";
 import ProductQuantity from "@/components/ProductQuantity";
-import ProductQauntity from "@/components/ProductQuantity";
 
 export const experimental_ppr = true;
 
@@ -44,7 +43,6 @@ const page = async ({ params }: { params: { id: string } }) => {
     throw new Error("No path provided");
   }
 
-  const allSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
   const imagesPlusProductDetails = await client.fetch(
     PRODUCT_PAGE_INFORMATION(productId)
   );
@@ -53,12 +51,9 @@ const page = async ({ params }: { params: { id: string } }) => {
     title,
     variants,
     cost,
-    colors,
     description,
-    materials,
     mainImage,
     brands,
-    collections,
     categories,
     mainDetails,
     detailBullets,
@@ -165,15 +160,14 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const parsedDescription = md.render(description);
 
-  const capitalizeBrand = (brand: any) => {
-    const newBrand = brand?.name
+  const capitalizeBrand = (brand: BrandType) => {
+    const newBrand = (brand?.name as string)
       .split(" ")
       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
     return newBrand;
   };
 
-  /* TODO: Use useActionState to handle the button clicks */
   return (
     <>
       <ProductOptionsProvider>
@@ -221,7 +215,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                   </p>
                   {categories &&
                     categories.length > 0 &&
-                    categories.map((obj: any, index: number) => (
+                    categories.map((obj: CategoryType, index: number) => (
                       <p
                         key={index}
                         className="font-plex-sans font-regular text-[18px]"
@@ -354,7 +348,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                 </p>
                 {categories &&
                   categories.length > 0 &&
-                  categories.map((obj: any, index: number) => (
+                  categories.map((obj: CategoryType, index: number) => (
                     <p
                       key={index}
                       className="font-plex-sans font-regular text-[14px] xs:text-[16px]"
@@ -432,7 +426,7 @@ const page = async ({ params }: { params: { id: string } }) => {
                 <div className="w-max flex flex flex-nowrap px-5 h-atuo gap-3 pt-2 pb-5 min-h-[200px]">
                   <Suspense fallback={<div>Loading products... </div>}>
                     {recentlyViewedProds?.length > 0 ? (
-                      recentlyViewedProds.slice(0, 10).map((product: any) => {
+                      recentlyViewedProds.slice(0, 10).map((product: ProductType) => {
                         return (
                           <div
                             key={product._id}

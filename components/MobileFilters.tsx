@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { Context } from "@/app/context/context";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import CheckBox from "./CheckBox";
@@ -14,7 +14,6 @@ const MobileFilters = ({
   const {
     filters,
     selectedFilters,
-    setSelectedFilters,
     toggleFilter,
     toggleCategory,
   } = useContext(Context);
