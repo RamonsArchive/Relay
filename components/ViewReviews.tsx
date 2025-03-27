@@ -252,12 +252,14 @@ const ViewReviews = ({
   };
 
   const handlePageScroll = () => {
-    if (scrollRef && scrollRef.current) {
-      scrollRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    };
+    setTimeout(() => {
+      if (scrollRef && scrollRef.current) {
+        scrollRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      };
+    },100)
   }
 
   return (
@@ -267,7 +269,7 @@ const ViewReviews = ({
       >
         <div className="flex flex-col gap-5 h-full w-full p-5 overflow-y-auto scrollbar-hidden">
           
-          <div className="flex flex-row justify-between" ref={scrollRef} >
+          <div className="flex flex-row justify-between" ref={scrollRef}>
             <div className="flex items-center gap-3" >
               <Image
                 src={urlFor(mainImage).url()}
