@@ -145,7 +145,7 @@ html {
   }
 
   .product-group {
-  @apply flex flex-col bg-white-300 shadow-100 rounded-sm transition-transform duration-300 ease-in-out min-w-[150px] min-h-[200px] max-w-[350px] max-h-[450px];
+  @apply flex flex-col bg-white-300 shadow-100 rounded-sm transition-transform duration-300 ease-in-out min-w-[150px] min-h-[200px] max-w-[400px] max-h-[450px];
   }
 
   .product-group:hover {

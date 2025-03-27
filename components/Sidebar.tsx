@@ -9,7 +9,6 @@ import { SlidersHorizontal } from "lucide-react";
 const Sidebar = () => {
   const { filters, selectedFilters, toggleFilter, toggleCategory } =
     useContext(Context);
-
   const [mobileFiltersClicked, setMobileFiltersClicked] = useState(false);
 
   useEffect(() => {

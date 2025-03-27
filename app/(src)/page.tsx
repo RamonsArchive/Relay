@@ -7,6 +7,7 @@ import ContentTitle from "@/components/ContentTitle";
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import FiltersShort from "@/components/FiltersShort";
+import ProductGridSkeleton from "@/components/ProductGridSkeleton";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const experimental_ppr = true;
@@ -57,7 +58,7 @@ const Home = async ({
       </Suspense>
 
       <div className="product-container overflow-y-auto scrollbar-hidden">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<ProductGridSkeleton />}>
           <ul className="product-grid">
             {products.length > 0 ? (
               products.map((product: ProductType) => (

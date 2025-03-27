@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { auth } from "@/auth";
 import FiltersShort from "@/components/FiltersShort";
 import { client } from "@/sanity/lib/client";
+import ProductGridSkeleton from "@/components/ProductGridSkeleton";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
@@ -59,7 +60,7 @@ const page = async ({
       </Suspense>
 
       <div className="product-container">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<ProductGridSkeleton />}>
           <ul className="product-grid">
             {collectionProducts.length > 0 ? (
               collectionProducts.map((product: ProductType) => (

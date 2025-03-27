@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const ContentTitle = () => {
   const searchParams = useSearchParams();
   const pathName = usePathname();
-  let title: string | undefined;
+  let title = "All Products";
 
   if (pathName !== "/") {
     title = pathName.split("/").filter(Boolean).pop() || "All Clothes";
@@ -24,8 +24,11 @@ const ContentTitle = () => {
       title = title.charAt(0).toUpperCase() + title.slice(1);
     }
   } else {
-    title = (searchParams.get("query") ?? undefined) || "";
-    title = `Results for: ${title.charAt(0).toUpperCase() + title.slice(1)}`;
+    if (searchParams.get("query")) {
+      const query = searchParams.get("query") || "";
+      //title = `Results for: ${query.charAt(0).toUpperCase() + query.slice(1)}`;
+      title = `Results for: ${query}`;
+    }
   }
 
   return (

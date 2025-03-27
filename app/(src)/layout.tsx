@@ -4,6 +4,7 @@ import { ContextProvider } from "@/app/context/context";
 import React, { Suspense } from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
 import { Toaster } from "sonner";
+import { SideBarCardSkeleton } from "@/components/SideBarSkeleton";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
@@ -14,12 +15,12 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         <Navbar />
         </Suspense>
         <div className="root-container">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<SideBarCardSkeleton />}>
           <SidebarWrapper />
           </Suspense>
 
           <div className="content-wrapper">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>Loading pages...</div>}>
             <div className="content-container">{children}</div>
             </Suspense>
           </div>
