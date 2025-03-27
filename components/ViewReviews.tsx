@@ -266,7 +266,10 @@ const ViewReviews = ({
       <div
         className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
-        <div className="flex flex-col gap-5 h-[100vh] w-full pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] pl-5 pr-5 md:pl-5 md:pt-5 md:pr-5 md:pb-5 overflow-y-auto scrollbar-hidden">
+        <div className="flex flex-col gap-5 h-full w-full p-5 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] md:pt-5 md:pb-5 overflow-y-auto scrollbar-hidden" style={{
+            paddingTop: "env(safe-area-inset-top)",
+            paddingBottom: "env(safe-area-inset-bottom)",
+          }}>
           <div className="flex flex-row justify-between">
             <div className="flex items-center gap-3" id="view-review-container">
               <Image
@@ -284,8 +287,8 @@ const ViewReviews = ({
                 <p className="font-plex-sans font-light text-[12px]">${cost}</p>
               </div>
             </div>
-
-            <div className="flex justify-self-end self-start p-1 rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
+            <div className="relative">
+            <div className="flex justify-end items-center p-1 rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
               <X
                 size="30px"
                 className="cursor-pointer text-gray-600"
@@ -293,6 +296,8 @@ const ViewReviews = ({
                 onClick={() => setViewReviews(false)}
               />
             </div>
+            </div>
+          
           </div>
           <div className="flex flex-col w-full">
             <div className="flex flex-col items-center gap-3">
