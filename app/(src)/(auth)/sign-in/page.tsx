@@ -20,10 +20,7 @@ const SignInPage = () => {
               height={130}
             />
           </Link>
-
-          
           <SignInContent />
-          
         </div>
       </div>
     </main>

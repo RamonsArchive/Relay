@@ -205,9 +205,6 @@ export const ContextProvider = ({
         );
       });
 
-      /* if (numCurrentFiltersSelected === 0) {
-        return;
-      } */
       console.log("numcurrentFiltersSelected", numCurrentFiltersSelected);
       if (numFilterParams > numCurrentFiltersSelected) {
         console.log("Filter params", parsedFilters);
