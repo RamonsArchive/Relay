@@ -266,10 +266,8 @@ const ViewReviews = ({
       <div
         className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
-        <div className="flex flex-col gap-5 h-full w-full p-5 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)] md:pt-5 md:pb-5 overflow-y-auto scrollbar-hidden" style={{
-            paddingTop: "env(safe-area-inset-top)",
-            paddingBottom: "env(safe-area-inset-bottom)",
-          }}>
+        <div className="flex flex-col gap-5 h-full w-full p-5 pb-[env(safe-area-inset-bottom) + 1.25rem] pt-[env(safe-area-inset-top) + 1.25rem] md:pt-5 md:pb-5 overflow-y-auto scrollbar-hidden">
+          
           <div className="flex flex-row justify-between">
             <div className="flex items-center gap-3" id="view-review-container">
               <Image
