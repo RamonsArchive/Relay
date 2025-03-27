@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
+      <Suspense fallback={<div>Loading content</div>}>
       <ContextProvider>
         <Suspense fallback={<div>Loading...</div>}>
         <Navbar />
@@ -30,6 +31,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         </div>
         <Toaster richColors />
       </ContextProvider>
+      </Suspense>
     </main>
   );
 };

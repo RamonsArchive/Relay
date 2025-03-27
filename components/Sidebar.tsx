@@ -27,7 +27,7 @@ const Sidebar = () => {
   return (
     <>
       <aside className="hidden sm:flex flex-col w-full h-full pb-20 gap-5 items-center pt-[4rem] md:pt-[0] scrollbar-hidden">
-        <div className="flex items-center justify-center w-full py-3 sticky top-0 bg-white-300 z-2 ">
+        <div className="flex items-center justify-center w-full py-3 sticky top-0 bg-white-300 z-50">
           <span className="font-plext-sans font-semibold items-center text-[22px]">
             Filters
           </span>
@@ -53,7 +53,7 @@ const Sidebar = () => {
                   </div>
                 </button>
                 <div
-                  className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-[500px]" : "max-h-0 pointer-events-none overflow-hidden"}`}
+                  className={`transform transition-all duration-300 ease-in-out scrollbar-hidden ${expanded ? "max-h-full" : "max-h-0 pointer-events-none overflow-hidden"}`}
                 >
                   {options.map((option, index) => (
                     <CheckBox

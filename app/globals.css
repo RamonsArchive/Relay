@@ -189,7 +189,7 @@ html {
   }
 
   .product-drop {
-    @apply flex flex-col font-plex-sans font-medium w-full mt-5 px-5 sm:mt-0 md:px-0 text-[24px] pt-5 gap-4
+    @apply flex flex-col font-plex-sans font-medium w-full mt-5 px-5 sm:mt-0 md:px-0 text-[24px] pt-5 gap-4 md:pb-10;
   }
 
   .product-drop-section {
