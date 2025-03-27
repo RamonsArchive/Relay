@@ -74,6 +74,7 @@ const ViewReviews = ({
   const sortDropDropDownRef = useRef<HTMLDivElement | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
   const filterDropDownRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const numReviewsPerStar = getNumReviewsPerStar(reviews);
   const reviewsPerPage = 10;
@@ -251,25 +252,23 @@ const ViewReviews = ({
   };
 
   const handlePageScroll = () => {
-    setTimeout(() => {
-      const element = document.getElementById("view-review-container");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "end" });
-      } else {
-        console.warn("Element not found!");
-      }
-    }, 0);
-  };
+    if (scrollRef && scrollRef.current) {
+      scrollRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    };
+  }
 
   return (
     <>
       <div
-        className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+        className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out pb-[env(safe-area-inset-bottom) + 1.25rem] pt-[env(safe-area-inset-top) + 1.25rem] md:pt-0 md:pb-0 ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
-        <div className="flex flex-col gap-5 h-full w-full p-5 pb-[env(safe-area-inset-bottom) + 1.25rem] pt-[env(safe-area-inset-top) + 1.25rem] md:pt-5 md:pb-5 overflow-y-auto scrollbar-hidden">
+        <div className="flex flex-col gap-5 h-full w-full p-5 overflow-y-auto scrollbar-hidden">
           
-          <div className="flex flex-row justify-between">
-            <div className="flex items-center gap-3" id="view-review-container">
+          <div className="flex flex-row justify-between" ref={scrollRef} >
+            <div className="flex items-center gap-3" >
               <Image
                 src={urlFor(mainImage).url()}
                 alt="product image"
