@@ -96,7 +96,7 @@ const ManageSession = ({ session }: { session: Session | null }) => {
           <form action={formAction}>
             <button
               type="submit"
-              className="font-plex-sans font-regular text-[18px]"
+              className="font-plex-sans font-regular text-[16px] md:text-[18px]"
             >
               Login
             </button>
