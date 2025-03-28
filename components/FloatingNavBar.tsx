@@ -31,13 +31,12 @@ const FloatingNavBar = ({
         </Link>
       </div>
       <div className="font-plex-sans font-light text-[8px]">
-        <div className="w-5 h-4">
+        <div className="relative w-6 h-4">
           <Image
             src={"/assets/icons/palestine.svg"}
             alt="Free Palestine"
-            width={30}
-            height={20}
-            className="w-full h-auto relative group group-border glow-border"
+            fill
+            className="object-cover group group-border glow-border"
           />
         </div>
         <span className="max-w-[15px]">Relay stands with Palestine</span>
