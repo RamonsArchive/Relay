@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "easymde/dist/easymde.min.css";
+import { Analytics } from "@vercel/analytics/react"
 
 const plexSans = localFont({
   src: [
@@ -53,6 +54,7 @@ return (
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       <body className={`${plexSans.variable} antialiased`}>{children}</body>
+      <Analytics />
     </html>
   );
 }
