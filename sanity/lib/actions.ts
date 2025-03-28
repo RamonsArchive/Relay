@@ -12,9 +12,6 @@ import { sanitizeSanityId } from "@/lib/utils";
 import { rateLimiter } from "@/lib/rateLimiter";
 import isUrl from "is-url"
 
-// next dev --turbopack
-
-
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
     const session = await auth();

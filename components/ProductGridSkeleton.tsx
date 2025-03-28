@@ -3,9 +3,9 @@ import {Skeleton}  from "@/components/ui/skeleton";
 
 
 const ProductCardSkeleton = () => {
-        return <Skeleton className="w-[200px] h-[250px] md:w-[300px] md:h-[350px] rounded-sm min-w-[150px] min-h-[200px] max-w-[350px] max-h-[450px]">
-            <Skeleton className="relative w-full h-[60%] flex-[3] overflow-hidden rounded-sm"> </Skeleton>
-            <Skeleton className="product-group-info w-full h-[40%]flex-[2]"></Skeleton>
+        return <Skeleton className="w-[200px] h-[250px] md:w-[300px] md:h-[350px] gap-1 rounded-sm min-w-[150px] min-h-[200px] max-w-[350px] max-h-[450px]">
+            <Skeleton className="relative w-full h-[60%] flex-[3] rounded-sm"> </Skeleton>
+            <Skeleton className="product-group-info w-full h-[40%] flex-[2] rounded-sm"></Skeleton>
         </Skeleton>
     
 }
