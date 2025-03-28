@@ -8,6 +8,7 @@ import { PAGE_QUERY } from "@/sanity/lib/queries";
 import { Suspense } from "react";
 import { auth } from "@/auth";
 import FiltersShort from "@/components/FiltersShort";
+import ProductGridSkeleton from "@/components/ProductGridSkeleton";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
@@ -59,7 +60,7 @@ const page = async ({
       </Suspense>
 
       <div className="product-container">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<ProductGridSkeleton />}>
           <ul className="product-grid">
             {genderProducts.length > 0 ? (
               genderProducts.map((product: ProductType) => (
