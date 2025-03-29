@@ -14,12 +14,15 @@ import React, {
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Context } from "@/app/context/context";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { Session } from "next-auth";
 import { writeRecentSearch } from "@/sanity/lib/actions";
 import Loader from "./Loader";
 import { ActionState, RecentSearches } from "@/globalTypes";
-import { revalidateRecentSearches } from "@/lib/serverActions";
+import {
+  fetchRecentSearchesFew,
+  revalidateRecentSearches,
+} from "@/lib/serverActions";
 import { startTransition } from "react";
 import { parseServerActionResponse } from "@/lib/utils";
 
@@ -29,25 +32,58 @@ interface Props {
   session: Session | null;
   clicked: boolean;
   setClicked: React.Dispatch<React.SetStateAction<boolean>>;
-  recentSearches: RecentSearches;
+  initialSearches: RecentSearches;
 }
 
 const SearchPopUp = ({
   session,
   clicked,
   setClicked,
-  recentSearches,
+  initialSearches,
 }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const path = usePathname();
   const query = searchParams.get("query") || "";
 
-  const [searchHistory, setSearchHistory] = useState(recentSearches);
+  const [searchHistory, setSearchHistory] = useState(initialSearches);
 
   const [inputValue, setInputValue] = useState("");
 
   const { resetFilters } = useContext(Context);
   const oldQuery = useRef<string | undefined>(query);
+  const dropDownRef = useRef<HTMLElement>(null);
+
+  const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+    if (dropDownRef && !dropDownRef.current?.contains(event.target as Node)) {
+      setClicked(false);
+    }
+  };
+
+  useEffect(() => {
+    if (clicked) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  });
+
+  useEffect(() => {
+    const refreshSearches = async () => {
+      console.log("Refetching dataaaaaa for searches");
+      const userId = session?.user?.id || "";
+      if (session && userId) {
+        const newSearches = await fetchRecentSearchesFew(userId);
+        console.log("new searches", newSearches);
+        setSearchHistory(newSearches);
+      }
+    };
+    refreshSearches();
+  }, [query, path, session]);
 
   useEffect(() => {
     if (query && query !== oldQuery.current) {
@@ -64,7 +100,10 @@ const SearchPopUp = ({
     setSearchHistory((prev) => prev.filter((item) => item.query !== query));
   };
 
-  const handleFromSubmit = async (prevState: ActionState, formData: FormData) => {
+  const handleFromSubmit = async (
+    prevState: ActionState,
+    formData: FormData
+  ) => {
     try {
       const query = formData.get("query")?.toString().trim() || undefined;
       if (!query) {
@@ -81,15 +120,15 @@ const SearchPopUp = ({
           console.error(error);
         }
       }
+      revalidateRecentSearches();
       setInputValue("");
       setClicked(false);
-      revalidateRecentSearches();
       return parseServerActionResponse({
         status: "SUCCESS",
         error: "",
-      })
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return {
         ...prevState,
         error: "An error occurred, please try again.",
@@ -107,6 +146,7 @@ const SearchPopUp = ({
   return (
     <main
       className={`fixed top-0 left-0 h-full md:h-[80vh] w-full z-50 p-3 bg-white-300 shadow-sm shadow-third-300 text-third-300 transform transition-all duration-300 ease-in-out ${clicked ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+      ref={dropDownRef}
     >
       {isPending && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-[999]">
@@ -157,9 +197,9 @@ const SearchPopUp = ({
               disabled={isPending}
             ></input>
 
-          <Suspense fallback={<div> reset search </div>}>
-            <SearchBarReset setInputValue={setInputValue} />
-          </Suspense>
+            <Suspense fallback={<div> reset search </div>}>
+              <SearchBarReset setInputValue={setInputValue} />
+            </Suspense>
           </div>
         </Form>
         <div className="flex flex-col justify-center items-center w-full max-w-lg mt-10 gap-y-5 text-center">

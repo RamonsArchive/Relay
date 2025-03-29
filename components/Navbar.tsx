@@ -8,14 +8,14 @@ export const experimental_ppr = true;
 const Navbar = async () => {
   const session = await auth();
   const userId = session?.user?.id || "";
-  let recentSearches = [];
+  let initialSearches = [];
   if (userId) {
-    recentSearches = await fetchRecentSearchesFew(userId);
+    initialSearches = await fetchRecentSearchesFew(userId);
   }
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <NavBarWrapper session={session} recentSearches={recentSearches} />
+      <NavBarWrapper session={session} initialSearches={initialSearches} />
     </Suspense>
   );
 };

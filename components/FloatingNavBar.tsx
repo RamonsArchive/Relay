@@ -11,10 +11,10 @@ import NavBarHeart from "./NavBarHeart";
 
 const FloatingNavBar = ({
   session,
-  recentSearches,
+  initialSearches,
 }: {
   session: Session | null;
-  recentSearches: RecentSearches;
+  initialSearches: RecentSearches;
 }) => {
   const compactMode = true;
   return (
@@ -43,16 +43,16 @@ const FloatingNavBar = ({
       </div>
       <div className="flex items-center sm:gap-1 ml-auto mr-1">
         <Suspense fallback={<div>Loading... </div>}>
-        <Searchbar
-          session={session}
-          compactMode={compactMode}
-          recentSearches={recentSearches}
-        />
+          <Searchbar
+            session={session}
+            compactMode={compactMode}
+            initialSearches={initialSearches}
+          />
         </Suspense>
         <NavBarHeart />
         <div className="p-2">
           <Suspense fallback={<div>Loading... </div>}>
-          <ManageSession session={session} />
+            <ManageSession session={session} />
           </Suspense>
         </div>
         <div className="navbar-icon-compact">

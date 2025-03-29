@@ -146,7 +146,7 @@ export const fetchRecentSearchesFew = async (userId: string) => {
     const query = `*[_type == "user" && userId == $userIdSanitized][0]{
       recentSearches[0...8]
     }`
-    const result = await client.withConfig({useCdn: false}).fetch(query, {userIdSanitized}, { next: { tags: ['recent-searches'] }});
+    const result = await client.withConfig({useCdn: false}).fetch(query, {userIdSanitized}, { next: { tags: ["recent-searches"] }});
     return result.recentSearches || [];
   } catch (error) {
     console.error("Error fetching recent searches", error);

@@ -8,11 +8,11 @@ import { RecentSearches } from "@/globalTypes";
 const Searchbar = ({
   session,
   compactMode = false,
-  recentSearches,
+  initialSearches,
 }: {
   session: Session | null;
   compactMode?: boolean;
-  recentSearches: RecentSearches;
+  initialSearches: RecentSearches;
 }) => {
   const [clicked, setClicked] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -68,13 +68,13 @@ const Searchbar = ({
           />
         </div>
       )}
-      <Suspense fallback={null} >
-      <SearchPopUp
-        session={session}
-        clicked={clicked}
-        setClicked={setClicked}
-        recentSearches={recentSearches}
-      />
+      <Suspense fallback={null}>
+        <SearchPopUp
+          session={session}
+          clicked={clicked}
+          setClicked={setClicked}
+          initialSearches={initialSearches}
+        />
       </Suspense>
     </>
   );

@@ -13,10 +13,10 @@ import NavBarHeart from "./NavBarHeart";
 
 const NavBarWrapper = ({
   session,
-  recentSearches,
+  initialSearches,
 }: {
   session: Session | null;
-  recentSearches: RecentSearches;
+  initialSearches: RecentSearches;
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const isScrolledRef = useRef(isScrolled);
@@ -115,22 +115,24 @@ const NavBarWrapper = ({
               </div>
               <div className="p-2">
                 <Suspense fallback={<div> Profile </div>}>
-                <ManageSession session={session} />
+                  <ManageSession session={session} />
                 </Suspense>
               </div>
             </div>
             <div className="flex justify-self-end self-end">
               <Suspense fallback={<div> Search </div>}>
-              <Searchbar session={session} recentSearches={recentSearches} />
+                <Searchbar
+                  session={session}
+                  initialSearches={initialSearches}
+                />
               </Suspense>
             </div>
           </div>
         </nav>
-        {/* Mobile Nav */}
       </header>
       <div className="md:hidden fixed top-0 h-[4rem] left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
         <Suspense fallback={<div> Search </div>}>
-        <FloatingNavBar session={session} recentSearches={recentSearches} />
+          <FloatingNavBar session={session} initialSearches={initialSearches} />
         </Suspense>
       </div>
 
@@ -138,7 +140,7 @@ const NavBarWrapper = ({
         className={`hidden md:block h-[4rem] fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50 transform transition-all ease-in-all duration-300 ${isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <Suspense fallback={<div> Search </div>}>
-        <FloatingNavBar session={session} recentSearches={recentSearches} />
+          <FloatingNavBar session={session} initialSearches={initialSearches} />
         </Suspense>
       </header>
     </>
