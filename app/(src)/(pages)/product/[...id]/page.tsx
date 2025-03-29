@@ -17,7 +17,12 @@ import {
 import Image from "next/image";
 import ProductHeart from "@/components/ProductHeart";
 import ProductCard from "@/components/ProductCard";
-import { ProductType, ReviewType, BrandType, CategoryType } from "@/globalTypes";
+import {
+  ProductType,
+  ReviewType,
+  BrandType,
+  CategoryType,
+} from "@/globalTypes";
 import { after } from "next/server";
 import { ReviewSliderStats, parseServerActionResponse } from "@/lib/utils";
 import AutoFlagReviewWrapper from "@/components/AutoFlagReviewWrapper";
@@ -258,7 +263,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                     Select Size
                   </p>
                   <Suspense fallback={<div>Loading...</div>}>
-                  <ProductSizeButtons variants={variants} />
+                    <ProductSizeButtons variants={variants} />
                   </Suspense>
                 </div>
                 <div className="flex flex-col w-full pt-5 gap-3">
@@ -266,13 +271,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                     Quantity
                   </p>
                   <Suspense fallback={<div>Loading...</div>}>
-                  <ProductQuantity variants={variants} />
+                    <ProductQuantity variants={variants} />
                   </Suspense>
                 </div>
-                
+
                 <div className="flex flex-col w-full gap-4 pt-10">
                   <Suspense fallback={<div>Loading...</div>}>
-                  <ProductBuyButtons variants={variants} />
+                    <ProductBuyButtons variants={variants} />
                   </Suspense>
                 </div>
                 <Suspense fallback={<div>Loading...</div>}>
@@ -294,12 +299,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-3 flex-col w-full min-h-0 pb-5 pt-10">
+          <div className="flex flex-col w-full min-h-0 pb-5 pt-10">
             <p className="font-plex-sans font-medium text-[30px] pl-5">
               Recently Viewed Products
             </p>
-            <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-[475px]">
-              <div className="flex flex-nowrap w-max gap-5 min-h-[375px] px-5">
+            <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hidden whitespace-nowrap h-auto">
+              <div className="flex flex-nowrap pt-5 w-max gap-5 min-h-[375px] px-5 pb-5">
                 <Suspense fallback={<div>Loading products... </div>}>
                   {recentlyViewedProds?.length > 0 ? (
                     recentlyViewedProds
@@ -338,7 +343,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                   />
                   <p>{capitalizeBrand(brands[0])}</p>
                 </div>
-                  <div className="sm:pr-5">
+                <div className="sm:pr-5">
                   <Suspense fallback={<div>Heart</div>}>
                     <ProductHeart
                       isHearted={heartedProducts?.includes(
@@ -348,8 +353,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                       userId={userId}
                       callbackUrl={callbackUrl}
                     />
-                    </Suspense>
-                  </div>
+                  </Suspense>
+                </div>
               </div>
 
               <div className="flex flex-col">
@@ -382,7 +387,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 Select Color
               </p>
               <Suspense fallback={<div>Loading Product Colors...</div>}>
-              <ProductColorButtons variants={variants} />
+                <ProductColorButtons variants={variants} />
               </Suspense>
             </div>
             <div className="flex flex-col w-full p-5">
@@ -398,11 +403,11 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 Quantity
               </p>
               <Suspense fallback={<div>Loading Product Quantity...</div>}>
-              <ProductQuantity variants={variants} />
+                <ProductQuantity variants={variants} />
               </Suspense>
             </div>
             <Suspense fallback={<div>Loading...</div>}>
-            <ProductBuyButtons variants={variants} />
+              <ProductBuyButtons variants={variants} />
             </Suspense>
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">
@@ -442,21 +447,25 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <div className="w-max flex flex flex-nowrap px-5 h-atuo gap-3 pt-2 pb-5 min-h-[200px]">
                   <Suspense fallback={<div>Loading products... </div>}>
                     {recentlyViewedProds?.length > 0 ? (
-                      recentlyViewedProds.slice(0, 10).map((product: ProductType) => {
-                        return (
-                          <div
-                            key={product._id}
-                            className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]"
-                          >
-                            <ProductCard
-                              product={product}
-                              isHearted={heartedProducts.includes(product._id)}
-                              callbackUrl={callbackUrl}
-                              user={user}
-                            />
-                          </div>
-                        );
-                      })
+                      recentlyViewedProds
+                        .slice(0, 10)
+                        .map((product: ProductType) => {
+                          return (
+                            <div
+                              key={product._id}
+                              className="flex w-full h-full max-h-[300px] sm:max-h-[350px] md:max-h-[400px] max-w-[250px] sm:max-w-[300px] md:max-w-[350px]"
+                            >
+                              <ProductCard
+                                product={product}
+                                isHearted={heartedProducts.includes(
+                                  product._id
+                                )}
+                                callbackUrl={callbackUrl}
+                                user={user}
+                              />
+                            </div>
+                          );
+                        })
                     ) : (
                       <div>No recently viewed products</div>
                     )}

@@ -57,7 +57,7 @@ const Searchbar = ({
           <Search size="18px" />
           <input
             name="query"
-            className="bg-transparent outline-none w-full placeholder-gray-400"
+            className="bg-transparent outline-none w-full placeholder-gray-400 cursor-pointer"
             placeholder="Search..."
             readOnly
           />
