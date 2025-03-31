@@ -4,7 +4,6 @@ import NavBarWrapper from "./NavBarWrapper";
 import { fetchRecentSearchesFew } from "@/lib/serverActions";
 
 export const experimental_ppr = true;
-
 const Navbar = async () => {
   const session = await auth();
   const userId = session?.user?.id || "";
