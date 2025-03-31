@@ -4,8 +4,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function POST() {
-    let name = "ramon";
-    let email = "ramon@gmail.com";
+    const name = "ramon";
+    const email = "ramon@gmail.com";
     const newUser = await prisma.user.create({
         data: {
             name,

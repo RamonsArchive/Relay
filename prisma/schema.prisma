@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:0033Fortnite%2A@localhost:3306/Relay"
+  url      = env("DATABASE_URL")
 }
 
 model User {
