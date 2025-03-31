@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function POST() {
     const name = "ramon";
-    const email = "ramon@gmail.com";
+    const email = "chad@gmail.com";
     const newUser = await prisma.user.create({
         data: {
             name,
