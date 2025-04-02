@@ -115,7 +115,7 @@ const MenuOptions = () => {
 
       <div
         ref={menuRef}
-        className={`fixed flex flex-col top-0 right-0 w-[60vw] sm:w-[40vw] h-full p-3 bg-white-300 shadow-md shadow-third-300 z-50 transform transition-all duration-300 ease-in-out scrollbar-hidden ${menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
+        className={`fixed flex flex-col top-0 right-0 w-[60vw] sm:w-[40vw] h-[100vh] p-3 bg-white-300 shadow-md shadow-third-300 z-[999] transform transition-all duration-300 ease-in-out scrollbar-hidden ${menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
       >
         <div className="ml-auto cursor-pointer">
           <button className="p-1 flex items-center justify-center rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">

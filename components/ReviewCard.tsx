@@ -192,21 +192,34 @@ const ReviewCard = ({
 
   const handleFromSubmit = async (prevState: ActionState, formData: FormData) => {
     try {
-      const editData = formData.get("review");
-      await editReviewSchema.parse({ review: editData });
+      console.log("Should be getting data");
+      const editData = formData.get("review") || "";
+      console.log("Edit data", editData);
+      await editReviewSchema.parseAsync({review: editData});
+      console.log("Edit reivew validation", editReviewSchema);
 
       const result = await writeReviewEdit(_id as string, editData as string);
-      setEditReviewLoader(false);
+      console.log("Result", result);
       if (result.status === "SUCCESS") {
         toast.success("Success", {
           description: "Congrats, your review has been successfully edited",
         });
 
         setEditReview(false);
-        router.refresh();
+      } else {
+        toast.error("Error", {
+          description: "Edit unable to be made. Please try again later"
+        })
       }
-      return result;
+      setEditReviewLoader(false);
+      setEditReview(false)
+      router.refresh();
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        error: "",
+      });
     } catch (error) {
+      console.error(error);
       if (error instanceof z.ZodError) {
         setEditReviewLoader(false);
         console.error(error);
@@ -507,7 +520,7 @@ const ReviewCard = ({
               <div className="flex gap-2">
                 <Button
                   type="submit"
-                  disabled={isPending}
+                  disabled={isPending || !reviewText}
                   className="w-full max-w-[300px] h-[30px]"
                   onClick={() => setEditReviewLoader(true)}
                 >

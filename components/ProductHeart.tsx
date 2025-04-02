@@ -27,7 +27,7 @@ const ProductHeart = ({
   }, [isHearted, userId, productId]);
 
   useEffect(() => {
-    router.refresh();
+    //router.refresh();
     const setHeart = async () => {
       const heartedProductId = Cookies.get("heartedProductId");
       const newHearted = !hearted;
@@ -43,6 +43,9 @@ const ProductHeart = ({
 
       if (!userId) {
         console.log("User id is not present, returning early");
+        toast.error("Please login", {
+          description: "To heart this product, please login."
+        })
         return;
       }
 
@@ -55,6 +58,7 @@ const ProductHeart = ({
           heartedProductId as string,
           newHearted
         );
+        console.log("Result", result);
         revalidateHeartedProducts();
 
         if (result.status === "SUCCESS") {

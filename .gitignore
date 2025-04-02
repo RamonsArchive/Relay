@@ -44,4 +44,4 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 # Prisma
-generated/prisma/
+# generated/prisma/

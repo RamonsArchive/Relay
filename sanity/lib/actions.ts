@@ -563,6 +563,13 @@ export const writeReviewEdit = async (reviewId: string, editData: string) =>  {
       })
      }
 
+     if (!editData) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Review edit can't be empty"
+      })
+     }
+
      if (!session || !sessionId) {
       return parseServerActionResponse({
         status: "ERROR",
