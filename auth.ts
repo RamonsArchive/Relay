@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
          if (!userExists) {
           let sanityImageRef = null;
           if (user.image) {
-            const sanityImageId = await uploadImageStringToSanity(user.image as string);
+            const sanityImageId = await uploadImageStringToSanity(user.image as string, profile.sub);
             if (sanityImageId) {
               sanityImageRef = {
                 _type: 'image',
@@ -35,6 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
             }
           }
+          console.log("Creating new user in sanity", userId);
           await writeClient.create({
             _type: "user",
             _id: userId,
@@ -46,8 +47,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
          }
 
+         console.log("User exists in sanity", userId);
+
          return true; // allow sign in
       } catch (error) {
+        console.error("Error during signIn callback", error);
         console.error(parseServerActionResponse({status: "ERROR", error: "INTERNAL SERVER ERROR"}));
         return false; // block sign
       }

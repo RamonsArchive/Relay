@@ -71,18 +71,19 @@ export const uploadImageToSanity = async (imageFile: File) => {
   }
 };
 
-export const uploadImageStringToSanity = async (imageUrl: string) => {
-  console.log("Image url", imageUrl);
+export const uploadImageStringToSanity = async (imageUrl: string, userId?: string) => {
   try {
-    const session = await auth();
-    const sessionId = session?.user?.id;
+    if (!userId) {
+      const session = await auth();
+      userId = session?.user?.id;
+    }
 
-    if (!session || !sessionId) {
+    if (!userId) {
       return parseServerActionResponse({
         status: "ERROR",
         error: "Unauthorized request"
       })
-    }
+    } 
 
     if (!imageUrl) {
       return parseServerActionResponse({
@@ -108,7 +109,7 @@ export const uploadImageStringToSanity = async (imageUrl: string) => {
       });
     }
 
-    const {success} = await rateLimiter.limit(sessionId);
+    const {success} = await rateLimiter.limit(userId);
     if (!success) {
       return parseServerActionResponse({
         status: "ERROR",
