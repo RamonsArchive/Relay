@@ -56,13 +56,12 @@ const ViewReviews = ({
   const [reviewContent, setReviewContent] = useState(reviews);
   const [sortDropDown, setSortDropDown] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Most Recent");
-  const sortDropDownTitle = 
-  [
+  const sortDropDownTitle = [
     { title: "Most Recent", value: 0 },
     { title: "Oldest", value: 1 },
     { title: "Highest Rated", value: 2 },
     { title: "Lowest Rated", value: 3 },
-  ]
+  ];
   const [searchFilterInput, setSearchFilterInput] = useState("");
   const [filterDropDown, setFilterDropDown] = useState(false);
   const [filterRating, setFilterRating] = useState<number[]>([]);
@@ -258,19 +257,18 @@ const ViewReviews = ({
           behavior: "smooth",
           block: "end",
         });
-      };
-    },100)
-  }
+      }
+    }, 100);
+  };
 
   return (
     <>
       <div
-        className={`flex fixed top-0 left-0 w-full h-full justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out pb-[env(safe-area-inset-bottom) + 1.25rem] pt-[env(safe-area-inset-top) + 1.25rem] md:pt-0 md:pb-0 ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
+        className={`fixed inset-0 justify-center items-center bg-white-300 overflow-y-hidden z-[999] transform transition-all duration-300 ease-in-out pb-[env(safe-area-inset-bottom) + 1.25rem] pt-[env(safe-area-inset-top) + 1.25rem] md:pt-0 md:pb-0 ${viewReviews ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
       >
         <div className="flex flex-col gap-5 h-full w-full p-5 overflow-y-auto scrollbar-hidden">
-          
           <div className="flex flex-row justify-between" ref={scrollRef}>
-            <div className="flex items-center gap-3" >
+            <div className="flex items-center gap-3">
               <Image
                 src={urlFor(mainImage).url()}
                 alt="product image"
@@ -287,16 +285,15 @@ const ViewReviews = ({
               </div>
             </div>
             <div className="relative">
-            <div className="flex justify-end items-center p-1 rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
-              <X
-                size="30px"
-                className="cursor-pointer text-gray-600"
-                strokeWidth={1}
-                onClick={() => setViewReviews(false)}
-              />
+              <div className="flex justify-end items-center p-1 rounded-full hover:bg-gray-300 transition duration-200 ease-in-out">
+                <X
+                  size="30px"
+                  className="cursor-pointer text-gray-600"
+                  strokeWidth={1}
+                  onClick={() => setViewReviews(false)}
+                />
+              </div>
             </div>
-            </div>
-          
           </div>
           <div className="flex flex-col w-full">
             <div className="flex flex-col items-center gap-3">
@@ -308,9 +305,7 @@ const ViewReviews = ({
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <ReviewSummarySliders
-                reviewStats={reviewStats}
-              />
+              <ReviewSummarySliders reviewStats={reviewStats} />
             </div>
             <div className="relative flex flex-col w-full gap-3 pt-5">
               <p className="font-plex-sants text-medium text-[16px]">

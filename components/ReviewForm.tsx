@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import { verifyNoUserReview } from "@/lib/serverActions";
-import { User} from "next-auth";
+import { User } from "next-auth";
 
 const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
   const router = useRouter();
@@ -28,7 +28,10 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
   const [qualityRating, setQualityRating] = useState(-1);
   const [valueRating, setValueRating] = useState(-1);
 
-  const handleFormSubmit = async (prevState: ActionState, formData: FormData) => {
+  const handleFormSubmit = async (
+    prevState: ActionState,
+    formData: FormData
+  ) => {
     const photoFile = formData.get("photo");
     let photoRef = null;
     if (!user) {
@@ -36,7 +39,7 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
         ...prevState,
         error: "User not found",
         status: "ERROR",
-      }
+      };
     }
     if (photoFile instanceof File && photoFile.size > 0) {
       if (photoFile.size > 5 * 1024 * 1024) {
@@ -88,7 +91,10 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
       };
 
       await reviewSchema.parseAsync(reviewData);
-      const existingReview = await verifyNoUserReview(productId[0], user?.id as string);
+      const existingReview = await verifyNoUserReview(
+        productId[0],
+        user?.id as string
+      );
       if (existingReview.status == "ERROR") {
         toast.error("Error", {
           description: "You already wrote a review for this product",
