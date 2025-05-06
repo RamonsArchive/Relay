@@ -108,15 +108,3 @@ const ManageSession = ({ session }: { session: Session | null }) => {
 };
 
 export default ManageSession;
-
-/*
-<form
-      action={async () => {
-        "use server"
-        await signIn("google")
-      }}
-    >
-      <button type="submit">Signin with Google</button>
-    </form>
-
-*/
