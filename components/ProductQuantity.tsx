@@ -1,14 +1,12 @@
 "use client";
-import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
+import { useProductOptions } from "@/app/context/ProductOptionsContext";
 import { VariantItemType, VariantType } from "@/globalTypes";
 import React from "react";
 import { useContext, useEffect } from "react";
 import { Plus, Minus } from "lucide-react";
 
 const ProductQuantity = ({ variants }: { variants: VariantType }) => {
-  const { selectedColor, selectedSize, quantity, setQuantity } = useContext(
-    ProductOptionsContext
-  );
+  const { selectedColor, selectedSize, quantity, setQuantity } = useProductOptions();
 
   /* Refresh on every change*/
   useEffect(() => {

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import { createContext, useState } from "react";
 
 type ProductOptionsContextType = {
@@ -46,5 +46,14 @@ const ProductOptionsProvider = ({
     </ProductOptionsContext.Provider>
   );
 };
+
+
+export const useProductOptions = () => {
+  const context = useContext(ProductOptionsContext);
+  if (!context) {
+    throw new Error("useProductOptions must be used within a ProductOptionsProvider");
+  }
+  return context;
+}
 
 export default ProductOptionsProvider;

@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import { useContext, useEffect } from "react";
-import { ColorType, VariantType } from "@/globalTypes";
-import { ProductOptionsContext } from "@/app/context/ProductOptionsContext";
+import { ColorType, VariantItemType, VariantType } from "@/globalTypes";
+import { useProductOptions } from "@/app/context/ProductOptionsContext";
 import { getUniqeColors } from "@/lib/utils";
 
 const ProductColorButtons = ({ variants }: { variants: VariantType }) => {
-  const { selectedColor, setSelectedColor } = useContext(ProductOptionsContext);
+  const { selectedColor, setSelectedColor, setSelectedSize, selectedSize } = useProductOptions();
 
   const uniqueColors = getUniqeColors(variants);
 
@@ -17,11 +17,11 @@ const ProductColorButtons = ({ variants }: { variants: VariantType }) => {
   }, [selectedColor, setSelectedColor, uniqueColors]);
 
   return (
-    <div className="flex flex-row gap-10 w-full mt-3">
+    <div className="flex flex-row gap-8 w-full mt-3 overflow-x-auto scrollbar-hidden pr-3">
       {uniqueColors.map((color: ColorType, index: number) => (
         <div
-          key={index}
-          className="flex flex-col gap-2 items-center cursor-pointer"
+          key={color.name}
+          className={`flex flex-col gap-1 items-center cursor-pointer px-2 py-2 rounded-full transition-all duration-300 ease-in-out ${selectedColor === color?.name ? "bg-gray-300" : ""}`}
           onClick={() => setSelectedColor(color?.name as string)}
         >
           <div

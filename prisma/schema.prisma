@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prisma"
@@ -14,8 +11,185 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ──────────────────────────────────────────────────────────────────────────
+// 1) User (Google ID as primary key)
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id        String    @id            // Google user ID
+  email     String    @unique        
+  name      String?                  
+  provider  String?                  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // relations
+  cart      Cart?                    
+  orders    Order[]
+  addresses Address[]
+  
+  // Soft delete
+  isActive  Boolean   @default(true)
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 2) Cart & CartItem
+model Cart {
+  id        Int         @id @default(autoincrement())
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String      @unique       // string FK to User.id
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt    
+
+  items     CartItem[]                
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId     Int
+  variant    Variant  @relation(fields: [variantId], references: [id])
+  variantId  String                     
+  quantity   Int                        
+
+  addedAt    DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@index([cartId])
+  @@index([variantId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 3) Order & OrderItem
+model Order {
+  id               Int          @id @default(autoincrement())
+  user             User         @relation(fields: [userId], references: [id])
+  userId           String       // string FK to User.id
+  address          Address      @relation(fields: [addressId], references: [id])
+  addressId        Int          
+
+  stripeSessionId  String       @unique
+  paymentIntentId  String       
+  amountTotal      Int          // in cents
+  currency         String       @default("usd")
+  status           String       
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  items            OrderItem[]
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    Int                         
+  variant    Variant  @relation(fields: [variantId], references: [id])
+  variantId  String
+
+  // Snapshot of product/variant data at purchase time
+  productId  String   // For historical reference
+  productTitle String 
+  variantSize String
+  variantColor String                      
+
+  unitPrice  Int      // snapshot in cents
+  quantity   Int                        
+  totalPrice Int      // unitPrice * quantity
+  
+  @@index([orderId])
+  @@index([variantId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 4) Variant (inventory mirror from Sanity)
+model Variant {
+  id            String    @id       // Sanity document _id
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId     String
+  size          String                // e.g. "M"
+  color         String                // e.g. "Hot Pink"
+  stockQuantity Int                   // live stock count
+  sku           String?               // Stock Keeping Unit
+  
+  // Sanity sync fields
+  sanityRevisionId String?            // Track Sanity's revision ID
+  lastSyncedAt     DateTime           // When this variant was last synced
+  isActive         Boolean  @default(true)  // For soft deletes
+
+  cartItems     CartItem[]            
+  orderItems    OrderItem[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([productId])
+  @@unique([productId, size, color])  // Each size/color combo should be unique per product
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 5) Product (mirror from Sanity)
+model Product {
+  id           String    @id       // Sanity product _id
+  title        String                
+  description  String?  @db.Text    // Using Text type for longer content
+  slug         String    @unique     // URL-friendly identifier
+  price        Int?                  // Base price in cents
+  images       Json?                 // URLs to images (stored as JSON array)
+  categories   Json?                 // Category references (stored as JSON array)
+  
+  // Sanity sync fields
+  sanityRevisionId String?           // Track Sanity's revision ID
+  lastSyncedAt     DateTime          // When this product was last synced
+  isActive         Boolean  @default(true)  // For soft deletes
+
+  variants     Variant[]
+  
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 6) Address
+model Address {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String              
+  line1     String              
+  line2     String?             
+  city      String              
+  state     String              
+  zip       String              
+  country   String              
+  isDefault Boolean  @default(false)
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  orders    Order[]
+  
+  @@index([userId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 7) SanitySync - Track webhook synchronization status
+model SanitySync {
+  id            Int       @id @default(autoincrement())
+  documentId    String    // Sanity document ID
+  documentType  String    // "product" or "variant"
+  operation     String    // "create", "update", "delete" 
+  revisionId    String    // Sanity revision ID
+  status        String    // "success", "failed", "pending"
+  errorMessage  String?   @db.Text
+  payload       Json?     // The webhook payload (useful for debugging/retry)
+  
+  processedAt   DateTime?  // When this sync operation was processed
+  createdAt     DateTime  @default(now())
+  
+  @@index([documentId])
+  @@index([status])
+  @@index([documentType])
 }

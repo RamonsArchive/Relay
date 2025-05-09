@@ -86,9 +86,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         });
       recentlyViewedProds = recentlyViewedProds.recentlyViewedProducts;
 
-      recentlyViewedProds = recentlyViewedProds.filter(
-        (prod: ProductType) => prod._id != productId
-      );
+      if (recentlyViewedProds && recentlyViewedProds.length > 0) {
+        recentlyViewedProds = recentlyViewedProds.filter(
+          (prod: ProductType) => prod._id != productId
+        );
+      }
+      
       heartedProducts = await fetchHeartedProducts(userId);
 
       if (dereferencedReviews?.length > 0) {
@@ -190,7 +193,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
             <div className="flex flex-col w-[40%] h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hidden scroll-smooth">
-              <div className="flex flex-col pl-3 lg:pl-5 gap-y-3 w-[90%] overflow-y-auto scrollbar-hidden">
+              <div className="flex flex-col pl-3 lg:pl-5 gap-y-3 w-[90%] overflow-y-auto scrollbar-hidden overflow-x-hidden">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-5 font-plex-sans font-bold text-[20px] items-center">
                     <Image
@@ -277,7 +280,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
                 <div className="flex flex-col w-full gap-4 pt-10">
                   <Suspense fallback={<div>Loading...</div>}>
-                    <ProductBuyButtons variants={variants} />
+                    <ProductBuyButtons userId={userId} productId={productId} />
                   </Suspense>
                 </div>
                 <Suspense fallback={<div>Loading...</div>}>
@@ -407,7 +410,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               </Suspense>
             </div>
             <Suspense fallback={<div>Loading...</div>}>
-              <ProductBuyButtons variants={variants} />
+              <ProductBuyButtons userId={userId} productId={productId} />
             </Suspense>
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">

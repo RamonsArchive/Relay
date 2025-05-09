@@ -6,6 +6,7 @@ import { parseServerActionResponse } from "@/lib/utils";
 import { AdapterUser } from "next-auth/adapters";
 import { uploadImageStringToSanity } from "./sanity/lib/actions";
 import { client } from "./sanity/lib/client";
+import { prisma } from "./lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
@@ -43,9 +44,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: user.email,
             firstName: user.name,
             image: sanityImageRef,
-            provider: account?.provider,
-          });
+            provider: account!.provider,
+          }); 
+
+
+          // 2) Upsert into MySQL via Prisma
+        await prisma.user.upsert({
+          where: { id: userId },
+          update: {
+            email:    user.email || '',
+            name:     user.name,
+            provider:     account!.provider,
+            updatedAt:    new Date(),
+          },
+          create: {
+            id:        userId,
+            email:     user.email || '',
+            name:      user.name,
+            provider:  account!.provider,
+            // createdAt and isActive use their defaults
+        },
+      });
          }
+      
 
          console.log("User exists in sanity", userId);
 
