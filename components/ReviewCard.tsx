@@ -149,10 +149,8 @@ const ReviewCard = ({
   };
 
   const handleDeleteEdit = () => {
-    console.log("Deleting edit");
     setEditReview(false);
     setReviewText(review);
-    console.log(editReview);
   };
 
   const handleDeleteReview = async () => {

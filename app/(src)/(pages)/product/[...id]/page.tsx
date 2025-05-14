@@ -67,7 +67,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const imageMain = mainImage;
   const galleryImages = imagesPlusProductDetails.imageGallery;
-  console.log("REviews", reviews);
 
   let dereferencedReviews = reviews || [];
   let recentlyViewedProds = [];

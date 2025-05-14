@@ -149,20 +149,12 @@ const constructQuerySearch = (searchTerm: string, optimizedHeartedProductsIds: s
 
 /* For homepage with filters */
 const constructHomePageFilters = (filtersArray: string[], optimizedHeartedProductsIds: string) => {
-  console.log("Filters array", filtersArray);
-
   const filterParams = filtersArray;
-  console.log("HOME PAGE WITH FILTERS")
 
   const keywords = filterParams.filter((keyword) => !["newest", "oldest", "lowest priced", "highest priced"].includes(keyword) && keyword.slice(0,1) !== "$");
-  console.log("keywords", keywords);
 
   const specialFilterrs = getSpecialFilters(filterParams);
-  console.log("specialFilterrs", specialFilterrs);
-
   const searchOrder = specialFilterrs.order;
-
-  console.log("SEARCH ORDER", searchOrder);
 
   const keywordConditions = keywords
     .map(
@@ -181,8 +173,6 @@ const constructHomePageFilters = (filtersArray: string[], optimizedHeartedProduc
       )
     `
     ).join(" && ");
-
-  console.log("keywordConditions", keywordConditions);
 
   const filterClause = keywordConditions ? ` && (${keywordConditions})` : "";
   const priceClause = specialFilterrs.priceFilter ? ` && (${specialFilterrs.priceFilter})` : "";
@@ -234,7 +224,6 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
     )
   `)
   .join(" || ");
-  console.log("keywordConditions", keywordConditions);
 
   const filterConditions = filterKeyWords.map((filter) => 
     `
@@ -252,8 +241,6 @@ const constructQueryPlusFilters = (queryArray: string[], filtersArray: string[],
   )
   `)
   .join(" && ");
-
-  console.log("filterConditions", filterConditions);
 
   const filterClause = filterConditions ? ` && (${filterConditions})` : "";
   const priceClause = specialFilterrs.priceFilter ? ` && (${specialFilterrs.priceFilter})` : "";

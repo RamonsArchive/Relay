@@ -119,17 +119,14 @@ export const uploadImageStringToSanity = async (imageUrl: string, userId?: strin
 
     // Fetch the image as an array buffer
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" }) as any;
-    console.log("Response", response);
 
     const imageBuffer = Buffer.from(response.data);
-    console.log("Image Buffer", imageBuffer);
 
     // Upload the image to Sanity
     const uploadImage = await writeClient.assets.upload("image", imageBuffer, {
       filename: `${nanoid()}.jpg`,
     });
 
-    console.log("Upload Success:", uploadImage);
     return uploadImage._id;
   } catch (error) {
     console.error("Error uploading image to Sanity:", error);
@@ -145,9 +142,6 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
    const sessionId = session?.user?.id;
    const userIdSanitized = sanitizeSanityId(userId);
    const productIdSanitized = sanitizeSanityId(productId);
-   console.log("userId sani", userIdSanitized);
-  console.log("productId sani", productIdSanitized);
-  console.log("hearted", hearted);
 
    if (!userIdSanitized || !productIdSanitized) {
     return parseServerActionResponse({
@@ -175,8 +169,6 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
       error: "Too many requests. Please try again later"
     })
    }
-
-   console.log("passed rate limiter check");
 
     if (!hearted) {
       try {
@@ -295,10 +287,6 @@ export const writePopularCategories = async (userId: string, productId: string, 
     const userIdSanitized = sanitizeSanityId(userId);
     const productIdSanitized = sanitizeSanityId(productId);
 
-    console.log("categoreise", categories);
-    console.log("userId", userId);
-    console.log("productId", productId);
-
     if (!userIdSanitized || !productIdSanitized) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -353,15 +341,11 @@ export const writePopularCategories = async (userId: string, productId: string, 
 export const writeRecentSearch = async (userId: string, searchQuery: string) => {
   console.log("In write recent search");
   try {
-    console.log("search query", searchQuery);
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
     const sanitizedSearchQuery = sanitizeSearchQuery(searchQuery);
-    console.log("sanitized search query", sanitizedSearchQuery);
-    console.log("sanitized user id", userIdSanitized);
     
-
     if (!userIdSanitized || !sanitizedSearchQuery) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -710,7 +694,6 @@ export const writeFlaggedReview = async (userId: string, reviewId: string, flagR
     })
   }
 
-  console.log("flag reason", flagReason);
   const session = await auth();
   const sessionId = session?.user?.id;
   const userIdSanitized = sanitizeSanityId(userId);
@@ -782,9 +765,6 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
     const sessionId = session?.user?.id;
     const flaggedReviewIdSanitized = sanitizeSanityId(flaggedReviewId);
     const userIdSanitized = sanitizeSanityId(userId);
-
-    console.log("sessionId", sessionId);
-    console.log("userIdSanitized", userIdSanitized);
 
     if (!flaggedReviewIdSanitized || !userIdSanitized) {
       return parseServerActionResponse({

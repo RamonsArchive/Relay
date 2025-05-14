@@ -280,3 +280,44 @@ export type ActionState = {
   status: "INITIAL" | "PENDING" | "SUCCESS" | "ERROR";
   error: string;
 }
+
+
+export type WebhookPayload = {
+  _id: string
+  _rev: string
+  _type: string
+
+  slug: string
+  title: string
+  cost: number
+  description: string
+
+  mainImage: string
+  imageGallery: string[]
+
+  categories: string[]
+
+  variants: Array<{
+    _key: string
+    size: string
+    color: string
+    quantity: number
+  }>
+}
+
+export type SanitySyncResult = {
+    success: boolean;
+    error?: string;
+    syncId: number;
+    productId?: string;
+    variantIds?: string[];
+}
+
+
+export type PayloadVariantType = {
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+  color?: string;
+  quantity?: number;
+  _type: "variant";
+  _key: string;
+}

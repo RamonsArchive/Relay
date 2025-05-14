@@ -78,7 +78,6 @@ const SearchPopUp = ({
       const userId = session?.user?.id || "";
       if (session && userId) {
         const newSearches = await fetchRecentSearchesFew(userId);
-        console.log("new searches", newSearches);
         setSearchHistory(newSearches);
       }
     };

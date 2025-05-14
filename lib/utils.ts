@@ -180,3 +180,4 @@ export const getSpecialFilters = (keywords: string[]) => {
 
   return result; // saftey check
 }
+
