@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import crypto  from "crypto";
-import { WebhookPayload, SanitySyncResult, PayloadVariantType } from "@/globalTypes";
+import { WebhookPayload, DatabaseVariantType } from "@/globalTypes";
 import { parseServerActionResponse } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
@@ -83,7 +83,7 @@ async function syncProductFromSanity(payload: WebhookPayload, syncId: number) {
                 where: {productId: product.id}
             })
 
-            const existingVariantMap: Record<string, any> = {}
+            const existingVariantMap: Record<string, DatabaseVariantType> = {}
             existingVariants.forEach((variant) => {
                 // add the unique variant id to the map
                 if (variant.id) {

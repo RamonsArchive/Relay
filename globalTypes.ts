@@ -321,3 +321,17 @@ export type PayloadVariantType = {
   _type: "variant";
   _key: string;
 }
+
+export type DatabaseVariantType = {
+    id: string;
+    productId: string;
+    size: string;
+    color: string;
+    stockQuantity: number;
+    sku: string | null;
+    sanityRevisionId: string | null;
+    lastSyncedAt: Date;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
