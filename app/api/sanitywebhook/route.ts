@@ -5,6 +5,10 @@ import { WebhookPayload, DatabaseVariantType } from "@/globalTypes";
 import { parseServerActionResponse } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
+
+  console.log("🔍 Incoming headers:", 
+    Object.fromEntries(request.headers.entries())
+  );
   const secret = process.env.SANITY_WEBHOOK_SECRET as string;
   const body = await request.text();
   console.log("RECIEVED BODY", body);
