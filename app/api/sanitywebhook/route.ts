@@ -13,7 +13,9 @@ export async function POST(request: NextRequest) {
   const body = await request.text();
   console.log("RECIEVED BODY", body);
   console.log("REVICED SECRETE", secret);
-  const signature = request.headers.get("sanity-webhook-signature");
+  const raw_signature = request.headers.get("sanity-webhook-signature");
+  const signature = raw_signature?.split(",").find((part) => part.startsWith("v1="))?.split("=")[1];
+
   console.log("signature", signature);
   
   console.log("body", body);
