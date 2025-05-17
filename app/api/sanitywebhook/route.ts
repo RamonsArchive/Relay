@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import crypto  from "crypto";
 import { WebhookPayload, DatabaseVariantType } from "@/globalTypes";
 import { parseServerActionResponse } from "@/lib/utils";
 import {isValidSignature} from '@sanity/webhook'
@@ -52,15 +51,15 @@ export async function POST(request: NextRequest) {
 async function syncProductFromSanity(payload: WebhookPayload, productId: string, syncId: number) {
     try {
         const result = await prisma.$transaction(async (tx) => {
+            const productImages = [...(payload.mainImage ? [payload.mainImage.asset._ref] : []), ...payload.imageGallery.map((image) => image.asset._ref)];
             const product = await tx.product.upsert({
                 where: { id: productId},
                 update: {
                     title: payload.title,
                     description: payload.description,
-                    slug: payload.slug,
+                    slug: payload.slug.current,
                     price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: [...(payload.mainImage ? [payload.mainImage] : []), ...payload.imageGallery.map((image) => image)],
-                    categories: payload.categories || [],
+                    images: productImages,
                     sanityRevisionId: payload._rev,
                     lastSyncedAt: new Date(),
                     isActive: true,
@@ -70,9 +69,9 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
                     id: productId,
                     title: payload.title,
                     description: payload.description,
-                    slug: payload.slug,
+                    slug: payload.slug.current,
                     price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: [...(payload.mainImage ? [payload.mainImage] : []), ...payload.imageGallery.map((image) => image)],
+                    images: productImages,
                     categories: payload.categories || [],
                     sanityRevisionId: payload._rev,
                     lastSyncedAt: new Date(),

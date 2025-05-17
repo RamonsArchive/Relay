@@ -283,26 +283,40 @@ export type ActionState = {
 
 
 export type WebhookPayload = {
-  _id: string
-  _rev: string
-  _type: string
-
-  slug: string
-  title: string
-  cost: number
-  description: string
-
-  mainImage: string
-  imageGallery: string[]
-
-  categories: string[]
-
-  variants: Array<{
-    _key: string
-    size: string
-    color: string
-    quantity: number
-  }>
+    _id: string;
+    _type: string;
+    _rev: string;
+    slug: {
+        _type: string;
+        current: string;
+    };
+    title: string;
+    cost: number;
+    description: string;
+    mainImage: {
+        _type: string;
+        asset: {
+            _ref: string;
+            _type: string;
+        };
+    };
+    imageGallery: Array<{
+        _type: string;
+        asset: {
+            _ref: string;
+            _type: string;
+        };
+    }>;
+    categories: Array<{
+        _ref: string;
+        _type: string;
+    }>;
+    variants: Array<{
+        _key: string;
+        size: string;
+        color: string;
+        quantity: number;
+    }>;
 }
 
 export type SanitySyncResult = {
