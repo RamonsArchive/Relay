@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import crypto  from "crypto";
 import { WebhookPayload, DatabaseVariantType } from "@/globalTypes";
 import { parseServerActionResponse } from "@/lib/utils";
+import {isValidSignature} from '@sanity/webhook'
 
 export async function POST(request: NextRequest) {
 
@@ -10,21 +11,16 @@ export async function POST(request: NextRequest) {
     Object.fromEntries(request.headers.entries())
   );
   const secret = process.env.SANITY_WEBHOOK_SECRET as string;
-  const body = await request.text();
+  const signature = request.headers.get("sanity-webhook-signature") || "";
+  const body = await request.text(); // read boyd into a string.
   console.log("RECIEVED BODY", body);
   console.log("REVICED SECRETE", secret);
-  const raw_signature = request.headers.get("sanity-webhook-signature");
-  const signature = raw_signature?.split(",").find((part) => part.startsWith("v1="))?.split("=")[1];
 
-  console.log("signature", signature);
-  
-  console.log("body", body);
-  const hash = crypto.createHmac("sha256", secret).update(body).digest("hex");
-  console.log("hash", hash);
-  if (signature !== hash) {
+  // validate the signature
+  if (!(isValidSignature(body, signature, secret))) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
-
+  
   const payload = JSON.parse(body);
   console.log("RECEVICED payload from webhook", payload);
 
