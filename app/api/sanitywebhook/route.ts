@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   const body = await request.text();
   console.log("RECIEVED BODY", body);
   console.log("REVICED SECRETE", secret);
-  const signature = request.headers.get("x-sanity-signature");
+  const signature = request.headers.get("sanity-webhook-signature");
   console.log("signature", signature);
   
   console.log("body", body);
