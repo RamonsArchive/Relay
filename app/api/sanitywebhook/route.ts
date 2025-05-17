@@ -20,16 +20,18 @@ export async function POST(request: NextRequest) {
   if (!(isValidSignature(body, signature, secret))) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
+
   
   const payload = JSON.parse(body);
   console.log("RECEVICED payload from webhook", payload);
 
   // record the sync operation
+  const payloadId = payload._id.replace(/^drafts\./, '');
   const syncRecord = await prisma.sanitySync.create({
     data: {
-        documentId: payload._id,
+        documentId: payloadId,
         documentType: payload._type,
-        operation: request.headers.get("x-sanity-signature") || "",
+        operation: request.headers.get("sanity-operation") || "",
         revisionId: payload._rev,
         status: "pending",
         payload: payload,
@@ -37,7 +39,7 @@ export async function POST(request: NextRequest) {
   })
 
   // proccess the product sync
-  const result = await syncProductFromSanity(payload, syncRecord.id);
+  const result = await syncProductFromSanity(payload, payloadId, syncRecord.id);
   console.log("RESULT", result);
   if (result.status) {
     return NextResponse.json({status: 200, message: "Product synced successfully"});
@@ -47,17 +49,17 @@ export async function POST(request: NextRequest) {
   
 }
 
-async function syncProductFromSanity(payload: WebhookPayload, syncId: number) {
+async function syncProductFromSanity(payload: WebhookPayload, productId: string, syncId: number) {
     try {
         const result = await prisma.$transaction(async (tx) => {
             const product = await tx.product.upsert({
-                where: { id: payload._id},
+                where: { id: productId},
                 update: {
                     title: payload.title,
                     description: payload.description,
                     slug: payload.slug,
                     price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: [payload.mainImage, ...payload.imageGallery.map((image) => image)],
+                    images: [...(payload.mainImage ? [payload.mainImage] : []), ...payload.imageGallery.map((image) => image)],
                     categories: payload.categories || [],
                     sanityRevisionId: payload._rev,
                     lastSyncedAt: new Date(),
@@ -65,12 +67,12 @@ async function syncProductFromSanity(payload: WebhookPayload, syncId: number) {
                         
                 },
                 create: {
-                    id: payload._id,
+                    id: productId,
                     title: payload.title,
                     description: payload.description,
                     slug: payload.slug,
                     price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: [payload.mainImage, ...payload.imageGallery.map((image) => image)],
+                    images: [...(payload.mainImage ? [payload.mainImage] : []), ...payload.imageGallery.map((image) => image)],
                     categories: payload.categories || [],
                     sanityRevisionId: payload._rev,
                     lastSyncedAt: new Date(),
@@ -112,7 +114,11 @@ async function syncProductFromSanity(payload: WebhookPayload, syncId: number) {
                         },
                         create: {
                             id: variantId,
-                            productId: product.id,
+                            product: {
+                                connect: {
+                                    id: productId
+                                }
+                            },
                             size: variant.size,
                             color: variant.color,
                             stockQuantity: variant.quantity,
