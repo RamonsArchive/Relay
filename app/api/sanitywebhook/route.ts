@@ -150,7 +150,7 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
                 }
               })
  
-        })
+        }, {timeout: 2000})
         return parseServerActionResponse({
             result,
             status: "SUCCESS",

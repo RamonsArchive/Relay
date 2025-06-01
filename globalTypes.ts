@@ -349,3 +349,22 @@ export type DatabaseVariantType = {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type CartType = {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string | null;
+    tempCartId: string | null;
+    expiresAt: Date | null;
+    items: CartItemType[];
+}
+
+export type CartItemType = {
+    id: number;
+    cartId: number;
+    variantId: string;
+    quantity: number;
+    addedAt: Date;
+    updatedAt: Date;
+}

@@ -49,25 +49,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 
           // 2) Upsert into MySQL via Prisma
-        await prisma.user.upsert({
-          where: { id: userId },
-          update: {
-            email:    user.email || '',
-            name:     user.name,
-            provider:     account!.provider,
-            updatedAt:    new Date(),
-          },
-          create: {
-            id:        userId,
-            email:     user.email || '',
-            name:      user.name,
-            provider:  account!.provider,
-            // createdAt and isActive use their defaults
-        },
-      });
-         }
-      
 
+        try {
+          console.log("right before upsert", userId);
+          await prisma.user.upsert({
+            where: { id: userId },
+            update: {
+              email:    user.email || '',
+              name:     user.name,
+              provider:     account!.provider,
+              updatedAt:    new Date(),
+            },
+            create: {
+              id:        userId,
+              email:     user.email || '',
+              name:      user.name,
+              provider:  account!.provider,
+              // createdAt and isActive use their defaults
+          },
+        }) 
+        console.log("upserted user into MySQL", userId);
+      }
+        
+       catch (error) {
+        console.error("Error upserting user into MySQL", error);
+        return false; // block sign in
+        }
+      }
          console.log("User exists in sanity", userId);
 
          return true; // allow sign in

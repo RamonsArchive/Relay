@@ -133,6 +133,8 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.CartScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  tempCartId: 'tempCartId',
+  expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -251,7 +253,8 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.CartOrderByRelevanceFieldEnum = {
-  userId: 'userId'
+  userId: 'userId',
+  tempCartId: 'tempCartId'
 };
 
 exports.Prisma.CartItemOrderByRelevanceFieldEnum = {
