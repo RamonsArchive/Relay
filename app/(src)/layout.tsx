@@ -5,12 +5,14 @@ import React, { Suspense } from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
 import { Toaster } from "sonner";
 import { SideBarCardSkeleton } from "@/components/SideBarSkeleton";
+import { BasketCountProvider } from "@/app/context/BasketCountContext";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
       <Suspense fallback={<div>Loading content</div>}>
         <ContextProvider>
+          <BasketCountProvider>
           <Suspense fallback={<div>Loading...</div>}>
             <Navbar />
           </Suspense>
@@ -31,6 +33,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
             </Suspense>
           </div>
           <Toaster richColors />
+          </BasketCountProvider>
         </ContextProvider>
       </Suspense>
     </main>

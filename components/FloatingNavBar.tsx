@@ -3,18 +3,20 @@ import Image from "next/image";
 import React, { Suspense } from "react";
 import Searchbar from "./Searchbar";
 import { Session } from "next-auth";
-import { ShoppingBasket } from "lucide-react";
 import ManageSession from "./ManageSession";
 import { RecentSearches } from "@/globalTypes";
 import MenuOptions from "./MenuOptions";
 import NavBarHeart from "./NavBarHeart";
+import BasketButton from "./BasketButton";
 
 const FloatingNavBar = ({
   session,
   initialSearches,
+  temp_cartId,
 }: {
   session: Session | null;
   initialSearches: RecentSearches;
+  temp_cartId: string;
 }) => {
   const compactMode = true;
   return (
@@ -57,10 +59,7 @@ const FloatingNavBar = ({
         </div>
         <div className="navbar-icon-compact">
           <Link href="/">
-            <ShoppingBasket
-              strokeWidth={1.4}
-              className="size-[26px] sm:size-[32px] md:size-[36px]"
-            />
+            <BasketButton userId={session?.user?.id || ""} temp_cartId={temp_cartId} />
           </Link>
         </div>
 

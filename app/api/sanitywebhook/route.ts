@@ -76,7 +76,6 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
                     sanityRevisionId: payload._rev,
                     lastSyncedAt: new Date(),
                     isActive: true,
-                    
                 }
             })
 

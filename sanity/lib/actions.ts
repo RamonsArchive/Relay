@@ -11,6 +11,7 @@ import {auth} from "@/auth";
 import { sanitizeSanityId } from "@/lib/utils";
 import { rateLimiter } from "@/lib/rateLimiter";
 import isUrl from "is-url"
+import { prisma } from "@/lib/prisma";
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -819,4 +820,166 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
     })
   }
 }
+
+
+export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string, ) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+    const productIdSanitized = sanitizeSanityId(productId);
+
+    const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
+
+    if (!findCartBy) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (findCartBy.userId === userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (!productIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid product ID"
+      });
+    }
+  
+
+    if (!quantity || quantity <= 0) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid quantity"
+      })
+    }
+
+    const {success} = await rateLimiter.limit(`${userIdSanitized}:addToBasket`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id: productIdSanitized,
+      }, 
+      include: {
+        variants: true,
+      }
+    })
+
+    if (!existingProduct) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Product not found"
+      })
+    }
+
+    const existingVariant = await prisma.variant.findUnique({
+      where: {
+        productId_size_color: {
+          productId: productIdSanitized,
+          size: size,
+          color: color,
+        }
+      }
+    })
+
+    if (!existingVariant) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Variant (productId+size+color) not found"
+      })
+    }
+
+    if (existingVariant.stockQuantity < quantity) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Variant quantity is not available"
+      })
+    }
+
+    const findCartWhere = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
+
+    // fetch or create the cart
+    let cart = await prisma.cart.upsert({
+      where: findCartWhere,
+      create: userIdSanitized ? {
+        userId: userIdSanitized
+      } : {
+        tempCartId: temp_cartId,
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+      },
+      update: {}
+    });
+
+    const upsertResult = await prisma.$transaction(async (tx: any) => {
+      const existingCartItem = await tx.cartItem.findUnique({
+        // prisma auto generates a unique name cartId_variantId
+        where: {
+          cartId_variantId: {
+            cartId: cart.id,
+            variantId: existingVariant.id,
+          }
+        },
+        select: {
+          id: true, 
+          quantity: true,
+        }
+      })
+      if (existingCartItem) {
+        const updated = await tx.cartItem.update({
+          where: {
+            id: existingCartItem.id,
+          },
+          data: {
+            quantity: existingCartItem.quantity + quantity,
+            updatedAt: new Date(),
+          }
+        })
+        return parseServerActionResponse({
+          ...updated,
+          status: "SUCCESS",
+          error: "",
+        })
+      } else {
+        const newCartItem = await tx.cartItem.create({
+          data: {
+            cart: { connect: { id: cart.id }},
+            variant: { connect: { id: existingVariant.id}},
+            quantity: quantity,
+          }
+        })
+        return parseServerActionResponse({
+          ...newCartItem,
+          status: "SUCCESS",
+          error: "",
+        })
+      }
+    })
+
+    return parseServerActionResponse({
+      ...upsertResult,
+      status: "SUCCESS",
+      error: "",
+    })
+    
+  } catch (error) {
+    console.error("Error adding to basket", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+
+};
 

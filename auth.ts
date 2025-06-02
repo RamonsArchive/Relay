@@ -76,8 +76,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false; // block sign in
         }
       }
-         console.log("User exists in sanity", userId);
 
+         console.log("User exists in sanity", userId);
          return true; // allow sign in
       } catch (error) {
         console.error("Error during signIn callback", error);

@@ -4,19 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import Searchbar from "./Searchbar";
 import ManageSession from "./ManageSession";
-import { ShoppingBasket } from "lucide-react";
 import { Session } from "next-auth";
 import FloatingNavBar from "./FloatingNavBar";
 import { RecentSearches } from "@/globalTypes";
 import { useState, useEffect, useRef } from "react";
 import NavBarHeart from "./NavBarHeart";
+import BasketButton from "./BasketButton";
 
 const NavBarWrapper = ({
   session,
   initialSearches,
+  temp_cartId,
 }: {
   session: Session | null;
   initialSearches: RecentSearches;
+  temp_cartId: string;
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const isScrolledRef = useRef(isScrolled);
@@ -107,12 +109,7 @@ const NavBarWrapper = ({
             <div className="flex flex-row ml-auto gap-x-1 items-center">
               <NavBarHeart />
 
-              <div className="navbar-icon-compact">
-                <ShoppingBasket
-                  strokeWidth={1.4}
-                  className="size-[26px] sm:size-[32px] md:size-[36px]"
-                />
-              </div>
+              <BasketButton userId={session?.user?.id || ""} temp_cartId={temp_cartId} />
               <div className="p-2">
                 <Suspense fallback={<div> Profile </div>}>
                   <ManageSession session={session} />
@@ -132,7 +129,7 @@ const NavBarWrapper = ({
       </header>
       <div className="md:hidden fixed top-0 h-[4rem] left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50">
         <Suspense fallback={<div> Search </div>}>
-          <FloatingNavBar session={session} initialSearches={initialSearches} />
+          <FloatingNavBar session={session} initialSearches={initialSearches} temp_cartId={temp_cartId} />
         </Suspense>
       </div>
 
@@ -140,7 +137,7 @@ const NavBarWrapper = ({
         className={`hidden md:block h-[4rem] fixed top-0 left-0 w-full bg-white-300 border-b-[1px] border-borderColor-100 text-color-primary-200 z-50 transform transition-all ease-in-all duration-300 ${isScrolled ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <Suspense fallback={<div> Search </div>}>
-          <FloatingNavBar session={session} initialSearches={initialSearches} />
+          <FloatingNavBar session={session} initialSearches={initialSearches} temp_cartId={temp_cartId} />
         </Suspense>
       </header>
     </>

@@ -32,6 +32,7 @@ import ProductBuyButtons from "@/components/ProductBuyButtons";
 import ProductOptionsProvider from "@/app/context/ProductOptionsContext";
 import ProductColorButtons from "@/components/ProductColorButtons";
 import ProductQuantity from "@/components/ProductQuantity";
+import { cookies } from "next/headers";
 
 export const experimental_ppr = true;
 
@@ -74,6 +75,9 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   let userReview = [];
   let flaggedReviews = [];
   const reviewStats = ReviewSliderStats(reviews);
+
+  const cookieJar = await cookies();
+  const temp_cartId = cookieJar.get("temp_cartId")?.value || "";
 
   if (userId) {
     try {
@@ -279,7 +283,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
                 <div className="flex flex-col w-full gap-4 pt-10">
                   <Suspense fallback={<div>Loading...</div>}>
-                    <ProductBuyButtons userId={userId} productId={productId} />
+                    <ProductBuyButtons userId={userId} productId={productId} temp_cartId={temp_cartId} />
                   </Suspense>
                 </div>
                 <Suspense fallback={<div>Loading...</div>}>
@@ -409,7 +413,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
               </Suspense>
             </div>
             <Suspense fallback={<div>Loading...</div>}>
-              <ProductBuyButtons userId={userId} productId={productId} />
+              <ProductBuyButtons userId={userId} productId={productId} temp_cartId={temp_cartId} />
             </Suspense>
 
             <div className="flex items-center justify-center text-wrap mt-10 px-5">

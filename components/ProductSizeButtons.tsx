@@ -5,7 +5,6 @@ import { useContext, useEffect } from "react";
 import { useProductOptions } from "@/app/context/ProductOptionsContext";
 
 const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
-  console.log("variants", variants);
   const { selectedSize, setSelectedSize, selectedColor } = useProductOptions();
 
   useEffect(() => {
@@ -24,9 +23,6 @@ const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
     if (!variant.color?.name) return false;
     return variant.color?.name.toLowerCase() === selectedColor.toLowerCase();
   });
-
-  console.log("selectedSize", selectedSize);
-
 
   return (
     <div className="flex flex-wrap w-full gap-3 pt-2">

@@ -59,6 +59,7 @@ model CartItem {
   
   @@index([cartId])
   @@index([variantId])
+  @@unique([cartId, variantId])
 }
 
 // ──────────────────────────────────────────────────────────────────────────
