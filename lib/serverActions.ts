@@ -4,6 +4,9 @@ import { signIn, signOut } from '@/auth';
 import { parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
+import { prisma } from "@/lib/prisma";
+import { v4 as uuid } from 'uuid';
+import { CartType, BasketType } from '@/globalTypes';
 
 export const handleSignIn = async (callbackUrl: string) => {
     return await signIn("google", {redirectTo: callbackUrl});
@@ -208,4 +211,173 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
       error: error
     })
   }
+}
+
+
+export const getCart = async (userId: string, temp_cartId: string, cookieJar: any) => {
+  const userIdSanitized = sanitizeSanityId(userId);
+  const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
+
+  try {
+
+  if (!userIdSanitized && !temp_cartIdSanitized) {
+    console.warn("No userId or temp_cartId provided");
+    return [];
+  }
+
+  const {success} = await clientRateLimiter.limit(`${userIdSanitized}:getCartData`);
+  if (!success) {
+    console.warn("Rate limit exceeded. Please try again later");
+    return [];
+  }
+
+
+  let cart: CartType | null = null;
+  if (!userId) {
+    if (!temp_cartId) {
+      temp_cartId = uuid();
+      cookieJar.set("temp_cartId", temp_cartId);
+    }
+    cart = await prisma.cart.findUnique({
+      where: { tempCartId: temp_cartId },
+      include: { items: true },
+    });
+
+    if (!cart) {
+      await prisma.cart.create({
+        data: {
+          tempCartId: temp_cartId,
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        },
+      });
+    }
+  } else {
+    if (temp_cartId) {
+      await syncCart(temp_cartId, userId, cookieJar);
+    }
+    cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: { items: true },
+    });
+    if (!cart) {
+      await prisma.cart.create({
+        data: { userId },
+      });
+    }
+  }
+
+  const cartInfo = await getCartInfo(cart);
+  return cartInfo;
+
+  } catch (error) {
+    console.error("Failed to get cart", error)
+    return [];
+  }
+}
+
+const syncCart = async (guestId: string, userId: string, cookieJar: any) => {
+  const guestCart = await prisma.cart.findUnique({
+    where: { tempCartId: guestId },
+    include: { items: true },
+  });
+
+  if (!guestCart || guestCart.items.length === 0) return;
+
+  let userCart = await prisma.cart.findUnique({
+    where: { userId },
+    include: { items: true },
+  });
+
+  if (!userCart) {
+    await prisma.cart.create({
+      data: {
+        userId,
+        items: {
+          create: guestCart.items.map(item => ({
+            variantId: item.variantId,
+            quantity: item.quantity,
+          }))
+        }
+      }
+    });
+  } else {
+    for (const item of guestCart.items) {
+      const existingItem = userCart.items.find(i => i.variantId === item.variantId);
+      if (existingItem) {
+        await prisma.cartItem.update({
+          where: { id: existingItem.id },
+          data: { quantity: existingItem.quantity + item.quantity },
+        });
+      } else {
+        await prisma.cartItem.create({
+          data: {
+            cartId: userCart.id,
+            variantId: item.variantId,
+            quantity: item.quantity,
+          },
+        });
+      }
+    }
+  }
+
+  await prisma.cart.delete({ where: { tempCartId: guestId } });
+  cookieJar.delete("temp_cartId");
+};
+
+
+
+
+
+const getCartInfo = async (cart: CartType | null) => {
+  if (!cart) {
+    console.warn("No cart provided");
+    return [];
+  }
+
+  const cartItems = cart.items;
+  const basket: BasketType[] = []
+
+  try {
+    for (const item of cartItems) {
+      const variant = await prisma.variant.findUnique({
+        where: { id: item.variantId },
+        select: {
+          size: true,
+          color: true,
+          stockQuantity: true,
+          product: {
+            select: {
+              id: true,
+              title: true,
+              price: true,
+              images: true,
+            }
+          }
+        }
+      })
+      if (!variant) {
+        console.warn("No variant found");
+        continue;
+      }
+      const inBasket = {
+        productId: variant.product.id,
+        title: variant.product.title,
+        color: variant.color,
+        size: variant.size,
+        imageUrl: variant.product.images,
+        price: variant.product.price,
+        quantity: item.quantity,
+        lineSubtotal: (variant.product.price || 0) * item.quantity,
+        stockQuantity: variant.stockQuantity,
+        images: variant.product.images
+      }
+      basket.push(inBasket);
+    }
+    return basket;
+    
+  } catch (error) {
+    console.error("Error getting cart info", error);
+    return [];
+  }
+
 }

@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
         const cookieJar = await cookies();
         const userId = session?.user?.id;
         const temp_cartId = cookieJar.get("temp_cartId")?.value;
-
         const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
         if (!findCartBy) {
             return NextResponse.json({error: "No cart found"}, {status: 404});

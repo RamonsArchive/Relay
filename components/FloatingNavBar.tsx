@@ -58,9 +58,7 @@ const FloatingNavBar = ({
           </Suspense>
         </div>
         <div className="navbar-icon-compact">
-          <Link href="/">
-            <BasketButton userId={session?.user?.id || ""} temp_cartId={temp_cartId} />
-          </Link>
+            <BasketButton />
         </div>
 
         <MenuOptions />

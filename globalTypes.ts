@@ -1,6 +1,7 @@
 import { SanityDocument } from "sanity";
 import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop, Slug } from "./sanity.types";
 import { Categories } from "./sanity/types";
+import { JsonValue } from "type-fest";
 
 export type ProductType = Pick<
   Product,
@@ -367,4 +368,37 @@ export type CartItemType = {
     quantity: number;
     addedAt: Date;
     updatedAt: Date;
+}
+
+export interface CartItemInfo {
+  variantId:   number;       // Prisma’s Variant.id
+  productId:   number;       // Prisma’s Product.id
+  title:       string;       // product.title
+  color:       string | null;
+  size:        string | null;
+  imageUrl:    string | null; 
+  unitPrice:   number;       // variant.price (in cents, or dollars—whatever your schema uses)
+  quantity:    number;       // how many units the customer is ordering
+  lineSubtotal: number;      // calculated: unitPrice * quantity
+}
+
+/**
+ * The overall cart “envelope” returned to the UI:
+ */
+export interface CartSummary {
+  count:     number;            // total number of distinct variants in the cart (i.e. cart.items.length)
+  total:     number;            // sum of all line subtotals
+  items:     CartItemInfo[];    // one object for each cart‐item
+}
+
+export type BasketType = {
+  productId: string | null;
+  title: string | null;
+  size: string;
+  color: string | null;
+  quantity: number;
+  stockQuantity: number;
+  price: number | null;
+  images: JsonValue | null;
+  lineSubtotal: number | null;
 }

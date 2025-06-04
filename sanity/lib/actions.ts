@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { ReviewType, categoriesType } from "@/globalTypes";
+import { CartItemType, ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -982,4 +982,139 @@ export const addToBasket = async (userId: string, productId: string, color: stri
   }
 
 };
+
+
+export const updateDataBaseQuantities = async (userId: string, productId: string, newQuantity: number, temp_cartId?: string | null) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+    const productIdSanitized = sanitizeSanityId(productId);
+
+    if (!userIdSanitized && !temp_cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (!productIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid product ID"
+      })
+    }
+
+    const {success} = await rateLimiter.limit(`${userIdSanitized}:updateDataBaseQuantities`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+
+    // get cart info from the userId and then get the varaint from the productid and then get userCartId from the cartId and the variantId combined
+    const transaction = await prisma.$transaction(async (tx: any) => {
+      const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
+      const cartInfo = await tx.cart.findUnique({
+        where: {
+          userId: findCartBy,
+        },
+        select: {
+          items: {
+            where: {
+              quantity: true,
+              variant: {
+                where: {
+                  sotckQuantity: true,
+                }
+              }
+            }
+          }
+        }
+      })
+
+      if (!cartInfo) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Cart not found"
+        })
+      }
+
+      const cartId = cartInfo.id;
+      const varaint = cartInfo.items.find((item: CartItemType) => item.variantId === productIdSanitized)
+      console.log("varaint", varaint);
+      if (varaint) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Variant not found"
+        })
+      }
+    
+      const currentStockQuantity = varaint?.variant.stockQuantity;
+      const diff = newQuantity - varaint.quantity;
+
+      if (currentStockQuantity < newQuantity) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Variant quantity is not available"
+        })
+      }
+
+      const updateVariantStockQuantity = await tx.variant.update({
+        where: {
+          id: varaint.variantId,
+        },
+        data: {
+          stockQuantity: currentStockQuantity + diff,
+        }
+      })
+
+      if (!updateVariantStockQuantity) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Failed to update variant stock quantity"
+        })
+      }
+
+      const updateCartQuantity = await tx.cartItem.update({
+        where: {
+          cartId_variantId: {
+            cartId: cartId,
+            variantId: varaint.variantId,
+          }
+        },
+        data: {
+          quantity: newQuantity,
+        }
+      })
+
+      if (!updateCartQuantity) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Failed to update cart quantity"
+        })
+      }
+
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        error: "",
+      })
+    })
+    
+  } catch (error) {
+    console.error("Error updating data base quantities", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+}
 

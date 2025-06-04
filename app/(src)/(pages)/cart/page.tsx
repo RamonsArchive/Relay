@@ -1,106 +1,56 @@
 import { auth } from '@/auth';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { v4 as uuid } from 'uuid';
-import React from 'react';
-import { CartType, CartItemType } from '@/globalTypes';
-
+import React, { Suspense } from 'react';
+import { BasketType } from '@/globalTypes';
+import { getCart } from '@/lib/serverActions';
+import { Slash } from 'lucide-react';
+import Link from 'next/link';
+import BasketBlock from '@/components/BasketBlock';
+import BasketQuantitySelector from '@/components/BasketQuantitySelector';
 
 const CartPage = async () => {
   const session = await auth();
   const user = session?.user;
-  const userId = user?.id || null;
+  const userId = user?.id || "";
 
   const cookieJar = await cookies();
   let temp_cartId = cookieJar.get("temp_cartId")?.value || "";
 
-  // Helper to sync guest cart to user cart
-  const syncCart = async (guestId: string, userId: string) => {
-    const guestCart = await prisma.cart.findUnique({
-      where: { tempCartId: guestId },
-      include: { items: true },
-    });
+  const cartItems = await getCart(userId || "", temp_cartId, cookieJar);
+  
+  return <main className="relative h-[calc(100vh-8rem)] flex flex-col w-full min-h-0 py-5 px-5 sm:px-20">
+    <div className="flex flex-col gap-x-2 items-center sm:items-start justify-start h-full w-full overflow-y-auto scrollbar-hidden">
+      <div className="flex flex-row  h-full">
+      <div className="flex justify-between transform transition-all duration-300 ease-in-out gap-x-1">
+        <Link href="/">
+        <p className="font-plex-sans text-gray-600 hover:text-gray-400 font-bold text-[12px] xs:text-[14px] md:text-[16px]">
+          Home
+        </p>
+        </Link>
+        <Slash className="w-4 h-4 sm:w-6 sm:h-6" />
+        </div>
+        <div className="flex items-center justify-between transform transition-all duration-300 ease-in-out gap-x-1">
+        <Link href="/cart">
+          <p className="font-plex-sans font-bold text-gray-800 hover:text-gray-600 text-[12px] xs:text-[14px] md:text-[16px]">
+            Cart
+          </p>
+        </Link>
+        </div>
+      </div>
 
-    if (!guestCart || guestCart.items.length === 0) return;
-
-    let userCart = await prisma.cart.findUnique({
-      where: { userId },
-      include: { items: true },
-    });
-
-    if (!userCart) {
-      await prisma.cart.create({
-        data: {
-          userId,
-          items: {
-            create: guestCart.items.map(item => ({
-              variantId: item.variantId,
-              quantity: item.quantity,
-            }))
-          }
-        }
-      });
-    } else {
-      for (const item of guestCart.items) {
-        const existingItem = userCart.items.find(i => i.variantId === item.variantId);
-        if (existingItem) {
-          await prisma.cartItem.update({
-            where: { id: existingItem.id },
-            data: { quantity: existingItem.quantity + item.quantity },
-          });
-        } else {
-          await prisma.cartItem.create({
-            data: {
-              cartId: userCart.id,
-              variantId: item.variantId,
-              quantity: item.quantity,
-            },
-          });
-        }
-      }
-    }
-
-    await prisma.cart.delete({ where: { tempCartId: guestId } });
-    cookieJar.delete("temp_cartId");
-  };
-
-  let cart: CartType | null = null;
-  if (!userId) {
-    if (!temp_cartId) {
-      temp_cartId = uuid();
-      cookieJar.set("temp_cartId", temp_cartId);
-    }
-    cart = await prisma.cart.findUnique({
-      where: { tempCartId: temp_cartId },
-      include: { items: true },
-    });
-
-    if (!cart) {
-      await prisma.cart.create({
-        data: {
-          tempCartId: temp_cartId,
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        },
-      });
-    }
-  } else {
-    if (temp_cartId) {
-      await syncCart(temp_cartId, userId);
-    }
-    cart = await prisma.cart.findUnique({
-      where: { userId },
-      include: { items: true },
-    });
-    if (!cart) {
-      await prisma.cart.create({
-        data: { userId },
-      });
-    }
-  }
-
-  let cartProducts: CartItemType[] = cart?.items || [];
-
-  return <div>Cart Page with {cart?.items?.length || 0} items</div>;
+      <div className="flex flex-col w-full h-full gap-y-5 sm:gap-y-3 w-full">
+        <p className="font-plex-sans text-[26px] xs:text-[32px] md:text-[36px] font-extrabold">
+          Your Cart
+        </p>
+        <div className="flex flex-col w-full h-full justify-start">
+          {cartItems.map((item: BasketType, index: number) => (
+            <BasketBlock key={item.productId} userId={userId} item={item} index={index} cartLength={cartItems.length} temp_cartId={temp_cartId}/>
+          ))}
+        </div>    
+      </div>
+      </div>
+    </main>;
 };
 
 export default CartPage;

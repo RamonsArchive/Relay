@@ -3,9 +3,8 @@ import { useBasketCount } from '@/app/context/BasketCountContext'
 import { ShoppingBasket } from "lucide-react";
 import Link from 'next/link';
 
-const BasketButton = ({userId, temp_cartId}: {userId: string, temp_cartId: string}) => {
+const BasketButton = () => {
     const { basketCount } = useBasketCount();
-
 
   return (
     <Link href="/cart">
@@ -20,8 +19,6 @@ const BasketButton = ({userId, temp_cartId}: {userId: string, temp_cartId: strin
     <div className="text-[12px] sm:text-[14px] md:text-[16px] font-bold absolute bottom-0 right-0">
         {basketCount}
     </div>
-    
-
     </div>
     </Link>
   )

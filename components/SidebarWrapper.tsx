@@ -8,12 +8,16 @@ import { SideBarCardSkeleton } from "./SideBarSkeleton";
 const SidebarWrapper = () => {
   const path = usePathname();
   const noSideBarPage =
-    path?.startsWith("/product/") || path?.startsWith("/writeReview/");
+    path?.startsWith("/product/") || path?.startsWith("/writeReview/") || path?.startsWith("/cart");
   const [isNoSideBarPage, setIsNoSideBarPage] = useState(noSideBarPage);
+
 
   useEffect(() => {
     setIsNoSideBarPage(noSideBarPage);
   }, [path]);
+
+  console.log("isNoSideBarPage", isNoSideBarPage);
+  console.log("Path", path);
 
   return (
     <div className={`${isNoSideBarPage ? "w-0 hidden opacity-0" : "side-bar"}`}>

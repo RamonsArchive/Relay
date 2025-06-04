@@ -36,7 +36,7 @@ const Sidebar = () => {
             ([category, { expanded, options }], index, arr) => (
               <div
                 key={category}
-                className={`side-bar-option-container ${index !== arr.length - 1 ? " border-b-[1px] pb-4 border-borderColor-100" : ""}`}
+                className={`side-bar-option-container ${index !== arr.length - 1 ? "border-b-[1px] pb-4 border-borderColor-100" : ""}`}
               >
                 <button onClick={() => toggleCategory(category)}>
                   <div className="side-bar-options">
