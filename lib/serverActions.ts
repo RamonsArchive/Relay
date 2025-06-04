@@ -342,6 +342,7 @@ const getCartInfo = async (cart: CartType | null) => {
       const variant = await prisma.variant.findUnique({
         where: { id: item.variantId },
         select: {
+          id: true,
           size: true,
           color: true,
           stockQuantity: true,
@@ -360,6 +361,7 @@ const getCartInfo = async (cart: CartType | null) => {
         continue;
       }
       const inBasket = {
+        id: variant.id,
         productId: variant.product.id,
         title: variant.product.title,
         color: variant.color,

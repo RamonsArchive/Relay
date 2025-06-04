@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartItemType, ReviewType, categoriesType } from "@/globalTypes";
+import { CartItemType, CartType, ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -822,7 +822,7 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
 }
 
 
-export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string, ) => {
+export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string) => {
   try {
     const session = await auth();
     const sessionId = session?.user?.id;
@@ -984,7 +984,7 @@ export const addToBasket = async (userId: string, productId: string, color: stri
 };
 
 
-export const updateDataBaseQuantities = async (userId: string, productId: string, newQuantity: number, temp_cartId?: string | null) => {
+export const updateDataBaseQuantities = async (userId: string, variantId: string, productId: string, newQuantity: number, temp_cartId?: string | null) => {
   try {
     const session = await auth();
     const sessionId = session?.user?.id;
@@ -1020,20 +1020,23 @@ export const updateDataBaseQuantities = async (userId: string, productId: string
       })
     }
 
-    // get cart info from the userId and then get the varaint from the productid and then get userCartId from the cartId and the variantId combined
+    // get cart info from the userId and then get the varaint from the productid and then get cartItem from the cartId and the variantId combined
     const transaction = await prisma.$transaction(async (tx: any) => {
-      const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
-      const cartInfo = await tx.cart.findUnique({
-        where: {
-          userId: findCartBy,
-        },
+      const whereClause = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
+      const cart = await tx.cart.findUnique({
+        where: whereClause,
         select: {
+          id: true,
           items: {
             where: {
+              variantId: variantId,
+            },
+            select: {
               quantity: true,
+              id: true,
               variant: {
-                where: {
-                  sotckQuantity: true,
+                select: {
+                  stockQuantity: true,
                 }
               }
             }
@@ -1041,25 +1044,26 @@ export const updateDataBaseQuantities = async (userId: string, productId: string
         }
       })
 
-      if (!cartInfo) {
+      if (!cart) {
         return parseServerActionResponse({
           status: "ERROR",
           error: "Cart not found"
         })
       }
 
-      const cartId = cartInfo.id;
-      const varaint = cartInfo.items.find((item: CartItemType) => item.variantId === productIdSanitized)
-      console.log("varaint", varaint);
-      if (varaint) {
+      const cartItem = cart?.items[0];
+      console.log("This is the cartItem", cartItem);
+
+      if (!cartItem) {
         return parseServerActionResponse({
           status: "ERROR",
-          error: "Variant not found"
+          error: "Cart item not found"
         })
       }
     
-      const currentStockQuantity = varaint?.variant.stockQuantity;
-      const diff = newQuantity - varaint.quantity;
+      const currentStockQuantity = cartItem.variant.stockQuantity;
+      const stockDiff = currentStockQuantity - newQuantity;
+      console.log("This is the currentStcokQuantity", currentStockQuantity);
 
       if (currentStockQuantity < newQuantity) {
         return parseServerActionResponse({
@@ -1068,16 +1072,16 @@ export const updateDataBaseQuantities = async (userId: string, productId: string
         })
       }
 
-      const updateVariantStockQuantity = await tx.variant.update({
+      const updateVaraint = await tx.variant.update({
         where: {
-          id: varaint.variantId,
+          id: variantId,
         },
         data: {
-          stockQuantity: currentStockQuantity + diff,
+          stockQuantity: stockDiff,
         }
       })
 
-      if (!updateVariantStockQuantity) {
+      if (!updateVaraint) {
         return parseServerActionResponse({
           status: "ERROR",
           error: "Failed to update variant stock quantity"
@@ -1087,8 +1091,8 @@ export const updateDataBaseQuantities = async (userId: string, productId: string
       const updateCartQuantity = await tx.cartItem.update({
         where: {
           cartId_variantId: {
-            cartId: cartId,
-            variantId: varaint.variantId,
+            cartId: cart.id,
+            variantId: variantId,
           }
         },
         data: {
@@ -1107,8 +1111,9 @@ export const updateDataBaseQuantities = async (userId: string, productId: string
         status: "SUCCESS",
         error: "",
       })
-    })
-    
+    }
+  )
+  return transaction;
   } catch (error) {
     console.error("Error updating data base quantities", error);
     return parseServerActionResponse({

@@ -392,6 +392,7 @@ export interface CartSummary {
 }
 
 export type BasketType = {
+  id: string;
   productId: string | null;
   title: string | null;
   size: string;

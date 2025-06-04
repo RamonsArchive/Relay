@@ -6,7 +6,7 @@ import {urlFor} from '@/sanity/lib/client';
 import { Trash2 } from 'lucide-react';
 import BasketQuantitySelector from './BasketQuantitySelector';
 const BasketBlock = ({userId, item, index, cartLength, temp_cartId}: {userId: string, item: BasketType, index: number, cartLength: number, temp_cartId: string | null}) => {
-    const {productId, title, color, size, images, price, stockQuantity, lineSubtotal, quantity} = item;
+    const {id, productId, title, color, size, images, price, stockQuantity, lineSubtotal, quantity} = item;
 
     let mainImage = null;
     if (Array.isArray(images) && images.length > 0) {
@@ -50,7 +50,7 @@ const BasketBlock = ({userId, item, index, cartLength, temp_cartId}: {userId: st
                         ${lineSubtotal ? lineSubtotal : price}
                     </p>
                     <Suspense fallback={<div>Loading...</div>}>
-                        <BasketQuantitySelector productId={productId} quantity={quantity} stockQuantity={stockQuantity} userId={userId} temp_cartId={temp_cartId} />
+                        <BasketQuantitySelector variantId={id} productId={productId} quantity={quantity} stockQuantity={stockQuantity} userId={userId} temp_cartId={temp_cartId} />
                     </Suspense>
                 </div>
             </div>
