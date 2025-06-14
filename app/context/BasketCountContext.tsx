@@ -26,7 +26,7 @@ export const BasketCountProvider = ({children}: {children: React.ReactNode}) => 
           if (optomisticUpdate) {
             setBasketCount(prev => prev + optomisticUpdate);
           }
-          const res = await fetch("/api/cart/count");
+          const res = await fetch("/api/cart/count", {next: {tags: ['cart-count']}});
           console.log("res", res);
           const data = await res.json();
           console.log("data", data);

@@ -403,3 +403,10 @@ export type BasketType = {
   images: JsonValue | null;
   lineSubtotal: number | null;
 }
+
+
+export type CartResponseType = {
+  cartId: number;
+  cart: BasketType[];
+
+}

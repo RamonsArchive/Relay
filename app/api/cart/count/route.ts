@@ -14,12 +14,15 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({error: "No cart found"}, {status: 404});
         }
 
+        console.log("findCartBy", findCartBy);
         const cart = await prisma.cart.findUnique({
             where: findCartBy,
             include: {
                 items: true,
             }
         })
+
+        console.log("cart ", cart)
 
         const count = cart?.items?.length || 0;
 

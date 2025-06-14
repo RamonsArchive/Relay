@@ -6,7 +6,7 @@ import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
 import { prisma } from "@/lib/prisma";
 import { v4 as uuid } from 'uuid';
-import { CartType, BasketType } from '@/globalTypes';
+import { CartType, BasketType, CartResponseType } from '@/globalTypes';
 
 export const handleSignIn = async (callbackUrl: string) => {
     return await signIn("google", {redirectTo: callbackUrl});
@@ -214,21 +214,26 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
 }
 
 
-export const getCart = async (userId: string, temp_cartId: string, cookieJar: any) => {
+export const getCart = async (userId: string, temp_cartId: string, cookieJar: any): Promise<CartResponseType> => {
   const userIdSanitized = sanitizeSanityId(userId);
   const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
 
   try {
-
   if (!userIdSanitized && !temp_cartIdSanitized) {
     console.warn("No userId or temp_cartId provided");
-    return [];
+    return {
+      cartId: 0,
+      cart: [],
+    };
   }
 
   const {success} = await clientRateLimiter.limit(`${userIdSanitized}:getCartData`);
   if (!success) {
     console.warn("Rate limit exceeded. Please try again later");
-    return [];
+    return {
+      cartId: 0,
+      cart: [],
+    };
   }
 
 
@@ -266,12 +271,27 @@ export const getCart = async (userId: string, temp_cartId: string, cookieJar: an
     }
   }
 
+  if (!cart) {
+    console.warn("No cart found");
+    return {
+      cartId: 0,
+      cart: [],
+    };
+  }
+
   const cartInfo = await getCartInfo(cart);
-  return cartInfo;
+
+  return {
+    cartId: cart.id,
+    cart: cartInfo,
+  };
 
   } catch (error) {
     console.error("Failed to get cart", error)
-    return [];
+    return {
+      cartId: 0,
+      cart: [],
+    };
   }
 }
 

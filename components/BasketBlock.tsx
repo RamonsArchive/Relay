@@ -3,9 +3,11 @@ import { BasketType } from '@/globalTypes'
 import React, { Suspense } from 'react'
 import Image from 'next/image'
 import {urlFor} from '@/sanity/lib/client';
-import { Trash2 } from 'lucide-react';
 import BasketQuantitySelector from './BasketQuantitySelector';
-const BasketBlock = ({userId, item, index, cartLength, temp_cartId}: {userId: string, item: BasketType, index: number, cartLength: number, temp_cartId: string | null}) => {
+import Link from 'next/link';
+import BasketItemTrash from './BasketItemTrash';
+
+const BasketBlock = ({userId, item, cartId, temp_cartId}: {userId: string, item: BasketType, cartId: number, temp_cartId: string | null}) => {
     const {id, productId, title, color, size, images, price, stockQuantity, lineSubtotal, quantity} = item;
 
     let mainImage = null;
@@ -16,19 +18,21 @@ const BasketBlock = ({userId, item, index, cartLength, temp_cartId}: {userId: st
     }
 
   return (
-    <div className={`flex flex-row gap-y-2 w-full h-full max-h-[300px] gap-x-5 justify-start pt-5 ${index === cartLength ? "pb-0" : index === 0 ? "pt-0 border-b-[1px] pb-5 border-gray-400" : "border-b-[1px] pb-5 border-gray-400"}`}>
-        <div className="flex w-1/3 h-full">
+    <div className="flex flex-row gap-y-2 w-full h-full max-h-[300px] gap-x-5 justify-start pt-5 border-b-[1px] border-gray-300 pb-5 pt-5 first:pt-3 last:border-b-0">
+      
+        <Link href={`/product/${productId}`} className="flex w-1/3 h-full">
             <Image src={mainImage} alt={"main image"} width={100} height={100} className="object-cover w-full h-full" />
-        </div>
+        </Link>
 
         <div className="flex flex-1 w-full h-full w-full">
             <div className="flex flex-col gap-y-2">
-                <div className="flex flex-row gap-x-2 items-center">
-                    <p className="font-plex-sans text-[18px] xs:text-[22px] md:text-[26px] font-bold">
+                <div className="flex flex-row gap-x-2 items-center justify-between">
+                    <Link href={`/product/${productId}`} className="font-plex-sans text-[18px] xs:text-[22px] md:text-[26px] font-bold">
                         {title}
-                    </p>
-                    <Trash2 className="w-4 h-4 sm:w-6 sm:h-6 cursor-pointer" />
+                    </Link>
+                    <BasketItemTrash userId={userId} variantId={id} cartId={cartId}/>
                 </div>
+                <Link href={`/product/${productId}`} className="flex flex-col gap-y-2">
                 <div className="flex flex-row gap-x-2">
                     <p className="font-plex-sans text-[14px] xs:text-[16px] md:text-[18px] font-bold">
                         Size: 
@@ -41,10 +45,11 @@ const BasketBlock = ({userId, item, index, cartLength, temp_cartId}: {userId: st
                     <p className="font-plex-sans text-[14px] xs:text-[16px] md:text-[18px] font-bold">
                         Color: 
                     </p>
-                    <p className="font-plex-sans text-[14px] xs:text-[16px] md:text-[18px] text-gray-500 font-bold">
+                    <p className="font-plex-sans text-[14px] xs:text-[16px] md:text-[18px] text-gray-600 font-bold">
                         {color}
                     </p>
                 </div>
+                </Link>
                 <div className="flex flex-row gap-x-5 items-center">
                     <p className="font-plex-sans text-[18px] xs:text-[20px] md:text-[22px] text-gray-500 font-bold">
                         ${lineSubtotal ? lineSubtotal : price}

@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartItemType, CartType, ReviewType, categoriesType } from "@/globalTypes";
+import { ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -12,6 +12,7 @@ import { sanitizeSanityId } from "@/lib/utils";
 import { rateLimiter } from "@/lib/rateLimiter";
 import isUrl from "is-url"
 import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -1027,20 +1028,6 @@ export const updateDataBaseQuantities = async (userId: string, variantId: string
         where: whereClause,
         select: {
           id: true,
-          items: {
-            where: {
-              variantId: variantId,
-            },
-            select: {
-              quantity: true,
-              id: true,
-              variant: {
-                select: {
-                  stockQuantity: true,
-                }
-              }
-            }
-          }
         }
       })
 
@@ -1050,44 +1037,7 @@ export const updateDataBaseQuantities = async (userId: string, variantId: string
           error: "Cart not found"
         })
       }
-
-      const cartItem = cart?.items[0];
-      console.log("This is the cartItem", cartItem);
-
-      if (!cartItem) {
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Cart item not found"
-        })
-      }
-    
-      const currentStockQuantity = cartItem.variant.stockQuantity;
-      const stockDiff = currentStockQuantity - newQuantity;
-      console.log("This is the currentStcokQuantity", currentStockQuantity);
-
-      if (currentStockQuantity < newQuantity) {
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Variant quantity is not available"
-        })
-      }
-
-      const updateVaraint = await tx.variant.update({
-        where: {
-          id: variantId,
-        },
-        data: {
-          stockQuantity: stockDiff,
-        }
-      })
-
-      if (!updateVaraint) {
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Failed to update variant stock quantity"
-        })
-      }
-
+  
       const updateCartQuantity = await tx.cartItem.update({
         where: {
           cartId_variantId: {
@@ -1113,6 +1063,7 @@ export const updateDataBaseQuantities = async (userId: string, variantId: string
       })
     }
   )
+  revalidatePath("/cart");
   return transaction;
   } catch (error) {
     console.error("Error updating data base quantities", error);
@@ -1122,4 +1073,87 @@ export const updateDataBaseQuantities = async (userId: string, variantId: string
     })
   }
 }
+
+
+export const deleteBasketItem = async (userId: string, variantId: string, cartId: number) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+    const variantIdSanitized = sanitizeSanityId(variantId);
+
+    if (!userIdSanitized && !cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    } 
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:deleteBasketItem`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+
+    const deleteItem = await prisma.cartItem.delete({
+      where: {
+        cartId_variantId: {
+          cartId: cartId,
+          variantId: variantId,
+        }
+      }
+    })
+
+    if (!deleteItem) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to delete item from cart"
+      })
+    }
+    revalidateTag("cart-count");
+    revalidatePath("/cart");
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+    })
+
+  } catch (error) {
+    console.error("Error deleting basket item", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+
+}
+
+
+
+/*
+
+const updateVaraint = await tx.variant.update({
+        where: {
+          id: variantId,
+        },
+        data: {
+          stockQuantity: stockDiff,
+        }
+      })
+
+      if (!updateVaraint) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Failed to update variant stock quantity"
+        })
+      }
+
+*/
 
