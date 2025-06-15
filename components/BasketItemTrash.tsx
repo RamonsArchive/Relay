@@ -3,8 +3,11 @@ import { Trash2 } from 'lucide-react'
 import React from 'react'
 import { toast } from 'sonner';
 import { deleteBasketItem } from '@/sanity/lib/actions';
+import { BasketCountContext } from '@/app/context/BasketCountContext';
+import { useContext } from 'react';
 
 const BasketItemTrash = ({userId, variantId, cartId}: {userId: string, variantId: string, cartId: number}) => {
+    const {refreshBasketCount} = useContext(BasketCountContext);
     const handleDelete = async () => {
         try {
             const result = await deleteBasketItem(userId, variantId, cartId);
@@ -14,6 +17,7 @@ const BasketItemTrash = ({userId, variantId, cartId}: {userId: string, variantId
                 });
                 return;
             }
+            refreshBasketCount(-1);
             toast.success("SUCCESS", {
                 description: "Item deleted from cart"
             });

@@ -54,7 +54,7 @@ const CartPage = async () => {
         {cartItems.length == 0 ? <div className="flex items-center justify-center h-full w-full"> 
           <div className="flex flex-col w-full h-full items-center justify-center gap-y-4 max-w-xl">
           <p className="font-plex-sans text-[28px] xs:text-[38px] md:text-[45px] font-extrabold">
-            Whoops! It looks like your cart is empty. 
+            Oops! Looks like your cart is empty. 
           </p>
           <p className="font-plex-sans text-[16px] xs:text-[18px] md:text-[20px] text-gray-500">
             You can add items to your cart by clicking the "Add to Cart" button on the product page.
@@ -83,3 +83,4 @@ const CartPage = async () => {
 };
 
 export default CartPage;
+

@@ -58,7 +58,9 @@ const FloatingNavBar = ({
           </Suspense>
         </div>
         <div className="navbar-icon-compact">
+          <Suspense fallback={<div>Loading... </div>}>
             <BasketButton />
+            </Suspense>
         </div>
 
         <MenuOptions />

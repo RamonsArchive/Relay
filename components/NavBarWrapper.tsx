@@ -109,7 +109,9 @@ const NavBarWrapper = ({
             <div className="flex flex-row ml-auto gap-x-1 items-center">
               <NavBarHeart />
 
+              <Suspense fallback={<div> Loading... </div>}>
               <BasketButton />
+              </Suspense>
               <div className="p-2">
                 <Suspense fallback={<div> Profile </div>}>
                   <ManageSession session={session} />

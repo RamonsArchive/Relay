@@ -1080,7 +1080,6 @@ export const deleteBasketItem = async (userId: string, variantId: string, cartId
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
-    const variantIdSanitized = sanitizeSanityId(variantId);
 
     if (!userIdSanitized && !cartId) {
       return parseServerActionResponse({
@@ -1135,25 +1134,4 @@ export const deleteBasketItem = async (userId: string, variantId: string, cartId
 
 }
 
-
-
-/*
-
-const updateVaraint = await tx.variant.update({
-        where: {
-          id: variantId,
-        },
-        data: {
-          stockQuantity: stockDiff,
-        }
-      })
-
-      if (!updateVaraint) {
-        return parseServerActionResponse({
-          status: "ERROR",
-          error: "Failed to update variant stock quantity"
-        })
-      }
-
-*/
 
