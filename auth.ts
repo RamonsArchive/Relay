@@ -7,6 +7,7 @@ import { AdapterUser } from "next-auth/adapters";
 import { uploadImageStringToSanity } from "./sanity/lib/actions";
 import { client } from "./sanity/lib/client";
 import { prisma } from "./lib/prisma";
+import { NextResponse } from "next/server";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
@@ -69,6 +70,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           },
         }) 
         console.log("upserted user into MySQL", userId);
+
+
+        const response = NextResponse.next();
+        response.cookies.set('needs_cart_sync', 'true', {
+          httpOnly: false, // Allow client-side access
+          maxAge: 60 * 5, // 5 minutes
+          path: '/'
+        });
       }
         
        catch (error) {
@@ -76,6 +85,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false; // block sign in
         }
       }
+
+
+
+
 
          console.log("User exists in sanity", userId);
          return true; // allow sign in

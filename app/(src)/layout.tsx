@@ -6,11 +6,16 @@ import SidebarWrapper from "@/components/SidebarWrapper";
 import { Toaster } from "sonner";
 import { SideBarCardSkeleton } from "@/components/SideBarSkeleton";
 import { BasketCountProvider } from "@/app/context/BasketCountContext";
+import { CartSyncProvider } from "../context/CartSyncContext";
+import { SessionProvider } from "next-auth/react";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
+
       <Suspense fallback={<div>Loading content</div>}>
+      <SessionProvider>
+        <CartSyncProvider>
         <ContextProvider>
           <BasketCountProvider>
           <Suspense fallback={<div>Loading...</div>}>
@@ -35,6 +40,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
           <Toaster richColors />
           </BasketCountProvider>
         </ContextProvider>
+        </CartSyncProvider>
+        </SessionProvider>
       </Suspense>
     </main>
   );

@@ -19,7 +19,7 @@ const CartPage = async () => {
   let temp_cartId = cookieJar.get("temp_cartId")?.value || "";
 
   let cartItems: BasketType[] = [];
-  const theCart = await getCart(userId || "", temp_cartId, cookieJar);
+  const theCart = await getCart(userId || "", temp_cartId);
   
   if (!theCart) {
     cartItems = [];

@@ -34,6 +34,7 @@ import ProductColorButtons from "@/components/ProductColorButtons";
 import ProductQuantity from "@/components/ProductQuantity";
 import { cookies } from "next/headers";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const experimental_ppr = true;
 
 const md = markdownit();

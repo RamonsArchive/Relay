@@ -214,7 +214,7 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
 }
 
 
-export const getCart = async (userId: string, temp_cartId: string, cookieJar: any): Promise<CartResponseType> => {
+export const getCart = async (userId: string, temp_cartId: string): Promise<CartResponseType> => {
   const userIdSanitized = sanitizeSanityId(userId);
   const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
 
@@ -236,48 +236,22 @@ export const getCart = async (userId: string, temp_cartId: string, cookieJar: an
     };
   }
 
+  const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
 
-  let cart: CartType | null = null;
-  if (!userId) {
-    if (!temp_cartId) {
-      temp_cartId = uuid();
-      cookieJar.set("temp_cartId", temp_cartId);
+  const cart = await prisma.cart.findUnique({
+    where: findCartBy,
+    include: {
+      items:true,
     }
-    cart = await prisma.cart.findUnique({
-      where: { tempCartId: temp_cartId },
-      include: { items: true },
-    });
-
-    if (!cart) {
-      await prisma.cart.create({
-        data: {
-          tempCartId: temp_cartId,
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        },
-      });
-    }
-  } else {
-    if (temp_cartId) {
-      await syncCart(temp_cartId, userId, cookieJar);
-    }
-    cart = await prisma.cart.findUnique({
-      where: { userId },
-      include: { items: true },
-    });
-    if (!cart) {
-      await prisma.cart.create({
-        data: { userId },
-      });
-    }
-  }
+  })
 
   if (!cart) {
-    console.warn("No cart found");
-    return {
-      cartId: 0,
-      cart: [],
-    };
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to get cart"
+    })
   }
+  
 
   const cartInfo = await getCartInfo(cart);
 
@@ -294,59 +268,6 @@ export const getCart = async (userId: string, temp_cartId: string, cookieJar: an
     };
   }
 }
-
-const syncCart = async (guestId: string, userId: string, cookieJar: any) => {
-  const guestCart = await prisma.cart.findUnique({
-    where: { tempCartId: guestId },
-    include: { items: true },
-  });
-
-  if (!guestCart || guestCart.items.length === 0) return;
-
-  let userCart = await prisma.cart.findUnique({
-    where: { userId },
-    include: { items: true },
-  });
-
-  if (!userCart) {
-    await prisma.cart.create({
-      data: {
-        userId,
-        items: {
-          create: guestCart.items.map(item => ({
-            variantId: item.variantId,
-            quantity: item.quantity,
-          }))
-        }
-      }
-    });
-  } else {
-    for (const item of guestCart.items) {
-      const existingItem = userCart.items.find(i => i.variantId === item.variantId);
-      if (existingItem) {
-        await prisma.cartItem.update({
-          where: { id: existingItem.id },
-          data: { quantity: existingItem.quantity + item.quantity },
-        });
-      } else {
-        await prisma.cartItem.create({
-          data: {
-            cartId: userCart.id,
-            variantId: item.variantId,
-            quantity: item.quantity,
-          },
-        });
-      }
-    }
-  }
-
-  await prisma.cart.delete({ where: { tempCartId: guestId } });
-  cookieJar.delete("temp_cartId");
-};
-
-
-
-
 
 const getCartInfo = async (cart: CartType | null) => {
   if (!cart) {

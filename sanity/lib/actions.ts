@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { ReviewType, categoriesType } from "@/globalTypes";
+import { CartType, ReviewType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -13,6 +13,7 @@ import { rateLimiter } from "@/lib/rateLimiter";
 import isUrl from "is-url"
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -829,6 +830,17 @@ export const addToBasket = async (userId: string, productId: string, color: stri
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
     const productIdSanitized = sanitizeSanityId(productId);
+    
+    if (!temp_cartId) {
+      temp_cartId = crypto.randomUUID();
+      const cookieJar = await cookies();
+      cookieJar.set("temp_cartId", temp_cartId, {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    }
+    console.log("temp_cartId", temp_cartId);
 
     const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
 
@@ -1131,7 +1143,124 @@ export const deleteBasketItem = async (userId: string, variantId: string, cartId
       error: "Internal server error"
     })
   }
-
 }
+
+
+
+export const checkCartSync = async (userId: string, temp_cartId: string) => {
+  const session = await auth();
+  const sessionId = session?.user?.id;
+  const userIdSanitized = sanitizeSanityId(userId);
+  const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
+
+  if (!userIdSanitized && !temp_cartIdSanitized) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Unauthorized request"
+    })
+  }
+
+  if (userIdSanitized && sessionId !== userIdSanitized) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Unauthorized request"
+    })
+  }
+
+  let cart: CartType | null = null;
+  if (!userId) {
+    cart = await prisma.cart.findUnique({
+      where: { tempCartId: temp_cartId },
+      include: { items: true },
+    });
+    if (!cart) {
+      await prisma.cart.create({
+        data: {
+          tempCartId: temp_cartId,
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        },
+      });
+    }
+  } else {
+    if (temp_cartId) {
+      await syncCart(temp_cartId, userId);
+    }
+    cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: { items: true },
+    });
+    if (!cart) {
+      await prisma.cart.create({
+        data: { userId },
+      });
+    }
+  }
+
+  if (!cart) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to create or sync cart"
+    })
+  }
+
+  return parseServerActionResponse({
+    status: "SUCCESS",
+    error: "",
+    cart: cart,
+  })
+}
+
+
+const syncCart = async (guestId: string, userId: string) => {
+  const cookieJar = await cookies();
+  const guestCart = await prisma.cart.findUnique({
+    where: { tempCartId: guestId },
+    include: { items: true },
+  });
+
+  if (!guestCart || guestCart.items.length === 0) return;
+
+  let userCart = await prisma.cart.findUnique({
+    where: { userId },
+    include: { items: true },
+  });
+
+  if (!userCart) {
+    await prisma.cart.create({
+      data: {
+        userId,
+        items: {
+          create: guestCart.items.map(item => ({
+            variantId: item.variantId,
+            quantity: item.quantity,
+          }))
+        }
+      }
+    });
+  } else {
+    for (const item of guestCart.items) {
+      const existingItem = userCart.items.find(i => i.variantId === item.variantId);
+      if (existingItem) {
+        await prisma.cartItem.update({
+          where: { id: existingItem.id },
+          data: { quantity: existingItem.quantity + item.quantity },
+        });
+      } else {
+        await prisma.cartItem.create({
+          data: {
+            cartId: userCart.id,
+            variantId: item.variantId,
+            quantity: item.quantity,
+          },
+        });
+      }
+    }
+  }
+
+  await prisma.cart.delete({ where: { tempCartId: guestId } });
+  cookieJar.delete("temp_cartId");
+};
+
+
 
 
