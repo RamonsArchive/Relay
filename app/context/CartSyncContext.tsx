@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { checkCartSync } from "@/sanity/lib/actions";
 import { parseServerActionResponse } from "@/lib/utils";
 import Cookies from "js-cookie";  
-
+import { useBasketCount } from "./BasketCountContext";
 
 
 export const CartSyncContext = createContext({});
@@ -14,6 +14,7 @@ export const CartSyncContext = createContext({});
 export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
     const {data: session, status} = useSession();
     const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'synced' | 'error'>('idle');
+    const {refreshBasketCount} = useBasketCount();
 
 
     useEffect(() => {
@@ -43,6 +44,11 @@ export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
                         })
                     }
                     setSyncStatus("synced");
+                    if (refreshBasketCount) {
+                        console.log("Refreshing basket count after cart sync");
+                        await refreshBasketCount(0);
+                      }
+
                     return parseServerActionResponse({
                         status: "SUCCESS",
                         error: "",
@@ -59,10 +65,11 @@ export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
         }
     }
         sync();
-    }, [session, status]);
+    }, [session, status, syncStatus]);
 
     useEffect(() => {
         if (status === "unauthenticated") {
+            console.log("unauthenticated, setting syncStatus to idle");
             setSyncStatus("idle");
         }
     }, [status]);

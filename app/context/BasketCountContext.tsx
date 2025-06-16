@@ -1,6 +1,7 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useCallback} from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef} from 'react';
 import { parseServerActionResponse } from "@/lib/utils";
+import { useSession } from 'next-auth/react';
 
 
 type BasketCountContextType = {
@@ -19,51 +20,47 @@ export const useBasketCount = () => {
 
 export const BasketCountProvider = ({children}: {children: React.ReactNode}) => {
     const [basketCount, setBasketCount] = useState(0);
-
+    const {data: session, status} = useSession();
+    
     const refreshBasketCount = useCallback(async(optomisticUpdate: number) => {
-        console.log("refreshBasketCount", optomisticUpdate);
-        try {
-          if (optomisticUpdate) {
-            setBasketCount(prev => prev + optomisticUpdate);
-          }
-          const res = await fetch("/api/cart/count", {next: {tags: ['cart-count']}});
-          console.log("res", res);
-          const data = await res.json();
-          console.log("data", data);
-          const count = data.count;
-          console.log(" count", count)
-          if (!res.ok) {
-            setBasketCount(prev => prev - optomisticUpdate || 0);
-            return parseServerActionResponse({
-                status: "ERROR",
-                error: "Failed to refresh basket count"
-            })
-
-          }
-          setBasketCount(count || 0);
-
-        return parseServerActionResponse({
-            status: "SUCCESS",
-            error: "",
-            data: {
-                count: count || 0
-            }
-         })
-         
-        } catch (error) {
-            console.error("Error refreshing basket count", error);
-            setBasketCount(0);
+      console.log("refreshBasketCount", optomisticUpdate);
+      try {
+        if (optomisticUpdate) {
+          setBasketCount(prev => prev + optomisticUpdate);
         }
-    }, [])
-
-    // on initial load, refresh the basket count
+        const res = await fetch("/api/cart/count");
+        const data = await res.json();
+        setBasketCount(data.count || 0);
+        
+        return parseServerActionResponse({
+          status: "SUCCESS",
+          count: data.count || 0 
+        });
+      } catch (error) {
+        console.error("Error refreshing basket count", error);
+        setBasketCount(0);
+      }
+    }, []);
+  
+    // Only handle sign out and initial load
     useEffect(() => {
+      if (status === "unauthenticated") {
+        console.log("REFRESHING BASKET COUNT ON SIGN OUT");
         refreshBasketCount(0);
-    }, [refreshBasketCount])
-
+      }
+    }, [refreshBasketCount, status]);
+  
+    // Initial load
+    useEffect(() => {
+      if (status !== "loading") {
+        console.log("REFRESHING BASKET COUNT ON INITIAL LOAD");
+        refreshBasketCount(0);
+      }
+    }, [refreshBasketCount, status]);
+  
     return (
-        <BasketCountContext.Provider value={{basketCount, refreshBasketCount}}>
-            {children}
-        </BasketCountContext.Provider>
-    )
-}
+      <BasketCountContext.Provider value={{basketCount, refreshBasketCount}}>
+        {children}
+      </BasketCountContext.Provider>
+    );
+};

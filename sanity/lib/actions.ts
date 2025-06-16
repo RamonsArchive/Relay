@@ -835,7 +835,6 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       temp_cartId = crypto.randomUUID();
       const cookieJar = await cookies();
       cookieJar.set("temp_cartId", temp_cartId, {
-        httpOnly: true,
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30,
       });

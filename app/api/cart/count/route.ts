@@ -11,8 +11,11 @@ export async function GET(request: NextRequest) {
         const userId = session?.user?.id;
         const temp_cartId = cookieJar.get("temp_cartId")?.value;
         const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
-        if (!findCartBy) {
-            return NextResponse.json({error: "No cart found"}, {status: 404});
+        console.log("findCartBy", findCartBy);
+
+        // valid state after sync is complete
+        if (!userId && !temp_cartId) {
+            return NextResponse.json({count: 0}, {status: 200});
         }
 
         console.log("findCartBy", findCartBy);

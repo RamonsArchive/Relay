@@ -1,23 +1,16 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { ContextProvider } from "@/app/context/context";
 import React, { Suspense } from "react";
 import SidebarWrapper from "@/components/SidebarWrapper";
-import { Toaster } from "sonner";
 import { SideBarCardSkeleton } from "@/components/SideBarSkeleton";
-import { BasketCountProvider } from "@/app/context/BasketCountContext";
-import { CartSyncProvider } from "../context/CartSyncContext";
-import { SessionProvider } from "next-auth/react";
+import { Providers } from "@/app/context/providers";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="root">
 
       <Suspense fallback={<div>Loading content</div>}>
-      <SessionProvider>
-        <CartSyncProvider>
-        <ContextProvider>
-          <BasketCountProvider>
+        <Providers>
           <Suspense fallback={<div>Loading...</div>}>
             <Navbar />
           </Suspense>
@@ -37,11 +30,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
               <Footer />
             </Suspense>
           </div>
-          <Toaster richColors />
-          </BasketCountProvider>
-        </ContextProvider>
-        </CartSyncProvider>
-        </SessionProvider>
+          </Providers>
       </Suspense>
     </main>
   );

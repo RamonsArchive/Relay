@@ -5,7 +5,6 @@ import { parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
 import { prisma } from "@/lib/prisma";
-import { v4 as uuid } from 'uuid';
 import { CartType, BasketType, CartResponseType } from '@/globalTypes';
 
 export const handleSignIn = async (callbackUrl: string) => {
@@ -251,8 +250,6 @@ export const getCart = async (userId: string, temp_cartId: string): Promise<Cart
       error: "Failed to get cart"
     })
   }
-  
-
   const cartInfo = await getCartInfo(cart);
 
   return {
