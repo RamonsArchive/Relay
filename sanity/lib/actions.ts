@@ -823,7 +823,6 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
   }
 }
 
-
 export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string) => {
   try {
     const session = await auth();
@@ -864,7 +863,6 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       });
     }
   
-
     if (!quantity || quantity <= 0) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -934,9 +932,9 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       update: {}
     });
 
+    // ✅ FIXED: Handle transaction errors properly
     const upsertResult = await prisma.$transaction(async (tx: any) => {
       const existingCartItem = await tx.cartItem.findUnique({
-        // prisma auto generates a unique name cartId_variantId
         where: {
           cartId_variantId: {
             cartId: cart.id,
@@ -948,21 +946,28 @@ export const addToBasket = async (userId: string, productId: string, color: stri
           quantity: true,
         }
       })
+      
       if (existingCartItem) {
+        const newQuantity = existingCartItem.quantity + quantity;
+        console.log("newQuantity", newQuantity);
+        console.log("existingVariant.stockQuantity", existingVariant.stockQuantity);
+        
+        // ✅ FIXED: Throw error instead of returning error response
+        if (newQuantity > existingVariant.stockQuantity) {
+          throw new Error("Quantity is not available");
+        }
+        
         const updated = await tx.cartItem.update({
           where: {
             id: existingCartItem.id,
           },
           data: {
-            quantity: existingCartItem.quantity + quantity,
+            quantity: newQuantity, 
             updatedAt: new Date(),
           }
         })
-        return parseServerActionResponse({
-          ...updated,
-          status: "SUCCESS",
-          error: "",
-        })
+        
+        return updated; // ✅ Return just the data, not wrapped response
       } else {
         const newCartItem = await tx.cartItem.create({
           data: {
@@ -971,14 +976,12 @@ export const addToBasket = async (userId: string, productId: string, color: stri
             quantity: quantity,
           }
         })
-        return parseServerActionResponse({
-          ...newCartItem,
-          status: "SUCCESS",
-          error: "",
-        })
+        
+        return newCartItem; // ✅ Return just the data, not wrapped response
       }
-    })
+    });
 
+    // ✅ FIXED: Only wrap with success if transaction completed
     return parseServerActionResponse({
       ...upsertResult,
       status: "SUCCESS",
@@ -987,12 +990,20 @@ export const addToBasket = async (userId: string, productId: string, color: stri
     
   } catch (error) {
     console.error("Error adding to basket", error);
+    
+    // ✅ FIXED: Handle specific error messages
+    if (error instanceof Error && error.message === "Quantity is not available") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Quantity is not available"
+      })
+    }
+    
     return parseServerActionResponse({
       status: "ERROR",
       error: "Internal server error"
     })
   }
-
 };
 
 
@@ -1259,6 +1270,329 @@ const syncCart = async (guestId: string, userId: string) => {
   await prisma.cart.delete({ where: { tempCartId: guestId } });
   cookieJar.delete("temp_cartId");
 };
+
+
+
+
+
+
+// 1. Apply promo code to cart (works for both temp and user carts)
+export const applyPromoCodeToCart = async (
+  code: string, 
+  cartId: number, 
+  cartTotal: number,
+  userId?: string // Optional for temp carts
+) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId || "");
+
+    if (!userIdSanitized && !cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",  
+        error: "Unauthorized request"
+      })
+    }
+
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:applyPromoCodeToCart`); 
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+
+    const promoCode = await prisma.promoCode.findFirst({
+      where: {
+        code: code.toUpperCase(),
+        isActive: true,
+        validFrom: { lte: new Date() },
+        OR: [
+          { validTo: null },
+          { validTo: { gte: new Date() } }
+        ]
+      },
+      include: {
+        userUsages: userId ? {
+          where: { userId },
+          select: { id: true }
+        } : undefined,
+        _count: {
+          select: { orders: true }
+        }
+      }
+    });
+
+    // Basic validation checks
+    if (!promoCode) {
+      return parseServerActionResponse({ status: "ERROR", error: "Invalid promo code" });
+    }
+
+    if (promoCode.maxUses && promoCode._count.orders >= promoCode.maxUses) {
+      return parseServerActionResponse({ status: "ERROR", error: "Promo code has reached maximum uses" });
+    }
+
+    if (cartTotal < promoCode.minOrderAmount) {
+      return parseServerActionResponse({ status: "ERROR", error: `Minimum order of $${(promoCode.minOrderAmount / 100).toFixed(2)} required` });
+    }
+
+    let requiresVerification = false;
+    let verificationMessage = "";
+
+    // Handle user-specific validations
+    if (userId) {
+      // For authenticated users, check usage limits
+      if (promoCode.userUsages && promoCode.userUsages.length >= promoCode.maxUsesPerUser) {
+        return parseServerActionResponse({ status: "ERROR", error: "You've already used this promo code" });
+      }
+
+      // Check first-time customer requirement
+      if (promoCode.isFirstTimeOnly) {
+        const existingOrders = await prisma.order.count({
+          where: { userId, status: { in: ['completed', 'processing'] } }
+        });
+        if (existingOrders > 0) {
+          return parseServerActionResponse({ status: "ERROR", error: "This code is only for first-time customers" });
+        }
+      }
+    } else {
+      // For temp carts, flag verification needed
+      if (promoCode.isFirstTimeOnly) {
+        requiresVerification = true;
+        verificationMessage = "This code is for first-time customers only. We'll verify eligibility when you sign in.";
+      } else if (promoCode.maxUsesPerUser < 999) {
+        requiresVerification = true;
+        verificationMessage = "Usage limits apply. We'll verify eligibility when you sign in.";
+      }
+    }
+
+    // Calculate discount
+    const discountAmount = calculateDiscount(promoCode, cartTotal);
+
+    // Update cart with promo code
+    await prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        appliedPromoCodeId: promoCode.id,
+        promoDiscountAmount: discountAmount,
+        promoAppliedAt: new Date(),
+        requiresPromoVerification: requiresVerification
+      }
+    });
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      promoCode: {
+        id: promoCode.id,
+        code: promoCode.code,
+        name: promoCode.name,
+        discountAmount,
+        description: promoCode.description,
+        requiresVerification,
+        verificationMessage
+      }
+    });
+
+  } catch (error) {
+    console.error('Error applying promo code to cart:', error);
+    return parseServerActionResponse({ status: "ERROR", error: "Failed to apply promo code" });
+  }
+};
+
+// 2. Remove promo code from cart
+export const removePromoCodeFromCart = async (cartId: number) => {
+  try {
+    await prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        appliedPromoCodeId: null,
+        promoDiscountAmount: null,
+        promoAppliedAt: null,
+        requiresPromoVerification: false
+      }
+    });
+    return parseServerActionResponse({ status: "SUCCESS", error: "" });
+  } catch (error) {
+    console.error('Error removing promo code from cart:', error);
+    return parseServerActionResponse({ status: "ERROR", error: "Failed to remove promo code" });
+  }
+};
+
+// 3. Validate promo code during checkout (when user signs in or places order)
+export const validatePromoCodeForOrder = async (
+  cartId: number,
+  userId: string,
+  finalCartTotal: number
+) => {
+  try {
+
+    const cart = await prisma.cart.findFirst({
+      where: { id: cartId },
+      include: {
+        appliedPromoCode: true
+      }
+    });
+
+    if (!cart?.appliedPromoCode) {
+      return parseServerActionResponse({ status: "SUCCESS", error: "" }); // No promo code applied
+    }
+
+    const promoCode = cart.appliedPromoCode;
+
+    // Re-check all validations with user context
+    if (!promoCode.isActive) {
+      return parseServerActionResponse({ status: "ERROR", error: "Promo code is no longer active" });
+    }
+
+    // Check if expired
+    if (promoCode.validTo && promoCode.validTo < new Date()) {
+      return parseServerActionResponse({ status: "ERROR", error: "Promo code has expired" });
+    }
+
+    // Check usage limits
+    const userUsageCount = await prisma.promoCodeUsage.count({
+      where: { 
+        promoCodeId: promoCode.id,
+        userId: userId,
+        status: 'applied'
+      }
+    });
+
+    if (userUsageCount >= promoCode.maxUsesPerUser) {
+      return parseServerActionResponse({ status: "ERROR", error: "You've already used this promo code" });
+    }
+
+    // Check first-time customer requirement
+    if (promoCode.isFirstTimeOnly) {
+      const existingOrders = await prisma.order.count({
+        where: { userId, status: { in: ['completed', 'processing'] } }
+      });
+      if (existingOrders > 0) {
+        return parseServerActionResponse({ status: "ERROR", error: "This code is only for first-time customers" });
+      }
+    }
+
+    // Check total usage limit
+    if (promoCode.maxUses) {
+      const totalUsage = await prisma.order.count({
+        where: { 
+          promoCodeId: promoCode.id,
+          status: { in: ['completed', 'processing'] }
+        }
+      });
+      if (totalUsage >= promoCode.maxUses) {
+        return parseServerActionResponse({ status: "ERROR", error: "Promo code has reached maximum uses" });
+      }
+    }
+
+    // Check minimum order amount
+    if (finalCartTotal < promoCode.minOrderAmount) {
+      return parseServerActionResponse({ status: "ERROR", error: `Minimum order of $${(promoCode.minOrderAmount / 100).toFixed(2)} required` });
+    }
+
+    // Recalculate discount in case cart total changed
+    const discountAmount = calculateDiscount(promoCode, finalCartTotal);
+
+    // Update cart with new discount amount
+    await prisma.cart.update({
+      where: { id: cartId },
+      data: {
+        promoDiscountAmount: discountAmount,
+        requiresPromoVerification: false
+      }
+    });
+
+    return parseServerActionResponse({ status: "SUCCESS", error: "", promoCode: promoCode, discountAmount: discountAmount });
+
+  } catch (error) {
+    console.error('Error validating promo code for order:', error);
+    return parseServerActionResponse({ status: "ERROR", error: "Failed to validate promo code" });
+  }
+};
+
+// 4. Transfer promo code from cart to order during order creation
+export const transferPromoCodeToOrder = async (
+  cartId: number,
+  orderId: number,
+  userId: string
+) => {
+  try {
+    const cart = await prisma.cart.findFirst({
+      where: { id: cartId },
+      include: { appliedPromoCode: true }
+    });
+
+    if (!cart?.appliedPromoCode) {
+      return parseServerActionResponse({ status: "SUCCESS", error: "" }); // No promo code to transfer
+    }
+
+    // Update order with promo code details
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        promoCodeId: cart.appliedPromoCodeId,
+        promoCodeUsed: cart.appliedPromoCode.code,
+        discountAmount: cart.promoDiscountAmount
+      }
+    });
+
+    // Create usage record
+    await prisma.promoCodeUsage.create({
+      data: {
+        promoCodeId: cart.appliedPromoCodeId!,
+        userId: userId,
+        orderId: orderId,
+        discountApplied: cart.promoDiscountAmount!,
+        orderAmount: 0, // You'll need to pass the actual order amount
+        status: 'applied'
+      }
+    });
+
+    // Update promo code usage count and last used date
+    await prisma.promoCode.update({
+      where: { id: cart.appliedPromoCodeId as number},
+      data: {
+        usageCount: { increment: 1 },
+        lastUsedAt: new Date()
+      }
+    });
+
+    return parseServerActionResponse({ status: "SUCCESS", error: "" });
+
+  } catch (error) {
+    console.error('Error transferring promo code to order:', error);
+    return parseServerActionResponse({ status: "ERROR", error: "Failed to transfer promo code" });
+  }
+};
+
+// Helper function to calculate discount
+const calculateDiscount = (promoCode: any, cartTotal: number): number => {
+  let discountAmount = 0;
+  
+  if (promoCode.discountCents) {
+    discountAmount = promoCode.discountCents;
+  } else if (promoCode.discountPercentage) {
+    discountAmount = Math.floor(cartTotal * promoCode.discountPercentage / 100);
+  }
+
+  // Apply maximum discount cap
+  if (promoCode.maxDiscountAmount && discountAmount > promoCode.maxDiscountAmount) {
+    discountAmount = promoCode.maxDiscountAmount;
+  }
+
+  // Can't discount more than cart total
+  return Math.min(discountAmount, cartTotal);
+};
+
 
 
 

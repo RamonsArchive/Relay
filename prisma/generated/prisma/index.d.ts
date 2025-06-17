@@ -58,6 +58,16 @@ export type Address = $Result.DefaultSelection<Prisma.$AddressPayload>
  * 
  */
 export type SanitySync = $Result.DefaultSelection<Prisma.$SanitySyncPayload>
+/**
+ * Model PromoCode
+ * 
+ */
+export type PromoCode = $Result.DefaultSelection<Prisma.$PromoCodePayload>
+/**
+ * Model PromoCodeUsage
+ * 
+ */
+export type PromoCodeUsage = $Result.DefaultSelection<Prisma.$PromoCodeUsagePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -273,6 +283,26 @@ export class PrismaClient<
     * ```
     */
   get sanitySync(): Prisma.SanitySyncDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.promoCode`: Exposes CRUD operations for the **PromoCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PromoCodes
+    * const promoCodes = await prisma.promoCode.findMany()
+    * ```
+    */
+  get promoCode(): Prisma.PromoCodeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.promoCodeUsage`: Exposes CRUD operations for the **PromoCodeUsage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PromoCodeUsages
+    * const promoCodeUsages = await prisma.promoCodeUsage.findMany()
+    * ```
+    */
+  get promoCodeUsage(): Prisma.PromoCodeUsageDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -721,7 +751,9 @@ export namespace Prisma {
     Variant: 'Variant',
     Product: 'Product',
     Address: 'Address',
-    SanitySync: 'SanitySync'
+    SanitySync: 'SanitySync',
+    PromoCode: 'PromoCode',
+    PromoCodeUsage: 'PromoCodeUsage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -740,7 +772,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "cart" | "cartItem" | "order" | "orderItem" | "variant" | "product" | "address" | "sanitySync"
+      modelProps: "user" | "cart" | "cartItem" | "order" | "orderItem" | "variant" | "product" | "address" | "sanitySync" | "promoCode" | "promoCodeUsage"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1338,6 +1370,138 @@ export namespace Prisma {
           }
         }
       }
+      PromoCode: {
+        payload: Prisma.$PromoCodePayload<ExtArgs>
+        fields: Prisma.PromoCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromoCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromoCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          findFirst: {
+            args: Prisma.PromoCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromoCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          findMany: {
+            args: Prisma.PromoCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>[]
+          }
+          create: {
+            args: Prisma.PromoCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          createMany: {
+            args: Prisma.PromoCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PromoCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          update: {
+            args: Prisma.PromoCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.PromoCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromoCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PromoCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodePayload>
+          }
+          aggregate: {
+            args: Prisma.PromoCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePromoCode>
+          }
+          groupBy: {
+            args: Prisma.PromoCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PromoCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromoCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<PromoCodeCountAggregateOutputType> | number
+          }
+        }
+      }
+      PromoCodeUsage: {
+        payload: Prisma.$PromoCodeUsagePayload<ExtArgs>
+        fields: Prisma.PromoCodeUsageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PromoCodeUsageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PromoCodeUsageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          findFirst: {
+            args: Prisma.PromoCodeUsageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PromoCodeUsageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          findMany: {
+            args: Prisma.PromoCodeUsageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>[]
+          }
+          create: {
+            args: Prisma.PromoCodeUsageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          createMany: {
+            args: Prisma.PromoCodeUsageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PromoCodeUsageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          update: {
+            args: Prisma.PromoCodeUsageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          deleteMany: {
+            args: Prisma.PromoCodeUsageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PromoCodeUsageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PromoCodeUsageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PromoCodeUsagePayload>
+          }
+          aggregate: {
+            args: Prisma.PromoCodeUsageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePromoCodeUsage>
+          }
+          groupBy: {
+            args: Prisma.PromoCodeUsageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PromoCodeUsageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PromoCodeUsageCountArgs<ExtArgs>
+            result: $Utils.Optional<PromoCodeUsageCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1431,6 +1595,8 @@ export namespace Prisma {
     product?: ProductOmit
     address?: AddressOmit
     sanitySync?: SanitySyncOmit
+    promoCode?: PromoCodeOmit
+    promoCodeUsage?: PromoCodeUsageOmit
   }
 
   /* Types for Logging */
@@ -1527,11 +1693,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     orders: number
     addresses: number
+    promoUsages: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
     addresses?: boolean | UserCountOutputTypeCountAddressesArgs
+    promoUsages?: boolean | UserCountOutputTypeCountPromoUsagesArgs
   }
 
   // Custom InputTypes
@@ -1557,6 +1725,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AddressWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPromoUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromoCodeUsageWhereInput
   }
 
 
@@ -1596,10 +1771,12 @@ export namespace Prisma {
    */
 
   export type OrderCountOutputType = {
+    promoUsages: number
     items: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promoUsages?: boolean | OrderCountOutputTypeCountPromoUsagesArgs
     items?: boolean | OrderCountOutputTypeCountItemsArgs
   }
 
@@ -1612,6 +1789,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the OrderCountOutputType
      */
     select?: OrderCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountPromoUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromoCodeUsageWhereInput
   }
 
   /**
@@ -1721,6 +1905,55 @@ export namespace Prisma {
    */
   export type AddressCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+
+  /**
+   * Count Type PromoCodeCountOutputType
+   */
+
+  export type PromoCodeCountOutputType = {
+    carts: number
+    orders: number
+    userUsages: number
+  }
+
+  export type PromoCodeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    carts?: boolean | PromoCodeCountOutputTypeCountCartsArgs
+    orders?: boolean | PromoCodeCountOutputTypeCountOrdersArgs
+    userUsages?: boolean | PromoCodeCountOutputTypeCountUserUsagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PromoCodeCountOutputType without action
+   */
+  export type PromoCodeCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeCountOutputType
+     */
+    select?: PromoCodeCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PromoCodeCountOutputType without action
+   */
+  export type PromoCodeCountOutputTypeCountCartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CartWhereInput
+  }
+
+  /**
+   * PromoCodeCountOutputType without action
+   */
+  export type PromoCodeCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderWhereInput
+  }
+
+  /**
+   * PromoCodeCountOutputType without action
+   */
+  export type PromoCodeCountOutputTypeCountUserUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromoCodeUsageWhereInput
   }
 
 
@@ -1911,6 +2144,7 @@ export namespace Prisma {
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     addresses?: boolean | User$addressesArgs<ExtArgs>
+    promoUsages?: boolean | User$promoUsagesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1931,6 +2165,7 @@ export namespace Prisma {
     cart?: boolean | User$cartArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     addresses?: boolean | User$addressesArgs<ExtArgs>
+    promoUsages?: boolean | User$promoUsagesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1940,6 +2175,7 @@ export namespace Prisma {
       cart: Prisma.$CartPayload<ExtArgs> | null
       orders: Prisma.$OrderPayload<ExtArgs>[]
       addresses: Prisma.$AddressPayload<ExtArgs>[]
+      promoUsages: Prisma.$PromoCodeUsagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2292,6 +2528,7 @@ export namespace Prisma {
     cart<T extends User$cartArgs<ExtArgs> = {}>(args?: Subset<T, User$cartArgs<ExtArgs>>): Prisma__CartClient<$Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     addresses<T extends User$addressesArgs<ExtArgs> = {}>(args?: Subset<T, User$addressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    promoUsages<T extends User$promoUsagesArgs<ExtArgs> = {}>(args?: Subset<T, User$promoUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2738,6 +2975,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.promoUsages
+   */
+  export type User$promoUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    where?: PromoCodeUsageWhereInput
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    cursor?: PromoCodeUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2770,16 +3031,24 @@ export namespace Prisma {
 
   export type CartAvgAggregateOutputType = {
     id: number | null
+    appliedPromoCodeId: number | null
+    promoDiscountAmount: number | null
   }
 
   export type CartSumAggregateOutputType = {
     id: number | null
+    appliedPromoCodeId: number | null
+    promoDiscountAmount: number | null
   }
 
   export type CartMinAggregateOutputType = {
     id: number | null
     userId: string | null
     tempCartId: string | null
+    appliedPromoCodeId: number | null
+    promoDiscountAmount: number | null
+    promoAppliedAt: Date | null
+    requiresPromoVerification: boolean | null
     expiresAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2789,6 +3058,10 @@ export namespace Prisma {
     id: number | null
     userId: string | null
     tempCartId: string | null
+    appliedPromoCodeId: number | null
+    promoDiscountAmount: number | null
+    promoAppliedAt: Date | null
+    requiresPromoVerification: boolean | null
     expiresAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2798,6 +3071,10 @@ export namespace Prisma {
     id: number
     userId: number
     tempCartId: number
+    appliedPromoCodeId: number
+    promoDiscountAmount: number
+    promoAppliedAt: number
+    requiresPromoVerification: number
     expiresAt: number
     createdAt: number
     updatedAt: number
@@ -2807,16 +3084,24 @@ export namespace Prisma {
 
   export type CartAvgAggregateInputType = {
     id?: true
+    appliedPromoCodeId?: true
+    promoDiscountAmount?: true
   }
 
   export type CartSumAggregateInputType = {
     id?: true
+    appliedPromoCodeId?: true
+    promoDiscountAmount?: true
   }
 
   export type CartMinAggregateInputType = {
     id?: true
     userId?: true
     tempCartId?: true
+    appliedPromoCodeId?: true
+    promoDiscountAmount?: true
+    promoAppliedAt?: true
+    requiresPromoVerification?: true
     expiresAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2826,6 +3111,10 @@ export namespace Prisma {
     id?: true
     userId?: true
     tempCartId?: true
+    appliedPromoCodeId?: true
+    promoDiscountAmount?: true
+    promoAppliedAt?: true
+    requiresPromoVerification?: true
     expiresAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2835,6 +3124,10 @@ export namespace Prisma {
     id?: true
     userId?: true
     tempCartId?: true
+    appliedPromoCodeId?: true
+    promoDiscountAmount?: true
+    promoAppliedAt?: true
+    requiresPromoVerification?: true
     expiresAt?: true
     createdAt?: true
     updatedAt?: true
@@ -2931,6 +3224,10 @@ export namespace Prisma {
     id: number
     userId: string | null
     tempCartId: string | null
+    appliedPromoCodeId: number | null
+    promoDiscountAmount: number | null
+    promoAppliedAt: Date | null
+    requiresPromoVerification: boolean
     expiresAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -2959,10 +3256,15 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     tempCartId?: boolean
+    appliedPromoCodeId?: boolean
+    promoDiscountAmount?: boolean
+    promoAppliedAt?: boolean
+    requiresPromoVerification?: boolean
     expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Cart$userArgs<ExtArgs>
+    appliedPromoCode?: boolean | Cart$appliedPromoCodeArgs<ExtArgs>
     items?: boolean | Cart$itemsArgs<ExtArgs>
     _count?: boolean | CartCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cart"]>
@@ -2973,14 +3275,19 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     tempCartId?: boolean
+    appliedPromoCodeId?: boolean
+    promoDiscountAmount?: boolean
+    promoAppliedAt?: boolean
+    requiresPromoVerification?: boolean
     expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "tempCartId" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["cart"]>
+  export type CartOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "tempCartId" | "appliedPromoCodeId" | "promoDiscountAmount" | "promoAppliedAt" | "requiresPromoVerification" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["cart"]>
   export type CartInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Cart$userArgs<ExtArgs>
+    appliedPromoCode?: boolean | Cart$appliedPromoCodeArgs<ExtArgs>
     items?: boolean | Cart$itemsArgs<ExtArgs>
     _count?: boolean | CartCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2989,12 +3296,17 @@ export namespace Prisma {
     name: "Cart"
     objects: {
       user: Prisma.$UserPayload<ExtArgs> | null
+      appliedPromoCode: Prisma.$PromoCodePayload<ExtArgs> | null
       items: Prisma.$CartItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: string | null
       tempCartId: string | null
+      appliedPromoCodeId: number | null
+      promoDiscountAmount: number | null
+      promoAppliedAt: Date | null
+      requiresPromoVerification: boolean
       expiresAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -3339,6 +3651,7 @@ export namespace Prisma {
   export interface Prisma__CartClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends Cart$userArgs<ExtArgs> = {}>(args?: Subset<T, Cart$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    appliedPromoCode<T extends Cart$appliedPromoCodeArgs<ExtArgs> = {}>(args?: Subset<T, Cart$appliedPromoCodeArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Cart$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Cart$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3372,6 +3685,10 @@ export namespace Prisma {
     readonly id: FieldRef<"Cart", 'Int'>
     readonly userId: FieldRef<"Cart", 'String'>
     readonly tempCartId: FieldRef<"Cart", 'String'>
+    readonly appliedPromoCodeId: FieldRef<"Cart", 'Int'>
+    readonly promoDiscountAmount: FieldRef<"Cart", 'Int'>
+    readonly promoAppliedAt: FieldRef<"Cart", 'DateTime'>
+    readonly requiresPromoVerification: FieldRef<"Cart", 'Boolean'>
     readonly expiresAt: FieldRef<"Cart", 'DateTime'>
     readonly createdAt: FieldRef<"Cart", 'DateTime'>
     readonly updatedAt: FieldRef<"Cart", 'DateTime'>
@@ -3734,6 +4051,25 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Cart.appliedPromoCode
+   */
+  export type Cart$appliedPromoCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    where?: PromoCodeWhereInput
   }
 
   /**
@@ -4781,12 +5117,16 @@ export namespace Prisma {
     id: number | null
     addressId: number | null
     amountTotal: number | null
+    promoCodeId: number | null
+    discountAmount: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     id: number | null
     addressId: number | null
     amountTotal: number | null
+    promoCodeId: number | null
+    discountAmount: number | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -4800,6 +5140,9 @@ export namespace Prisma {
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    promoCodeId: number | null
+    promoCodeUsed: string | null
+    discountAmount: number | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -4813,6 +5156,9 @@ export namespace Prisma {
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    promoCodeId: number | null
+    promoCodeUsed: string | null
+    discountAmount: number | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -4826,6 +5172,9 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    promoCodeId: number
+    promoCodeUsed: number
+    discountAmount: number
     _all: number
   }
 
@@ -4834,12 +5183,16 @@ export namespace Prisma {
     id?: true
     addressId?: true
     amountTotal?: true
+    promoCodeId?: true
+    discountAmount?: true
   }
 
   export type OrderSumAggregateInputType = {
     id?: true
     addressId?: true
     amountTotal?: true
+    promoCodeId?: true
+    discountAmount?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -4853,6 +5206,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    promoCodeId?: true
+    promoCodeUsed?: true
+    discountAmount?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -4866,6 +5222,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    promoCodeId?: true
+    promoCodeUsed?: true
+    discountAmount?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -4879,6 +5238,9 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    promoCodeId?: true
+    promoCodeUsed?: true
+    discountAmount?: true
     _all?: true
   }
 
@@ -4979,6 +5341,9 @@ export namespace Prisma {
     status: string
     createdAt: Date
     updatedAt: Date
+    promoCodeId: number | null
+    promoCodeUsed: string | null
+    discountAmount: number | null
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -5011,8 +5376,13 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    promoCodeId?: boolean
+    promoCodeUsed?: boolean
+    discountAmount?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | AddressDefaultArgs<ExtArgs>
+    promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
+    promoUsages?: boolean | Order$promoUsagesArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -5030,12 +5400,17 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    promoCodeId?: boolean
+    promoCodeUsed?: boolean
+    discountAmount?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "addressId" | "stripeSessionId" | "paymentIntentId" | "amountTotal" | "currency" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "addressId" | "stripeSessionId" | "paymentIntentId" | "amountTotal" | "currency" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "discountAmount", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     address?: boolean | AddressDefaultArgs<ExtArgs>
+    promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
+    promoUsages?: boolean | Order$promoUsagesArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -5045,6 +5420,8 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       address: Prisma.$AddressPayload<ExtArgs>
+      promoCode: Prisma.$PromoCodePayload<ExtArgs> | null
+      promoUsages: Prisma.$PromoCodeUsagePayload<ExtArgs>[]
       items: Prisma.$OrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -5058,6 +5435,9 @@ export namespace Prisma {
       status: string
       createdAt: Date
       updatedAt: Date
+      promoCodeId: number | null
+      promoCodeUsed: string | null
+      discountAmount: number | null
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -5400,6 +5780,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     address<T extends AddressDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AddressDefaultArgs<ExtArgs>>): Prisma__AddressClient<$Result.GetResult<Prisma.$AddressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    promoCode<T extends Order$promoCodeArgs<ExtArgs> = {}>(args?: Subset<T, Order$promoCodeArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    promoUsages<T extends Order$promoUsagesArgs<ExtArgs> = {}>(args?: Subset<T, Order$promoUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5440,6 +5822,9 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
+    readonly promoCodeId: FieldRef<"Order", 'Int'>
+    readonly promoCodeUsed: FieldRef<"Order", 'String'>
+    readonly discountAmount: FieldRef<"Order", 'Int'>
   }
     
 
@@ -5780,6 +6165,49 @@ export namespace Prisma {
      * Limit how many Orders to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Order.promoCode
+   */
+  export type Order$promoCodeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    where?: PromoCodeWhereInput
+  }
+
+  /**
+   * Order.promoUsages
+   */
+  export type Order$promoUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    where?: PromoCodeUsageWhereInput
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    cursor?: PromoCodeUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
   }
 
   /**
@@ -11035,6 +11463,2322 @@ export namespace Prisma {
 
 
   /**
+   * Model PromoCode
+   */
+
+  export type AggregatePromoCode = {
+    _count: PromoCodeCountAggregateOutputType | null
+    _avg: PromoCodeAvgAggregateOutputType | null
+    _sum: PromoCodeSumAggregateOutputType | null
+    _min: PromoCodeMinAggregateOutputType | null
+    _max: PromoCodeMaxAggregateOutputType | null
+  }
+
+  export type PromoCodeAvgAggregateOutputType = {
+    id: number | null
+    discountCents: number | null
+    discountPercentage: number | null
+    minOrderAmount: number | null
+    maxDiscountAmount: number | null
+    maxUses: number | null
+    maxUsesPerUser: number | null
+    usageCount: number | null
+  }
+
+  export type PromoCodeSumAggregateOutputType = {
+    id: number | null
+    discountCents: number | null
+    discountPercentage: number | null
+    minOrderAmount: number | null
+    maxDiscountAmount: number | null
+    maxUses: number | null
+    maxUsesPerUser: number | null
+    usageCount: number | null
+  }
+
+  export type PromoCodeMinAggregateOutputType = {
+    id: number | null
+    code: string | null
+    name: string | null
+    description: string | null
+    discountCents: number | null
+    discountPercentage: number | null
+    minOrderAmount: number | null
+    maxDiscountAmount: number | null
+    maxUses: number | null
+    maxUsesPerUser: number | null
+    validFrom: Date | null
+    validTo: Date | null
+    isPublic: boolean | null
+    isActive: boolean | null
+    isFirstTimeOnly: boolean | null
+    usageCount: number | null
+    createdBy: string | null
+    lastUsedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromoCodeMaxAggregateOutputType = {
+    id: number | null
+    code: string | null
+    name: string | null
+    description: string | null
+    discountCents: number | null
+    discountPercentage: number | null
+    minOrderAmount: number | null
+    maxDiscountAmount: number | null
+    maxUses: number | null
+    maxUsesPerUser: number | null
+    validFrom: Date | null
+    validTo: Date | null
+    isPublic: boolean | null
+    isActive: boolean | null
+    isFirstTimeOnly: boolean | null
+    usageCount: number | null
+    createdBy: string | null
+    lastUsedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PromoCodeCountAggregateOutputType = {
+    id: number
+    code: number
+    name: number
+    description: number
+    discountCents: number
+    discountPercentage: number
+    minOrderAmount: number
+    maxDiscountAmount: number
+    maxUses: number
+    maxUsesPerUser: number
+    validFrom: number
+    validTo: number
+    isPublic: number
+    isActive: number
+    isFirstTimeOnly: number
+    allowedCategories: number
+    excludedCategories: number
+    allowedProducts: number
+    excludedProducts: number
+    usageCount: number
+    createdBy: number
+    lastUsedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PromoCodeAvgAggregateInputType = {
+    id?: true
+    discountCents?: true
+    discountPercentage?: true
+    minOrderAmount?: true
+    maxDiscountAmount?: true
+    maxUses?: true
+    maxUsesPerUser?: true
+    usageCount?: true
+  }
+
+  export type PromoCodeSumAggregateInputType = {
+    id?: true
+    discountCents?: true
+    discountPercentage?: true
+    minOrderAmount?: true
+    maxDiscountAmount?: true
+    maxUses?: true
+    maxUsesPerUser?: true
+    usageCount?: true
+  }
+
+  export type PromoCodeMinAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    discountCents?: true
+    discountPercentage?: true
+    minOrderAmount?: true
+    maxDiscountAmount?: true
+    maxUses?: true
+    maxUsesPerUser?: true
+    validFrom?: true
+    validTo?: true
+    isPublic?: true
+    isActive?: true
+    isFirstTimeOnly?: true
+    usageCount?: true
+    createdBy?: true
+    lastUsedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromoCodeMaxAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    discountCents?: true
+    discountPercentage?: true
+    minOrderAmount?: true
+    maxDiscountAmount?: true
+    maxUses?: true
+    maxUsesPerUser?: true
+    validFrom?: true
+    validTo?: true
+    isPublic?: true
+    isActive?: true
+    isFirstTimeOnly?: true
+    usageCount?: true
+    createdBy?: true
+    lastUsedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PromoCodeCountAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    discountCents?: true
+    discountPercentage?: true
+    minOrderAmount?: true
+    maxDiscountAmount?: true
+    maxUses?: true
+    maxUsesPerUser?: true
+    validFrom?: true
+    validTo?: true
+    isPublic?: true
+    isActive?: true
+    isFirstTimeOnly?: true
+    allowedCategories?: true
+    excludedCategories?: true
+    allowedProducts?: true
+    excludedProducts?: true
+    usageCount?: true
+    createdBy?: true
+    lastUsedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PromoCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromoCode to aggregate.
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodes to fetch.
+     */
+    orderBy?: PromoCodeOrderByWithRelationInput | PromoCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromoCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PromoCodes
+    **/
+    _count?: true | PromoCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PromoCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PromoCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromoCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromoCodeMaxAggregateInputType
+  }
+
+  export type GetPromoCodeAggregateType<T extends PromoCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromoCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromoCode[P]>
+      : GetScalarType<T[P], AggregatePromoCode[P]>
+  }
+
+
+
+
+  export type PromoCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromoCodeWhereInput
+    orderBy?: PromoCodeOrderByWithAggregationInput | PromoCodeOrderByWithAggregationInput[]
+    by: PromoCodeScalarFieldEnum[] | PromoCodeScalarFieldEnum
+    having?: PromoCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromoCodeCountAggregateInputType | true
+    _avg?: PromoCodeAvgAggregateInputType
+    _sum?: PromoCodeSumAggregateInputType
+    _min?: PromoCodeMinAggregateInputType
+    _max?: PromoCodeMaxAggregateInputType
+  }
+
+  export type PromoCodeGroupByOutputType = {
+    id: number
+    code: string
+    name: string | null
+    description: string | null
+    discountCents: number | null
+    discountPercentage: number | null
+    minOrderAmount: number
+    maxDiscountAmount: number | null
+    maxUses: number | null
+    maxUsesPerUser: number
+    validFrom: Date
+    validTo: Date | null
+    isPublic: boolean
+    isActive: boolean
+    isFirstTimeOnly: boolean
+    allowedCategories: JsonValue | null
+    excludedCategories: JsonValue | null
+    allowedProducts: JsonValue | null
+    excludedProducts: JsonValue | null
+    usageCount: number
+    createdBy: string | null
+    lastUsedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PromoCodeCountAggregateOutputType | null
+    _avg: PromoCodeAvgAggregateOutputType | null
+    _sum: PromoCodeSumAggregateOutputType | null
+    _min: PromoCodeMinAggregateOutputType | null
+    _max: PromoCodeMaxAggregateOutputType | null
+  }
+
+  type GetPromoCodeGroupByPayload<T extends PromoCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromoCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromoCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromoCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], PromoCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromoCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    discountCents?: boolean
+    discountPercentage?: boolean
+    minOrderAmount?: boolean
+    maxDiscountAmount?: boolean
+    maxUses?: boolean
+    maxUsesPerUser?: boolean
+    validFrom?: boolean
+    validTo?: boolean
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: boolean
+    excludedCategories?: boolean
+    allowedProducts?: boolean
+    excludedProducts?: boolean
+    usageCount?: boolean
+    createdBy?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    carts?: boolean | PromoCode$cartsArgs<ExtArgs>
+    orders?: boolean | PromoCode$ordersArgs<ExtArgs>
+    userUsages?: boolean | PromoCode$userUsagesArgs<ExtArgs>
+    _count?: boolean | PromoCodeCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["promoCode"]>
+
+
+
+  export type PromoCodeSelectScalar = {
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    discountCents?: boolean
+    discountPercentage?: boolean
+    minOrderAmount?: boolean
+    maxDiscountAmount?: boolean
+    maxUses?: boolean
+    maxUsesPerUser?: boolean
+    validFrom?: boolean
+    validTo?: boolean
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: boolean
+    excludedCategories?: boolean
+    allowedProducts?: boolean
+    excludedProducts?: boolean
+    usageCount?: boolean
+    createdBy?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PromoCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "description" | "discountCents" | "discountPercentage" | "minOrderAmount" | "maxDiscountAmount" | "maxUses" | "maxUsesPerUser" | "validFrom" | "validTo" | "isPublic" | "isActive" | "isFirstTimeOnly" | "allowedCategories" | "excludedCategories" | "allowedProducts" | "excludedProducts" | "usageCount" | "createdBy" | "lastUsedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["promoCode"]>
+  export type PromoCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    carts?: boolean | PromoCode$cartsArgs<ExtArgs>
+    orders?: boolean | PromoCode$ordersArgs<ExtArgs>
+    userUsages?: boolean | PromoCode$userUsagesArgs<ExtArgs>
+    _count?: boolean | PromoCodeCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PromoCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PromoCode"
+    objects: {
+      carts: Prisma.$CartPayload<ExtArgs>[]
+      orders: Prisma.$OrderPayload<ExtArgs>[]
+      userUsages: Prisma.$PromoCodeUsagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      code: string
+      name: string | null
+      description: string | null
+      discountCents: number | null
+      discountPercentage: number | null
+      minOrderAmount: number
+      maxDiscountAmount: number | null
+      maxUses: number | null
+      maxUsesPerUser: number
+      validFrom: Date
+      validTo: Date | null
+      isPublic: boolean
+      isActive: boolean
+      isFirstTimeOnly: boolean
+      allowedCategories: Prisma.JsonValue | null
+      excludedCategories: Prisma.JsonValue | null
+      allowedProducts: Prisma.JsonValue | null
+      excludedProducts: Prisma.JsonValue | null
+      usageCount: number
+      createdBy: string | null
+      lastUsedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["promoCode"]>
+    composites: {}
+  }
+
+  type PromoCodeGetPayload<S extends boolean | null | undefined | PromoCodeDefaultArgs> = $Result.GetResult<Prisma.$PromoCodePayload, S>
+
+  type PromoCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PromoCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PromoCodeCountAggregateInputType | true
+    }
+
+  export interface PromoCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromoCode'], meta: { name: 'PromoCode' } }
+    /**
+     * Find zero or one PromoCode that matches the filter.
+     * @param {PromoCodeFindUniqueArgs} args - Arguments to find a PromoCode
+     * @example
+     * // Get one PromoCode
+     * const promoCode = await prisma.promoCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PromoCodeFindUniqueArgs>(args: SelectSubset<T, PromoCodeFindUniqueArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PromoCode that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PromoCodeFindUniqueOrThrowArgs} args - Arguments to find a PromoCode
+     * @example
+     * // Get one PromoCode
+     * const promoCode = await prisma.promoCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PromoCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, PromoCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromoCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeFindFirstArgs} args - Arguments to find a PromoCode
+     * @example
+     * // Get one PromoCode
+     * const promoCode = await prisma.promoCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PromoCodeFindFirstArgs>(args?: SelectSubset<T, PromoCodeFindFirstArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromoCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeFindFirstOrThrowArgs} args - Arguments to find a PromoCode
+     * @example
+     * // Get one PromoCode
+     * const promoCode = await prisma.promoCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PromoCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, PromoCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PromoCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PromoCodes
+     * const promoCodes = await prisma.promoCode.findMany()
+     * 
+     * // Get first 10 PromoCodes
+     * const promoCodes = await prisma.promoCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promoCodeWithIdOnly = await prisma.promoCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PromoCodeFindManyArgs>(args?: SelectSubset<T, PromoCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PromoCode.
+     * @param {PromoCodeCreateArgs} args - Arguments to create a PromoCode.
+     * @example
+     * // Create one PromoCode
+     * const PromoCode = await prisma.promoCode.create({
+     *   data: {
+     *     // ... data to create a PromoCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends PromoCodeCreateArgs>(args: SelectSubset<T, PromoCodeCreateArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PromoCodes.
+     * @param {PromoCodeCreateManyArgs} args - Arguments to create many PromoCodes.
+     * @example
+     * // Create many PromoCodes
+     * const promoCode = await prisma.promoCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PromoCodeCreateManyArgs>(args?: SelectSubset<T, PromoCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PromoCode.
+     * @param {PromoCodeDeleteArgs} args - Arguments to delete one PromoCode.
+     * @example
+     * // Delete one PromoCode
+     * const PromoCode = await prisma.promoCode.delete({
+     *   where: {
+     *     // ... filter to delete one PromoCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PromoCodeDeleteArgs>(args: SelectSubset<T, PromoCodeDeleteArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PromoCode.
+     * @param {PromoCodeUpdateArgs} args - Arguments to update one PromoCode.
+     * @example
+     * // Update one PromoCode
+     * const promoCode = await prisma.promoCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PromoCodeUpdateArgs>(args: SelectSubset<T, PromoCodeUpdateArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PromoCodes.
+     * @param {PromoCodeDeleteManyArgs} args - Arguments to filter PromoCodes to delete.
+     * @example
+     * // Delete a few PromoCodes
+     * const { count } = await prisma.promoCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PromoCodeDeleteManyArgs>(args?: SelectSubset<T, PromoCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromoCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PromoCodes
+     * const promoCode = await prisma.promoCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PromoCodeUpdateManyArgs>(args: SelectSubset<T, PromoCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PromoCode.
+     * @param {PromoCodeUpsertArgs} args - Arguments to update or create a PromoCode.
+     * @example
+     * // Update or create a PromoCode
+     * const promoCode = await prisma.promoCode.upsert({
+     *   create: {
+     *     // ... data to create a PromoCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PromoCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PromoCodeUpsertArgs>(args: SelectSubset<T, PromoCodeUpsertArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PromoCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeCountArgs} args - Arguments to filter PromoCodes to count.
+     * @example
+     * // Count the number of PromoCodes
+     * const count = await prisma.promoCode.count({
+     *   where: {
+     *     // ... the filter for the PromoCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromoCodeCountArgs>(
+      args?: Subset<T, PromoCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromoCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PromoCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromoCodeAggregateArgs>(args: Subset<T, PromoCodeAggregateArgs>): Prisma.PrismaPromise<GetPromoCodeAggregateType<T>>
+
+    /**
+     * Group by PromoCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromoCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromoCodeGroupByArgs['orderBy'] }
+        : { orderBy?: PromoCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromoCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromoCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PromoCode model
+   */
+  readonly fields: PromoCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PromoCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromoCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    carts<T extends PromoCode$cartsArgs<ExtArgs> = {}>(args?: Subset<T, PromoCode$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orders<T extends PromoCode$ordersArgs<ExtArgs> = {}>(args?: Subset<T, PromoCode$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userUsages<T extends PromoCode$userUsagesArgs<ExtArgs> = {}>(args?: Subset<T, PromoCode$userUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PromoCode model
+   */
+  interface PromoCodeFieldRefs {
+    readonly id: FieldRef<"PromoCode", 'Int'>
+    readonly code: FieldRef<"PromoCode", 'String'>
+    readonly name: FieldRef<"PromoCode", 'String'>
+    readonly description: FieldRef<"PromoCode", 'String'>
+    readonly discountCents: FieldRef<"PromoCode", 'Int'>
+    readonly discountPercentage: FieldRef<"PromoCode", 'Int'>
+    readonly minOrderAmount: FieldRef<"PromoCode", 'Int'>
+    readonly maxDiscountAmount: FieldRef<"PromoCode", 'Int'>
+    readonly maxUses: FieldRef<"PromoCode", 'Int'>
+    readonly maxUsesPerUser: FieldRef<"PromoCode", 'Int'>
+    readonly validFrom: FieldRef<"PromoCode", 'DateTime'>
+    readonly validTo: FieldRef<"PromoCode", 'DateTime'>
+    readonly isPublic: FieldRef<"PromoCode", 'Boolean'>
+    readonly isActive: FieldRef<"PromoCode", 'Boolean'>
+    readonly isFirstTimeOnly: FieldRef<"PromoCode", 'Boolean'>
+    readonly allowedCategories: FieldRef<"PromoCode", 'Json'>
+    readonly excludedCategories: FieldRef<"PromoCode", 'Json'>
+    readonly allowedProducts: FieldRef<"PromoCode", 'Json'>
+    readonly excludedProducts: FieldRef<"PromoCode", 'Json'>
+    readonly usageCount: FieldRef<"PromoCode", 'Int'>
+    readonly createdBy: FieldRef<"PromoCode", 'String'>
+    readonly lastUsedAt: FieldRef<"PromoCode", 'DateTime'>
+    readonly createdAt: FieldRef<"PromoCode", 'DateTime'>
+    readonly updatedAt: FieldRef<"PromoCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PromoCode findUnique
+   */
+  export type PromoCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCode to fetch.
+     */
+    where: PromoCodeWhereUniqueInput
+  }
+
+  /**
+   * PromoCode findUniqueOrThrow
+   */
+  export type PromoCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCode to fetch.
+     */
+    where: PromoCodeWhereUniqueInput
+  }
+
+  /**
+   * PromoCode findFirst
+   */
+  export type PromoCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCode to fetch.
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodes to fetch.
+     */
+    orderBy?: PromoCodeOrderByWithRelationInput | PromoCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromoCodes.
+     */
+    cursor?: PromoCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromoCodes.
+     */
+    distinct?: PromoCodeScalarFieldEnum | PromoCodeScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode findFirstOrThrow
+   */
+  export type PromoCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCode to fetch.
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodes to fetch.
+     */
+    orderBy?: PromoCodeOrderByWithRelationInput | PromoCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromoCodes.
+     */
+    cursor?: PromoCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromoCodes.
+     */
+    distinct?: PromoCodeScalarFieldEnum | PromoCodeScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode findMany
+   */
+  export type PromoCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodes to fetch.
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodes to fetch.
+     */
+    orderBy?: PromoCodeOrderByWithRelationInput | PromoCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PromoCodes.
+     */
+    cursor?: PromoCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodes.
+     */
+    skip?: number
+    distinct?: PromoCodeScalarFieldEnum | PromoCodeScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode create
+   */
+  export type PromoCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PromoCode.
+     */
+    data: XOR<PromoCodeCreateInput, PromoCodeUncheckedCreateInput>
+  }
+
+  /**
+   * PromoCode createMany
+   */
+  export type PromoCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PromoCodes.
+     */
+    data: PromoCodeCreateManyInput | PromoCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PromoCode update
+   */
+  export type PromoCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PromoCode.
+     */
+    data: XOR<PromoCodeUpdateInput, PromoCodeUncheckedUpdateInput>
+    /**
+     * Choose, which PromoCode to update.
+     */
+    where: PromoCodeWhereUniqueInput
+  }
+
+  /**
+   * PromoCode updateMany
+   */
+  export type PromoCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PromoCodes.
+     */
+    data: XOR<PromoCodeUpdateManyMutationInput, PromoCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which PromoCodes to update
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * Limit how many PromoCodes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromoCode upsert
+   */
+  export type PromoCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PromoCode to update in case it exists.
+     */
+    where: PromoCodeWhereUniqueInput
+    /**
+     * In case the PromoCode found by the `where` argument doesn't exist, create a new PromoCode with this data.
+     */
+    create: XOR<PromoCodeCreateInput, PromoCodeUncheckedCreateInput>
+    /**
+     * In case the PromoCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromoCodeUpdateInput, PromoCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * PromoCode delete
+   */
+  export type PromoCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+    /**
+     * Filter which PromoCode to delete.
+     */
+    where: PromoCodeWhereUniqueInput
+  }
+
+  /**
+   * PromoCode deleteMany
+   */
+  export type PromoCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromoCodes to delete
+     */
+    where?: PromoCodeWhereInput
+    /**
+     * Limit how many PromoCodes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromoCode.carts
+   */
+  export type PromoCode$cartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Cart
+     */
+    select?: CartSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Cart
+     */
+    omit?: CartOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CartInclude<ExtArgs> | null
+    where?: CartWhereInput
+    orderBy?: CartOrderByWithRelationInput | CartOrderByWithRelationInput[]
+    cursor?: CartWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CartScalarFieldEnum | CartScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode.orders
+   */
+  export type PromoCode$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+    orderBy?: OrderOrderByWithRelationInput | OrderOrderByWithRelationInput[]
+    cursor?: OrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode.userUsages
+   */
+  export type PromoCode$userUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    where?: PromoCodeUsageWhereInput
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    cursor?: PromoCodeUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCode without action
+   */
+  export type PromoCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCode
+     */
+    select?: PromoCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCode
+     */
+    omit?: PromoCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PromoCodeUsage
+   */
+
+  export type AggregatePromoCodeUsage = {
+    _count: PromoCodeUsageCountAggregateOutputType | null
+    _avg: PromoCodeUsageAvgAggregateOutputType | null
+    _sum: PromoCodeUsageSumAggregateOutputType | null
+    _min: PromoCodeUsageMinAggregateOutputType | null
+    _max: PromoCodeUsageMaxAggregateOutputType | null
+  }
+
+  export type PromoCodeUsageAvgAggregateOutputType = {
+    id: number | null
+    promoCodeId: number | null
+    orderId: number | null
+    discountApplied: number | null
+    orderAmount: number | null
+  }
+
+  export type PromoCodeUsageSumAggregateOutputType = {
+    id: number | null
+    promoCodeId: number | null
+    orderId: number | null
+    discountApplied: number | null
+    orderAmount: number | null
+  }
+
+  export type PromoCodeUsageMinAggregateOutputType = {
+    id: number | null
+    promoCodeId: number | null
+    userId: string | null
+    orderId: number | null
+    discountApplied: number | null
+    orderAmount: number | null
+    status: string | null
+    failureReason: string | null
+    usedAt: Date | null
+  }
+
+  export type PromoCodeUsageMaxAggregateOutputType = {
+    id: number | null
+    promoCodeId: number | null
+    userId: string | null
+    orderId: number | null
+    discountApplied: number | null
+    orderAmount: number | null
+    status: string | null
+    failureReason: string | null
+    usedAt: Date | null
+  }
+
+  export type PromoCodeUsageCountAggregateOutputType = {
+    id: number
+    promoCodeId: number
+    userId: number
+    orderId: number
+    discountApplied: number
+    orderAmount: number
+    status: number
+    failureReason: number
+    usedAt: number
+    _all: number
+  }
+
+
+  export type PromoCodeUsageAvgAggregateInputType = {
+    id?: true
+    promoCodeId?: true
+    orderId?: true
+    discountApplied?: true
+    orderAmount?: true
+  }
+
+  export type PromoCodeUsageSumAggregateInputType = {
+    id?: true
+    promoCodeId?: true
+    orderId?: true
+    discountApplied?: true
+    orderAmount?: true
+  }
+
+  export type PromoCodeUsageMinAggregateInputType = {
+    id?: true
+    promoCodeId?: true
+    userId?: true
+    orderId?: true
+    discountApplied?: true
+    orderAmount?: true
+    status?: true
+    failureReason?: true
+    usedAt?: true
+  }
+
+  export type PromoCodeUsageMaxAggregateInputType = {
+    id?: true
+    promoCodeId?: true
+    userId?: true
+    orderId?: true
+    discountApplied?: true
+    orderAmount?: true
+    status?: true
+    failureReason?: true
+    usedAt?: true
+  }
+
+  export type PromoCodeUsageCountAggregateInputType = {
+    id?: true
+    promoCodeId?: true
+    userId?: true
+    orderId?: true
+    discountApplied?: true
+    orderAmount?: true
+    status?: true
+    failureReason?: true
+    usedAt?: true
+    _all?: true
+  }
+
+  export type PromoCodeUsageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromoCodeUsage to aggregate.
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodeUsages to fetch.
+     */
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PromoCodeUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodeUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodeUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PromoCodeUsages
+    **/
+    _count?: true | PromoCodeUsageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PromoCodeUsageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PromoCodeUsageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PromoCodeUsageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PromoCodeUsageMaxAggregateInputType
+  }
+
+  export type GetPromoCodeUsageAggregateType<T extends PromoCodeUsageAggregateArgs> = {
+        [P in keyof T & keyof AggregatePromoCodeUsage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePromoCodeUsage[P]>
+      : GetScalarType<T[P], AggregatePromoCodeUsage[P]>
+  }
+
+
+
+
+  export type PromoCodeUsageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PromoCodeUsageWhereInput
+    orderBy?: PromoCodeUsageOrderByWithAggregationInput | PromoCodeUsageOrderByWithAggregationInput[]
+    by: PromoCodeUsageScalarFieldEnum[] | PromoCodeUsageScalarFieldEnum
+    having?: PromoCodeUsageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PromoCodeUsageCountAggregateInputType | true
+    _avg?: PromoCodeUsageAvgAggregateInputType
+    _sum?: PromoCodeUsageSumAggregateInputType
+    _min?: PromoCodeUsageMinAggregateInputType
+    _max?: PromoCodeUsageMaxAggregateInputType
+  }
+
+  export type PromoCodeUsageGroupByOutputType = {
+    id: number
+    promoCodeId: number
+    userId: string
+    orderId: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason: string | null
+    usedAt: Date
+    _count: PromoCodeUsageCountAggregateOutputType | null
+    _avg: PromoCodeUsageAvgAggregateOutputType | null
+    _sum: PromoCodeUsageSumAggregateOutputType | null
+    _min: PromoCodeUsageMinAggregateOutputType | null
+    _max: PromoCodeUsageMaxAggregateOutputType | null
+  }
+
+  type GetPromoCodeUsageGroupByPayload<T extends PromoCodeUsageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PromoCodeUsageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PromoCodeUsageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PromoCodeUsageGroupByOutputType[P]>
+            : GetScalarType<T[P], PromoCodeUsageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PromoCodeUsageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    promoCodeId?: boolean
+    userId?: boolean
+    orderId?: boolean
+    discountApplied?: boolean
+    orderAmount?: boolean
+    status?: boolean
+    failureReason?: boolean
+    usedAt?: boolean
+    promoCode?: boolean | PromoCodeDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    order?: boolean | PromoCodeUsage$orderArgs<ExtArgs>
+  }, ExtArgs["result"]["promoCodeUsage"]>
+
+
+
+  export type PromoCodeUsageSelectScalar = {
+    id?: boolean
+    promoCodeId?: boolean
+    userId?: boolean
+    orderId?: boolean
+    discountApplied?: boolean
+    orderAmount?: boolean
+    status?: boolean
+    failureReason?: boolean
+    usedAt?: boolean
+  }
+
+  export type PromoCodeUsageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "promoCodeId" | "userId" | "orderId" | "discountApplied" | "orderAmount" | "status" | "failureReason" | "usedAt", ExtArgs["result"]["promoCodeUsage"]>
+  export type PromoCodeUsageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    promoCode?: boolean | PromoCodeDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    order?: boolean | PromoCodeUsage$orderArgs<ExtArgs>
+  }
+
+  export type $PromoCodeUsagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PromoCodeUsage"
+    objects: {
+      promoCode: Prisma.$PromoCodePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      order: Prisma.$OrderPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      promoCodeId: number
+      userId: string
+      orderId: number | null
+      discountApplied: number
+      orderAmount: number
+      status: string
+      failureReason: string | null
+      usedAt: Date
+    }, ExtArgs["result"]["promoCodeUsage"]>
+    composites: {}
+  }
+
+  type PromoCodeUsageGetPayload<S extends boolean | null | undefined | PromoCodeUsageDefaultArgs> = $Result.GetResult<Prisma.$PromoCodeUsagePayload, S>
+
+  type PromoCodeUsageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PromoCodeUsageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PromoCodeUsageCountAggregateInputType | true
+    }
+
+  export interface PromoCodeUsageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PromoCodeUsage'], meta: { name: 'PromoCodeUsage' } }
+    /**
+     * Find zero or one PromoCodeUsage that matches the filter.
+     * @param {PromoCodeUsageFindUniqueArgs} args - Arguments to find a PromoCodeUsage
+     * @example
+     * // Get one PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PromoCodeUsageFindUniqueArgs>(args: SelectSubset<T, PromoCodeUsageFindUniqueArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PromoCodeUsage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PromoCodeUsageFindUniqueOrThrowArgs} args - Arguments to find a PromoCodeUsage
+     * @example
+     * // Get one PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PromoCodeUsageFindUniqueOrThrowArgs>(args: SelectSubset<T, PromoCodeUsageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromoCodeUsage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageFindFirstArgs} args - Arguments to find a PromoCodeUsage
+     * @example
+     * // Get one PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PromoCodeUsageFindFirstArgs>(args?: SelectSubset<T, PromoCodeUsageFindFirstArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PromoCodeUsage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageFindFirstOrThrowArgs} args - Arguments to find a PromoCodeUsage
+     * @example
+     * // Get one PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PromoCodeUsageFindFirstOrThrowArgs>(args?: SelectSubset<T, PromoCodeUsageFindFirstOrThrowArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PromoCodeUsages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PromoCodeUsages
+     * const promoCodeUsages = await prisma.promoCodeUsage.findMany()
+     * 
+     * // Get first 10 PromoCodeUsages
+     * const promoCodeUsages = await prisma.promoCodeUsage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const promoCodeUsageWithIdOnly = await prisma.promoCodeUsage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PromoCodeUsageFindManyArgs>(args?: SelectSubset<T, PromoCodeUsageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PromoCodeUsage.
+     * @param {PromoCodeUsageCreateArgs} args - Arguments to create a PromoCodeUsage.
+     * @example
+     * // Create one PromoCodeUsage
+     * const PromoCodeUsage = await prisma.promoCodeUsage.create({
+     *   data: {
+     *     // ... data to create a PromoCodeUsage
+     *   }
+     * })
+     * 
+     */
+    create<T extends PromoCodeUsageCreateArgs>(args: SelectSubset<T, PromoCodeUsageCreateArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PromoCodeUsages.
+     * @param {PromoCodeUsageCreateManyArgs} args - Arguments to create many PromoCodeUsages.
+     * @example
+     * // Create many PromoCodeUsages
+     * const promoCodeUsage = await prisma.promoCodeUsage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PromoCodeUsageCreateManyArgs>(args?: SelectSubset<T, PromoCodeUsageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PromoCodeUsage.
+     * @param {PromoCodeUsageDeleteArgs} args - Arguments to delete one PromoCodeUsage.
+     * @example
+     * // Delete one PromoCodeUsage
+     * const PromoCodeUsage = await prisma.promoCodeUsage.delete({
+     *   where: {
+     *     // ... filter to delete one PromoCodeUsage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PromoCodeUsageDeleteArgs>(args: SelectSubset<T, PromoCodeUsageDeleteArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PromoCodeUsage.
+     * @param {PromoCodeUsageUpdateArgs} args - Arguments to update one PromoCodeUsage.
+     * @example
+     * // Update one PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PromoCodeUsageUpdateArgs>(args: SelectSubset<T, PromoCodeUsageUpdateArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PromoCodeUsages.
+     * @param {PromoCodeUsageDeleteManyArgs} args - Arguments to filter PromoCodeUsages to delete.
+     * @example
+     * // Delete a few PromoCodeUsages
+     * const { count } = await prisma.promoCodeUsage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PromoCodeUsageDeleteManyArgs>(args?: SelectSubset<T, PromoCodeUsageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PromoCodeUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PromoCodeUsages
+     * const promoCodeUsage = await prisma.promoCodeUsage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PromoCodeUsageUpdateManyArgs>(args: SelectSubset<T, PromoCodeUsageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PromoCodeUsage.
+     * @param {PromoCodeUsageUpsertArgs} args - Arguments to update or create a PromoCodeUsage.
+     * @example
+     * // Update or create a PromoCodeUsage
+     * const promoCodeUsage = await prisma.promoCodeUsage.upsert({
+     *   create: {
+     *     // ... data to create a PromoCodeUsage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PromoCodeUsage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PromoCodeUsageUpsertArgs>(args: SelectSubset<T, PromoCodeUsageUpsertArgs<ExtArgs>>): Prisma__PromoCodeUsageClient<$Result.GetResult<Prisma.$PromoCodeUsagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PromoCodeUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageCountArgs} args - Arguments to filter PromoCodeUsages to count.
+     * @example
+     * // Count the number of PromoCodeUsages
+     * const count = await prisma.promoCodeUsage.count({
+     *   where: {
+     *     // ... the filter for the PromoCodeUsages we want to count
+     *   }
+     * })
+    **/
+    count<T extends PromoCodeUsageCountArgs>(
+      args?: Subset<T, PromoCodeUsageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PromoCodeUsageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PromoCodeUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PromoCodeUsageAggregateArgs>(args: Subset<T, PromoCodeUsageAggregateArgs>): Prisma.PrismaPromise<GetPromoCodeUsageAggregateType<T>>
+
+    /**
+     * Group by PromoCodeUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PromoCodeUsageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PromoCodeUsageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PromoCodeUsageGroupByArgs['orderBy'] }
+        : { orderBy?: PromoCodeUsageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PromoCodeUsageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPromoCodeUsageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PromoCodeUsage model
+   */
+  readonly fields: PromoCodeUsageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PromoCodeUsage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PromoCodeUsageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    promoCode<T extends PromoCodeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PromoCodeDefaultArgs<ExtArgs>>): Prisma__PromoCodeClient<$Result.GetResult<Prisma.$PromoCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    order<T extends PromoCodeUsage$orderArgs<ExtArgs> = {}>(args?: Subset<T, PromoCodeUsage$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PromoCodeUsage model
+   */
+  interface PromoCodeUsageFieldRefs {
+    readonly id: FieldRef<"PromoCodeUsage", 'Int'>
+    readonly promoCodeId: FieldRef<"PromoCodeUsage", 'Int'>
+    readonly userId: FieldRef<"PromoCodeUsage", 'String'>
+    readonly orderId: FieldRef<"PromoCodeUsage", 'Int'>
+    readonly discountApplied: FieldRef<"PromoCodeUsage", 'Int'>
+    readonly orderAmount: FieldRef<"PromoCodeUsage", 'Int'>
+    readonly status: FieldRef<"PromoCodeUsage", 'String'>
+    readonly failureReason: FieldRef<"PromoCodeUsage", 'String'>
+    readonly usedAt: FieldRef<"PromoCodeUsage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PromoCodeUsage findUnique
+   */
+  export type PromoCodeUsageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodeUsage to fetch.
+     */
+    where: PromoCodeUsageWhereUniqueInput
+  }
+
+  /**
+   * PromoCodeUsage findUniqueOrThrow
+   */
+  export type PromoCodeUsageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodeUsage to fetch.
+     */
+    where: PromoCodeUsageWhereUniqueInput
+  }
+
+  /**
+   * PromoCodeUsage findFirst
+   */
+  export type PromoCodeUsageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodeUsage to fetch.
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodeUsages to fetch.
+     */
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromoCodeUsages.
+     */
+    cursor?: PromoCodeUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodeUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodeUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromoCodeUsages.
+     */
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCodeUsage findFirstOrThrow
+   */
+  export type PromoCodeUsageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodeUsage to fetch.
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodeUsages to fetch.
+     */
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PromoCodeUsages.
+     */
+    cursor?: PromoCodeUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodeUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodeUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PromoCodeUsages.
+     */
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCodeUsage findMany
+   */
+  export type PromoCodeUsageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which PromoCodeUsages to fetch.
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PromoCodeUsages to fetch.
+     */
+    orderBy?: PromoCodeUsageOrderByWithRelationInput | PromoCodeUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PromoCodeUsages.
+     */
+    cursor?: PromoCodeUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PromoCodeUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PromoCodeUsages.
+     */
+    skip?: number
+    distinct?: PromoCodeUsageScalarFieldEnum | PromoCodeUsageScalarFieldEnum[]
+  }
+
+  /**
+   * PromoCodeUsage create
+   */
+  export type PromoCodeUsageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PromoCodeUsage.
+     */
+    data: XOR<PromoCodeUsageCreateInput, PromoCodeUsageUncheckedCreateInput>
+  }
+
+  /**
+   * PromoCodeUsage createMany
+   */
+  export type PromoCodeUsageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PromoCodeUsages.
+     */
+    data: PromoCodeUsageCreateManyInput | PromoCodeUsageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PromoCodeUsage update
+   */
+  export type PromoCodeUsageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PromoCodeUsage.
+     */
+    data: XOR<PromoCodeUsageUpdateInput, PromoCodeUsageUncheckedUpdateInput>
+    /**
+     * Choose, which PromoCodeUsage to update.
+     */
+    where: PromoCodeUsageWhereUniqueInput
+  }
+
+  /**
+   * PromoCodeUsage updateMany
+   */
+  export type PromoCodeUsageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PromoCodeUsages.
+     */
+    data: XOR<PromoCodeUsageUpdateManyMutationInput, PromoCodeUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which PromoCodeUsages to update
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * Limit how many PromoCodeUsages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromoCodeUsage upsert
+   */
+  export type PromoCodeUsageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PromoCodeUsage to update in case it exists.
+     */
+    where: PromoCodeUsageWhereUniqueInput
+    /**
+     * In case the PromoCodeUsage found by the `where` argument doesn't exist, create a new PromoCodeUsage with this data.
+     */
+    create: XOR<PromoCodeUsageCreateInput, PromoCodeUsageUncheckedCreateInput>
+    /**
+     * In case the PromoCodeUsage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PromoCodeUsageUpdateInput, PromoCodeUsageUncheckedUpdateInput>
+  }
+
+  /**
+   * PromoCodeUsage delete
+   */
+  export type PromoCodeUsageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+    /**
+     * Filter which PromoCodeUsage to delete.
+     */
+    where: PromoCodeUsageWhereUniqueInput
+  }
+
+  /**
+   * PromoCodeUsage deleteMany
+   */
+  export type PromoCodeUsageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PromoCodeUsages to delete
+     */
+    where?: PromoCodeUsageWhereInput
+    /**
+     * Limit how many PromoCodeUsages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PromoCodeUsage.order
+   */
+  export type PromoCodeUsage$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
+   * PromoCodeUsage without action
+   */
+  export type PromoCodeUsageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PromoCodeUsage
+     */
+    select?: PromoCodeUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PromoCodeUsage
+     */
+    omit?: PromoCodeUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PromoCodeUsageInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -11065,6 +13809,10 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     tempCartId: 'tempCartId',
+    appliedPromoCodeId: 'appliedPromoCodeId',
+    promoDiscountAmount: 'promoDiscountAmount',
+    promoAppliedAt: 'promoAppliedAt',
+    requiresPromoVerification: 'requiresPromoVerification',
     expiresAt: 'expiresAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -11095,7 +13843,10 @@ export namespace Prisma {
     currency: 'currency',
     status: 'status',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    promoCodeId: 'promoCodeId',
+    promoCodeUsed: 'promoCodeUsed',
+    discountAmount: 'discountAmount'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -11185,6 +13936,51 @@ export namespace Prisma {
   export type SanitySyncScalarFieldEnum = (typeof SanitySyncScalarFieldEnum)[keyof typeof SanitySyncScalarFieldEnum]
 
 
+  export const PromoCodeScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    discountCents: 'discountCents',
+    discountPercentage: 'discountPercentage',
+    minOrderAmount: 'minOrderAmount',
+    maxDiscountAmount: 'maxDiscountAmount',
+    maxUses: 'maxUses',
+    maxUsesPerUser: 'maxUsesPerUser',
+    validFrom: 'validFrom',
+    validTo: 'validTo',
+    isPublic: 'isPublic',
+    isActive: 'isActive',
+    isFirstTimeOnly: 'isFirstTimeOnly',
+    allowedCategories: 'allowedCategories',
+    excludedCategories: 'excludedCategories',
+    allowedProducts: 'allowedProducts',
+    excludedProducts: 'excludedProducts',
+    usageCount: 'usageCount',
+    createdBy: 'createdBy',
+    lastUsedAt: 'lastUsedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PromoCodeScalarFieldEnum = (typeof PromoCodeScalarFieldEnum)[keyof typeof PromoCodeScalarFieldEnum]
+
+
+  export const PromoCodeUsageScalarFieldEnum: {
+    id: 'id',
+    promoCodeId: 'promoCodeId',
+    userId: 'userId',
+    orderId: 'orderId',
+    discountApplied: 'discountApplied',
+    orderAmount: 'orderAmount',
+    status: 'status',
+    failureReason: 'failureReason',
+    usedAt: 'usedAt'
+  };
+
+  export type PromoCodeUsageScalarFieldEnum = (typeof PromoCodeUsageScalarFieldEnum)[keyof typeof PromoCodeUsageScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -11239,7 +14035,8 @@ export namespace Prisma {
     stripeSessionId: 'stripeSessionId',
     paymentIntentId: 'paymentIntentId',
     currency: 'currency',
-    status: 'status'
+    status: 'status',
+    promoCodeUsed: 'promoCodeUsed'
   };
 
   export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
@@ -11321,6 +14118,25 @@ export namespace Prisma {
   export type SanitySyncOrderByRelevanceFieldEnum = (typeof SanitySyncOrderByRelevanceFieldEnum)[keyof typeof SanitySyncOrderByRelevanceFieldEnum]
 
 
+  export const PromoCodeOrderByRelevanceFieldEnum: {
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    createdBy: 'createdBy'
+  };
+
+  export type PromoCodeOrderByRelevanceFieldEnum = (typeof PromoCodeOrderByRelevanceFieldEnum)[keyof typeof PromoCodeOrderByRelevanceFieldEnum]
+
+
+  export const PromoCodeUsageOrderByRelevanceFieldEnum: {
+    userId: 'userId',
+    status: 'status',
+    failureReason: 'failureReason'
+  };
+
+  export type PromoCodeUsageOrderByRelevanceFieldEnum = (typeof PromoCodeUsageOrderByRelevanceFieldEnum)[keyof typeof PromoCodeUsageOrderByRelevanceFieldEnum]
+
+
   /**
    * Field references
    */
@@ -11392,6 +14208,7 @@ export namespace Prisma {
     cart?: XOR<CartNullableScalarRelationFilter, CartWhereInput> | null
     orders?: OrderListRelationFilter
     addresses?: AddressListRelationFilter
+    promoUsages?: PromoCodeUsageListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -11405,6 +14222,7 @@ export namespace Prisma {
     cart?: CartOrderByWithRelationInput
     orders?: OrderOrderByRelationAggregateInput
     addresses?: AddressOrderByRelationAggregateInput
+    promoUsages?: PromoCodeUsageOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -11422,6 +14240,7 @@ export namespace Prisma {
     cart?: XOR<CartNullableScalarRelationFilter, CartWhereInput> | null
     orders?: OrderListRelationFilter
     addresses?: AddressListRelationFilter
+    promoUsages?: PromoCodeUsageListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -11457,10 +14276,15 @@ export namespace Prisma {
     id?: IntFilter<"Cart"> | number
     userId?: StringNullableFilter<"Cart"> | string | null
     tempCartId?: StringNullableFilter<"Cart"> | string | null
+    appliedPromoCodeId?: IntNullableFilter<"Cart"> | number | null
+    promoDiscountAmount?: IntNullableFilter<"Cart"> | number | null
+    promoAppliedAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
+    requiresPromoVerification?: BoolFilter<"Cart"> | boolean
     expiresAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
     createdAt?: DateTimeFilter<"Cart"> | Date | string
     updatedAt?: DateTimeFilter<"Cart"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    appliedPromoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
     items?: CartItemListRelationFilter
   }
 
@@ -11468,10 +14292,15 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrderInput | SortOrder
     tempCartId?: SortOrderInput | SortOrder
+    appliedPromoCodeId?: SortOrderInput | SortOrder
+    promoDiscountAmount?: SortOrderInput | SortOrder
+    promoAppliedAt?: SortOrderInput | SortOrder
+    requiresPromoVerification?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    appliedPromoCode?: PromoCodeOrderByWithRelationInput
     items?: CartItemOrderByRelationAggregateInput
     _relevance?: CartOrderByRelevanceInput
   }
@@ -11483,10 +14312,15 @@ export namespace Prisma {
     AND?: CartWhereInput | CartWhereInput[]
     OR?: CartWhereInput[]
     NOT?: CartWhereInput | CartWhereInput[]
+    appliedPromoCodeId?: IntNullableFilter<"Cart"> | number | null
+    promoDiscountAmount?: IntNullableFilter<"Cart"> | number | null
+    promoAppliedAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
+    requiresPromoVerification?: BoolFilter<"Cart"> | boolean
     expiresAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
     createdAt?: DateTimeFilter<"Cart"> | Date | string
     updatedAt?: DateTimeFilter<"Cart"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    appliedPromoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
     items?: CartItemListRelationFilter
   }, "id" | "userId" | "tempCartId">
 
@@ -11494,6 +14328,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrderInput | SortOrder
     tempCartId?: SortOrderInput | SortOrder
+    appliedPromoCodeId?: SortOrderInput | SortOrder
+    promoDiscountAmount?: SortOrderInput | SortOrder
+    promoAppliedAt?: SortOrderInput | SortOrder
+    requiresPromoVerification?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11511,6 +14349,10 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Cart"> | number
     userId?: StringNullableWithAggregatesFilter<"Cart"> | string | null
     tempCartId?: StringNullableWithAggregatesFilter<"Cart"> | string | null
+    appliedPromoCodeId?: IntNullableWithAggregatesFilter<"Cart"> | number | null
+    promoDiscountAmount?: IntNullableWithAggregatesFilter<"Cart"> | number | null
+    promoAppliedAt?: DateTimeNullableWithAggregatesFilter<"Cart"> | Date | string | null
+    requiresPromoVerification?: BoolWithAggregatesFilter<"Cart"> | boolean
     expiresAt?: DateTimeNullableWithAggregatesFilter<"Cart"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Cart"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Cart"> | Date | string
@@ -11597,8 +14439,13 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    promoCodeId?: IntNullableFilter<"Order"> | number | null
+    promoCodeUsed?: StringNullableFilter<"Order"> | string | null
+    discountAmount?: IntNullableFilter<"Order"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     address?: XOR<AddressScalarRelationFilter, AddressWhereInput>
+    promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
+    promoUsages?: PromoCodeUsageListRelationFilter
     items?: OrderItemListRelationFilter
   }
 
@@ -11613,8 +14460,13 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    promoCodeId?: SortOrderInput | SortOrder
+    promoCodeUsed?: SortOrderInput | SortOrder
+    discountAmount?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
+    promoCode?: PromoCodeOrderByWithRelationInput
+    promoUsages?: PromoCodeUsageOrderByRelationAggregateInput
     items?: OrderItemOrderByRelationAggregateInput
     _relevance?: OrderOrderByRelevanceInput
   }
@@ -11633,8 +14485,13 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    promoCodeId?: IntNullableFilter<"Order"> | number | null
+    promoCodeUsed?: StringNullableFilter<"Order"> | string | null
+    discountAmount?: IntNullableFilter<"Order"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     address?: XOR<AddressScalarRelationFilter, AddressWhereInput>
+    promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
+    promoUsages?: PromoCodeUsageListRelationFilter
     items?: OrderItemListRelationFilter
   }, "id" | "stripeSessionId">
 
@@ -11649,6 +14506,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    promoCodeId?: SortOrderInput | SortOrder
+    promoCodeUsed?: SortOrderInput | SortOrder
+    discountAmount?: SortOrderInput | SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -11670,6 +14530,9 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Order"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    promoCodeId?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    promoCodeUsed?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    discountAmount?: IntNullableWithAggregatesFilter<"Order"> | number | null
   }
 
   export type OrderItemWhereInput = {
@@ -12117,6 +14980,250 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SanitySync"> | Date | string
   }
 
+  export type PromoCodeWhereInput = {
+    AND?: PromoCodeWhereInput | PromoCodeWhereInput[]
+    OR?: PromoCodeWhereInput[]
+    NOT?: PromoCodeWhereInput | PromoCodeWhereInput[]
+    id?: IntFilter<"PromoCode"> | number
+    code?: StringFilter<"PromoCode"> | string
+    name?: StringNullableFilter<"PromoCode"> | string | null
+    description?: StringNullableFilter<"PromoCode"> | string | null
+    discountCents?: IntNullableFilter<"PromoCode"> | number | null
+    discountPercentage?: IntNullableFilter<"PromoCode"> | number | null
+    minOrderAmount?: IntFilter<"PromoCode"> | number
+    maxDiscountAmount?: IntNullableFilter<"PromoCode"> | number | null
+    maxUses?: IntNullableFilter<"PromoCode"> | number | null
+    maxUsesPerUser?: IntFilter<"PromoCode"> | number
+    validFrom?: DateTimeFilter<"PromoCode"> | Date | string
+    validTo?: DateTimeNullableFilter<"PromoCode"> | Date | string | null
+    isPublic?: BoolFilter<"PromoCode"> | boolean
+    isActive?: BoolFilter<"PromoCode"> | boolean
+    isFirstTimeOnly?: BoolFilter<"PromoCode"> | boolean
+    allowedCategories?: JsonNullableFilter<"PromoCode">
+    excludedCategories?: JsonNullableFilter<"PromoCode">
+    allowedProducts?: JsonNullableFilter<"PromoCode">
+    excludedProducts?: JsonNullableFilter<"PromoCode">
+    usageCount?: IntFilter<"PromoCode"> | number
+    createdBy?: StringNullableFilter<"PromoCode"> | string | null
+    lastUsedAt?: DateTimeNullableFilter<"PromoCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"PromoCode"> | Date | string
+    updatedAt?: DateTimeFilter<"PromoCode"> | Date | string
+    carts?: CartListRelationFilter
+    orders?: OrderListRelationFilter
+    userUsages?: PromoCodeUsageListRelationFilter
+  }
+
+  export type PromoCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    discountCents?: SortOrderInput | SortOrder
+    discountPercentage?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    maxUsesPerUser?: SortOrder
+    validFrom?: SortOrder
+    validTo?: SortOrderInput | SortOrder
+    isPublic?: SortOrder
+    isActive?: SortOrder
+    isFirstTimeOnly?: SortOrder
+    allowedCategories?: SortOrderInput | SortOrder
+    excludedCategories?: SortOrderInput | SortOrder
+    allowedProducts?: SortOrderInput | SortOrder
+    excludedProducts?: SortOrderInput | SortOrder
+    usageCount?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    carts?: CartOrderByRelationAggregateInput
+    orders?: OrderOrderByRelationAggregateInput
+    userUsages?: PromoCodeUsageOrderByRelationAggregateInput
+    _relevance?: PromoCodeOrderByRelevanceInput
+  }
+
+  export type PromoCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    code?: string
+    AND?: PromoCodeWhereInput | PromoCodeWhereInput[]
+    OR?: PromoCodeWhereInput[]
+    NOT?: PromoCodeWhereInput | PromoCodeWhereInput[]
+    name?: StringNullableFilter<"PromoCode"> | string | null
+    description?: StringNullableFilter<"PromoCode"> | string | null
+    discountCents?: IntNullableFilter<"PromoCode"> | number | null
+    discountPercentage?: IntNullableFilter<"PromoCode"> | number | null
+    minOrderAmount?: IntFilter<"PromoCode"> | number
+    maxDiscountAmount?: IntNullableFilter<"PromoCode"> | number | null
+    maxUses?: IntNullableFilter<"PromoCode"> | number | null
+    maxUsesPerUser?: IntFilter<"PromoCode"> | number
+    validFrom?: DateTimeFilter<"PromoCode"> | Date | string
+    validTo?: DateTimeNullableFilter<"PromoCode"> | Date | string | null
+    isPublic?: BoolFilter<"PromoCode"> | boolean
+    isActive?: BoolFilter<"PromoCode"> | boolean
+    isFirstTimeOnly?: BoolFilter<"PromoCode"> | boolean
+    allowedCategories?: JsonNullableFilter<"PromoCode">
+    excludedCategories?: JsonNullableFilter<"PromoCode">
+    allowedProducts?: JsonNullableFilter<"PromoCode">
+    excludedProducts?: JsonNullableFilter<"PromoCode">
+    usageCount?: IntFilter<"PromoCode"> | number
+    createdBy?: StringNullableFilter<"PromoCode"> | string | null
+    lastUsedAt?: DateTimeNullableFilter<"PromoCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"PromoCode"> | Date | string
+    updatedAt?: DateTimeFilter<"PromoCode"> | Date | string
+    carts?: CartListRelationFilter
+    orders?: OrderListRelationFilter
+    userUsages?: PromoCodeUsageListRelationFilter
+  }, "id" | "code">
+
+  export type PromoCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    discountCents?: SortOrderInput | SortOrder
+    discountPercentage?: SortOrderInput | SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    maxUsesPerUser?: SortOrder
+    validFrom?: SortOrder
+    validTo?: SortOrderInput | SortOrder
+    isPublic?: SortOrder
+    isActive?: SortOrder
+    isFirstTimeOnly?: SortOrder
+    allowedCategories?: SortOrderInput | SortOrder
+    excludedCategories?: SortOrderInput | SortOrder
+    allowedProducts?: SortOrderInput | SortOrder
+    excludedProducts?: SortOrderInput | SortOrder
+    usageCount?: SortOrder
+    createdBy?: SortOrderInput | SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PromoCodeCountOrderByAggregateInput
+    _avg?: PromoCodeAvgOrderByAggregateInput
+    _max?: PromoCodeMaxOrderByAggregateInput
+    _min?: PromoCodeMinOrderByAggregateInput
+    _sum?: PromoCodeSumOrderByAggregateInput
+  }
+
+  export type PromoCodeScalarWhereWithAggregatesInput = {
+    AND?: PromoCodeScalarWhereWithAggregatesInput | PromoCodeScalarWhereWithAggregatesInput[]
+    OR?: PromoCodeScalarWhereWithAggregatesInput[]
+    NOT?: PromoCodeScalarWhereWithAggregatesInput | PromoCodeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PromoCode"> | number
+    code?: StringWithAggregatesFilter<"PromoCode"> | string
+    name?: StringNullableWithAggregatesFilter<"PromoCode"> | string | null
+    description?: StringNullableWithAggregatesFilter<"PromoCode"> | string | null
+    discountCents?: IntNullableWithAggregatesFilter<"PromoCode"> | number | null
+    discountPercentage?: IntNullableWithAggregatesFilter<"PromoCode"> | number | null
+    minOrderAmount?: IntWithAggregatesFilter<"PromoCode"> | number
+    maxDiscountAmount?: IntNullableWithAggregatesFilter<"PromoCode"> | number | null
+    maxUses?: IntNullableWithAggregatesFilter<"PromoCode"> | number | null
+    maxUsesPerUser?: IntWithAggregatesFilter<"PromoCode"> | number
+    validFrom?: DateTimeWithAggregatesFilter<"PromoCode"> | Date | string
+    validTo?: DateTimeNullableWithAggregatesFilter<"PromoCode"> | Date | string | null
+    isPublic?: BoolWithAggregatesFilter<"PromoCode"> | boolean
+    isActive?: BoolWithAggregatesFilter<"PromoCode"> | boolean
+    isFirstTimeOnly?: BoolWithAggregatesFilter<"PromoCode"> | boolean
+    allowedCategories?: JsonNullableWithAggregatesFilter<"PromoCode">
+    excludedCategories?: JsonNullableWithAggregatesFilter<"PromoCode">
+    allowedProducts?: JsonNullableWithAggregatesFilter<"PromoCode">
+    excludedProducts?: JsonNullableWithAggregatesFilter<"PromoCode">
+    usageCount?: IntWithAggregatesFilter<"PromoCode"> | number
+    createdBy?: StringNullableWithAggregatesFilter<"PromoCode"> | string | null
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"PromoCode"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PromoCode"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PromoCode"> | Date | string
+  }
+
+  export type PromoCodeUsageWhereInput = {
+    AND?: PromoCodeUsageWhereInput | PromoCodeUsageWhereInput[]
+    OR?: PromoCodeUsageWhereInput[]
+    NOT?: PromoCodeUsageWhereInput | PromoCodeUsageWhereInput[]
+    id?: IntFilter<"PromoCodeUsage"> | number
+    promoCodeId?: IntFilter<"PromoCodeUsage"> | number
+    userId?: StringFilter<"PromoCodeUsage"> | string
+    orderId?: IntNullableFilter<"PromoCodeUsage"> | number | null
+    discountApplied?: IntFilter<"PromoCodeUsage"> | number
+    orderAmount?: IntFilter<"PromoCodeUsage"> | number
+    status?: StringFilter<"PromoCodeUsage"> | string
+    failureReason?: StringNullableFilter<"PromoCodeUsage"> | string | null
+    usedAt?: DateTimeFilter<"PromoCodeUsage"> | Date | string
+    promoCode?: XOR<PromoCodeScalarRelationFilter, PromoCodeWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }
+
+  export type PromoCodeUsageOrderByWithRelationInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    userId?: SortOrder
+    orderId?: SortOrderInput | SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    usedAt?: SortOrder
+    promoCode?: PromoCodeOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    order?: OrderOrderByWithRelationInput
+    _relevance?: PromoCodeUsageOrderByRelevanceInput
+  }
+
+  export type PromoCodeUsageWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    promoCodeId_orderId?: PromoCodeUsagePromoCodeIdOrderIdCompoundUniqueInput
+    AND?: PromoCodeUsageWhereInput | PromoCodeUsageWhereInput[]
+    OR?: PromoCodeUsageWhereInput[]
+    NOT?: PromoCodeUsageWhereInput | PromoCodeUsageWhereInput[]
+    promoCodeId?: IntFilter<"PromoCodeUsage"> | number
+    userId?: StringFilter<"PromoCodeUsage"> | string
+    orderId?: IntNullableFilter<"PromoCodeUsage"> | number | null
+    discountApplied?: IntFilter<"PromoCodeUsage"> | number
+    orderAmount?: IntFilter<"PromoCodeUsage"> | number
+    status?: StringFilter<"PromoCodeUsage"> | string
+    failureReason?: StringNullableFilter<"PromoCodeUsage"> | string | null
+    usedAt?: DateTimeFilter<"PromoCodeUsage"> | Date | string
+    promoCode?: XOR<PromoCodeScalarRelationFilter, PromoCodeWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }, "id" | "promoCodeId_orderId">
+
+  export type PromoCodeUsageOrderByWithAggregationInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    userId?: SortOrder
+    orderId?: SortOrderInput | SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    usedAt?: SortOrder
+    _count?: PromoCodeUsageCountOrderByAggregateInput
+    _avg?: PromoCodeUsageAvgOrderByAggregateInput
+    _max?: PromoCodeUsageMaxOrderByAggregateInput
+    _min?: PromoCodeUsageMinOrderByAggregateInput
+    _sum?: PromoCodeUsageSumOrderByAggregateInput
+  }
+
+  export type PromoCodeUsageScalarWhereWithAggregatesInput = {
+    AND?: PromoCodeUsageScalarWhereWithAggregatesInput | PromoCodeUsageScalarWhereWithAggregatesInput[]
+    OR?: PromoCodeUsageScalarWhereWithAggregatesInput[]
+    NOT?: PromoCodeUsageScalarWhereWithAggregatesInput | PromoCodeUsageScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PromoCodeUsage"> | number
+    promoCodeId?: IntWithAggregatesFilter<"PromoCodeUsage"> | number
+    userId?: StringWithAggregatesFilter<"PromoCodeUsage"> | string
+    orderId?: IntNullableWithAggregatesFilter<"PromoCodeUsage"> | number | null
+    discountApplied?: IntWithAggregatesFilter<"PromoCodeUsage"> | number
+    orderAmount?: IntWithAggregatesFilter<"PromoCodeUsage"> | number
+    status?: StringWithAggregatesFilter<"PromoCodeUsage"> | string
+    failureReason?: StringNullableWithAggregatesFilter<"PromoCodeUsage"> | string | null
+    usedAt?: DateTimeWithAggregatesFilter<"PromoCodeUsage"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     email: string
@@ -12128,6 +15235,7 @@ export namespace Prisma {
     cart?: CartCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     addresses?: AddressCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -12141,6 +15249,7 @@ export namespace Prisma {
     cart?: CartUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -12154,6 +15263,7 @@ export namespace Prisma {
     cart?: CartUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     addresses?: AddressUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -12167,6 +15277,7 @@ export namespace Prisma {
     cart?: CartUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -12201,10 +15312,14 @@ export namespace Prisma {
 
   export type CartCreateInput = {
     tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutCartInput
+    appliedPromoCode?: PromoCodeCreateNestedOneWithoutCartsInput
     items?: CartItemCreateNestedManyWithoutCartInput
   }
 
@@ -12212,6 +15327,10 @@ export namespace Prisma {
     id?: number
     userId?: string | null
     tempCartId?: string | null
+    appliedPromoCodeId?: number | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12220,10 +15339,14 @@ export namespace Prisma {
 
   export type CartUpdateInput = {
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutCartNestedInput
+    appliedPromoCode?: PromoCodeUpdateOneWithoutCartsNestedInput
     items?: CartItemUpdateManyWithoutCartNestedInput
   }
 
@@ -12231,6 +15354,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedPromoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12241,6 +15368,10 @@ export namespace Prisma {
     id?: number
     userId?: string | null
     tempCartId?: string | null
+    appliedPromoCodeId?: number | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12248,6 +15379,9 @@ export namespace Prisma {
 
   export type CartUpdateManyMutationInput = {
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12257,6 +15391,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedPromoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12328,8 +15466,12 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
     user: UserCreateNestedOneWithoutOrdersInput
     address: AddressCreateNestedOneWithoutOrdersInput
+    promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
 
@@ -12344,6 +15486,10 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -12355,8 +15501,12 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneRequiredWithoutOrdersNestedInput
+    promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
 
@@ -12371,6 +15521,10 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -12385,6 +15539,9 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -12395,6 +15552,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -12408,6 +15567,9 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type OrderItemCreateInput = {
@@ -12896,6 +16058,282 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PromoCodeCreateInput = {
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartCreateNestedManyWithoutAppliedPromoCodeInput
+    orders?: OrderCreateNestedManyWithoutPromoCodeInput
+    userUsages?: PromoCodeUsageCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeUncheckedCreateInput = {
+    id?: number
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartUncheckedCreateNestedManyWithoutAppliedPromoCodeInput
+    orders?: OrderUncheckedCreateNestedManyWithoutPromoCodeInput
+    userUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeUpdateInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUpdateManyWithoutAppliedPromoCodeNestedInput
+    orders?: OrderUpdateManyWithoutPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUncheckedUpdateManyWithoutAppliedPromoCodeNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeCreateManyInput = {
+    id?: number
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PromoCodeUpdateManyMutationInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageCreateInput = {
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+    promoCode: PromoCodeCreateNestedOneWithoutUserUsagesInput
+    user: UserCreateNestedOneWithoutPromoUsagesInput
+    order?: OrderCreateNestedOneWithoutPromoUsagesInput
+  }
+
+  export type PromoCodeUsageUncheckedCreateInput = {
+    id?: number
+    promoCodeId: number
+    userId: string
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type PromoCodeUsageUpdateInput = {
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCode?: PromoCodeUpdateOneRequiredWithoutUserUsagesNestedInput
+    user?: UserUpdateOneRequiredWithoutPromoUsagesNestedInput
+    order?: OrderUpdateOneWithoutPromoUsagesNestedInput
+  }
+
+  export type PromoCodeUsageUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageCreateManyInput = {
+    id?: number
+    promoCodeId: number
+    userId: string
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type PromoCodeUsageUpdateManyMutationInput = {
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -12959,6 +16397,12 @@ export namespace Prisma {
     none?: AddressWhereInput
   }
 
+  export type PromoCodeUsageListRelationFilter = {
+    every?: PromoCodeUsageWhereInput
+    some?: PromoCodeUsageWhereInput
+    none?: PromoCodeUsageWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -12969,6 +16413,10 @@ export namespace Prisma {
   }
 
   export type AddressOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PromoCodeUsageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13077,6 +16525,17 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -13091,6 +16550,11 @@ export namespace Prisma {
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
+  }
+
+  export type PromoCodeNullableScalarRelationFilter = {
+    is?: PromoCodeWhereInput | null
+    isNot?: PromoCodeWhereInput | null
   }
 
   export type CartItemListRelationFilter = {
@@ -13113,6 +16577,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     tempCartId?: SortOrder
+    appliedPromoCodeId?: SortOrder
+    promoDiscountAmount?: SortOrder
+    promoAppliedAt?: SortOrder
+    requiresPromoVerification?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13120,12 +16588,18 @@ export namespace Prisma {
 
   export type CartAvgOrderByAggregateInput = {
     id?: SortOrder
+    appliedPromoCodeId?: SortOrder
+    promoDiscountAmount?: SortOrder
   }
 
   export type CartMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     tempCartId?: SortOrder
+    appliedPromoCodeId?: SortOrder
+    promoDiscountAmount?: SortOrder
+    promoAppliedAt?: SortOrder
+    requiresPromoVerification?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13135,6 +16609,10 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     tempCartId?: SortOrder
+    appliedPromoCodeId?: SortOrder
+    promoDiscountAmount?: SortOrder
+    promoAppliedAt?: SortOrder
+    requiresPromoVerification?: SortOrder
     expiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13142,6 +16620,8 @@ export namespace Prisma {
 
   export type CartSumOrderByAggregateInput = {
     id?: SortOrder
+    appliedPromoCodeId?: SortOrder
+    promoDiscountAmount?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -13158,6 +16638,22 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13271,12 +16767,17 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    promoCodeId?: SortOrder
+    promoCodeUsed?: SortOrder
+    discountAmount?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
     id?: SortOrder
     addressId?: SortOrder
     amountTotal?: SortOrder
+    promoCodeId?: SortOrder
+    discountAmount?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -13290,6 +16791,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    promoCodeId?: SortOrder
+    promoCodeUsed?: SortOrder
+    discountAmount?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -13303,12 +16807,17 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    promoCodeId?: SortOrder
+    promoCodeUsed?: SortOrder
+    discountAmount?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
     id?: SortOrder
     addressId?: SortOrder
     amountTotal?: SortOrder
+    promoCodeId?: SortOrder
+    discountAmount?: SortOrder
   }
 
   export type OrderScalarRelationFilter = {
@@ -13443,17 +16952,6 @@ export namespace Prisma {
   export type VariantSumOrderByAggregateInput = {
     stockQuantity?: SortOrder
   }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -13541,22 +17039,6 @@ export namespace Prisma {
 
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -13692,6 +17174,190 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type CartListRelationFilter = {
+    every?: CartWhereInput
+    some?: CartWhereInput
+    none?: CartWhereInput
+  }
+
+  export type CartOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PromoCodeOrderByRelevanceInput = {
+    fields: PromoCodeOrderByRelevanceFieldEnum | PromoCodeOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PromoCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    discountCents?: SortOrder
+    discountPercentage?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrder
+    maxUses?: SortOrder
+    maxUsesPerUser?: SortOrder
+    validFrom?: SortOrder
+    validTo?: SortOrder
+    isPublic?: SortOrder
+    isActive?: SortOrder
+    isFirstTimeOnly?: SortOrder
+    allowedCategories?: SortOrder
+    excludedCategories?: SortOrder
+    allowedProducts?: SortOrder
+    excludedProducts?: SortOrder
+    usageCount?: SortOrder
+    createdBy?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromoCodeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    discountCents?: SortOrder
+    discountPercentage?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrder
+    maxUses?: SortOrder
+    maxUsesPerUser?: SortOrder
+    usageCount?: SortOrder
+  }
+
+  export type PromoCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    discountCents?: SortOrder
+    discountPercentage?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrder
+    maxUses?: SortOrder
+    maxUsesPerUser?: SortOrder
+    validFrom?: SortOrder
+    validTo?: SortOrder
+    isPublic?: SortOrder
+    isActive?: SortOrder
+    isFirstTimeOnly?: SortOrder
+    usageCount?: SortOrder
+    createdBy?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromoCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    discountCents?: SortOrder
+    discountPercentage?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrder
+    maxUses?: SortOrder
+    maxUsesPerUser?: SortOrder
+    validFrom?: SortOrder
+    validTo?: SortOrder
+    isPublic?: SortOrder
+    isActive?: SortOrder
+    isFirstTimeOnly?: SortOrder
+    usageCount?: SortOrder
+    createdBy?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PromoCodeSumOrderByAggregateInput = {
+    id?: SortOrder
+    discountCents?: SortOrder
+    discountPercentage?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscountAmount?: SortOrder
+    maxUses?: SortOrder
+    maxUsesPerUser?: SortOrder
+    usageCount?: SortOrder
+  }
+
+  export type PromoCodeScalarRelationFilter = {
+    is?: PromoCodeWhereInput
+    isNot?: PromoCodeWhereInput
+  }
+
+  export type OrderNullableScalarRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
+  export type PromoCodeUsageOrderByRelevanceInput = {
+    fields: PromoCodeUsageOrderByRelevanceFieldEnum | PromoCodeUsageOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PromoCodeUsagePromoCodeIdOrderIdCompoundUniqueInput = {
+    promoCodeId: number
+    orderId: number
+  }
+
+  export type PromoCodeUsageCountOrderByAggregateInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    userId?: SortOrder
+    orderId?: SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    usedAt?: SortOrder
+  }
+
+  export type PromoCodeUsageAvgOrderByAggregateInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    orderId?: SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+  }
+
+  export type PromoCodeUsageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    userId?: SortOrder
+    orderId?: SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    usedAt?: SortOrder
+  }
+
+  export type PromoCodeUsageMinOrderByAggregateInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    userId?: SortOrder
+    orderId?: SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    usedAt?: SortOrder
+  }
+
+  export type PromoCodeUsageSumOrderByAggregateInput = {
+    id?: SortOrder
+    promoCodeId?: SortOrder
+    orderId?: SortOrder
+    discountApplied?: SortOrder
+    orderAmount?: SortOrder
+  }
+
   export type CartCreateNestedOneWithoutUserInput = {
     create?: XOR<CartCreateWithoutUserInput, CartUncheckedCreateWithoutUserInput>
     connectOrCreate?: CartCreateOrConnectWithoutUserInput
@@ -13712,6 +17378,13 @@ export namespace Prisma {
     connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
   }
 
+  export type PromoCodeUsageCreateNestedManyWithoutUserInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput> | PromoCodeUsageCreateWithoutUserInput[] | PromoCodeUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutUserInput | PromoCodeUsageCreateOrConnectWithoutUserInput[]
+    createMany?: PromoCodeUsageCreateManyUserInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+  }
+
   export type CartUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<CartCreateWithoutUserInput, CartUncheckedCreateWithoutUserInput>
     connectOrCreate?: CartCreateOrConnectWithoutUserInput
@@ -13730,6 +17403,13 @@ export namespace Prisma {
     connectOrCreate?: AddressCreateOrConnectWithoutUserInput | AddressCreateOrConnectWithoutUserInput[]
     createMany?: AddressCreateManyUserInputEnvelope
     connect?: AddressWhereUniqueInput | AddressWhereUniqueInput[]
+  }
+
+  export type PromoCodeUsageUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput> | PromoCodeUsageCreateWithoutUserInput[] | PromoCodeUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutUserInput | PromoCodeUsageCreateOrConnectWithoutUserInput[]
+    createMany?: PromoCodeUsageCreateManyUserInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -13786,6 +17466,20 @@ export namespace Prisma {
     deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
   }
 
+  export type PromoCodeUsageUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput> | PromoCodeUsageCreateWithoutUserInput[] | PromoCodeUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutUserInput | PromoCodeUsageCreateOrConnectWithoutUserInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutUserInput | PromoCodeUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PromoCodeUsageCreateManyUserInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutUserInput | PromoCodeUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutUserInput | PromoCodeUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+  }
+
   export type CartUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<CartCreateWithoutUserInput, CartUncheckedCreateWithoutUserInput>
     connectOrCreate?: CartCreateOrConnectWithoutUserInput
@@ -13824,10 +17518,30 @@ export namespace Prisma {
     deleteMany?: AddressScalarWhereInput | AddressScalarWhereInput[]
   }
 
+  export type PromoCodeUsageUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput> | PromoCodeUsageCreateWithoutUserInput[] | PromoCodeUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutUserInput | PromoCodeUsageCreateOrConnectWithoutUserInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutUserInput | PromoCodeUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PromoCodeUsageCreateManyUserInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutUserInput | PromoCodeUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutUserInput | PromoCodeUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutCartInput = {
     create?: XOR<UserCreateWithoutCartInput, UserUncheckedCreateWithoutCartInput>
     connectOrCreate?: UserCreateOrConnectWithoutCartInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type PromoCodeCreateNestedOneWithoutCartsInput = {
+    create?: XOR<PromoCodeCreateWithoutCartsInput, PromoCodeUncheckedCreateWithoutCartsInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutCartsInput
+    connect?: PromoCodeWhereUniqueInput
   }
 
   export type CartItemCreateNestedManyWithoutCartInput = {
@@ -13844,6 +17558,14 @@ export namespace Prisma {
     connect?: CartItemWhereUniqueInput | CartItemWhereUniqueInput[]
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -13856,6 +17578,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCartInput, UserUpdateWithoutCartInput>, UserUncheckedUpdateWithoutCartInput>
+  }
+
+  export type PromoCodeUpdateOneWithoutCartsNestedInput = {
+    create?: XOR<PromoCodeCreateWithoutCartsInput, PromoCodeUncheckedCreateWithoutCartsInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutCartsInput
+    upsert?: PromoCodeUpsertWithoutCartsInput
+    disconnect?: PromoCodeWhereInput | boolean
+    delete?: PromoCodeWhereInput | boolean
+    connect?: PromoCodeWhereUniqueInput
+    update?: XOR<XOR<PromoCodeUpdateToOneWithWhereWithoutCartsInput, PromoCodeUpdateWithoutCartsInput>, PromoCodeUncheckedUpdateWithoutCartsInput>
   }
 
   export type CartItemUpdateManyWithoutCartNestedInput = {
@@ -13934,11 +17666,31 @@ export namespace Prisma {
     connect?: AddressWhereUniqueInput
   }
 
+  export type PromoCodeCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<PromoCodeCreateWithoutOrdersInput, PromoCodeUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutOrdersInput
+    connect?: PromoCodeWhereUniqueInput
+  }
+
+  export type PromoCodeUsageCreateNestedManyWithoutOrderInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput> | PromoCodeUsageCreateWithoutOrderInput[] | PromoCodeUsageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutOrderInput | PromoCodeUsageCreateOrConnectWithoutOrderInput[]
+    createMany?: PromoCodeUsageCreateManyOrderInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+  }
+
   export type OrderItemCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput> | PromoCodeUsageCreateWithoutOrderInput[] | PromoCodeUsageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutOrderInput | PromoCodeUsageCreateOrConnectWithoutOrderInput[]
+    createMany?: PromoCodeUsageCreateManyOrderInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
   }
 
   export type OrderItemUncheckedCreateNestedManyWithoutOrderInput = {
@@ -13964,6 +17716,30 @@ export namespace Prisma {
     update?: XOR<XOR<AddressUpdateToOneWithWhereWithoutOrdersInput, AddressUpdateWithoutOrdersInput>, AddressUncheckedUpdateWithoutOrdersInput>
   }
 
+  export type PromoCodeUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<PromoCodeCreateWithoutOrdersInput, PromoCodeUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutOrdersInput
+    upsert?: PromoCodeUpsertWithoutOrdersInput
+    disconnect?: PromoCodeWhereInput | boolean
+    delete?: PromoCodeWhereInput | boolean
+    connect?: PromoCodeWhereUniqueInput
+    update?: XOR<XOR<PromoCodeUpdateToOneWithWhereWithoutOrdersInput, PromoCodeUpdateWithoutOrdersInput>, PromoCodeUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type PromoCodeUsageUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput> | PromoCodeUsageCreateWithoutOrderInput[] | PromoCodeUsageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutOrderInput | PromoCodeUsageCreateOrConnectWithoutOrderInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutOrderInput | PromoCodeUsageUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: PromoCodeUsageCreateManyOrderInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutOrderInput | PromoCodeUsageUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutOrderInput | PromoCodeUsageUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+  }
+
   export type OrderItemUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -13976,6 +17752,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput> | PromoCodeUsageCreateWithoutOrderInput[] | PromoCodeUsageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutOrderInput | PromoCodeUsageCreateOrConnectWithoutOrderInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutOrderInput | PromoCodeUsageUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: PromoCodeUsageCreateManyOrderInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutOrderInput | PromoCodeUsageUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutOrderInput | PromoCodeUsageUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
   }
 
   export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
@@ -14132,14 +17922,6 @@ export namespace Prisma {
     connect?: VariantWhereUniqueInput | VariantWhereUniqueInput[]
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type VariantUpdateManyWithoutProductNestedInput = {
     create?: XOR<VariantCreateWithoutProductInput, VariantUncheckedCreateWithoutProductInput> | VariantCreateWithoutProductInput[] | VariantUncheckedCreateWithoutProductInput[]
     connectOrCreate?: VariantCreateOrConnectWithoutProductInput | VariantCreateOrConnectWithoutProductInput[]
@@ -14222,6 +18004,176 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutAddressInput | OrderUpdateWithWhereUniqueWithoutAddressInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutAddressInput | OrderUpdateManyWithWhereWithoutAddressInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type CartCreateNestedManyWithoutAppliedPromoCodeInput = {
+    create?: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput> | CartCreateWithoutAppliedPromoCodeInput[] | CartUncheckedCreateWithoutAppliedPromoCodeInput[]
+    connectOrCreate?: CartCreateOrConnectWithoutAppliedPromoCodeInput | CartCreateOrConnectWithoutAppliedPromoCodeInput[]
+    createMany?: CartCreateManyAppliedPromoCodeInputEnvelope
+    connect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+  }
+
+  export type OrderCreateNestedManyWithoutPromoCodeInput = {
+    create?: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput> | OrderCreateWithoutPromoCodeInput[] | OrderUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoCodeInput | OrderCreateOrConnectWithoutPromoCodeInput[]
+    createMany?: OrderCreateManyPromoCodeInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type PromoCodeUsageCreateNestedManyWithoutPromoCodeInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput> | PromoCodeUsageCreateWithoutPromoCodeInput[] | PromoCodeUsageUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutPromoCodeInput | PromoCodeUsageCreateOrConnectWithoutPromoCodeInput[]
+    createMany?: PromoCodeUsageCreateManyPromoCodeInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+  }
+
+  export type CartUncheckedCreateNestedManyWithoutAppliedPromoCodeInput = {
+    create?: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput> | CartCreateWithoutAppliedPromoCodeInput[] | CartUncheckedCreateWithoutAppliedPromoCodeInput[]
+    connectOrCreate?: CartCreateOrConnectWithoutAppliedPromoCodeInput | CartCreateOrConnectWithoutAppliedPromoCodeInput[]
+    createMany?: CartCreateManyAppliedPromoCodeInputEnvelope
+    connect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+  }
+
+  export type OrderUncheckedCreateNestedManyWithoutPromoCodeInput = {
+    create?: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput> | OrderCreateWithoutPromoCodeInput[] | OrderUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoCodeInput | OrderCreateOrConnectWithoutPromoCodeInput[]
+    createMany?: OrderCreateManyPromoCodeInputEnvelope
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type PromoCodeUsageUncheckedCreateNestedManyWithoutPromoCodeInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput> | PromoCodeUsageCreateWithoutPromoCodeInput[] | PromoCodeUsageUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutPromoCodeInput | PromoCodeUsageCreateOrConnectWithoutPromoCodeInput[]
+    createMany?: PromoCodeUsageCreateManyPromoCodeInputEnvelope
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+  }
+
+  export type CartUpdateManyWithoutAppliedPromoCodeNestedInput = {
+    create?: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput> | CartCreateWithoutAppliedPromoCodeInput[] | CartUncheckedCreateWithoutAppliedPromoCodeInput[]
+    connectOrCreate?: CartCreateOrConnectWithoutAppliedPromoCodeInput | CartCreateOrConnectWithoutAppliedPromoCodeInput[]
+    upsert?: CartUpsertWithWhereUniqueWithoutAppliedPromoCodeInput | CartUpsertWithWhereUniqueWithoutAppliedPromoCodeInput[]
+    createMany?: CartCreateManyAppliedPromoCodeInputEnvelope
+    set?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    disconnect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    delete?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    connect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    update?: CartUpdateWithWhereUniqueWithoutAppliedPromoCodeInput | CartUpdateWithWhereUniqueWithoutAppliedPromoCodeInput[]
+    updateMany?: CartUpdateManyWithWhereWithoutAppliedPromoCodeInput | CartUpdateManyWithWhereWithoutAppliedPromoCodeInput[]
+    deleteMany?: CartScalarWhereInput | CartScalarWhereInput[]
+  }
+
+  export type OrderUpdateManyWithoutPromoCodeNestedInput = {
+    create?: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput> | OrderCreateWithoutPromoCodeInput[] | OrderUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoCodeInput | OrderCreateOrConnectWithoutPromoCodeInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutPromoCodeInput | OrderUpsertWithWhereUniqueWithoutPromoCodeInput[]
+    createMany?: OrderCreateManyPromoCodeInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutPromoCodeInput | OrderUpdateWithWhereUniqueWithoutPromoCodeInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutPromoCodeInput | OrderUpdateManyWithWhereWithoutPromoCodeInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type PromoCodeUsageUpdateManyWithoutPromoCodeNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput> | PromoCodeUsageCreateWithoutPromoCodeInput[] | PromoCodeUsageUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutPromoCodeInput | PromoCodeUsageCreateOrConnectWithoutPromoCodeInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutPromoCodeInput | PromoCodeUsageUpsertWithWhereUniqueWithoutPromoCodeInput[]
+    createMany?: PromoCodeUsageCreateManyPromoCodeInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutPromoCodeInput | PromoCodeUsageUpdateWithWhereUniqueWithoutPromoCodeInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutPromoCodeInput | PromoCodeUsageUpdateManyWithWhereWithoutPromoCodeInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+  }
+
+  export type CartUncheckedUpdateManyWithoutAppliedPromoCodeNestedInput = {
+    create?: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput> | CartCreateWithoutAppliedPromoCodeInput[] | CartUncheckedCreateWithoutAppliedPromoCodeInput[]
+    connectOrCreate?: CartCreateOrConnectWithoutAppliedPromoCodeInput | CartCreateOrConnectWithoutAppliedPromoCodeInput[]
+    upsert?: CartUpsertWithWhereUniqueWithoutAppliedPromoCodeInput | CartUpsertWithWhereUniqueWithoutAppliedPromoCodeInput[]
+    createMany?: CartCreateManyAppliedPromoCodeInputEnvelope
+    set?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    disconnect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    delete?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    connect?: CartWhereUniqueInput | CartWhereUniqueInput[]
+    update?: CartUpdateWithWhereUniqueWithoutAppliedPromoCodeInput | CartUpdateWithWhereUniqueWithoutAppliedPromoCodeInput[]
+    updateMany?: CartUpdateManyWithWhereWithoutAppliedPromoCodeInput | CartUpdateManyWithWhereWithoutAppliedPromoCodeInput[]
+    deleteMany?: CartScalarWhereInput | CartScalarWhereInput[]
+  }
+
+  export type OrderUncheckedUpdateManyWithoutPromoCodeNestedInput = {
+    create?: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput> | OrderCreateWithoutPromoCodeInput[] | OrderUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoCodeInput | OrderCreateOrConnectWithoutPromoCodeInput[]
+    upsert?: OrderUpsertWithWhereUniqueWithoutPromoCodeInput | OrderUpsertWithWhereUniqueWithoutPromoCodeInput[]
+    createMany?: OrderCreateManyPromoCodeInputEnvelope
+    set?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    disconnect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    delete?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+    update?: OrderUpdateWithWhereUniqueWithoutPromoCodeInput | OrderUpdateWithWhereUniqueWithoutPromoCodeInput[]
+    updateMany?: OrderUpdateManyWithWhereWithoutPromoCodeInput | OrderUpdateManyWithWhereWithoutPromoCodeInput[]
+    deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeNestedInput = {
+    create?: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput> | PromoCodeUsageCreateWithoutPromoCodeInput[] | PromoCodeUsageUncheckedCreateWithoutPromoCodeInput[]
+    connectOrCreate?: PromoCodeUsageCreateOrConnectWithoutPromoCodeInput | PromoCodeUsageCreateOrConnectWithoutPromoCodeInput[]
+    upsert?: PromoCodeUsageUpsertWithWhereUniqueWithoutPromoCodeInput | PromoCodeUsageUpsertWithWhereUniqueWithoutPromoCodeInput[]
+    createMany?: PromoCodeUsageCreateManyPromoCodeInputEnvelope
+    set?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    disconnect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    delete?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    connect?: PromoCodeUsageWhereUniqueInput | PromoCodeUsageWhereUniqueInput[]
+    update?: PromoCodeUsageUpdateWithWhereUniqueWithoutPromoCodeInput | PromoCodeUsageUpdateWithWhereUniqueWithoutPromoCodeInput[]
+    updateMany?: PromoCodeUsageUpdateManyWithWhereWithoutPromoCodeInput | PromoCodeUsageUpdateManyWithWhereWithoutPromoCodeInput[]
+    deleteMany?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+  }
+
+  export type PromoCodeCreateNestedOneWithoutUserUsagesInput = {
+    create?: XOR<PromoCodeCreateWithoutUserUsagesInput, PromoCodeUncheckedCreateWithoutUserUsagesInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutUserUsagesInput
+    connect?: PromoCodeWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPromoUsagesInput = {
+    create?: XOR<UserCreateWithoutPromoUsagesInput, UserUncheckedCreateWithoutPromoUsagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPromoUsagesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type OrderCreateNestedOneWithoutPromoUsagesInput = {
+    create?: XOR<OrderCreateWithoutPromoUsagesInput, OrderUncheckedCreateWithoutPromoUsagesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoUsagesInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type PromoCodeUpdateOneRequiredWithoutUserUsagesNestedInput = {
+    create?: XOR<PromoCodeCreateWithoutUserUsagesInput, PromoCodeUncheckedCreateWithoutUserUsagesInput>
+    connectOrCreate?: PromoCodeCreateOrConnectWithoutUserUsagesInput
+    upsert?: PromoCodeUpsertWithoutUserUsagesInput
+    connect?: PromoCodeWhereUniqueInput
+    update?: XOR<XOR<PromoCodeUpdateToOneWithWhereWithoutUserUsagesInput, PromoCodeUpdateWithoutUserUsagesInput>, PromoCodeUncheckedUpdateWithoutUserUsagesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutPromoUsagesNestedInput = {
+    create?: XOR<UserCreateWithoutPromoUsagesInput, UserUncheckedCreateWithoutPromoUsagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPromoUsagesInput
+    upsert?: UserUpsertWithoutPromoUsagesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPromoUsagesInput, UserUpdateWithoutPromoUsagesInput>, UserUncheckedUpdateWithoutPromoUsagesInput>
+  }
+
+  export type OrderUpdateOneWithoutPromoUsagesNestedInput = {
+    create?: XOR<OrderCreateWithoutPromoUsagesInput, OrderUncheckedCreateWithoutPromoUsagesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutPromoUsagesInput
+    upsert?: OrderUpsertWithoutPromoUsagesInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutPromoUsagesInput, OrderUpdateWithoutPromoUsagesInput>, OrderUncheckedUpdateWithoutPromoUsagesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -14388,20 +18340,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -14427,6 +18365,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -14454,15 +18406,23 @@ export namespace Prisma {
 
   export type CartCreateWithoutUserInput = {
     tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    appliedPromoCode?: PromoCodeCreateNestedOneWithoutCartsInput
     items?: CartItemCreateNestedManyWithoutCartInput
   }
 
   export type CartUncheckedCreateWithoutUserInput = {
     id?: number
     tempCartId?: string | null
+    appliedPromoCodeId?: number | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14482,7 +18442,11 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
     address: AddressCreateNestedOneWithoutOrdersInput
+    promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
 
@@ -14496,6 +18460,10 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -14546,6 +18514,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PromoCodeUsageCreateWithoutUserInput = {
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+    promoCode: PromoCodeCreateNestedOneWithoutUserUsagesInput
+    order?: OrderCreateNestedOneWithoutPromoUsagesInput
+  }
+
+  export type PromoCodeUsageUncheckedCreateWithoutUserInput = {
+    id?: number
+    promoCodeId: number
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type PromoCodeUsageCreateOrConnectWithoutUserInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    create: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type PromoCodeUsageCreateManyUserInputEnvelope = {
+    data: PromoCodeUsageCreateManyUserInput | PromoCodeUsageCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CartUpsertWithoutUserInput = {
     update: XOR<CartUpdateWithoutUserInput, CartUncheckedUpdateWithoutUserInput>
     create: XOR<CartCreateWithoutUserInput, CartUncheckedCreateWithoutUserInput>
@@ -14559,15 +18558,23 @@ export namespace Prisma {
 
   export type CartUpdateWithoutUserInput = {
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appliedPromoCode?: PromoCodeUpdateOneWithoutCartsNestedInput
     items?: CartItemUpdateManyWithoutCartNestedInput
   }
 
   export type CartUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedPromoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14604,6 +18611,9 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    promoCodeId?: IntNullableFilter<"Order"> | number | null
+    promoCodeUsed?: StringNullableFilter<"Order"> | string | null
+    discountAmount?: IntNullableFilter<"Order"> | number | null
   }
 
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
@@ -14639,6 +18649,37 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Address"> | Date | string
   }
 
+  export type PromoCodeUsageUpsertWithWhereUniqueWithoutUserInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    update: XOR<PromoCodeUsageUpdateWithoutUserInput, PromoCodeUsageUncheckedUpdateWithoutUserInput>
+    create: XOR<PromoCodeUsageCreateWithoutUserInput, PromoCodeUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type PromoCodeUsageUpdateWithWhereUniqueWithoutUserInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    data: XOR<PromoCodeUsageUpdateWithoutUserInput, PromoCodeUsageUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PromoCodeUsageUpdateManyWithWhereWithoutUserInput = {
+    where: PromoCodeUsageScalarWhereInput
+    data: XOR<PromoCodeUsageUpdateManyMutationInput, PromoCodeUsageUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PromoCodeUsageScalarWhereInput = {
+    AND?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+    OR?: PromoCodeUsageScalarWhereInput[]
+    NOT?: PromoCodeUsageScalarWhereInput | PromoCodeUsageScalarWhereInput[]
+    id?: IntFilter<"PromoCodeUsage"> | number
+    promoCodeId?: IntFilter<"PromoCodeUsage"> | number
+    userId?: StringFilter<"PromoCodeUsage"> | string
+    orderId?: IntNullableFilter<"PromoCodeUsage"> | number | null
+    discountApplied?: IntFilter<"PromoCodeUsage"> | number
+    orderAmount?: IntFilter<"PromoCodeUsage"> | number
+    status?: StringFilter<"PromoCodeUsage"> | string
+    failureReason?: StringNullableFilter<"PromoCodeUsage"> | string | null
+    usedAt?: DateTimeFilter<"PromoCodeUsage"> | Date | string
+  }
+
   export type UserCreateWithoutCartInput = {
     id: string
     email: string
@@ -14649,6 +18690,7 @@ export namespace Prisma {
     isActive?: boolean
     orders?: OrderCreateNestedManyWithoutUserInput
     addresses?: AddressCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCartInput = {
@@ -14661,11 +18703,74 @@ export namespace Prisma {
     isActive?: boolean
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCartInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCartInput, UserUncheckedCreateWithoutCartInput>
+  }
+
+  export type PromoCodeCreateWithoutCartsInput = {
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutPromoCodeInput
+    userUsages?: PromoCodeUsageCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeUncheckedCreateWithoutCartsInput = {
+    id?: number
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutPromoCodeInput
+    userUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeCreateOrConnectWithoutCartsInput = {
+    where: PromoCodeWhereUniqueInput
+    create: XOR<PromoCodeCreateWithoutCartsInput, PromoCodeUncheckedCreateWithoutCartsInput>
   }
 
   export type CartItemCreateWithoutCartInput = {
@@ -14714,6 +18819,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUpdateManyWithoutUserNestedInput
     addresses?: AddressUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCartInput = {
@@ -14726,6 +18832,75 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type PromoCodeUpsertWithoutCartsInput = {
+    update: XOR<PromoCodeUpdateWithoutCartsInput, PromoCodeUncheckedUpdateWithoutCartsInput>
+    create: XOR<PromoCodeCreateWithoutCartsInput, PromoCodeUncheckedCreateWithoutCartsInput>
+    where?: PromoCodeWhereInput
+  }
+
+  export type PromoCodeUpdateToOneWithWhereWithoutCartsInput = {
+    where?: PromoCodeWhereInput
+    data: XOR<PromoCodeUpdateWithoutCartsInput, PromoCodeUncheckedUpdateWithoutCartsInput>
+  }
+
+  export type PromoCodeUpdateWithoutCartsInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeUncheckedUpdateWithoutCartsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeNestedInput
   }
 
   export type CartItemUpsertWithWhereUniqueWithoutCartInput = {
@@ -14758,16 +18933,24 @@ export namespace Prisma {
 
   export type CartCreateWithoutItemsInput = {
     tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutCartInput
+    appliedPromoCode?: PromoCodeCreateNestedOneWithoutCartsInput
   }
 
   export type CartUncheckedCreateWithoutItemsInput = {
     id?: number
     userId?: string | null
     tempCartId?: string | null
+    appliedPromoCodeId?: number | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14826,16 +19009,24 @@ export namespace Prisma {
 
   export type CartUpdateWithoutItemsInput = {
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutCartNestedInput
+    appliedPromoCode?: PromoCodeUpdateOneWithoutCartsNestedInput
   }
 
   export type CartUncheckedUpdateWithoutItemsInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedPromoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14892,6 +19083,7 @@ export namespace Prisma {
     isActive?: boolean
     cart?: CartCreateNestedOneWithoutUserInput
     addresses?: AddressCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -14904,6 +19096,7 @@ export namespace Prisma {
     isActive?: boolean
     cart?: CartUncheckedCreateNestedOneWithoutUserInput
     addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -14941,6 +19134,99 @@ export namespace Prisma {
   export type AddressCreateOrConnectWithoutOrdersInput = {
     where: AddressWhereUniqueInput
     create: XOR<AddressCreateWithoutOrdersInput, AddressUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type PromoCodeCreateWithoutOrdersInput = {
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartCreateNestedManyWithoutAppliedPromoCodeInput
+    userUsages?: PromoCodeUsageCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeUncheckedCreateWithoutOrdersInput = {
+    id?: number
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartUncheckedCreateNestedManyWithoutAppliedPromoCodeInput
+    userUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeCreateOrConnectWithoutOrdersInput = {
+    where: PromoCodeWhereUniqueInput
+    create: XOR<PromoCodeCreateWithoutOrdersInput, PromoCodeUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type PromoCodeUsageCreateWithoutOrderInput = {
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+    promoCode: PromoCodeCreateNestedOneWithoutUserUsagesInput
+    user: UserCreateNestedOneWithoutPromoUsagesInput
+  }
+
+  export type PromoCodeUsageUncheckedCreateWithoutOrderInput = {
+    id?: number
+    promoCodeId: number
+    userId: string
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type PromoCodeUsageCreateOrConnectWithoutOrderInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    create: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput>
+  }
+
+  export type PromoCodeUsageCreateManyOrderInputEnvelope = {
+    data: PromoCodeUsageCreateManyOrderInput | PromoCodeUsageCreateManyOrderInput[]
+    skipDuplicates?: boolean
   }
 
   export type OrderItemCreateWithoutOrderInput = {
@@ -14997,6 +19283,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     cart?: CartUpdateOneWithoutUserNestedInput
     addresses?: AddressUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -15009,6 +19296,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     cart?: CartUncheckedUpdateOneWithoutUserNestedInput
     addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AddressUpsertWithoutOrdersInput = {
@@ -15047,6 +19335,90 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUpsertWithoutOrdersInput = {
+    update: XOR<PromoCodeUpdateWithoutOrdersInput, PromoCodeUncheckedUpdateWithoutOrdersInput>
+    create: XOR<PromoCodeCreateWithoutOrdersInput, PromoCodeUncheckedCreateWithoutOrdersInput>
+    where?: PromoCodeWhereInput
+  }
+
+  export type PromoCodeUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: PromoCodeWhereInput
+    data: XOR<PromoCodeUpdateWithoutOrdersInput, PromoCodeUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type PromoCodeUpdateWithoutOrdersInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUpdateManyWithoutAppliedPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeUncheckedUpdateWithoutOrdersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUncheckedUpdateManyWithoutAppliedPromoCodeNestedInput
+    userUsages?: PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeUsageUpsertWithWhereUniqueWithoutOrderInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    update: XOR<PromoCodeUsageUpdateWithoutOrderInput, PromoCodeUsageUncheckedUpdateWithoutOrderInput>
+    create: XOR<PromoCodeUsageCreateWithoutOrderInput, PromoCodeUsageUncheckedCreateWithoutOrderInput>
+  }
+
+  export type PromoCodeUsageUpdateWithWhereUniqueWithoutOrderInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    data: XOR<PromoCodeUsageUpdateWithoutOrderInput, PromoCodeUsageUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type PromoCodeUsageUpdateManyWithWhereWithoutOrderInput = {
+    where: PromoCodeUsageScalarWhereInput
+    data: XOR<PromoCodeUsageUpdateManyMutationInput, PromoCodeUsageUncheckedUpdateManyWithoutOrderInput>
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -15089,8 +19461,12 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
     user: UserCreateNestedOneWithoutOrdersInput
     address: AddressCreateNestedOneWithoutOrdersInput
+    promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -15104,6 +19480,10 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -15165,8 +19545,12 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneRequiredWithoutOrdersNestedInput
+    promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -15180,6 +19564,10 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type VariantUpsertWithoutOrderItemsInput = {
@@ -15472,6 +19860,7 @@ export namespace Prisma {
     isActive?: boolean
     cart?: CartCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAddressesInput = {
@@ -15484,6 +19873,7 @@ export namespace Prisma {
     isActive?: boolean
     cart?: CartUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAddressesInput = {
@@ -15499,7 +19889,11 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
     user: UserCreateNestedOneWithoutOrdersInput
+    promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
 
@@ -15513,6 +19907,10 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -15547,6 +19945,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     cart?: CartUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAddressesInput = {
@@ -15559,6 +19958,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     cart?: CartUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutAddressInput = {
@@ -15577,6 +19977,459 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutAddressInput>
   }
 
+  export type CartCreateWithoutAppliedPromoCodeInput = {
+    tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutCartInput
+    items?: CartItemCreateNestedManyWithoutCartInput
+  }
+
+  export type CartUncheckedCreateWithoutAppliedPromoCodeInput = {
+    id?: number
+    userId?: string | null
+    tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: CartItemUncheckedCreateNestedManyWithoutCartInput
+  }
+
+  export type CartCreateOrConnectWithoutAppliedPromoCodeInput = {
+    where: CartWhereUniqueInput
+    create: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput>
+  }
+
+  export type CartCreateManyAppliedPromoCodeInputEnvelope = {
+    data: CartCreateManyAppliedPromoCodeInput | CartCreateManyAppliedPromoCodeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderCreateWithoutPromoCodeInput = {
+    stripeSessionId: string
+    paymentIntentId: string
+    amountTotal: number
+    currency?: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    user: UserCreateNestedOneWithoutOrdersInput
+    address: AddressCreateNestedOneWithoutOrdersInput
+    promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutPromoCodeInput = {
+    id?: number
+    userId: string
+    addressId: number
+    stripeSessionId: string
+    paymentIntentId: string
+    amountTotal: number
+    currency?: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutPromoCodeInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput>
+  }
+
+  export type OrderCreateManyPromoCodeInputEnvelope = {
+    data: OrderCreateManyPromoCodeInput | OrderCreateManyPromoCodeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PromoCodeUsageCreateWithoutPromoCodeInput = {
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+    user: UserCreateNestedOneWithoutPromoUsagesInput
+    order?: OrderCreateNestedOneWithoutPromoUsagesInput
+  }
+
+  export type PromoCodeUsageUncheckedCreateWithoutPromoCodeInput = {
+    id?: number
+    userId: string
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type PromoCodeUsageCreateOrConnectWithoutPromoCodeInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    create: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput>
+  }
+
+  export type PromoCodeUsageCreateManyPromoCodeInputEnvelope = {
+    data: PromoCodeUsageCreateManyPromoCodeInput | PromoCodeUsageCreateManyPromoCodeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CartUpsertWithWhereUniqueWithoutAppliedPromoCodeInput = {
+    where: CartWhereUniqueInput
+    update: XOR<CartUpdateWithoutAppliedPromoCodeInput, CartUncheckedUpdateWithoutAppliedPromoCodeInput>
+    create: XOR<CartCreateWithoutAppliedPromoCodeInput, CartUncheckedCreateWithoutAppliedPromoCodeInput>
+  }
+
+  export type CartUpdateWithWhereUniqueWithoutAppliedPromoCodeInput = {
+    where: CartWhereUniqueInput
+    data: XOR<CartUpdateWithoutAppliedPromoCodeInput, CartUncheckedUpdateWithoutAppliedPromoCodeInput>
+  }
+
+  export type CartUpdateManyWithWhereWithoutAppliedPromoCodeInput = {
+    where: CartScalarWhereInput
+    data: XOR<CartUpdateManyMutationInput, CartUncheckedUpdateManyWithoutAppliedPromoCodeInput>
+  }
+
+  export type CartScalarWhereInput = {
+    AND?: CartScalarWhereInput | CartScalarWhereInput[]
+    OR?: CartScalarWhereInput[]
+    NOT?: CartScalarWhereInput | CartScalarWhereInput[]
+    id?: IntFilter<"Cart"> | number
+    userId?: StringNullableFilter<"Cart"> | string | null
+    tempCartId?: StringNullableFilter<"Cart"> | string | null
+    appliedPromoCodeId?: IntNullableFilter<"Cart"> | number | null
+    promoDiscountAmount?: IntNullableFilter<"Cart"> | number | null
+    promoAppliedAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
+    requiresPromoVerification?: BoolFilter<"Cart"> | boolean
+    expiresAt?: DateTimeNullableFilter<"Cart"> | Date | string | null
+    createdAt?: DateTimeFilter<"Cart"> | Date | string
+    updatedAt?: DateTimeFilter<"Cart"> | Date | string
+  }
+
+  export type OrderUpsertWithWhereUniqueWithoutPromoCodeInput = {
+    where: OrderWhereUniqueInput
+    update: XOR<OrderUpdateWithoutPromoCodeInput, OrderUncheckedUpdateWithoutPromoCodeInput>
+    create: XOR<OrderCreateWithoutPromoCodeInput, OrderUncheckedCreateWithoutPromoCodeInput>
+  }
+
+  export type OrderUpdateWithWhereUniqueWithoutPromoCodeInput = {
+    where: OrderWhereUniqueInput
+    data: XOR<OrderUpdateWithoutPromoCodeInput, OrderUncheckedUpdateWithoutPromoCodeInput>
+  }
+
+  export type OrderUpdateManyWithWhereWithoutPromoCodeInput = {
+    where: OrderScalarWhereInput
+    data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutPromoCodeInput>
+  }
+
+  export type PromoCodeUsageUpsertWithWhereUniqueWithoutPromoCodeInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    update: XOR<PromoCodeUsageUpdateWithoutPromoCodeInput, PromoCodeUsageUncheckedUpdateWithoutPromoCodeInput>
+    create: XOR<PromoCodeUsageCreateWithoutPromoCodeInput, PromoCodeUsageUncheckedCreateWithoutPromoCodeInput>
+  }
+
+  export type PromoCodeUsageUpdateWithWhereUniqueWithoutPromoCodeInput = {
+    where: PromoCodeUsageWhereUniqueInput
+    data: XOR<PromoCodeUsageUpdateWithoutPromoCodeInput, PromoCodeUsageUncheckedUpdateWithoutPromoCodeInput>
+  }
+
+  export type PromoCodeUsageUpdateManyWithWhereWithoutPromoCodeInput = {
+    where: PromoCodeUsageScalarWhereInput
+    data: XOR<PromoCodeUsageUpdateManyMutationInput, PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeInput>
+  }
+
+  export type PromoCodeCreateWithoutUserUsagesInput = {
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartCreateNestedManyWithoutAppliedPromoCodeInput
+    orders?: OrderCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeUncheckedCreateWithoutUserUsagesInput = {
+    id?: number
+    code: string
+    name?: string | null
+    description?: string | null
+    discountCents?: number | null
+    discountPercentage?: number | null
+    minOrderAmount?: number
+    maxDiscountAmount?: number | null
+    maxUses?: number | null
+    maxUsesPerUser?: number
+    validFrom?: Date | string
+    validTo?: Date | string | null
+    isPublic?: boolean
+    isActive?: boolean
+    isFirstTimeOnly?: boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: number
+    createdBy?: string | null
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    carts?: CartUncheckedCreateNestedManyWithoutAppliedPromoCodeInput
+    orders?: OrderUncheckedCreateNestedManyWithoutPromoCodeInput
+  }
+
+  export type PromoCodeCreateOrConnectWithoutUserUsagesInput = {
+    where: PromoCodeWhereUniqueInput
+    create: XOR<PromoCodeCreateWithoutUserUsagesInput, PromoCodeUncheckedCreateWithoutUserUsagesInput>
+  }
+
+  export type UserCreateWithoutPromoUsagesInput = {
+    id: string
+    email: string
+    name?: string | null
+    provider?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    cart?: CartCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    addresses?: AddressCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPromoUsagesInput = {
+    id: string
+    email: string
+    name?: string | null
+    provider?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    isActive?: boolean
+    cart?: CartUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    addresses?: AddressUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPromoUsagesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPromoUsagesInput, UserUncheckedCreateWithoutPromoUsagesInput>
+  }
+
+  export type OrderCreateWithoutPromoUsagesInput = {
+    stripeSessionId: string
+    paymentIntentId: string
+    amountTotal: number
+    currency?: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    user: UserCreateNestedOneWithoutOrdersInput
+    address: AddressCreateNestedOneWithoutOrdersInput
+    promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutPromoUsagesInput = {
+    id?: number
+    userId: string
+    addressId: number
+    stripeSessionId: string
+    paymentIntentId: string
+    amountTotal: number
+    currency?: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutPromoUsagesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutPromoUsagesInput, OrderUncheckedCreateWithoutPromoUsagesInput>
+  }
+
+  export type PromoCodeUpsertWithoutUserUsagesInput = {
+    update: XOR<PromoCodeUpdateWithoutUserUsagesInput, PromoCodeUncheckedUpdateWithoutUserUsagesInput>
+    create: XOR<PromoCodeCreateWithoutUserUsagesInput, PromoCodeUncheckedCreateWithoutUserUsagesInput>
+    where?: PromoCodeWhereInput
+  }
+
+  export type PromoCodeUpdateToOneWithWhereWithoutUserUsagesInput = {
+    where?: PromoCodeWhereInput
+    data: XOR<PromoCodeUpdateWithoutUserUsagesInput, PromoCodeUncheckedUpdateWithoutUserUsagesInput>
+  }
+
+  export type PromoCodeUpdateWithoutUserUsagesInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUpdateManyWithoutAppliedPromoCodeNestedInput
+    orders?: OrderUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type PromoCodeUncheckedUpdateWithoutUserUsagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    discountCents?: NullableIntFieldUpdateOperationsInput | number | null
+    discountPercentage?: NullableIntFieldUpdateOperationsInput | number | null
+    minOrderAmount?: IntFieldUpdateOperationsInput | number
+    maxDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    maxUsesPerUser?: IntFieldUpdateOperationsInput | number
+    validFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    validTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isFirstTimeOnly?: BoolFieldUpdateOperationsInput | boolean
+    allowedCategories?: NullableJsonNullValueInput | InputJsonValue
+    excludedCategories?: NullableJsonNullValueInput | InputJsonValue
+    allowedProducts?: NullableJsonNullValueInput | InputJsonValue
+    excludedProducts?: NullableJsonNullValueInput | InputJsonValue
+    usageCount?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    carts?: CartUncheckedUpdateManyWithoutAppliedPromoCodeNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutPromoCodeNestedInput
+  }
+
+  export type UserUpsertWithoutPromoUsagesInput = {
+    update: XOR<UserUpdateWithoutPromoUsagesInput, UserUncheckedUpdateWithoutPromoUsagesInput>
+    create: XOR<UserCreateWithoutPromoUsagesInput, UserUncheckedCreateWithoutPromoUsagesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPromoUsagesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPromoUsagesInput, UserUncheckedUpdateWithoutPromoUsagesInput>
+  }
+
+  export type UserUpdateWithoutPromoUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    cart?: CartUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    addresses?: AddressUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPromoUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    cart?: CartUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    addresses?: AddressUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type OrderUpsertWithoutPromoUsagesInput = {
+    update: XOR<OrderUpdateWithoutPromoUsagesInput, OrderUncheckedUpdateWithoutPromoUsagesInput>
+    create: XOR<OrderCreateWithoutPromoUsagesInput, OrderUncheckedCreateWithoutPromoUsagesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutPromoUsagesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutPromoUsagesInput, OrderUncheckedUpdateWithoutPromoUsagesInput>
+  }
+
+  export type OrderUpdateWithoutPromoUsagesInput = {
+    stripeSessionId?: StringFieldUpdateOperationsInput | string
+    paymentIntentId?: StringFieldUpdateOperationsInput | string
+    amountTotal?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    address?: AddressUpdateOneRequiredWithoutOrdersNestedInput
+    promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutPromoUsagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    addressId?: IntFieldUpdateOperationsInput | number
+    stripeSessionId?: StringFieldUpdateOperationsInput | string
+    paymentIntentId?: StringFieldUpdateOperationsInput | string
+    amountTotal?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
   export type OrderCreateManyUserInput = {
     id?: number
     addressId: number
@@ -15587,6 +20440,9 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
   }
 
   export type AddressCreateManyUserInput = {
@@ -15602,6 +20458,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type PromoCodeUsageCreateManyUserInput = {
+    id?: number
+    promoCodeId: number
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
   export type OrderUpdateWithoutUserInput = {
     stripeSessionId?: StringFieldUpdateOperationsInput | string
     paymentIntentId?: StringFieldUpdateOperationsInput | string
@@ -15610,7 +20477,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
     address?: AddressUpdateOneRequiredWithoutOrdersNestedInput
+    promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
 
@@ -15624,6 +20495,10 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -15637,6 +20512,9 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -15679,6 +20557,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PromoCodeUsageUpdateWithoutUserInput = {
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCode?: PromoCodeUpdateOneRequiredWithoutUserUsagesNestedInput
+    order?: OrderUpdateOneWithoutPromoUsagesNestedInput
+  }
+
+  export type PromoCodeUsageUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CartItemCreateManyCartInput = {
     id?: number
     variantId: string
@@ -15710,6 +20620,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PromoCodeUsageCreateManyOrderInput = {
+    id?: number
+    promoCodeId: number
+    userId: string
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
   export type OrderItemCreateManyOrderInput = {
     id?: number
     variantId: string
@@ -15720,6 +20641,38 @@ export namespace Prisma {
     unitPrice: number
     quantity: number
     totalPrice: number
+  }
+
+  export type PromoCodeUsageUpdateWithoutOrderInput = {
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCode?: PromoCodeUpdateOneRequiredWithoutUserUsagesNestedInput
+    user?: UserUpdateOneRequiredWithoutPromoUsagesNestedInput
+  }
+
+  export type PromoCodeUsageUncheckedUpdateWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    promoCodeId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderItemUpdateWithoutOrderInput = {
@@ -15901,6 +20854,9 @@ export namespace Prisma {
     status: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    promoCodeId?: number | null
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
   }
 
   export type OrderUpdateWithoutAddressInput = {
@@ -15911,7 +20867,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
 
@@ -15925,6 +20885,10 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -15938,6 +20902,164 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CartCreateManyAppliedPromoCodeInput = {
+    id?: number
+    userId?: string | null
+    tempCartId?: string | null
+    promoDiscountAmount?: number | null
+    promoAppliedAt?: Date | string | null
+    requiresPromoVerification?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OrderCreateManyPromoCodeInput = {
+    id?: number
+    userId: string
+    addressId: number
+    stripeSessionId: string
+    paymentIntentId: string
+    amountTotal: number
+    currency?: string
+    status: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    promoCodeUsed?: string | null
+    discountAmount?: number | null
+  }
+
+  export type PromoCodeUsageCreateManyPromoCodeInput = {
+    id?: number
+    userId: string
+    orderId?: number | null
+    discountApplied: number
+    orderAmount: number
+    status: string
+    failureReason?: string | null
+    usedAt?: Date | string
+  }
+
+  export type CartUpdateWithoutAppliedPromoCodeInput = {
+    tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutCartNestedInput
+    items?: CartItemUpdateManyWithoutCartNestedInput
+  }
+
+  export type CartUncheckedUpdateWithoutAppliedPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: CartItemUncheckedUpdateManyWithoutCartNestedInput
+  }
+
+  export type CartUncheckedUpdateManyWithoutAppliedPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    tempCartId?: NullableStringFieldUpdateOperationsInput | string | null
+    promoDiscountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoAppliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiresPromoVerification?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderUpdateWithoutPromoCodeInput = {
+    stripeSessionId?: StringFieldUpdateOperationsInput | string
+    paymentIntentId?: StringFieldUpdateOperationsInput | string
+    amountTotal?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    address?: AddressUpdateOneRequiredWithoutOrdersNestedInput
+    promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    addressId?: IntFieldUpdateOperationsInput | number
+    stripeSessionId?: StringFieldUpdateOperationsInput | string
+    paymentIntentId?: StringFieldUpdateOperationsInput | string
+    amountTotal?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateManyWithoutPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    addressId?: IntFieldUpdateOperationsInput | number
+    stripeSessionId?: StringFieldUpdateOperationsInput | string
+    paymentIntentId?: StringFieldUpdateOperationsInput | string
+    amountTotal?: IntFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type PromoCodeUsageUpdateWithoutPromoCodeInput = {
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPromoUsagesNestedInput
+    order?: OrderUpdateOneWithoutPromoUsagesNestedInput
+  }
+
+  export type PromoCodeUsageUncheckedUpdateWithoutPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PromoCodeUsageUncheckedUpdateManyWithoutPromoCodeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    discountApplied?: IntFieldUpdateOperationsInput | number
+    orderAmount?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

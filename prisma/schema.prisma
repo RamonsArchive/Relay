@@ -22,9 +22,10 @@ model User {
   updatedAt DateTime  @updatedAt
 
   // relations
-  cart      Cart?                    
-  orders    Order[]
-  addresses Address[]
+  cart           Cart?                    
+  orders         Order[]
+  addresses      Address[]
+  promoUsages    PromoCodeUsage[] // track promo code usage
   
   // Soft delete
   isActive  Boolean   @default(true)
@@ -38,6 +39,13 @@ model Cart {
   userId    String?      @unique       // string FK to User.id
 
   tempCartId String?     @unique
+
+  // Promo code fields - applied before checkout
+  appliedPromoCode     PromoCode? @relation(fields: [appliedPromoCodeId], references: [id])
+  appliedPromoCodeId   Int?
+  promoDiscountAmount  Int?       // calculated discount in cents
+  promoAppliedAt       DateTime?  // when promo was applied
+  requiresPromoVerification Boolean @default(false) // needs verification at checkout
 
   expiresAt DateTime?
   createdAt DateTime    @default(now())
@@ -79,10 +87,20 @@ model Order {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
+
+  // promo code integration
+  promoCode        PromoCode?   @relation(fields: [promoCodeId], references: [id])
+  promoCodeId      Int?
+  promoCodeUsed    String?
+  discountAmount   Int?
+
+  promoUsages      PromoCodeUsage[]
   items            OrderItem[]
   
   @@index([userId])
   @@index([status])
+  @@index([promoCodeId])
+  @@index([createdAt])
 }
 
 model OrderItem {
@@ -197,4 +215,80 @@ model SanitySync {
   @@index([documentId])
   @@index([status])
   @@index([documentType])
+}
+
+// OPTIMIZED: Enhanced PromoCode model
+model PromoCode {
+  id                 Int      @id @default(autoincrement())
+  code               String   @unique
+  name               String?  // Human-readable name for admin (e.g., "Black Friday 2024")
+  description        String?  // Internal description
+  
+  // Discount configuration (exactly one should be set)
+  discountCents      Int?     // fixed discount in cents
+  discountPercentage Int?     // percentage discount (1-100, stored as integer)
+  
+  // Usage constraints
+  minOrderAmount     Int      @default(0) // minimum order amount in cents
+  maxDiscountAmount  Int?     // cap on discount amount (useful for percentage discounts)
+  maxUses            Int?     // total usage limit across all users (null = unlimited)
+  maxUsesPerUser     Int      @default(1) // per-user usage limit
+  
+  // Time constraints
+  validFrom          DateTime @default(now())
+  validTo            DateTime?
+  
+  // Targeting and visibility
+  isPublic           Boolean  @default(false) // can be discovered/shared publicly
+  isActive           Boolean  @default(true)  // can be used
+  isFirstTimeOnly    Boolean  @default(false) // only for users with no previous orders
+  
+  // Category/product restrictions (optional)
+  allowedCategories  Json?    // array of category IDs this applies to
+  excludedCategories Json?    // array of category IDs this excludes
+  allowedProducts    Json?    // array of product IDs this applies to
+  excludedProducts   Json?    // array of product IDs this excludes
+  
+  // Analytics and metadata
+  usageCount         Int      @default(0) // denormalized usage counter for performance
+  createdBy          String?  // admin user who created this
+  lastUsedAt         DateTime?
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relations
+  carts              Cart[]
+  orders             Order[]   // orders that used this promo code
+  userUsages         PromoCodeUsage[] // detailed usage tracking
+
+  @@index([code])
+  @@index([isActive, validFrom, validTo])
+  @@index([isPublic, isActive])
+  @@index([validTo]) // For cleanup of expired codes
+  @@index([usageCount]) // For popular codes analytics
+}
+
+model PromoCodeUsage {
+  id            Int       @id @default(autoincrement())
+  promoCode     PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  promoCodeId   Int
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+  order         Order?    @relation(fields: [orderId], references: [id])
+  orderId       Int?      // null if usage attempt failed
+  
+  discountApplied Int     // actual discount amount in cents
+  orderAmount     Int     // order subtotal when code was applied
+  
+  // Status tracking
+  status          String  // "applied", "failed", "expired", "invalid"
+  failureReason   String? // reason if status is "failed"
+  
+  usedAt          DateTime @default(now())
+  
+  @@index([promoCodeId, userId])
+  @@index([userId])
+  @@index([usedAt])
+  @@unique([promoCodeId, orderId]) // prevent duplicate usage per order
 }

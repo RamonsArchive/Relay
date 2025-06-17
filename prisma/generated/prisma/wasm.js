@@ -134,6 +134,10 @@ exports.Prisma.CartScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tempCartId: 'tempCartId',
+  appliedPromoCodeId: 'appliedPromoCodeId',
+  promoDiscountAmount: 'promoDiscountAmount',
+  promoAppliedAt: 'promoAppliedAt',
+  requiresPromoVerification: 'requiresPromoVerification',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -158,7 +162,10 @@ exports.Prisma.OrderScalarFieldEnum = {
   currency: 'currency',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  promoCodeId: 'promoCodeId',
+  promoCodeUsed: 'promoCodeUsed',
+  discountAmount: 'discountAmount'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -230,6 +237,45 @@ exports.Prisma.SanitySyncScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PromoCodeScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  discountCents: 'discountCents',
+  discountPercentage: 'discountPercentage',
+  minOrderAmount: 'minOrderAmount',
+  maxDiscountAmount: 'maxDiscountAmount',
+  maxUses: 'maxUses',
+  maxUsesPerUser: 'maxUsesPerUser',
+  validFrom: 'validFrom',
+  validTo: 'validTo',
+  isPublic: 'isPublic',
+  isActive: 'isActive',
+  isFirstTimeOnly: 'isFirstTimeOnly',
+  allowedCategories: 'allowedCategories',
+  excludedCategories: 'excludedCategories',
+  allowedProducts: 'allowedProducts',
+  excludedProducts: 'excludedProducts',
+  usageCount: 'usageCount',
+  createdBy: 'createdBy',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PromoCodeUsageScalarFieldEnum = {
+  id: 'id',
+  promoCodeId: 'promoCodeId',
+  userId: 'userId',
+  orderId: 'orderId',
+  discountApplied: 'discountApplied',
+  orderAmount: 'orderAmount',
+  status: 'status',
+  failureReason: 'failureReason',
+  usedAt: 'usedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -266,7 +312,8 @@ exports.Prisma.OrderOrderByRelevanceFieldEnum = {
   stripeSessionId: 'stripeSessionId',
   paymentIntentId: 'paymentIntentId',
   currency: 'currency',
-  status: 'status'
+  status: 'status',
+  promoCodeUsed: 'promoCodeUsed'
 };
 
 exports.Prisma.OrderItemOrderByRelevanceFieldEnum = {
@@ -324,6 +371,19 @@ exports.Prisma.SanitySyncOrderByRelevanceFieldEnum = {
   errorMessage: 'errorMessage'
 };
 
+exports.Prisma.PromoCodeOrderByRelevanceFieldEnum = {
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  createdBy: 'createdBy'
+};
+
+exports.Prisma.PromoCodeUsageOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  status: 'status',
+  failureReason: 'failureReason'
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -334,7 +394,9 @@ exports.Prisma.ModelName = {
   Variant: 'Variant',
   Product: 'Product',
   Address: 'Address',
-  SanitySync: 'SanitySync'
+  SanitySync: 'SanitySync',
+  PromoCode: 'PromoCode',
+  PromoCodeUsage: 'PromoCodeUsage'
 };
 
 /**

@@ -44,19 +44,20 @@ export const BasketCountProvider = ({children}: {children: React.ReactNode}) => 
   
     // Only handle sign out and initial load
     useEffect(() => {
+      console.log("THIS IS STATUS", status);
       if (status === "unauthenticated") {
         console.log("REFRESHING BASKET COUNT ON SIGN OUT");
         refreshBasketCount(0);
       }
-    }, [refreshBasketCount, status]);
+    }, [status]);
   
     // Initial load
     useEffect(() => {
-      if (status !== "loading") {
+      if (status === "loading") {
         console.log("REFRESHING BASKET COUNT ON INITIAL LOAD");
         refreshBasketCount(0);
       }
-    }, [refreshBasketCount, status]);
+    }, [ status]);
   
     return (
       <BasketCountContext.Provider value={{basketCount, refreshBasketCount}}>

@@ -6,6 +6,7 @@ import { getCart } from '@/lib/serverActions';
 import { Slash } from 'lucide-react';
 import Link from 'next/link';
 import BasketBlock from '@/components/BasketBlock';
+import SummaryDisplay from '@/components/SummaryDisplay';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
@@ -30,12 +31,12 @@ const CartPage = async () => {
 
 
   
-  return <main className="relative h-[calc(100vh-8rem)] flex flex-col w-full min-h-0 py-5 px-5 sm:px-20">
+  return <main className="relative pt-[5rem] md:h-[calc(100vh-8rem)] md:pt-5 flex flex-col md:flex-row w-full min-h-0 py-5 px-5 sm:px-20">
     <div className="flex flex-col gap-x-2 items-center sm:items-start justify-start h-full w-full overflow-y-auto scrollbar-hidden">
       <div className="flex flex-row w-full">
       <div className="flex flex-row items-center transform transition-all duration-300 ease-in-out gap-x-1">
         <Link href="/">
-        <p className="font-plex-sans text-gray-600 hover:text-gray-400 font-bold text-[12px] xs:text-[14px] md:text-[16px]">
+        <p className="font-plex-sans text-gray-600 hover:text-gray-400 font-bold text-[14px] xs:text-[16px] md:text-[18px]">
           Home
         </p>
         </Link>
@@ -43,7 +44,7 @@ const CartPage = async () => {
         </div>
         <div className="flex flex-row items-center transform transition-all duration-300 ease-in-out gap-x-1">
         <Link href="/cart">
-          <p className="font-plex-sans font-bold text-gray-800 hover:text-gray-600 text-[12px] xs:text-[14px] md:text-[16px]">
+          <p className="font-plex-sans font-bold text-gray-800 hover:text-gray-600 text-[14px] xs:text-[16px] md:text-[18px]">
             Cart
           </p>
         </Link>
@@ -79,6 +80,7 @@ const CartPage = async () => {
         </div>    
       </div>
       </div>
+      <SummaryDisplay cartItems={cartItems} />
     </main>;
 };
 

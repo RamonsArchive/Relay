@@ -27,7 +27,7 @@ const ProductBuyButtons = ({ userId, productId, temp_cartId }: { userId: string 
 
       } else {
         toast.error("ERROR", {
-          description: "Failed to add item to basket",
+          description: response.error,
         });
       }
     } catch (error) {
