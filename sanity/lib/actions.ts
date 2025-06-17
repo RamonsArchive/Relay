@@ -1395,6 +1395,7 @@ export const applyPromoCodeToCart = async (
         id: promoCode.id,
         code: promoCode.code,
         name: promoCode.name,
+        discountPercentage: promoCode.discountPercentage,
         discountAmount,
         description: promoCode.description,
         requiresVerification,

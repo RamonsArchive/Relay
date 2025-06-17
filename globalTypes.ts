@@ -408,5 +408,13 @@ export type BasketType = {
 export type CartResponseType = {
   cartId: number;
   cart: BasketType[];
+}
 
+export type SummaryStateType = {
+  subtotal: number;
+  discount: number;
+  discountPercentage?: number;
+  shipping: number;
+  tax: number;
+  total: number;
 }

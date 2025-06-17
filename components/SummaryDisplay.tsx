@@ -12,12 +12,13 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
     const [summaryState, setSummaryState] = useState<SummaryStateType>({
         subtotal: cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
         discount: 0,
+        discountPercentage: 0,
         shipping: 0,
         tax: 0,
         total: 0,
     })
 
-    const {subtotal, discount, shipping, tax, total} = summaryState;
+    const {subtotal, discount, shipping, tax, total, discountPercentage} = summaryState;
 
     const handlePromoSubmit = async (prevState: ActionState, formData: FormData) => {
         try {
@@ -46,6 +47,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
             setSummaryState({
                 subtotal: cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
                 discount: result.promoCode?.discountAmount || 0,
+                discountPercentage: result.promoCode?.discountPercentage || 0,
                 shipping: 0,
                 tax: 0,
                 total: summaryState.subtotal - (result.promoCode?.discountAmount || 0) + summaryState.shipping + summaryState.tax,
@@ -78,7 +80,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
 
 
   return (
-    <div className="flex flex-row w-full justify-end w-full">
+    <div className="flex flex-row w-full justify-end w-full mt-5 lg:mt-0">
         <div className="flex flex-col w-full h-full p-5 border border-gray-300 border-[1px] rounded-md shadow-md gap-y-5">
           <p className="font-bold text-[22px] xs:text-[24px] md:text-[28px] justify-start">Order Summary</p>
           <div className="flex flex-col w-full gap-y-5">
@@ -103,7 +105,10 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
                 <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Total</p>
                 <p className="font-bold text-[16px] xs:text-[18px] md:text-[20px]">${total}</p>
             </div>
-            <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Promo Code</p>
+            <div className="flex flex-row w-full justify-between">
+            <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Promo Code {(discountPercentage as number) > 0 && (<span className="text-green-500 font-regular">(${discountPercentage}%)</span>)}</p>
+              {(discount > 0) && <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px] text-green-500">${discount}</p>}
+            </div>
             <div className="flex flex-row w-full justify-between items-center">
                 <Form action={formAction} className="flex w-full">
                     <div className="flex flex-row gap-x-2 w-full px-2 py-1 border border-gray-300 border-[1px] rounded-md items-center">
