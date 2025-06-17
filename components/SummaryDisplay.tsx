@@ -1,13 +1,14 @@
 "use client";
-import { BasketType, SummaryStateType } from '@/globalTypes'
+import { BasketType, ActionState, SummaryStateType } from '@/globalTypes'
 import React, { useState, useActionState } from 'react'
-import { Input } from './ui/input';
 import { Button } from './ui/button';   
 import { Tag } from 'lucide-react';
 import Form from "next/form";
 import { parseServerActionResponse } from '@/lib/utils';
+import { applyPromoCodeToCart } from '@/sanity/lib/actions';
+import { toast } from 'sonner';
 
-const SummaryDisplay = ({cartItems}: {cartItems: BasketType[]}) => {
+const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], cartId: number, userId: string}) => {
     const [summaryState, setSummaryState] = useState<SummaryStateType>({
         subtotal: cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
         discount: 0,
@@ -18,9 +19,46 @@ const SummaryDisplay = ({cartItems}: {cartItems: BasketType[]}) => {
 
     const {subtotal, discount, shipping, tax, total} = summaryState;
 
-    const handlePromoSubmit = async (formData: FormData) => {
+    const handlePromoSubmit = async (prevState: ActionState, formData: FormData) => {
         try {
             const promoCode = formData.get("promoCode") as string;
+            if (!promoCode) {
+                toast.error("ERROR", {
+                  description: "Please enter a promo code",
+                });
+                return parseServerActionResponse({
+                    status: "ERROR",  
+                    error: "Please enter a promo code",
+                })
+            }
+            const result = await applyPromoCodeToCart(promoCode, cartId, subtotal, userId);
+            console.log(result);
+            if (result.status === "ERROR") {
+                toast.error("ERROR", {
+                  description: result.error,
+                });
+                return parseServerActionResponse({
+                    status: "ERROR",
+                    error: result.error,
+                })
+            }
+
+            setSummaryState({
+                subtotal: cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0),
+                discount: result.promoCode?.discountAmount || 0,
+                shipping: 0,
+                tax: 0,
+                total: summaryState.subtotal - (result.promoCode?.discountAmount || 0) + summaryState.shipping + summaryState.tax,
+            })
+
+            toast.success("SUCCESS", {
+              description: "Promo code applied successfully",
+            });
+
+            return parseServerActionResponse({
+                status: "SUCCESS",
+                error: "",
+            })
 
         } catch (error) {
             console.log(error);
@@ -70,8 +108,8 @@ const SummaryDisplay = ({cartItems}: {cartItems: BasketType[]}) => {
                 <Form action={formAction} className="flex w-full">
                     <div className="flex flex-row gap-x-2 w-full px-2 py-1 border border-gray-300 border-[1px] rounded-md items-center">
                         <Tag className="w-4 h-4 md:w-5 md:h-5" />
-                        <input type="text" placeholder="Add promo code" className="w-full bg-transparent outline-none" name="promoCode"/>
-                        <Button className="w-fit" type="submit" disabled={isPending}> Apply </Button>
+                        <input type="text" placeholder="Add promo code" className="w-full bg-transparent outline-none" name="promoCode" />
+                        <Button className="w-fit" type="submit" disabled={isPending}>Apply</Button>
                     </div>
                 </Form>
 

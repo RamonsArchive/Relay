@@ -80,7 +80,7 @@ const CartPage = async () => {
         </div>    
       </div>
       </div>
-      <SummaryDisplay cartItems={cartItems} />
+      <SummaryDisplay cartItems={cartItems} cartId={cartId} userId={userId}/>
     </main>;
 };
 
