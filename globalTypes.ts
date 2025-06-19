@@ -351,14 +351,15 @@ export type DatabaseVariantType = {
     updatedAt: Date;
 }
 
-export type CartType = {
-    id: number;
+export type UserType = {
+    id: string;
+    email: string;
+    name: string | null;
+    stripeCustomerId: string | null;
     createdAt: Date;
     updatedAt: Date;
-    userId: string | null;
-    tempCartId: string | null;
-    expiresAt: Date | null;
-    items: CartItemType[];
+    isActive: boolean;
+    provider: string | null;
 }
 
 export type CartItemType = {
@@ -371,8 +372,8 @@ export type CartItemType = {
 }
 
 export interface CartItemInfo {
-  variantId:   number;       // Prisma’s Variant.id
-  productId:   number;       // Prisma’s Product.id
+  variantId:   number;       // Prisma's Variant.id
+  productId:   number;       // Prisma's Product.id
   title:       string;       // product.title
   color:       string | null;
   size:        string | null;
@@ -383,7 +384,7 @@ export interface CartItemInfo {
 }
 
 /**
- * The overall cart “envelope” returned to the UI:
+ * The overall cart "envelope" returned to the UI:
  */
 export interface CartSummary {
   count:     number;            // total number of distinct variants in the cart (i.e. cart.items.length)
@@ -423,4 +424,15 @@ export type TaxLineItemType = {
   amount: number;
   tax_behavior: string;
   reference: string;
+}
+
+export type CartType = {
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string | null;
+    tempCartId: string | null;
+    expiresAt: Date | null;
+    items: CartItemType[];
+    user?: UserType | null;
 }

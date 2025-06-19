@@ -14,10 +14,14 @@ datasource db {
 // ──────────────────────────────────────────────────────────────────────────
 // 1) User (Google ID as primary key)
 model User {
-  id        String   @id // Google user ID
-  email     String   @unique
-  name      String?
-  provider  String?
+  id       String  @id // Google user ID
+  email    String  @unique
+  name     String?
+  provider String?
+
+  // Stripe integration
+  stripeCustomerId String? @unique // Store Stripe customer ID for reuse
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -25,7 +29,7 @@ model User {
   cart        Cart?
   orders      Order[]
   addresses   Address[]
-  promoUsages PromoCodeUsage[] // track promo code usage
+  promoUsages PromoCodeUsage[]
 
   // Soft delete
   isActive Boolean @default(true)
@@ -33,10 +37,11 @@ model User {
 
 // ──────────────────────────────────────────────────────────────────────────
 // 2) Cart & CartItem
+// 2) Cart & CartItem - SIMPLIFIED (no premature snapshot)
 model Cart {
   id     Int     @id @default(autoincrement())
   user   User?   @relation(fields: [userId], references: [id])
-  userId String? @unique // string FK to User.id
+  userId String? @unique
 
   tempCartId String? @unique
 
@@ -44,14 +49,31 @@ model Cart {
   appliedPromoCode          PromoCode? @relation(fields: [appliedPromoCodeId], references: [id])
   appliedPromoCodeId        Int?
   promoDiscountAmount       Int? // calculated discount in cents
-  promoAppliedAt            DateTime? // when promo was applied
-  requiresPromoVerification Boolean    @default(false) // needs verification at checkout
+  promoAppliedAt            DateTime?
+  requiresPromoVerification Boolean    @default(false)
+
+  // Shipping preference (not cost - calculated at checkout)
+  shippingMethod    String?  @default("standard") // "standard", "express", "free"
+  shippingAddressId Int? // Reference to Address model instead of JSON
+  shippingAddress   Address? @relation(fields: [shippingAddressId], references: [id])
+
+  // Stripe checkout session tracking
+  stripeCheckoutSessionId String? @unique
+  checkoutStatus          String? @default("pending") // "pending", "in_progress", "completed", "expired"
+
+  // NO snapshot fields in Cart - calculated fresh each time
+  // This prevents stale data when items are added/removed
 
   expiresAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  items CartItem[]
+  items            CartItem[]
+  checkoutSessions CheckoutSession[]
+
+  @@index([userId])
+  @@index([tempCartId])
+  @@index([stripeCheckoutSessionId])
 }
 
 model CartItem {
@@ -73,25 +95,44 @@ model CartItem {
 // ──────────────────────────────────────────────────────────────────────────
 // 3) Order & OrderItem
 model Order {
-  id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String // string FK to User.id
-  address   Address @relation(fields: [addressId], references: [id])
-  addressId Int
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  stripeSessionId String   @unique
-  paymentIntentId String
-  amountTotal     Int // in cents
-  currency        String   @default("usd")
-  status          String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  // Shipping info (snapshot at purchase)
+  shippingAddress Json // Full address snapshot
+  shippingMethod  String // Method used
+  shippingCost    Int // Final shipping cost in cents
 
-  // promo code integration
-  promoCode      PromoCode? @relation(fields: [promoCodeId], references: [id])
-  promoCodeId    Int?
-  promoCodeUsed  String?
-  discountAmount Int?
+  // Stripe integration
+  stripeSessionId  String  @unique
+  stripeCustomerId String? // Customer ID used for this order
+  paymentIntentId  String
+
+  // Order totals (final calculated amounts)
+  subtotal       Int // Items subtotal in cents
+  discountAmount Int // Total discount applied in cents
+  taxAmount      Int // Tax amount in cents
+  shippingAmount Int // Shipping cost in cents (duplicate for clarity)
+  amountTotal    Int // Final total in cents
+  currency       String @default("usd")
+
+  // Tax calculation details (for compliance)
+  taxCalculation Json? // Store full tax calculation details
+
+  status String // "pending", "processing", "shipped", "delivered", "cancelled"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Promo code integration (snapshot)
+  promoCode     PromoCode? @relation(fields: [promoCodeId], references: [id])
+  promoCodeId   Int?
+  promoCodeUsed String? // Code string used
+  promoDiscount Int? // Discount amount in cents
+
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId Int?
 
   promoUsages PromoCodeUsage[]
   items       OrderItem[]
@@ -100,6 +141,7 @@ model Order {
   @@index([status])
   @@index([promoCodeId])
   @@index([createdAt])
+  @@index([stripeSessionId])
 }
 
 model OrderItem {
@@ -112,12 +154,18 @@ model OrderItem {
   // Snapshot of product/variant data at purchase time
   productId    String // For historical reference
   productTitle String
+  productSlug  String // For generating links to product pages
   variantSize  String
   variantColor String
+  variantSku   String? // For inventory tracking                    
 
-  unitPrice  Int // snapshot in cents
+  unitPrice  Int // Price per unit in cents (snapshot)
   quantity   Int
-  totalPrice Int // unitPrice * quantity
+  totalPrice Int // unitPrice * quantity in cents
+
+  // Tax details for this line item (for compliance)
+  taxAmount Int? // Tax on this line item
+  taxRate   Float? // Tax rate applied
 
   @@index([orderId])
   @@index([variantId])
@@ -176,25 +224,78 @@ model Product {
 
 // ──────────────────────────────────────────────────────────────────────────
 // 6) Address
+// 4) Address model (referenced by Cart and Order)
 model Address {
-  id        Int     @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  line1     String
-  line2     String?
-  city      String
-  state     String
-  zip       String
-  country   String
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Address fields
+  firstName  String
+  lastName   String
+  company    String?
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  country    String  @default("US")
+  postalCode String
+  phone      String?
+
+  // Address type and defaults
+  type      String  @default("shipping") // "shipping", "billing", "both"
   isDefault Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Relations
   orders Order[]
+  carts  Cart[] // For shipping address reference
 
   @@index([userId])
+  @@index([userId, isDefault])
 }
+
+//   ──────────────────────────────────────────────────────────────────────────
+// 7) Checkout Session tracking (optional but recommended)
+model CheckoutSession {
+  id              Int    @id @default(autoincrement())
+  stripeSessionId String @unique
+
+  // Reference to cart that initiated checkout
+  cart   Cart? @relation(fields: [cartId], references: [id])
+  cartId Int?
+
+  // Calculated totals at checkout time (before Stripe)
+  subtotal          Int // in cents
+  estimatedTax      Int // in cents (estimated)
+  estimatedShipping Int // in cents
+  promoDiscount     Int // in cents
+  estimatedTotal    Int // in cents
+
+  // Final amounts from Stripe (after webhook)
+  finalTax      Int? // in cents (actual from Stripe)
+  finalShipping Int? // in cents  
+  finalTotal    Int? // in cents
+
+  status String @default("pending") // "pending", "completed", "expired", "cancelled"
+
+  // Stripe webhook data
+  stripeEventId      String? // For idempotency
+  webhookProcessedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stripeSessionId])
+  @@index([cartId])
+  @@index([status])
+}
+
+// Add relation to Cart model
+// (Add this to the Cart model above)
+// checkoutSessions     CheckoutSession[]
 
 // ──────────────────────────────────────────────────────────────────────────
 // 7) SanitySync - Track webhook synchronization status

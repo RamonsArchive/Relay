@@ -125,6 +125,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   provider: 'provider',
+  stripeCustomerId: 'stripeCustomerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   isActive: 'isActive'
@@ -138,6 +139,10 @@ exports.Prisma.CartScalarFieldEnum = {
   promoDiscountAmount: 'promoDiscountAmount',
   promoAppliedAt: 'promoAppliedAt',
   requiresPromoVerification: 'requiresPromoVerification',
+  shippingMethod: 'shippingMethod',
+  shippingAddressId: 'shippingAddressId',
+  stripeCheckoutSessionId: 'stripeCheckoutSessionId',
+  checkoutStatus: 'checkoutStatus',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -155,17 +160,26 @@ exports.Prisma.CartItemScalarFieldEnum = {
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  addressId: 'addressId',
+  shippingAddress: 'shippingAddress',
+  shippingMethod: 'shippingMethod',
+  shippingCost: 'shippingCost',
   stripeSessionId: 'stripeSessionId',
+  stripeCustomerId: 'stripeCustomerId',
   paymentIntentId: 'paymentIntentId',
+  subtotal: 'subtotal',
+  discountAmount: 'discountAmount',
+  taxAmount: 'taxAmount',
+  shippingAmount: 'shippingAmount',
   amountTotal: 'amountTotal',
   currency: 'currency',
+  taxCalculation: 'taxCalculation',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   promoCodeId: 'promoCodeId',
   promoCodeUsed: 'promoCodeUsed',
-  discountAmount: 'discountAmount'
+  promoDiscount: 'promoDiscount',
+  addressId: 'addressId'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -174,11 +188,15 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   variantId: 'variantId',
   productId: 'productId',
   productTitle: 'productTitle',
+  productSlug: 'productSlug',
   variantSize: 'variantSize',
   variantColor: 'variantColor',
+  variantSku: 'variantSku',
   unitPrice: 'unitPrice',
   quantity: 'quantity',
-  totalPrice: 'totalPrice'
+  totalPrice: 'totalPrice',
+  taxAmount: 'taxAmount',
+  taxRate: 'taxRate'
 };
 
 exports.Prisma.VariantScalarFieldEnum = {
@@ -213,13 +231,37 @@ exports.Prisma.ProductScalarFieldEnum = {
 exports.Prisma.AddressScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  company: 'company',
   line1: 'line1',
   line2: 'line2',
   city: 'city',
   state: 'state',
-  zip: 'zip',
   country: 'country',
+  postalCode: 'postalCode',
+  phone: 'phone',
+  type: 'type',
   isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CheckoutSessionScalarFieldEnum = {
+  id: 'id',
+  stripeSessionId: 'stripeSessionId',
+  cartId: 'cartId',
+  subtotal: 'subtotal',
+  estimatedTax: 'estimatedTax',
+  estimatedShipping: 'estimatedShipping',
+  promoDiscount: 'promoDiscount',
+  estimatedTotal: 'estimatedTotal',
+  finalTax: 'finalTax',
+  finalShipping: 'finalShipping',
+  finalTotal: 'finalTotal',
+  status: 'status',
+  stripeEventId: 'stripeEventId',
+  webhookProcessedAt: 'webhookProcessedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -281,6 +323,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
@@ -295,42 +341,20 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  provider: 'provider'
+  provider: 'provider',
+  stripeCustomerId: 'stripeCustomerId'
 };
 
 exports.Prisma.CartOrderByRelevanceFieldEnum = {
   userId: 'userId',
-  tempCartId: 'tempCartId'
+  tempCartId: 'tempCartId',
+  shippingMethod: 'shippingMethod',
+  stripeCheckoutSessionId: 'stripeCheckoutSessionId',
+  checkoutStatus: 'checkoutStatus'
 };
 
 exports.Prisma.CartItemOrderByRelevanceFieldEnum = {
   variantId: 'variantId'
-};
-
-exports.Prisma.OrderOrderByRelevanceFieldEnum = {
-  userId: 'userId',
-  stripeSessionId: 'stripeSessionId',
-  paymentIntentId: 'paymentIntentId',
-  currency: 'currency',
-  status: 'status',
-  promoCodeUsed: 'promoCodeUsed'
-};
-
-exports.Prisma.OrderItemOrderByRelevanceFieldEnum = {
-  variantId: 'variantId',
-  productId: 'productId',
-  productTitle: 'productTitle',
-  variantSize: 'variantSize',
-  variantColor: 'variantColor'
-};
-
-exports.Prisma.VariantOrderByRelevanceFieldEnum = {
-  id: 'id',
-  productId: 'productId',
-  size: 'size',
-  color: 'color',
-  sku: 'sku',
-  sanityRevisionId: 'sanityRevisionId'
 };
 
 exports.Prisma.JsonNullValueFilter = {
@@ -344,6 +368,36 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.OrderOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  shippingMethod: 'shippingMethod',
+  stripeSessionId: 'stripeSessionId',
+  stripeCustomerId: 'stripeCustomerId',
+  paymentIntentId: 'paymentIntentId',
+  currency: 'currency',
+  status: 'status',
+  promoCodeUsed: 'promoCodeUsed'
+};
+
+exports.Prisma.OrderItemOrderByRelevanceFieldEnum = {
+  variantId: 'variantId',
+  productId: 'productId',
+  productTitle: 'productTitle',
+  productSlug: 'productSlug',
+  variantSize: 'variantSize',
+  variantColor: 'variantColor',
+  variantSku: 'variantSku'
+};
+
+exports.Prisma.VariantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  size: 'size',
+  color: 'color',
+  sku: 'sku',
+  sanityRevisionId: 'sanityRevisionId'
+};
+
 exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
@@ -354,12 +408,23 @@ exports.Prisma.ProductOrderByRelevanceFieldEnum = {
 
 exports.Prisma.AddressOrderByRelevanceFieldEnum = {
   userId: 'userId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  company: 'company',
   line1: 'line1',
   line2: 'line2',
   city: 'city',
   state: 'state',
-  zip: 'zip',
-  country: 'country'
+  country: 'country',
+  postalCode: 'postalCode',
+  phone: 'phone',
+  type: 'type'
+};
+
+exports.Prisma.CheckoutSessionOrderByRelevanceFieldEnum = {
+  stripeSessionId: 'stripeSessionId',
+  status: 'status',
+  stripeEventId: 'stripeEventId'
 };
 
 exports.Prisma.SanitySyncOrderByRelevanceFieldEnum = {
@@ -394,6 +459,7 @@ exports.Prisma.ModelName = {
   Variant: 'Variant',
   Product: 'Product',
   Address: 'Address',
+  CheckoutSession: 'CheckoutSession',
   SanitySync: 'SanitySync',
   PromoCode: 'PromoCode',
   PromoCodeUsage: 'PromoCodeUsage'

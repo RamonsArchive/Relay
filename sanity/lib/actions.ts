@@ -4,9 +4,9 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartType, ReviewType, TaxLineItemType, categoriesType } from "@/globalTypes";
+import { CartType, ReviewType, TaxLineItemType, categoriesType, UserType } from "@/globalTypes";
 import slugify from "slugify";
-import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
+import { convertLineItemsWithPriceData, parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
 import { sanitizeSanityId } from "@/lib/utils";
 import { clientRateLimiter, rateLimiter } from "@/lib/rateLimiter";
@@ -1158,6 +1158,7 @@ export const deleteBasketItem = async (userId: string, variantId: string, cartId
 
 
 
+// ===== UPDATED CART SYNC WITH STRIPE CUSTOMER =====
 export const checkCartSync = async (userId: string, temp_cartId: string) => {
   const session = await auth();
   const sessionId = session?.user?.id;
@@ -1168,42 +1169,105 @@ export const checkCartSync = async (userId: string, temp_cartId: string) => {
     return parseServerActionResponse({
       status: "ERROR",
       error: "Unauthorized request"
-    })
+    });
   }
 
   if (userIdSanitized && sessionId !== userIdSanitized) {
     return parseServerActionResponse({
       status: "ERROR",
       error: "Unauthorized request"
-    })
+    });
   }
 
   let cart: CartType | null = null;
+
   if (!userId) {
+    // Handle guest cart
     cart = await prisma.cart.findUnique({
       where: { tempCartId: temp_cartId },
-      include: { items: true },
+      include: { 
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: true
+              }
+            }
+          }
+        },
+        appliedPromoCode: true,
+        shippingAddress: true
+      },
     });
+
     if (!cart) {
-      await prisma.cart.create({
+      cart = await prisma.cart.create({
         data: {
           tempCartId: temp_cartId,
-          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30), // 30 days
+        },
+        include: { 
+          items: {
+            include: {
+              variant: {
+                include: {
+                  product: true
+                }
+              }
+            }
+          },
+          appliedPromoCode: true,
+          shippingAddress: true
         },
       });
     }
   } else {
+    // Handle authenticated user cart
     if (temp_cartId) {
       await syncCart(temp_cartId, userId);
     }
+
     cart = await prisma.cart.findUnique({
       where: { userId },
-      include: { items: true },
+      include: { 
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: true
+              }
+            }
+          }
+        },
+        appliedPromoCode: true,
+        shippingAddress: true,
+        user: true // Include user for Stripe customer creation
+      },
     });
+
     if (!cart) {
-      await prisma.cart.create({
+      cart = await prisma.cart.create({
         data: { userId },
+        include: { 
+          items: {
+            include: {
+              variant: {
+                include: {
+                  product: true
+                }
+              }
+            }
+          },
+          appliedPromoCode: true,
+          shippingAddress: true,
+          user: true
+        },
       });
+    }
+
+    // Ensure user has Stripe customer ID
+    if (cart.user && !cart.user.stripeCustomerId) {
+      await createStripeCustomerForUser(cart.user);
     }
   }
 
@@ -1211,25 +1275,62 @@ export const checkCartSync = async (userId: string, temp_cartId: string) => {
     return parseServerActionResponse({
       status: "ERROR",
       error: "Failed to create or sync cart"
-    })
+    });
   }
 
   return parseServerActionResponse({
     status: "SUCCESS",
     error: "",
     cart: cart,
-  })
-}
+  });
+};
 
+// ===== STRIPE CUSTOMER CREATION =====
+const createStripeCustomerForUser = async (user: UserType) => {
+  try {
+    const stripeCustomer = await stripe.customers.create({
+      email: user.email,
+      name: user.name || undefined,
+      metadata: {
+        userId: user.id,
+      },
+    });
 
+    // Update user with Stripe customer ID
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { stripeCustomerId: stripeCustomer.id },
+    });
+
+    console.log(`Created Stripe customer ${stripeCustomer.id} for user ${user.id}`);
+    return stripeCustomer.id;
+  } catch (error) {
+    console.error('Failed to create Stripe customer:', error);
+    return null;
+  }
+};
+
+// ===== UPDATED SYNC CART FUNCTION =====
 const syncCart = async (guestId: string, userId: string) => {
   const cookieJar = await cookies();
+  
   const guestCart = await prisma.cart.findUnique({
     where: { tempCartId: guestId },
-    include: { items: true },
+    include: { 
+      items: true,
+      appliedPromoCode: true,
+      shippingAddress: true
+    },
   });
 
-  if (!guestCart || guestCart.items.length === 0) return;
+  if (!guestCart || guestCart.items.length === 0) {
+    // Clean up empty guest cart
+    if (guestCart) {
+      await prisma.cart.delete({ where: { tempCartId: guestId } });
+    }
+    cookieJar.delete("temp_cartId");
+    return;
+  }
 
   let userCart = await prisma.cart.findUnique({
     where: { userId },
@@ -1237,9 +1338,19 @@ const syncCart = async (guestId: string, userId: string) => {
   });
 
   if (!userCart) {
+    // Create new user cart with guest cart data
     await prisma.cart.create({
       data: {
         userId,
+        // Transfer promo code if applied
+        appliedPromoCodeId: guestCart.appliedPromoCodeId,
+        promoDiscountAmount: guestCart.promoDiscountAmount,
+        promoAppliedAt: guestCart.promoAppliedAt,
+        requiresPromoVerification: guestCart.requiresPromoVerification,
+        // Transfer shipping preferences
+        shippingMethod: guestCart.shippingMethod,
+        shippingAddressId: guestCart.shippingAddressId,
+        // Create cart items
         items: {
           create: guestCart.items.map(item => ({
             variantId: item.variantId,
@@ -1249,8 +1360,25 @@ const syncCart = async (guestId: string, userId: string) => {
       }
     });
   } else {
+    // Merge guest cart into existing user cart
+    
+    // Transfer promo code if guest cart has one and user cart doesn't
+    if (guestCart.appliedPromoCodeId && !userCart.appliedPromoCodeId) {
+      await prisma.cart.update({
+        where: { id: userCart.id },
+        data: {
+          appliedPromoCodeId: guestCart.appliedPromoCodeId,
+          promoDiscountAmount: guestCart.promoDiscountAmount,
+          promoAppliedAt: guestCart.promoAppliedAt,
+          requiresPromoVerification: guestCart.requiresPromoVerification,
+        }
+      });
+    }
+
+    // Merge items
     for (const item of guestCart.items) {
       const existingItem = userCart.items.find(i => i.variantId === item.variantId);
+      
       if (existingItem) {
         await prisma.cartItem.update({
           where: { id: existingItem.id },
@@ -1268,9 +1396,325 @@ const syncCart = async (guestId: string, userId: string) => {
     }
   }
 
+  // Clean up guest cart
   await prisma.cart.delete({ where: { tempCartId: guestId } });
   cookieJar.delete("temp_cartId");
 };
+
+
+// ====== VERIFY CART FUNCTION =====
+export const verifyCart = async (userId: string, cartId: number) => {
+  try {
+
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!userIdSanitized && !cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",    
+        error: "Unauthorized request"
+      })
+    }
+
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:verifyCart`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"  
+      })
+    }
+
+    const transaction = await prisma.$transaction(async (tx) => {
+      const cart = await tx.cart.findUnique({
+        where: { id: cartId },
+        include: { items: { include: { variant: true } } },
+      });
+  
+      if (!cart) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Cart not found"
+        })
+      }
+      const cartItems = cart.items;
+  
+      if (cartItems.length === 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Cart is empty"
+        })
+      }
+  
+      const variantIds = cartItems.map((item) => item.variantId);
+      const existingVariants = new Set<string>();
+      const variants = await tx.variant.findMany({
+        where: { id: { in: variantIds } },
+        select: { id: true, stockQuantity: true }
+      })
+
+      for (const variant of variants) {
+        existingVariants.add(variant.id);
+      }
+
+      const missingVariants = variantIds.filter((id) => !existingVariants.has(id));
+      if (missingVariants.length > 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: `Missing variants: ${missingVariants.join(", ")}`
+        })
+      }
+
+      for (const item of cartItems) {
+        const variant = variants.find((v) => v.id === item.variantId);
+        if (!variant) {
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: `Missing variant: ${item.variantId}`
+          })
+        }
+
+        if (variant.stockQuantity < item.quantity) {
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: `Insufficient stock for variant: ${item.variantId}`
+          })
+        }  
+      }
+
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        error: "",
+        data: { cart: cart },
+      })
+    });
+
+    if (transaction.status === "ERROR") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: transaction.error
+      })
+    }
+
+    const cart = transaction.data.cart;
+    if (!cart) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to verify cart"
+      })
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      cart: cart,   
+    })
+
+    // check if this is a good validation for the cart? 
+
+  } catch (error) {
+    console.error("Error verifying cart", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+}
+
+// NEED TO STILL CREAT A STRIPE USER AFTER AUTH LOGIN
+
+// ===== PROFESSIONAL CHECKOUT FUNCTION =====
+export const initiateCheckout = async (userId: string, shippingMethod: string, shippingAddress: any) => {
+  try {
+    const cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            variant: {
+              include: {
+                product: true
+              }
+            }
+          }
+        },
+        appliedPromoCode: true,
+        shippingAddress: true,
+        user: true
+      }
+    });
+
+    if (!cart || cart.items.length === 0) {
+      throw new Error('Cart is empty');
+    }
+
+    // Ensure user has Stripe customer
+    let stripeCustomerId = cart.user?.stripeCustomerId;
+    if (!stripeCustomerId && cart.user) {
+      stripeCustomerId = await createStripeCustomerForUser(cart.user);
+    }
+
+    // Create line items for Stripe
+    const lineItems = cart.items.map((item) => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.variant.product.title || 'Product',
+          description: `${item.variant.size} - ${item.variant.color}`,
+          metadata: {
+            productId: item.variant.product.id,
+            variantId: item.variant.id,
+          }
+        },
+        unit_amount: Math.round((item.variant.product.price || 0) * 100), // Convert to cents
+      },
+      quantity: item.quantity,
+    }));
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      customer: stripeCustomerId || undefined,
+      customer_creation: stripeCustomerId ? undefined : 'always',
+      
+      // Let Stripe handle tax calculation
+      automatic_tax: { enabled: true },
+      
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
+      
+      metadata: {
+        cartId: cart.id.toString(),
+        userId: userId,
+      },
+    });
+
+    // Update cart with checkout session
+    await prisma.cart.update({
+      where: { id: cart.id },
+      data: {
+        stripeCheckoutSessionId: session.id,
+        checkoutStatus: 'in_progress',
+      }
+    });
+
+    return {
+      status: 'SUCCESS',
+      checkoutUrl: session.url,
+      sessionId: session.id,
+    };
+
+  } catch (error) {
+    console.error('Checkout initiation failed:', error);
+    return {
+      status: 'ERROR',
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const calculateShippingCost = async (shippingMethod: string) => {
+  const shippingCost = getShippingOptions.find(option => option.shipping_rate_data.id === shippingMethod)?.shipping_rate_data.fixed_amount.amount;
+  return shippingCost;
+};
+
+// ===== SHIPPING OPTIONS =====
+const getShippingOptions = [
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 0, currency: 'usd' }, // $0
+      display_name: 'Free Shipping',
+      id: 'free',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 999, currency: 'usd' }, // $9.99
+      display_name: 'Standard Shipping',
+      id: 'standard',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1299, currency: 'usd' }, // $0
+      display_name: 'Express Shipping',
+      id: 'express',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 2 },
+        maximum: { unit: 'business_day', value: 5 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1999, currency: 'usd' }, // $19.99
+      display_name: 'Overnight Shipping',
+      id: 'overnight',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 1 },
+        maximum: { unit: 'business_day', value: 2 },
+      },
+    },
+  },
+];
+
+/* 
+KEY IMPROVEMENTS:
+
+1. **No Stale Data**: Removed snapshot fields from Cart model
+   - Totals calculated fresh each time
+   - No issues with outdated tax/shipping when items change
+
+2. **Stripe Customer Integration**: 
+   - Automatically create/reuse Stripe customers
+   - Store customer ID for future purchases
+   - Better checkout experience for returning customers
+
+3. **Real-time Calculations**:
+   - calculateCartTotals() function for fresh calculations
+   - Only calculate tax when shipping address is available
+   - Handles promo codes, shipping, tax dynamically
+
+4. **Better Data Model**:
+   - Address model for reusable shipping addresses
+   - Order model with proper snapshots (only after purchase)
+   - Checkout session tracking for debugging
+
+5. **Professional Checkout Flow**:
+   - Validate cart before checkout
+   - Ensure Stripe customer exists
+   - Let Stripe handle tax calculation (more accurate)
+   - Proper error handling
+
+This approach eliminates stale data issues while maintaining 
+professional checkout functionality!
+*/
+
+
+
+
+
 
 
 
@@ -1543,7 +1987,7 @@ export const transferPromoCodeToOrder = async (
       data: {
         promoCodeId: cart.appliedPromoCodeId,
         promoCodeUsed: cart.appliedPromoCode.code,
-        discountAmount: cart.promoDiscountAmount
+        discountAmount: cart.promoDiscountAmount ?? 0
       }
     });
 
@@ -1594,8 +2038,6 @@ const calculateDiscount = (promoCode: any, cartTotal: number): number => {
   // Can't discount more than cart total
   return Math.min(discountAmount, cartTotal);
 };
-
-
 
 
 export const checkZipCode = async (userId: string, zipCode: string) => {

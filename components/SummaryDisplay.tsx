@@ -5,10 +5,12 @@ import { Button } from './ui/button';
 import { Search, Tag } from 'lucide-react';
 import Form from "next/form";
 import { convertLineItemsForTax } from '@/lib/utils';
-import { applyPromoCodeToCart, estimateTaxForZipCode } from '@/sanity/lib/actions';
+import { applyPromoCodeToCart, estimateTaxForZipCode, removePromoCodeFromCart, validatePromoCodeForOrder } from '@/sanity/lib/actions';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], cartId: number, userId: string}) => {
+    const router = useRouter(); 
     const [selectedShipping, setSelectedShipping] = useState('standard');
     const [zipCode, setZipCode] = useState('');
     const [discount, setDiscount] = useState(0);
@@ -107,6 +109,29 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
       error: ''
     });
 
+    const checkout = async () => {
+      if (!userId) {
+       const callbackUrl = `${window.location.origin}/checkout`;
+        router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        toast.info('Please login to checkout', {
+          description: 'You must be logged in to checkout',
+        });
+      }
+
+      if (discount > 0) {
+        const verifyPromoCode = await validatePromoCodeForOrder(cartId, userId, subtotal);
+        if (verifyPromoCode.status === 'ERROR') {
+          removePromoCodeFromCart(cartId);
+          toast.error('ERROR', { description: verifyPromoCode.error });
+          return;
+        }
+      }
+
+      const veriyCart = "";
+
+
+    }
+
   return (
     <div className="flex flex-row w-full justify-end w-full mt-5 lg:mt-0">
         <div className="flex flex-col w-full h-full p-5 border border-gray-300 border-[1px] rounded-md shadow-md gap-y-5">
@@ -156,9 +181,9 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
               <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Shipping</p>
               <div className="flex flex-col w-full gap-y-2">
               {shippingOptions.map((option) => (
-                <div key={option.id} className={`flex flex-row w-full justify-between items-center gap-x-3 px-3 py-2 border border-gray-300 border-[1px] rounded-md transition-all duration-300 ease-in-out cursor-pointer ${selectedShipping === option.id ? "bg-blue-100" : ""}`} onClick={() => setSelectedShipping(option.id)}> 
-                  <div className={`flex flex-row items-center justify-center w-5 h-5  rounded-full border border-gray-300 transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-blue-100" : ""}`}> 
-                  <div className={`object-cover w-full h-full rounded-full bg-transparent transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-blue-200" : "bg-transparent"}`}>
+                <div key={option.id} className={`flex flex-row w-full justify-between items-center gap-x-3 px-3 py-2 border border-gray-300 border-[1px] rounded-md transition-all duration-300 ease-in-out cursor-pointer ${selectedShipping === option.id ? "bg-blue-200" : ""}`} onClick={() => setSelectedShipping(option.id)}> 
+                  <div className={`flex flex-row items-center justify-center w-5 h-5 rounded-full border border-gray-300 transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-blue-100" : ""}`}> 
+                  <div className={`object-cover w-full h-full rounded-full transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-[#ffffff]" : "bg-transparent"}`}>
                     </div>
                   </div>
                   <p className="font-light text-[12px] sm:text-[14px] md:text-[16px] flex-1">
@@ -187,7 +212,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
             </form>
             </div>
             <div className="flex flex-row w-full justify-between border-white bg-primary-200 text-white border border-gray-300 border-[1px] transition-all duration-300 ease-in-out rounded-md hover:opacity-70 mt-3">
-              <button className="flex items-center justify-center px-2 py-2 w-full">
+              <button className="flex items-center justify-center px-2 py-2 w-full" onClick={checkout}>
                 <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Proceed to Checkout</p>
               </button>
             </div>

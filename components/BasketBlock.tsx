@@ -18,7 +18,7 @@ const BasketBlock = ({userId, item, cartId, temp_cartId}: {userId: string, item:
     }
 
   return (
-    <div className="flex flex-row gap-y-2 w-full h-[250px] gap-x-5 justify-start pt-5 border-b-[1px] border-gray-300 pb-5 pt-5 first:pt-3 last:border-b-0">
+    <div className="flex flex-row gap-y-2 w-full h-[200px] xs:h-[250px] gap-x-5 justify-start pt-5 border-b-[1px] border-gray-300 pb-5 pt-5 first:pt-3 last:border-b-0">
       
         <Link href={`/product/${productId}`} className="flex w-1/3 h-full min-w-[100px] max-w-[200px]">
             <Image src={mainImage} alt={"main image"} width={100} height={100} className="object-cover w-full h-full rounded-md" />

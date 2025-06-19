@@ -1,4 +1,5 @@
 import { ReviewType, VariantType, ReviewCount, ColorType, VariantItemType, TaxLineItemType, BasketType } from "@/globalTypes"
+import { cart } from "@/sanity/schemaTypes/cart"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -194,16 +195,20 @@ export const convertLineItemsForTax = (checkoutLineItems: BasketType[]) => {
 };
 
 export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) => {
-  return checkoutLineItems.map((item) => ({
+  return checkoutLineItems.map((item: any) => ({
     price_data: {
-      currency: "usd",
-      unit_amount: Math.round((item.price || 0) * 100), // Price in cents
+      currency: 'usd',
       product_data: {
-        name: `Product ${item.productId}`,
+        name: item.variant.product.title,
+        description: `${item.variant.size} - ${item.variant.color}`,
+        metadata: {
+          productId: item.variant.product.id,
+          variantId: item.variant.id,
+        }
       },
+      unit_amount: Math.round(item.variant.price * 100), // Convert to cents
     },
     quantity: item.quantity,
-    tax_behavior: "exclusive",
   }));
 };
 

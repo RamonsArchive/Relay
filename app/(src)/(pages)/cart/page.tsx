@@ -76,7 +76,7 @@ const CartPage = async () => {
         </div>
         
         {/* Cart items container with proper height management */}
-        <div className="flex flex-col w-full flex-1 lg:max-h-[calc(100vh-18rem)] justify-start overflow-y-auto scrollbar-hidden p-5 border border-gray-300 border-[1px] rounded-md shadow-md mt-4 pb-20 lg:pb-0">
+        <div className="flex flex-col w-full flex-1 lg:max-h-[calc(100vh-15rem)] justify-start overflow-y-auto scrollbar-hidden p-3 sm:p-5 border border-gray-300 border-[1px] rounded-md shadow-md mt-4 pb-3 lg:pb-0">
           {cartItems && cartItems.map((item: BasketType) => (
             <Suspense key={item.id} fallback={<div>Loading...</div>}>
               <BasketBlock key={item.id} userId={userId} item={item} cartId={cartId} temp_cartId={temp_cartId}/>
