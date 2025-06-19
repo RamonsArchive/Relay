@@ -4,16 +4,17 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartType, ReviewType, categoriesType } from "@/globalTypes";
+import { CartType, ReviewType, TaxLineItemType, categoriesType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
 import { sanitizeSanityId } from "@/lib/utils";
-import { rateLimiter } from "@/lib/rateLimiter";
+import { clientRateLimiter, rateLimiter } from "@/lib/rateLimiter";
 import isUrl from "is-url"
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { stripe } from "@/lib/stripe";
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -1597,4 +1598,218 @@ const calculateDiscount = (promoCode: any, cartTotal: number): number => {
 
 
 
+export const checkZipCode = async (userId: string, zipCode: string) => {
+  try {
+    console.log("rgith before the fetch request");
+    const request = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${process.env.GOOGLE_MAPS_API_KEY}`)
+    if (!request.ok) {
+      console.warn("Failed to fetch zip code");
+      console.log("request", request);
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to fetch zip code"
+      })
+    }
+    const data = await request.json();
 
+    if (data.status !== "OK") {
+      console.warn("Failed to fetch zip code");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to fetch zip code"
+      })
+    }
+
+    return parseServerActionResponse({
+      data: data,
+      status: "SUCCESS",
+      error: "",
+    })
+
+  } catch (error) {
+    console.error("Error checking zip code", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to check zip code"
+    })
+  }
+}
+
+
+export const estimateTaxForZipCode = async (userId: string, zipCode: string, taxLineItems: TaxLineItemType[], shippingCost: number) => {
+  try {
+    const session = await auth()
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!zipCode) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No zipCode provided"
+      })
+    }
+
+    if (userIdSanitized) {
+      const {success} = await clientRateLimiter.limit(`${userIdSanitized}:checkZipCode`);
+      if (!success) {
+        console.warn("Rate limit exceeded. Please try again later");
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Rate limit exceeded. Please try again later"
+        })
+      }
+      if (sessionId !== userIdSanitized) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Unauthorized request"
+        })
+      }
+    } else {
+      const {success} = await clientRateLimiter.limit(`checkZipCode:${zipCode}`);
+      if (!success) {
+        console.warn("Rate limit exceeded. Please try again later");
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Rate limit exceeded. Please try again later"
+        })
+    }
+  }
+
+  const placeData = await checkZipCode(userId, zipCode);
+    if (placeData.status === "ERROR") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to fetch zip code"
+      });
+    }
+    
+    const addressParts = placeData.data.results[0].formatted_address.split(',');
+    if (addressParts.length < 2) {
+      return { status: "ERROR", error: "Invalid address format" };
+    }
+    
+    const city = addressParts[0];
+    const stateAndZip = addressParts[1].trim().split(' ');
+    const state = stateAndZip[0];
+    const postalCode = stateAndZip[1];
+
+    // Ensure shipping cost is in cents
+    const shippingCostCents = Math.round(shippingCost * 100);
+
+    console.log("shippingCostCents", shippingCostCents);
+
+    const taxCalculation = await stripe.tax.calculations.create({
+      currency: "usd",
+      line_items: taxLineItems as any,
+      tax_date: Math.floor(Date.now() / 1000),
+      shipping_cost: shippingCostCents > 0 ? {
+        amount: shippingCostCents,
+        tax_behavior: "exclusive",
+      } : undefined,
+      customer_details: {
+        address: {
+          city: city,
+          state: state,
+          postal_code: postalCode,
+          country: "US",
+        },
+        address_source: "shipping", // Add this
+      },
+      // Add expand to get more details
+    });
+
+    return parseServerActionResponse({       
+      status: "SUCCESS",
+      error: "",
+      calculation: taxCalculation,
+      totalTax: taxCalculation.tax_amount_exclusive,
+      totalAmount: taxCalculation.amount_total,
+    })
+
+  } catch (error) {
+    console.error("Tax calculation error:", error);
+    return {
+      status: "ERROR",
+      error: (error as Error).message || "Failed to calculate tax",
+    };
+  }
+};
+
+
+/*
+export const createCheckoutSession = async (userId: string, promoCode?: string) => {
+  try {
+    // Get line items
+    const lineItems = await getCartItemsForStripe(userId);
+    
+    // Get cart totals for promo validation
+    const cartSummary = await getCartSummary(userId);
+    
+    let discounts = [];
+    let shippingOptions = [];
+    
+    // Handle promo codes
+    if (promoCode) {
+      const promoDiscount = await validateAndApplyPromoCode(userId, promoCode, cartSummary.subtotal);
+      if (promoDiscount.valid) {
+        // Create Stripe coupon if it doesn't exist
+        const stripeCoupon = await createOrGetStripeCoupon(promoDiscount);
+        discounts.push({ coupon: stripeCoupon.id });
+      }
+    }
+    
+    // Handle shipping
+    if (cartSummary.requiresShipping) {
+      shippingOptions = [{
+        shipping_rate_data: {
+          type: 'fixed_amount',
+          fixed_amount: {
+            amount: Math.round(cartSummary.shippingCost * 100), // Convert to cents
+            currency: 'usd',
+          },
+          display_name: 'Standard Shipping',
+          delivery_estimate: {
+            minimum: {
+              unit: 'business_day',
+              value: 3,
+            },
+            maximum: {
+              unit: 'business_day', 
+              value: 7,
+            },
+          },
+        },
+      }];
+    }
+
+    // Create checkout session
+    const session = await stripe.checkout.sessions.create({
+      customer: stripeCustomerId,
+      payment_method_types: ['card'],
+      line_items: lineItems, // Individual items, not totals
+      mode: 'payment',
+      
+      // Apply discounts
+      ...(discounts.length > 0 && { discounts }),
+      
+      // Shipping options
+      ...(shippingOptions.length > 0 && { shipping_options: shippingOptions }),
+      
+      // Auto-calculate tax on each line item
+      automatic_tax: {
+        enabled: true,
+      },
+      
+      // Other settings...
+      success_url: `${process.env.NEXT_PUBLIC_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
+    });
+
+    return { sessionId: session.id, url: session.url };
+
+  } catch (error) {
+    console.error('Failed to create checkout session:', error);
+    throw error;
+  }
+};
+ */

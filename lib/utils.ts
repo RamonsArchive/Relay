@@ -1,4 +1,4 @@
-import { ReviewType, VariantType, ReviewCount, ColorType, VariantItemType } from "@/globalTypes"
+import { ReviewType, VariantType, ReviewCount, ColorType, VariantItemType, TaxLineItemType, BasketType } from "@/globalTypes"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -180,4 +180,30 @@ export const getSpecialFilters = (keywords: string[]) => {
 
   return result; // saftey check
 }
+
+
+export const convertLineItemsForTax = (checkoutLineItems: BasketType[]) => {
+  return checkoutLineItems.map((item) => ({
+    amount: Math.round((item.price || 0) * item.quantity * 100), // Convert to cents
+    tax_code: "txcd_99999999",
+    tax_behavior: "exclusive",
+    reference: `${item.productId}-${item.id}`,
+    // Add tax_code if you have product tax codes
+    // tax_code: item.tax_code || undefined,
+  }));
+};
+
+export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) => {
+  return checkoutLineItems.map((item) => ({
+    price_data: {
+      currency: "usd",
+      unit_amount: Math.round((item.price || 0) * 100), // Price in cents
+      product_data: {
+        name: `Product ${item.productId}`,
+      },
+    },
+    quantity: item.quantity,
+    tax_behavior: "exclusive",
+  }));
+};
 

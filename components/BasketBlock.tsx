@@ -25,7 +25,7 @@ const BasketBlock = ({userId, item, cartId, temp_cartId}: {userId: string, item:
         </Link>
 
         <div className="flex flex-1 w-full h-full">
-            <div className="flex flex-col justify-between w-full">
+            <div className="flex flex-col w-full gap-y-3">
                 <div className="flex flex-row gap-x-2 items-center justify-between">
                     <Link href={`/product/${productId}`} className="font-plex-sans text-[18px] xs:text-[22px] md:text-[26px] font-bold">
                         {title}

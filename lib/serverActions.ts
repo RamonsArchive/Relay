@@ -1,7 +1,7 @@
 "use server";
 import { revalidateTag } from "next/cache";
 import { signIn, signOut } from '@/auth';
-import { parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
+import { cn, parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
 import { prisma } from "@/lib/prisma";
@@ -290,6 +290,7 @@ const getCartInfo = async (cart: CartType | null) => {
               title: true,
               price: true,
               images: true,
+              description: true,
             }
           }
         }
@@ -309,7 +310,8 @@ const getCartInfo = async (cart: CartType | null) => {
         quantity: item.quantity,
         lineSubtotal: (variant.product.price || 0) * item.quantity,
         stockQuantity: variant.stockQuantity,
-        images: variant.product.images
+        images: variant.product.images,
+        description: variant.product.description,
       }
       basket.push(inBasket);
     }

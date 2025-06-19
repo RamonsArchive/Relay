@@ -44,6 +44,7 @@
     "sanity-plugin-markdown": "^5.0.0",
     "slugify": "^1.6.6",
     "sonner": "^2.0.1",
+    "stripe": "^18.2.1",
     "styled-components": "^6.1.15",
     "styled-jsx": "^5.1.6",
     "tailwind-merge": "^3.0.1"

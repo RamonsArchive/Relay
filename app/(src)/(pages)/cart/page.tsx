@@ -29,7 +29,7 @@ const CartPage = async () => {
   const cartId = theCart.cartId;
 
   return (
-    <main className="relative min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] flex flex-col lg:flex-row w-full py-5 px-5 sm:px-20 gap-x-5">
+    <main className="relative pt-[5rem] md:pt-[1rem] min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] flex flex-col lg:flex-row w-full py-5 px-5 sm:px-20 gap-x-5">
       <div className="flex flex-col w-full min-h-0">
         <div className="flex flex-col gap-x-2 items-center sm:items-start justify-start w-full">
           <div className="flex flex-row w-full">
@@ -86,7 +86,9 @@ const CartPage = async () => {
       </div>
       
       {/* Summary will take its natural height */}
-      <SummaryDisplay cartItems={cartItems} cartId={cartId} userId={userId}/>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SummaryDisplay cartItems={cartItems} cartId={cartId} userId={userId}/>
+      </Suspense>
     </main>
   );
 };

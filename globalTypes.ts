@@ -402,6 +402,7 @@ export type BasketType = {
   price: number | null;
   images: JsonValue | null;
   lineSubtotal: number | null;
+  description: string | null;
 }
 
 
@@ -411,10 +412,15 @@ export type CartResponseType = {
 }
 
 export type SummaryStateType = {
-  subtotal: number;
+  // subtotal: number;
   discount: number;
   discountPercentage?: number;
-  shipping: number;
   tax: number;
-  total: number;
+ //  total: number;
+}
+
+export type TaxLineItemType = {
+  amount: number;
+  tax_behavior: string;
+  reference: string;
 }
