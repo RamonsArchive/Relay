@@ -1303,10 +1303,17 @@ const createStripeCustomerForUser = async (user: UserType) => {
     });
 
     console.log(`Created Stripe customer ${stripeCustomer.id} for user ${user.id}`);
-    return stripeCustomer.id;
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: { stripeCustomerId: stripeCustomer.id },
+    })
   } catch (error) {
     console.error('Failed to create Stripe customer:', error);
-    return null;
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to create Stripe customer"
+    })
   }
 };
 
@@ -1424,6 +1431,13 @@ export const verifyCart = async (userId: string, cartId: number) => {
       })
     }
 
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
     const { success } = await rateLimiter.limit(`${userIdSanitized}:verifyCart`);
     if (!success) {
       return parseServerActionResponse({
@@ -1434,7 +1448,9 @@ export const verifyCart = async (userId: string, cartId: number) => {
 
     const transaction = await prisma.$transaction(async (tx) => {
       const cart = await tx.cart.findUnique({
-        where: { id: cartId },
+        where: { id: cartId,
+          userId: userIdSanitized,
+         },
         include: { items: { include: { variant: true } } },
       });
   
@@ -1531,8 +1547,34 @@ export const verifyCart = async (userId: string, cartId: number) => {
 // NEED TO STILL CREAT A STRIPE USER AFTER AUTH LOGIN
 
 // ===== PROFESSIONAL CHECKOUT FUNCTION =====
-export const initiateCheckout = async (userId: string, shippingMethod: string, shippingAddress: any) => {
+export const initiateCheckout = async (userId: string) => {
   try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:initiateCheckout`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+
     const cart = await prisma.cart.findUnique({
       where: { userId },
       include: {
@@ -1558,7 +1600,14 @@ export const initiateCheckout = async (userId: string, shippingMethod: string, s
     // Ensure user has Stripe customer
     let stripeCustomerId = cart.user?.stripeCustomerId;
     if (!stripeCustomerId && cart.user) {
-      stripeCustomerId = await createStripeCustomerForUser(cart.user);
+      const result = await createStripeCustomerForUser(cart.user);
+      if (result.status === "ERROR") {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: result.error
+        })
+      }
+      stripeCustomerId = result.data.stripeCustomerId;
     }
 
     // Create line items for Stripe
@@ -1579,12 +1628,18 @@ export const initiateCheckout = async (userId: string, shippingMethod: string, s
     }));
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const stripeSession = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: lineItems,
       customer: stripeCustomerId || undefined,
       customer_creation: stripeCustomerId ? undefined : 'always',
+
+      // now stripe will save the address and shipping method to the customer object
+      customer_update: {
+        address: 'auto',
+        shipping: 'auto',
+      },
       
       // Let Stripe handle tax calculation
       automatic_tax: { enabled: true },
@@ -1602,15 +1657,18 @@ export const initiateCheckout = async (userId: string, shippingMethod: string, s
     await prisma.cart.update({
       where: { id: cart.id },
       data: {
-        stripeCheckoutSessionId: session.id,
+        stripeCheckoutSessionId: stripeSession.id,
         checkoutStatus: 'in_progress',
       }
     });
 
     return {
       status: 'SUCCESS',
-      checkoutUrl: session.url,
-      sessionId: session.id,
+      error: "",
+      clientSecret: stripeSession.client_secret,
+      successUrl: stripeSession.success_url,
+      cancelUrl: stripeSession.cancel_url,
+      sessionId: stripeSession.id,
     };
 
   } catch (error) {
@@ -1678,6 +1736,67 @@ const getShippingOptions = [
     },
   },
 ];
+
+
+export const setShippingMethod = async (userId: string, shippingMethod: string, temp_cartId: string | null) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+    console.log("temp_cartId", temp_cartId);
+
+    if (!userIdSanitized && !temp_cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:setShippingMethod`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
+    const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId || "" };
+
+
+    const update = await prisma.cart.update({
+      where: {
+        ...findCartBy,
+      },
+      data: {
+        shippingMethod: shippingMethod,
+      }
+    })
+
+    if (!update) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update cart"
+      })
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: { cart: update },
+    })
+  } catch (error) {
+    console.error("Error setting shipping method", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+}
 
 /* 
 KEY IMPROVEMENTS:

@@ -8,21 +8,13 @@ const SignInContent = () => {
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl") || "/";
   
-    const [fullCallbackUrl, setFullCallbackUrl] = useState(callbackUrl);
-  
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        setFullCallbackUrl(new URL(callbackUrl, window.location.origin).href);
-      }
-    }, [callbackUrl]);
-
   return (
     <>
         <p className="font-plex-sans font-medium text-[16px] md:text-[20px] text-black">
             Please sign in to continue
           </p>
           <form
-            action={() => handleSignIn(fullCallbackUrl)}
+            action={() => handleSignIn(callbackUrl)}
             className="sign-in-button bg-primary-200 text-white font-plex-sans text-[16px] md:text-[20px] w-full"
           >
             <button type="submit" className="w-full h-full">

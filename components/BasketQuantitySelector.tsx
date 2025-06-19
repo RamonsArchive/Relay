@@ -15,7 +15,7 @@ const BasketQuantitySelector = ({userId, variantId, productId, quantity, stockQu
 
         if (newQuantity > stockQuantity) {
             toast.error("ERROR", {
-                description: `Only ${stockQuantity} ${quantity} left in stock`
+                description: `Selected ${quantity} items, but only ${stockQuantity} left in stock`
             });
             return;
         } 

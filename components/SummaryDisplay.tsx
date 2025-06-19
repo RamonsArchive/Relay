@@ -5,13 +5,14 @@ import { Button } from './ui/button';
 import { Search, Tag } from 'lucide-react';
 import Form from "next/form";
 import { convertLineItemsForTax } from '@/lib/utils';
-import { applyPromoCodeToCart, estimateTaxForZipCode, removePromoCodeFromCart, validatePromoCodeForOrder } from '@/sanity/lib/actions';
+import { applyPromoCodeToCart, estimateTaxForZipCode, initiateCheckout, removePromoCodeFromCart, setShippingMethod, validatePromoCodeForOrder, verifyCart } from '@/sanity/lib/actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], cartId: number, userId: string}) => {
+const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId: string, path: string, cartItems: BasketType[], cartId: number, temp_cartId: string | null}) => {
+    console.log("temp_cartId in summary display", temp_cartId);
     const router = useRouter(); 
-    const [selectedShipping, setSelectedShipping] = useState('standard');
+    const [selectedShipping, setSelectedShipping] = useState("");
     const [zipCode, setZipCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [discountPercentage, setDiscountPercentage] = useState(0);
@@ -21,9 +22,9 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
     const zipCodeRef = useRef<string>("");  
   
     const shippingOptions = useMemo(() => [
-      { id: 'standard', name: 'Standard (3-7 business days)', price: 8.99 },
-      { id: 'express', name: 'Express (2-5 business days)', price: 12.99 },
-      { id: 'overnight', name: 'Overnight (1-2 business days)', price: 19.99 }
+      { id: 'standard', name: 'Standard (3-7 business days)', price: 899 },
+      { id: 'express', name: 'Express (2-5 business days)', price: 1299 },
+      { id: 'overnight', name: 'Overnight (1-2 business days)', price: 1999 }
     ], []);
   
     const shipping = useMemo(() => {
@@ -81,8 +82,8 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
       }
     };
   
-    const handlePromoSubmit = async (formData: any) => {
-      const promoCode = formData.get('promoCode');
+    const handlePromoSubmit = async (prevState: any, formData: FormData) => {
+      const promoCode = formData.get('promoCode') as string;
       if (!promoCode) {
         toast.error('ERROR', { description: 'Please enter a promo code' });
         return { status: 'ERROR', error: 'Please enter a promo code' };
@@ -105,31 +106,90 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
     };
   
     const [state, formAction, isPending] = useActionState(handlePromoSubmit, {
-      status: 'INITIAL',
+      status: 'INITIAL' as const,
       error: ''
     });
 
     const checkout = async () => {
-      if (!userId) {
-       const callbackUrl = `${window.location.origin}/checkout`;
-        router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-        toast.info('Please login to checkout', {
-          description: 'You must be logged in to checkout',
-        });
-      }
+      try {
+        setIsLoading(true);
 
-      if (discount > 0) {
-        const verifyPromoCode = await validatePromoCodeForOrder(cartId, userId, subtotal);
-        if (verifyPromoCode.status === 'ERROR') {
-          removePromoCodeFromCart(cartId);
-          toast.error('ERROR', { description: verifyPromoCode.error });
+        if (selectedShipping === "") {
+          toast.error('ERROR', { description: 'Please select a shipping method' });
+          setIsLoading(false);
           return;
         }
+
+        if (!userId) {
+          console.log("path", path);
+          const callbackUrl = `${path}/cart`;
+          setIsLoading(false);
+          console.log("callbackUrl", callbackUrl);
+          router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+          toast.info('Please login to checkout', {
+            description: 'You must be logged in to checkout',
+          });
+          return;
+        }
+  
+        if (discount > 0) {
+          const verifyPromoCode = await validatePromoCodeForOrder(cartId, userId, subtotal);
+          if (verifyPromoCode.status === 'ERROR') {
+            removePromoCodeFromCart(cartId);
+            toast.error('ERROR', { description: verifyPromoCode.error });
+            return;
+          }
+        }
+  
+        const veriyCart = await verifyCart(userId, cartId);
+  
+        if (veriyCart.status === 'ERROR') {
+          toast.error('ERROR', { description: veriyCart.error });
+          return;
+        }
+        toast.success('SUCCESS', { description: 'Cart verified successfully' });
+  
+        const initiateCheckoutResult = await initiateCheckout(userId);
+        if (initiateCheckoutResult.status === 'ERROR') {
+          toast.error('ERROR', { description: initiateCheckoutResult.error });
+          setIsLoading(false);
+          router.push(initiateCheckoutResult.cancelUrl);
+          return;
+        }
+        toast.success('SUCCESS', { description: 'Checkout initiated successfully' });
+        router.push(initiateCheckoutResult.successUrl);
+        setIsLoading(false);
+
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+        toast.error('ERROR', { description: 'Failed to checkout' });
       }
+      
+    }
 
-      const veriyCart = "";
-
-
+    const writeShippingMethod = async (userId: string, shippingMethod: string) => {
+      const prevShippingMethod = selectedShipping;
+      try {
+        setSelectedShipping(shippingMethod);
+        setIsLoading(true);
+        console.log("temp_cartId", temp_cartId);
+        const result = await setShippingMethod(userId, shippingMethod, temp_cartId);
+        if (result.status === 'ERROR') {
+          toast.error('ERROR', { description: result.error });
+          setIsLoading(false);
+          setSelectedShipping(prevShippingMethod);
+          return;
+        }
+        setIsLoading(false);
+        toast.success('SUCCESS', { description: 'Shipping method set successfully' });
+         
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+        setSelectedShipping(prevShippingMethod);
+        toast.error('ERROR', { description: 'Failed to set shipping method' });
+      }
     }
 
   return (
@@ -139,23 +199,23 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
           <div className="flex flex-col w-full gap-y-5">
             <div className="flex flex-row w-full justify-between">
               <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Subtotal</p>
-              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${subtotal}</p>
+              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${(subtotal / 100).toFixed(2)}</p>
             </div>
             <div className="flex flex-row w-full justify-between">
               <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Discount</p>
-              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px] text-red-500">-${discount}</p>
+              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px] text-red-500">-${(discount / 100).toFixed(2)}</p>
             </div>
             <div className="flex flex-row w-full justify-between">
               <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Estimated Shipping</p>
-              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${shipping}</p>
+              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${(shipping / 100).toFixed(2)}</p>
             </div>
             <div className="flex flex-row w-full justify-between">
               <p className="font-light text-[14px] xs:text-[16px] md:text-[18px]">Estimated Tax</p>
-              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${tax}</p>
+              <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px]">${(tax / 100).toFixed(2)}</p>
             </div>
             <div className="flex flex-row w-full justify-between">
                 <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Total</p>
-                <p className="font-bold text-[16px] xs:text-[18px] md:text-[20px]">${total}</p>
+                <p className="font-bold text-[16px] xs:text-[18px] md:text-[20px]">${(total / 100).toFixed(2)}</p>
             </div>
           </div>
           <div className="flex w-full justify-center items-center">
@@ -165,7 +225,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
             
             <div className="flex flex-row w-full justify-between">
             <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Promo Code {(discountPercentage as number) > 0 && (<span className="text-green-500 font-regular">(${discountPercentage}%)</span>)}</p>
-              {(discount > 0) && <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px] text-green-500">${discount}</p>}
+              {(discount > 0) && <p className="font-bold text-[14px] xs:text-[16px] md:text-[18px] text-green-500">${(discount / 100).toFixed(2)}</p>}
             </div>
             <div className="flex flex-row w-full justify-between items-center">
                 <Form action={formAction} className="flex w-full items-center">
@@ -181,7 +241,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
               <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Shipping</p>
               <div className="flex flex-col w-full gap-y-2">
               {shippingOptions.map((option) => (
-                <div key={option.id} className={`flex flex-row w-full justify-between items-center gap-x-3 px-3 py-2 border border-gray-300 border-[1px] rounded-md transition-all duration-300 ease-in-out cursor-pointer ${selectedShipping === option.id ? "bg-blue-200" : ""}`} onClick={() => setSelectedShipping(option.id)}> 
+                <div key={option.id} className={`flex flex-row w-full justify-between items-center gap-x-3 px-3 py-2 border border-gray-300 border-[1px] rounded-md transition-all duration-300 ease-in-out cursor-pointer ${selectedShipping === option.id ? "bg-blue-200" : ""}`} onClick={() => writeShippingMethod(userId,option.id)}> 
                   <div className={`flex flex-row items-center justify-center w-5 h-5 rounded-full border border-gray-300 transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-blue-100" : ""}`}> 
                   <div className={`object-cover w-full h-full rounded-full transition-all duration-200 ease-in-out ${selectedShipping === option.id ? "bg-[#ffffff]" : "bg-transparent"}`}>
                     </div>
@@ -190,7 +250,7 @@ const SummaryDisplay = ({cartItems, cartId, userId}: {cartItems: BasketType[], c
                     {option.name}
                   </p>
                   <p className="font-light text-[12px] sm:text-[14px] md:text-[16px]">
-                    +${option.price}
+                    +${(option.price / 100).toFixed(2)}
                   </p>
                 </div>
 

@@ -11,12 +11,15 @@ import SummaryDisplay from '@/components/SummaryDisplay';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
 
-const CartPage = async () => {
+const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const path = (await params).id || "/";
+  console.log("path in cart page", path);
   const session = await auth();
   const user = session?.user;
   const userId = user?.id || "";
   const cookieJar = await cookies();
   let temp_cartId = cookieJar.get("temp_cartId")?.value || "";
+  console.log("temp_cartId in cart page", temp_cartId);
   let cartItems: BasketType[] = [];
 
   const theCart = await getCart(userId || "", temp_cartId);
@@ -29,8 +32,8 @@ const CartPage = async () => {
   const cartId = theCart.cartId;
 
   return (
-    <main className="relative pt-[5rem] md:pt-[1rem] min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] flex flex-col lg:flex-row w-full py-5 px-5 sm:px-20 gap-x-5">
-      <div className="flex flex-col w-full min-h-0">
+    <main className="relative pt-[5rem] md:pt-[1.5rem] min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] flex flex-col lg:flex-row w-full py-5 px-5 sm:px-20 gap-x-5">
+      <div className="flex flex-col w-full min-h-0 gap-y-3">
         <div className="flex flex-col gap-x-2 items-center sm:items-start justify-start w-full">
           <div className="flex flex-row w-full">
             <div className="flex flex-row items-center transform transition-all duration-300 ease-in-out gap-x-1">
@@ -49,10 +52,11 @@ const CartPage = async () => {
               </Link>
             </div>
           </div>
+          </div>
           
-          <div className="flex flex-col w-full">
+          
             {!cartItems || cartItems.length == 0 ? (
-              <div className="flex items-center justify-center h-full w-full min-h-[50vh]">
+              <div className="flex flex-col flex-1 w-full items-center justify-center border border-gray-300 border-[1px] rounded-md shadow-md p-5"> 
                 <div className="flex flex-col w-full h-full items-center justify-center gap-y-4 max-w-xl">
                   <p className="font-plex-sans text-[28px] xs:text-[38px] md:text-[45px] font-extrabold">
                     Oops! Looks like your cart is empty.
@@ -68,16 +72,17 @@ const CartPage = async () => {
                 </div>
               </div>
             ) : (
+              <div className="flex flex-col w-full">
               <p className="font-plex-sans text-[28px] xs:text-[38px] md:text-[45px] font-extrabold">
                 Your Cart
-              </p>
+              </p>  
+              </div>
             )}
-          </div>
-        </div>
+            
         
         {/* Cart items container with proper height management */}
-        <div className="flex flex-col w-full flex-1 lg:max-h-[calc(100vh-15rem)] justify-start overflow-y-auto scrollbar-hidden p-3 sm:p-5 border border-gray-300 border-[1px] rounded-md shadow-md mt-4 pb-3 lg:pb-0">
-          {cartItems && cartItems.map((item: BasketType) => (
+        <div className={`flex flex-col w-full justify-start overflow-y-auto scrollbar-hidden flex-1 lg:max-h-[calc(100vh-10rem)] p-3 sm:p-5 border border-gray-300 border-[1px] rounded-md shadow-md pb-3 lg:pb-0 ${cartItems && cartItems.length > 0 ? 'flex-1 lg:max-h-[calc(100vh-10rem)]' : 'hidden'}`}>
+          {cartItems && cartItems.length > 0 && cartItems.map((item: BasketType) => (
             <Suspense key={item.id} fallback={<div>Loading...</div>}>
               <BasketBlock key={item.id} userId={userId} item={item} cartId={cartId} temp_cartId={temp_cartId}/>
             </Suspense>
@@ -87,7 +92,7 @@ const CartPage = async () => {
       
       {/* Summary will take its natural height */}
       <Suspense fallback={<div>Loading...</div>}>
-        <SummaryDisplay cartItems={cartItems} cartId={cartId} userId={userId}/>
+        <SummaryDisplay userId={userId} path={path} cartItems={cartItems} cartId={cartId} temp_cartId={temp_cartId} />
       </Suspense>
     </main>
   );
