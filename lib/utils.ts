@@ -213,7 +213,7 @@ export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) =
 };
 
 export const fetchShippingOptions = async (method: string) => {
-  
+  console.log("method", method);
 // ===== SHIPPING OPTIONS =====
 const getShippingOptions = [
   {
@@ -267,12 +267,19 @@ const getShippingOptions = [
 ];
 
 for (const option of getShippingOptions) {
-  if (option.shipping_rate_data.id === method) {
-    return option.shipping_rate_data;
+  if (option.shipping_rate_data.id === method.toLowerCase()) {
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: option.shipping_rate_data,
+    });
   }
 }
 
-return null;
+return parseServerActionResponse({
+  status: "ERROR",
+  error: "Invalid shipping method",
+});
 }
 
 

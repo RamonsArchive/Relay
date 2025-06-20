@@ -45,6 +45,43 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         estimateTax(false, zipCodeRef.current);
       }
     }, [selectedShipping, cartItems]);
+
+
+    /* ===== CREATE TEMP STRIPE CUSTOMER ===== */
+    // useEffect(() => {
+    //   const createTempStripeCustomer = async () => {
+    //     try {
+    //       setIsLoading(true);
+    //     const result = await fetch("/api/test", {
+    //       method: "POST",
+    //       body: JSON.stringify({
+    //         userId: userId,
+    //       })
+    //     })
+    //     if (!result.ok) {
+    //       toast.error('ERROR', { description: 'Failed to create temp stripe customer' });
+    //       setIsLoading(false);
+    //       return;
+    //     }
+    //     const data = await result.json();
+    //     console.log("data", data);
+    //     if (data.status === "ERROR") {
+    //       setIsLoading(false);
+    //       toast.error('ERROR', { description: data.error });
+    //       return;
+    //     }
+    //     toast.success('SUCCESS', { description: 'Temp stripe customer created successfully' });
+    //     setIsLoading(false);
+    //   } catch (error) {
+    //       console.log(error);
+    //       setIsLoading(false);
+    //       toast.error('ERROR', { description: 'Failed to create temp stripe customer' });
+    //       return;
+    //     }
+    //   }
+        
+    //   createTempStripeCustomer();
+    // }, [])
   
     const estimateTax = async (verifyZipCode: boolean = false, zipFromRef?: string) => {
       setIsLoading(true);
@@ -114,13 +151,6 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
     const checkout = async () => {
       try {
         setIsLoading(true);
-
-        if (selectedShipping === "") {
-          toast.error('ERROR', { description: 'Please select a shipping method' });
-          setIsLoading(false);
-          return;
-        }
-
         if (!userId) {
           console.log("path", path);
           const callbackUrl = `${path}/cart`;

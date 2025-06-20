@@ -6,7 +6,7 @@ import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts
 import { client } from "@/sanity/lib/client";
 import { CartType, ReviewType, TaxLineItemType, categoriesType, UserType } from "@/globalTypes";
 import slugify from "slugify";
-import { convertLineItemsWithPriceData, parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
+import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
 import { sanitizeSanityId } from "@/lib/utils";
 import { clientRateLimiter, rateLimiter } from "@/lib/rateLimiter";
@@ -1544,6 +1544,60 @@ export const verifyCart = async (userId: string, cartId: number) => {
   }
 }
 
+ //==== SHIPPING OPTIONS =====
+ const getShippingOptions = [
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 0, currency: 'usd' }, // $0
+      display_name: 'Free Shipping',
+      id: 'free',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 999, currency: 'usd' }, // $9.99
+      display_name: 'Standard Shipping',
+      id: 'standard',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1299, currency: 'usd' }, // $0
+      display_name: 'Express Shipping',
+      id: 'express',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 2 },
+        maximum: { unit: 'business_day', value: 5 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1999, currency: 'usd' }, // $19.99
+      display_name: 'Overnight Shipping',
+      id: 'overnight',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 1 },
+        maximum: { unit: 'business_day', value: 2 },
+      },
+    },
+  },
+];
+
+
+
 // NEED TO STILL CREAT A STRIPE USER AFTER AUTH LOGIN
 
 // ===== PROFESSIONAL CHECKOUT FUNCTION =====
@@ -1622,30 +1676,88 @@ export const initiateCheckout = async (userId: string) => {
             variantId: item.variant.id,
           }
         },
-        unit_amount: Math.round((item.variant.product.price || 0) * 100), // Convert to cents
+        unit_amount: Math.round(item.variant.product.price || 0), // Convert to cents
       },
       quantity: item.quantity,
     }));
 
-    // Create Stripe checkout session
     const stripeSession = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
+      ui_mode: 'embedded',
       line_items: lineItems,
       customer: stripeCustomerId || undefined,
       customer_creation: stripeCustomerId ? undefined : 'always',
+
+      phone_number_collection: {
+        enabled: true,
+      },
 
       // now stripe will save the address and shipping method to the customer object
       customer_update: {
         address: 'auto',
         shipping: 'auto',
       },
-      
+
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA'],
+      },
+
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 0, currency: 'usd' },
+            display_name: 'Free Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 5 },
+              maximum: { unit: 'business_day', value: 7 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 999, currency: 'usd' },
+            display_name: 'Standard Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 5 },
+              maximum: { unit: 'business_day', value: 7 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 1299, currency: 'usd' },
+            display_name: 'Express Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 2 },
+              maximum: { unit: 'business_day', value: 5 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 1999, currency: 'usd' },
+            display_name: 'Overnight Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 1 },
+              maximum: { unit: 'business_day', value: 2 },  
+            },
+          },
+        },
+      ],
+
+      // permissions: {
+      //   update_shipping_details: 'server_only',
+      // },
+
       // Let Stripe handle tax calculation
       automatic_tax: { enabled: true },
       
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/cart`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
       
       metadata: {
         cartId: cart.id.toString(),
@@ -1684,59 +1796,6 @@ export const calculateShippingCost = async (shippingMethod: string) => {
   const shippingCost = getShippingOptions.find(option => option.shipping_rate_data.id === shippingMethod)?.shipping_rate_data.fixed_amount.amount;
   return shippingCost;
 };
-
-// ===== SHIPPING OPTIONS =====
-const getShippingOptions = [
-  {
-    shipping_rate_data: {
-      type: 'fixed_amount',
-      fixed_amount: { amount: 0, currency: 'usd' }, // $0
-      display_name: 'Free Shipping',
-      id: 'free',
-      delivery_estimate: {
-        minimum: { unit: 'business_day', value: 5 },
-        maximum: { unit: 'business_day', value: 7 },
-      },
-    },
-  },
-  {
-    shipping_rate_data: {
-      type: 'fixed_amount',
-      fixed_amount: { amount: 999, currency: 'usd' }, // $9.99
-      display_name: 'Standard Shipping',
-      id: 'standard',
-      delivery_estimate: {
-        minimum: { unit: 'business_day', value: 5 },
-        maximum: { unit: 'business_day', value: 7 },
-      },
-    },
-  },
-  {
-    shipping_rate_data: {
-      type: 'fixed_amount',
-      fixed_amount: { amount: 1299, currency: 'usd' }, // $0
-      display_name: 'Express Shipping',
-      id: 'express',
-      delivery_estimate: {
-        minimum: { unit: 'business_day', value: 2 },
-        maximum: { unit: 'business_day', value: 5 },
-      },
-    },
-  },
-  {
-    shipping_rate_data: {
-      type: 'fixed_amount',
-      fixed_amount: { amount: 1999, currency: 'usd' }, // $19.99
-      display_name: 'Overnight Shipping',
-      id: 'overnight',
-      delivery_estimate: {
-        minimum: { unit: 'business_day', value: 1 },
-        maximum: { unit: 'business_day', value: 2 },
-      },
-    },
-  },
-];
-
 
 export const setShippingMethod = async (userId: string, shippingMethod: string, temp_cartId: string | null) => {
   try {
@@ -2341,6 +2400,10 @@ export const getCartForCheckout = async (userId: string) => {
       error: "",
       data: {
         cartId: cart.id,
+        shippingMethod: cart.shippingMethod,
+        items: cart.items,
+        promoDiscountAmount: cart.promoDiscountAmount,
+        requiresPromoVerification: cart.requiresPromoVerification,
       }
     })
   } catch (error) {
