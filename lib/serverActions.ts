@@ -323,3 +323,4 @@ const getCartInfo = async (cart: CartType | null) => {
   }
 
 }
+
