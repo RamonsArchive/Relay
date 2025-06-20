@@ -8,7 +8,7 @@ import { SideBarCardSkeleton } from "./SideBarSkeleton";
 const SidebarWrapper = () => {
   const path = usePathname();
   const noSideBarPage =
-    path?.startsWith("/product/") || path?.startsWith("/writeReview/") || path?.startsWith("/cart");
+    path?.startsWith("/product/") || path?.startsWith("/writeReview/") || path?.startsWith("/cart") || path?.startsWith("/checkout");
   const [isNoSideBarPage, setIsNoSideBarPage] = useState(noSideBarPage);
 
 

@@ -212,3 +212,68 @@ export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) =
   }));
 };
 
+export const fetchShippingOptions = async (method: string) => {
+  
+// ===== SHIPPING OPTIONS =====
+const getShippingOptions = [
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 0, currency: 'usd' }, // $0
+      display_name: 'Free Shipping',
+      id: 'free',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 999, currency: 'usd' }, // $9.99
+      display_name: 'Standard Shipping',
+      id: 'standard',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 5 },
+        maximum: { unit: 'business_day', value: 7 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1299, currency: 'usd' }, // $0
+      display_name: 'Express Shipping',
+      id: 'express',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 2 },
+        maximum: { unit: 'business_day', value: 5 },
+      },
+    },
+  },
+  {
+    shipping_rate_data: {
+      type: 'fixed_amount',
+      fixed_amount: { amount: 1999, currency: 'usd' }, // $19.99
+      display_name: 'Overnight Shipping',
+      id: 'overnight',
+      delivery_estimate: {
+        minimum: { unit: 'business_day', value: 1 },
+        maximum: { unit: 'business_day', value: 2 },
+      },
+    },
+  },
+];
+
+for (const option of getShippingOptions) {
+  if (option.shipping_rate_data.id === method) {
+    return option.shipping_rate_data;
+  }
+}
+
+return null;
+}
+
+
+

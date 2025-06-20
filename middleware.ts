@@ -15,5 +15,5 @@ export default auth((req) => {
 
 
   export const config = {
-    matcher: ["/writeReview/:path*"],
+    matcher: ["/writeReview/:path*", "/checkout"],
   };

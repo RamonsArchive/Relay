@@ -2296,6 +2296,64 @@ export const estimateTaxForZipCode = async (userId: string, zipCode: string, tax
   }
 };
 
+export const getCartForCheckout = async (userId: string) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+    
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid user ID"
+      });
+    }
+
+    if (sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      });
+    }
+
+    const cart = await prisma.cart.findFirst({
+      where: {
+        userId: userIdSanitized,
+      },
+      select: {
+        id: true,
+        items: true,
+        promoDiscountAmount: true,
+        requiresPromoVerification: true,
+        shippingMethod: true,
+      }
+    });
+
+    if (!cart) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No cart found"
+      });
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: {
+        cartId: cart.id,
+      }
+    })
+  } catch (error) {
+    console.error("Error getting simple cart ID:", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to get simple cart ID"
+    });
+  }
+  
+  
+}
+
 
 /*
 export const createCheckoutSession = async (userId: string, promoCode?: string) => {

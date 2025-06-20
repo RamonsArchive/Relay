@@ -22,6 +22,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
     const zipCodeRef = useRef<string>("");  
   
     const shippingOptions = useMemo(() => [
+      { id: 'free', name: 'Free (3-7 business days)', price: 0 },
       { id: 'standard', name: 'Standard (3-7 business days)', price: 899 },
       { id: 'express', name: 'Express (2-5 business days)', price: 1299 },
       { id: 'overnight', name: 'Overnight (1-2 business days)', price: 1999 }
@@ -132,32 +133,9 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
           return;
         }
   
-        if (discount > 0) {
-          const verifyPromoCode = await validatePromoCodeForOrder(cartId, userId, subtotal);
-          if (verifyPromoCode.status === 'ERROR') {
-            removePromoCodeFromCart(cartId);
-            toast.error('ERROR', { description: verifyPromoCode.error });
-            return;
-          }
-        }
-  
-        const veriyCart = await verifyCart(userId, cartId);
-  
-        if (veriyCart.status === 'ERROR') {
-          toast.error('ERROR', { description: veriyCart.error });
-          return;
-        }
-        toast.success('SUCCESS', { description: 'Cart verified successfully' });
-  
-        const initiateCheckoutResult = await initiateCheckout(userId);
-        if (initiateCheckoutResult.status === 'ERROR') {
-          toast.error('ERROR', { description: initiateCheckoutResult.error });
-          setIsLoading(false);
-          router.push(initiateCheckoutResult.cancelUrl);
-          return;
-        }
-        toast.success('SUCCESS', { description: 'Checkout initiated successfully' });
-        router.push(initiateCheckoutResult.successUrl);
+        const newPath = `${path}checkout`;
+        console.log("newPath", newPath);
+        router.push(newPath);
         setIsLoading(false);
 
       } catch (error) {
