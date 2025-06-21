@@ -188,7 +188,6 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   variantId: 'variantId',
   productId: 'productId',
   productTitle: 'productTitle',
-  productSlug: 'productSlug',
   variantSize: 'variantSize',
   variantColor: 'variantColor',
   variantSku: 'variantSku',
@@ -383,7 +382,6 @@ exports.Prisma.OrderItemOrderByRelevanceFieldEnum = {
   variantId: 'variantId',
   productId: 'productId',
   productTitle: 'productTitle',
-  productSlug: 'productSlug',
   variantSize: 'variantSize',
   variantColor: 'variantColor',
   variantSku: 'variantSku'

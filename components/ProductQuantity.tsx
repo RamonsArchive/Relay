@@ -18,10 +18,11 @@ const ProductQuantity = ({ variants }: { variants: VariantType }) => {
   const variantForColorSize = variants.find(
     (variant: VariantItemType) =>
       variant?.color?.name?.toLowerCase() == selectedColor.toLowerCase() &&
-      variant?.size?.toLowerCase() === selectedSize.toLowerCase()
+      variant?.size?.toLowerCase() === selectedSize.toLowerCase() && 
+      (variant?.quantity || 0) > 0
   );
 
-  const totalQuantity = variantForColorSize?.quantity || 1;
+  const totalQuantity = variantForColorSize?.quantity || 0;
 
   const handleSetQuantity = (quantity: number) => {
     setQuantity(quantity);

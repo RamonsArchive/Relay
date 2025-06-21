@@ -6632,7 +6632,6 @@ export namespace Prisma {
     variantId: string | null
     productId: string | null
     productTitle: string | null
-    productSlug: string | null
     variantSize: string | null
     variantColor: string | null
     variantSku: string | null
@@ -6649,7 +6648,6 @@ export namespace Prisma {
     variantId: string | null
     productId: string | null
     productTitle: string | null
-    productSlug: string | null
     variantSize: string | null
     variantColor: string | null
     variantSku: string | null
@@ -6666,7 +6664,6 @@ export namespace Prisma {
     variantId: number
     productId: number
     productTitle: number
-    productSlug: number
     variantSize: number
     variantColor: number
     variantSku: number
@@ -6705,7 +6702,6 @@ export namespace Prisma {
     variantId?: true
     productId?: true
     productTitle?: true
-    productSlug?: true
     variantSize?: true
     variantColor?: true
     variantSku?: true
@@ -6722,7 +6718,6 @@ export namespace Prisma {
     variantId?: true
     productId?: true
     productTitle?: true
-    productSlug?: true
     variantSize?: true
     variantColor?: true
     variantSku?: true
@@ -6739,7 +6734,6 @@ export namespace Prisma {
     variantId?: true
     productId?: true
     productTitle?: true
-    productSlug?: true
     variantSize?: true
     variantColor?: true
     variantSku?: true
@@ -6843,7 +6837,6 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku: string | null
@@ -6879,7 +6872,6 @@ export namespace Prisma {
     variantId?: boolean
     productId?: boolean
     productTitle?: boolean
-    productSlug?: boolean
     variantSize?: boolean
     variantColor?: boolean
     variantSku?: boolean
@@ -6900,7 +6892,6 @@ export namespace Prisma {
     variantId?: boolean
     productId?: boolean
     productTitle?: boolean
-    productSlug?: boolean
     variantSize?: boolean
     variantColor?: boolean
     variantSku?: boolean
@@ -6911,7 +6902,7 @@ export namespace Prisma {
     taxRate?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "variantId" | "productId" | "productTitle" | "productSlug" | "variantSize" | "variantColor" | "variantSku" | "unitPrice" | "quantity" | "totalPrice" | "taxAmount" | "taxRate", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "variantId" | "productId" | "productTitle" | "variantSize" | "variantColor" | "variantSku" | "unitPrice" | "quantity" | "totalPrice" | "taxAmount" | "taxRate", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     variant?: boolean | VariantDefaultArgs<ExtArgs>
@@ -6929,7 +6920,6 @@ export namespace Prisma {
       variantId: string
       productId: string
       productTitle: string
-      productSlug: string
       variantSize: string
       variantColor: string
       variantSku: string | null
@@ -7314,7 +7304,6 @@ export namespace Prisma {
     readonly variantId: FieldRef<"OrderItem", 'String'>
     readonly productId: FieldRef<"OrderItem", 'String'>
     readonly productTitle: FieldRef<"OrderItem", 'String'>
-    readonly productSlug: FieldRef<"OrderItem", 'String'>
     readonly variantSize: FieldRef<"OrderItem", 'String'>
     readonly variantColor: FieldRef<"OrderItem", 'String'>
     readonly variantSku: FieldRef<"OrderItem", 'String'>
@@ -15487,7 +15476,6 @@ export namespace Prisma {
     variantId: 'variantId',
     productId: 'productId',
     productTitle: 'productTitle',
-    productSlug: 'productSlug',
     variantSize: 'variantSize',
     variantColor: 'variantColor',
     variantSku: 'variantSku',
@@ -15736,7 +15724,6 @@ export namespace Prisma {
     variantId: 'variantId',
     productId: 'productId',
     productTitle: 'productTitle',
-    productSlug: 'productSlug',
     variantSize: 'variantSize',
     variantColor: 'variantColor',
     variantSku: 'variantSku'
@@ -16309,7 +16296,6 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
-    productSlug?: StringFilter<"OrderItem"> | string
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -16328,7 +16314,6 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
-    productSlug?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrderInput | SortOrder
@@ -16351,7 +16336,6 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
-    productSlug?: StringFilter<"OrderItem"> | string
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -16370,7 +16354,6 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
-    productSlug?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrderInput | SortOrder
@@ -16395,7 +16378,6 @@ export namespace Prisma {
     variantId?: StringWithAggregatesFilter<"OrderItem"> | string
     productId?: StringWithAggregatesFilter<"OrderItem"> | string
     productTitle?: StringWithAggregatesFilter<"OrderItem"> | string
-    productSlug?: StringWithAggregatesFilter<"OrderItem"> | string
     variantSize?: StringWithAggregatesFilter<"OrderItem"> | string
     variantColor?: StringWithAggregatesFilter<"OrderItem"> | string
     variantSku?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
@@ -17602,7 +17584,6 @@ export namespace Prisma {
   export type OrderItemCreateInput = {
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17621,7 +17602,6 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17635,7 +17615,6 @@ export namespace Prisma {
   export type OrderItemUpdateInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17654,7 +17633,6 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17671,7 +17649,6 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17685,7 +17662,6 @@ export namespace Prisma {
   export type OrderItemUpdateManyMutationInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17702,7 +17678,6 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19229,7 +19204,6 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
-    productSlug?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrder
@@ -19256,7 +19230,6 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
-    productSlug?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrder
@@ -19273,7 +19246,6 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
-    productSlug?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrder
@@ -22155,7 +22127,6 @@ export namespace Prisma {
   export type OrderItemCreateWithoutOrderInput = {
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22172,7 +22143,6 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22391,7 +22361,6 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
-    productSlug?: StringFilter<"OrderItem"> | string
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -22659,7 +22628,6 @@ export namespace Prisma {
   export type OrderItemCreateWithoutVariantInput = {
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22676,7 +22644,6 @@ export namespace Prisma {
     orderId: number
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -23999,7 +23966,6 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -24045,7 +24011,6 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutOrderInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24062,7 +24027,6 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24078,7 +24042,6 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24102,7 +24065,6 @@ export namespace Prisma {
     orderId: number
     productId: string
     productTitle: string
-    productSlug: string
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -24139,7 +24101,6 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutVariantInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24156,7 +24117,6 @@ export namespace Prisma {
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24172,7 +24132,6 @@ export namespace Prisma {
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
-    productSlug?: StringFieldUpdateOperationsInput | string
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null

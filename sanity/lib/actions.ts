@@ -1670,13 +1670,17 @@ export const initiateCheckout = async (userId: string) => {
         currency: 'usd',
         product_data: {
           name: item.variant.product.title || 'Product',
-          description: `${item.variant.size} - ${item.variant.color}`,
+          description: `${item.variant.size} - ${item.variant.color} - ${item.variant.product.description || ''}`,
           metadata: {
             productId: item.variant.product.id,
+            productTitle: item.variant.product.title,
             variantId: item.variant.id,
+            size: item.variant.size,
+            color: item.variant.color,
+            sku: item.variant.sku,
           }
         },
-        unit_amount: Math.round(item.variant.product.price || 0), // Convert to cents
+        unit_amount: Math.round((item.variant.product.price || 0) * 100), // Convert to cents
       },
       quantity: item.quantity,
     }));
@@ -1749,11 +1753,6 @@ export const initiateCheckout = async (userId: string) => {
           },
         },
       ],
-
-      // permissions: {
-      //   update_shipping_details: 'server_only',
-      // },
-
       // Let Stripe handle tax calculation
       automatic_tax: { enabled: true },
       
@@ -1762,6 +1761,9 @@ export const initiateCheckout = async (userId: string) => {
       metadata: {
         cartId: cart.id.toString(),
         userId: userId,
+        userName: cart.user?.name || "",
+        userEmail: cart.user?.email || "",
+        hasExistingCustomer: stripeCustomerId ? "true" : "false",
       },
     });
 
@@ -1889,12 +1891,84 @@ This approach eliminates stale data issues while maintaining
 professional checkout functionality!
 */
 
+export const fetchOrderDetails = async (userId: string, stripeSessionId: string) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
 
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
 
+    if (userIdSanitized && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
 
+    if (!stripeSessionId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No stripe session id"
+      })
+    }
 
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:fetchOrderDetails`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      })
+    }
 
+    let order = await prisma.order.findFirst({
+      where: {
+        stripeSessionId: stripeSessionId,
+      },
+      include: {
+        items: true,
+      }
+    })
 
+    if (!order) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Order not found"
+      })
+    }
+
+    /* =============================== Backup code for stripe session retrieval =============================== */
+    // const sessionResult = await stripe.checkout.sessions.retrieve(stripeSessionId, {
+    //   expand: ['line_items', 'customer']
+    // })
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: {
+        orderDate: order.createdAt,
+        orderTotal: order.subtotal,
+        orderStatus: order.status,
+        orderItems: order.items,
+        orderShipping: order.shippingMethod,
+        orderShippingAddress: order.shippingAddress,
+        orderTaxAmount: order.taxAmount,
+      }
+    })
+
+    } catch (error) {
+    console.error("Error fetching order details", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })  
+  }
+}
 
 
 
