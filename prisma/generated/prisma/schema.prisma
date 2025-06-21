@@ -113,7 +113,6 @@ model Order {
   subtotal       Int // Items subtotal in cents
   discountAmount Int // Total discount applied in cents
   taxAmount      Int // Tax amount in cents
-  shippingAmount Int // Shipping cost in cents (duplicate for clarity)
   amountTotal    Int // Final total in cents
   currency       String @default("usd")
 

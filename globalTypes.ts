@@ -436,3 +436,134 @@ export type CartType = {
     items: CartItemType[];
     user?: UserType | null;
 }
+
+export type OrderItemType = {
+    id: number;
+    orderId: number;
+    productId: string;
+    variantId: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    productTitle: string;
+    variantSize: string;
+    variantColor: string;
+    variantSku: string | null;
+    images: JsonValue;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export type OrderItemEmailType = {
+    productTitle: string;
+    variantSize: string;
+    variantColor: string;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+    images: JsonValue;
+}
+
+export type OrderType = {
+    id: number;
+    userId: string;
+    stripeSessionId: string;
+    stripeCustomerId: string | null;
+    paymentIntentId: string | null;
+    status: 'PENDING' | 'PAID' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+    subtotal: number;
+    discountAmount: number;
+    taxAmount: number;
+    amountTotal: number;
+    currency: string;
+    shippingAddress: JsonValue;
+    shippingMethod: string;
+    shippingCost: number;
+    promoCodeId: number | null;
+    promoCodeUsed: string | null;
+    promoDiscount: number | null;
+    orderName: string;
+    orderEmail: string;
+    createdAt: Date;
+    updatedAt: Date;
+    items: OrderItemType[];
+}
+
+export type StripeSessionType = {
+    id: string;
+    object: 'checkout.session';
+    amount_total: number;
+    currency: string;
+    customer: string | null;
+    customer_details: {
+        email: string | null;
+        name: string | null;
+        phone: string | null;
+    } | null;
+    payment_intent: string | null;
+    shipping_details: {
+        address: {
+            city: string | null;
+            country: string | null;
+            line1: string | null;
+            line2: string | null;
+            postal_code: string | null;
+            state: string | null;
+        } | null;
+        name: string | null;
+        phone: string | null;
+        shipping_option_data: {
+            name: string;
+            amount_total: number;
+        } | null;
+    } | null;
+    discounts: {
+        coupon: {
+            percent_off: number | null;
+        } | null;
+    } | null;
+    tax_percent: number | null;
+    metadata: {
+        cartId: string;
+        userId: string;
+        userName: string;
+        userEmail: string;
+        hasExistingCustomer: string;
+    };
+    line_items: {
+        data: Array<{
+            id: string;
+            object: 'item';
+            amount_total: number;
+            currency: string;
+            description: string | null;
+            quantity: number | null;
+            price: {
+                id: string;
+                object: 'price';
+                unit_amount: number;
+                currency: string;
+                product: {
+                    id: string;
+                    object: 'product';
+                    name: string;
+                    description: string | null;
+                    metadata: {
+                        productId: string;
+                        productTitle: string;
+                        variantId: string;
+                        images: string;
+                        size: string;
+                        color: string;
+                        sku: string;
+                    };
+                } | null;
+            } | null;
+        }>;
+    };
+}
+
+export type ShippingSessionType = {
+  shipping_amount: number;
+  shipping_rate: string;
+}

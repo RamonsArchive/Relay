@@ -5330,7 +5330,6 @@ export namespace Prisma {
     subtotal: number | null
     discountAmount: number | null
     taxAmount: number | null
-    shippingAmount: number | null
     amountTotal: number | null
     promoCodeId: number | null
     promoDiscount: number | null
@@ -5343,7 +5342,6 @@ export namespace Prisma {
     subtotal: number | null
     discountAmount: number | null
     taxAmount: number | null
-    shippingAmount: number | null
     amountTotal: number | null
     promoCodeId: number | null
     promoDiscount: number | null
@@ -5361,7 +5359,6 @@ export namespace Prisma {
     subtotal: number | null
     discountAmount: number | null
     taxAmount: number | null
-    shippingAmount: number | null
     amountTotal: number | null
     currency: string | null
     status: string | null
@@ -5386,7 +5383,6 @@ export namespace Prisma {
     subtotal: number | null
     discountAmount: number | null
     taxAmount: number | null
-    shippingAmount: number | null
     amountTotal: number | null
     currency: string | null
     status: string | null
@@ -5412,7 +5408,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency: number
     taxCalculation: number
@@ -5435,7 +5430,6 @@ export namespace Prisma {
     subtotal?: true
     discountAmount?: true
     taxAmount?: true
-    shippingAmount?: true
     amountTotal?: true
     promoCodeId?: true
     promoDiscount?: true
@@ -5448,7 +5442,6 @@ export namespace Prisma {
     subtotal?: true
     discountAmount?: true
     taxAmount?: true
-    shippingAmount?: true
     amountTotal?: true
     promoCodeId?: true
     promoDiscount?: true
@@ -5466,7 +5459,6 @@ export namespace Prisma {
     subtotal?: true
     discountAmount?: true
     taxAmount?: true
-    shippingAmount?: true
     amountTotal?: true
     currency?: true
     status?: true
@@ -5491,7 +5483,6 @@ export namespace Prisma {
     subtotal?: true
     discountAmount?: true
     taxAmount?: true
-    shippingAmount?: true
     amountTotal?: true
     currency?: true
     status?: true
@@ -5517,7 +5508,6 @@ export namespace Prisma {
     subtotal?: true
     discountAmount?: true
     taxAmount?: true
-    shippingAmount?: true
     amountTotal?: true
     currency?: true
     taxCalculation?: true
@@ -5631,7 +5621,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency: string
     taxCalculation: JsonValue | null
@@ -5677,7 +5666,6 @@ export namespace Prisma {
     subtotal?: boolean
     discountAmount?: boolean
     taxAmount?: boolean
-    shippingAmount?: boolean
     amountTotal?: boolean
     currency?: boolean
     taxCalculation?: boolean
@@ -5712,7 +5700,6 @@ export namespace Prisma {
     subtotal?: boolean
     discountAmount?: boolean
     taxAmount?: boolean
-    shippingAmount?: boolean
     amountTotal?: boolean
     currency?: boolean
     taxCalculation?: boolean
@@ -5727,7 +5714,7 @@ export namespace Prisma {
     orderEmail?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "shippingAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId" | "orderName" | "orderEmail", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId" | "orderName" | "orderEmail", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
@@ -5758,7 +5745,6 @@ export namespace Prisma {
       subtotal: number
       discountAmount: number
       taxAmount: number
-      shippingAmount: number
       amountTotal: number
       currency: string
       taxCalculation: Prisma.JsonValue | null
@@ -6156,7 +6142,6 @@ export namespace Prisma {
     readonly subtotal: FieldRef<"Order", 'Int'>
     readonly discountAmount: FieldRef<"Order", 'Int'>
     readonly taxAmount: FieldRef<"Order", 'Int'>
-    readonly shippingAmount: FieldRef<"Order", 'Int'>
     readonly amountTotal: FieldRef<"Order", 'Int'>
     readonly currency: FieldRef<"Order", 'String'>
     readonly taxCalculation: FieldRef<"Order", 'Json'>
@@ -15483,7 +15468,6 @@ export namespace Prisma {
     subtotal: 'subtotal',
     discountAmount: 'discountAmount',
     taxAmount: 'taxAmount',
-    shippingAmount: 'shippingAmount',
     amountTotal: 'amountTotal',
     currency: 'currency',
     taxCalculation: 'taxCalculation',
@@ -16181,7 +16165,6 @@ export namespace Prisma {
     subtotal?: IntFilter<"Order"> | number
     discountAmount?: IntFilter<"Order"> | number
     taxAmount?: IntFilter<"Order"> | number
-    shippingAmount?: IntFilter<"Order"> | number
     amountTotal?: IntFilter<"Order"> | number
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
@@ -16213,7 +16196,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     currency?: SortOrder
     taxCalculation?: SortOrderInput | SortOrder
@@ -16249,7 +16231,6 @@ export namespace Prisma {
     subtotal?: IntFilter<"Order"> | number
     discountAmount?: IntFilter<"Order"> | number
     taxAmount?: IntFilter<"Order"> | number
-    shippingAmount?: IntFilter<"Order"> | number
     amountTotal?: IntFilter<"Order"> | number
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
@@ -16281,7 +16262,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     currency?: SortOrder
     taxCalculation?: SortOrderInput | SortOrder
@@ -16316,7 +16296,6 @@ export namespace Prisma {
     subtotal?: IntWithAggregatesFilter<"Order"> | number
     discountAmount?: IntWithAggregatesFilter<"Order"> | number
     taxAmount?: IntWithAggregatesFilter<"Order"> | number
-    shippingAmount?: IntWithAggregatesFilter<"Order"> | number
     amountTotal?: IntWithAggregatesFilter<"Order"> | number
     currency?: StringWithAggregatesFilter<"Order"> | string
     taxCalculation?: JsonNullableWithAggregatesFilter<"Order">
@@ -17463,7 +17442,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17493,7 +17471,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17520,7 +17497,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17550,7 +17526,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17579,7 +17554,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17604,7 +17578,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -17629,7 +17602,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -19109,7 +19081,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     currency?: SortOrder
     taxCalculation?: SortOrder
@@ -19130,7 +19101,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     promoCodeId?: SortOrder
     promoDiscount?: SortOrder
@@ -19148,7 +19118,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -19173,7 +19142,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     currency?: SortOrder
     status?: SortOrder
@@ -19193,7 +19161,6 @@ export namespace Prisma {
     subtotal?: SortOrder
     discountAmount?: SortOrder
     taxAmount?: SortOrder
-    shippingAmount?: SortOrder
     amountTotal?: SortOrder
     promoCodeId?: SortOrder
     promoDiscount?: SortOrder
@@ -21147,7 +21114,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -21175,7 +21141,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -21359,7 +21324,6 @@ export namespace Prisma {
     subtotal?: IntFilter<"Order"> | number
     discountAmount?: IntFilter<"Order"> | number
     taxAmount?: IntFilter<"Order"> | number
-    shippingAmount?: IntFilter<"Order"> | number
     amountTotal?: IntFilter<"Order"> | number
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
@@ -22467,7 +22431,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -22496,7 +22459,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -22573,7 +22535,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -22602,7 +22563,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -22949,7 +22909,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -22978,7 +22937,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23281,7 +23239,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23310,7 +23267,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23520,7 +23476,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23549,7 +23504,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23698,7 +23652,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23727,7 +23680,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23754,7 +23706,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23808,7 +23759,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23836,7 +23786,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -23864,7 +23813,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24338,7 +24286,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24378,7 +24325,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24407,7 +24353,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24435,7 +24380,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24528,7 +24472,6 @@ export namespace Prisma {
     subtotal: number
     discountAmount: number
     taxAmount: number
-    shippingAmount: number
     amountTotal: number
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24614,7 +24557,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24643,7 +24585,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
@@ -24671,7 +24612,6 @@ export namespace Prisma {
     subtotal?: IntFieldUpdateOperationsInput | number
     discountAmount?: IntFieldUpdateOperationsInput | number
     taxAmount?: IntFieldUpdateOperationsInput | number
-    shippingAmount?: IntFieldUpdateOperationsInput | number
     amountTotal?: IntFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue

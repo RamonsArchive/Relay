@@ -169,7 +169,6 @@ exports.Prisma.OrderScalarFieldEnum = {
   subtotal: 'subtotal',
   discountAmount: 'discountAmount',
   taxAmount: 'taxAmount',
-  shippingAmount: 'shippingAmount',
   amountTotal: 'amountTotal',
   currency: 'currency',
   taxCalculation: 'taxCalculation',

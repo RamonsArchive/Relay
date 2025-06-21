@@ -15,6 +15,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { stripe } from "@/lib/stripe";
+import type { JsonArray } from 'type-fest';
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -1664,6 +1665,8 @@ export const initiateCheckout = async (userId: string) => {
       stripeCustomerId = result.data.stripeCustomerId;
     }
 
+
+
     // Create line items for Stripe
     const lineItems = cart.items.map((item) => ({
       price_data: {
@@ -1675,13 +1678,13 @@ export const initiateCheckout = async (userId: string) => {
             productId: item.variant.product.id,
             productTitle: item.variant.product.title,
             variantId: item.variant.id,
-            images: parseServerActionResponse(item.variant.product.images),
+            images: Array.isArray(item.variant.product.images) ? JSON.stringify(item.variant.product.images[0]) : JSON.stringify(item.variant.product.images).slice(0, 200),
             size: item.variant.size,
             color: item.variant.color,
             sku: item.variant.sku,
           }
         },
-        unit_amount: Math.round((item.variant.product.price || 0) * 100), // Convert to cents
+        unit_amount: Math.round(item.variant.product.price || 0), // Convert to cents
       },
       quantity: item.quantity,
     }));
@@ -1765,6 +1768,9 @@ export const initiateCheckout = async (userId: string) => {
         userName: cart.user?.name || "",
         userEmail: cart.user?.email || "",
         hasExistingCustomer: stripeCustomerId ? "true" : "false",
+        appliedPromoCode: cart.appliedPromoCode?.code || "",
+        promoDiscountAmount: cart.promoDiscountAmount || 0,
+        shippingMethod: cart.shippingMethod || "",
       },
     });
 

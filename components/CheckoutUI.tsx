@@ -11,6 +11,7 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout
 } from '@stripe/react-stripe-js';
+import Link from 'next/link';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST || "");
 //console.log("stripePromise", stripePromise);
@@ -23,6 +24,7 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
 
     const router = useRouter();
     const [stripeClientSecret, setStripeClientSecret] = useState<string | null>(null);
+    const [noCart, setNoCart] = useState(false);
 
     useEffect(() => {
         const createOrder = async () => {
@@ -44,6 +46,9 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                 console.log("cart", cart);
                 if (cart.status === 'ERROR') {
                   toast.error('ERROR', { description: cart.error });
+                  if (cart.error === 'No cart found') {
+                    setNoCart(true);
+                  }
                   return;
                 }
                 console.log("passed cart check");
@@ -111,12 +116,20 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
             <EmbeddedCheckoutProvider stripe={stripePromise} options={{clientSecret: stripeClientSecret}}>
             <EmbeddedCheckout />
         </EmbeddedCheckoutProvider>
+        ) : ( noCart ? (
+          <div className="flex flex-col items-center justify-center h-screen gap-y-2">
+            <h1 className="text-2xl font-bold">No cart found</h1>
+            <p className="text-sm text-gray-500">Please add items to your cart to checkout</p>
+            <Link href="/">
+              <button className="flex items-center text-[12px] xs:text-[14px] sm:text-[16px] justify-center font-regular px-2 py-1 transition duration-300 ease-in-out hover:bg-gray-50 border border-gray-300 rounded-md"> Home </button>
+            </Link>
+          </div>
         ) : (
             <div className="flex flex-col items-center justify-center h-screen">
                 <h1 className="text-2xl font-bold">Loading...</h1>
                 <p className="text-sm text-gray-500">Please wait while we process your checkout...</p>
             </div>
-        )}
+        ))}
     </div>
   )
 }
