@@ -69,6 +69,9 @@ export const handleCheckoutComplete = async (session: any) => {
                 phone: String(session.shipping_details.phone || ""),
               }),
 
+            orderName: session.customer_details?.name || "",
+            orderEmail: session.customer_details?.email || "",
+
             items: {
                 create: lineItems.data.map(item => {
                     const product = item?.price?.product;
@@ -82,10 +85,11 @@ export const handleCheckoutComplete = async (session: any) => {
                         unitPrice: (item?.price?.unit_amount || 0) / 100,
                         totalPrice: (item?.price?.unit_amount || 0) / 100 * (item.quantity || 0),
                         productTitle: metadata.productTitle,
+                        images: parseServerActionResponse(metadata.images),
                         variantSize: metadata.size,
                         variantColor: metadata.color,
                         variantSku: metadata.sku,
-                    }
+                    } 
                 })
             }
         

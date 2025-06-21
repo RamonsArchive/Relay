@@ -5371,6 +5371,8 @@ export namespace Prisma {
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
+    orderName: string | null
+    orderEmail: string | null
   }
 
   export type OrderMaxAggregateOutputType = {
@@ -5394,6 +5396,8 @@ export namespace Prisma {
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
+    orderName: string | null
+    orderEmail: string | null
   }
 
   export type OrderCountAggregateOutputType = {
@@ -5419,6 +5423,8 @@ export namespace Prisma {
     promoCodeUsed: number
     promoDiscount: number
     addressId: number
+    orderName: number
+    orderEmail: number
     _all: number
   }
 
@@ -5470,6 +5476,8 @@ export namespace Prisma {
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
+    orderName?: true
+    orderEmail?: true
   }
 
   export type OrderMaxAggregateInputType = {
@@ -5493,6 +5501,8 @@ export namespace Prisma {
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
+    orderName?: true
+    orderEmail?: true
   }
 
   export type OrderCountAggregateInputType = {
@@ -5518,6 +5528,8 @@ export namespace Prisma {
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
+    orderName?: true
+    orderEmail?: true
     _all?: true
   }
 
@@ -5630,6 +5642,8 @@ export namespace Prisma {
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
+    orderName: string
+    orderEmail: string
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
     _sum: OrderSumAggregateOutputType | null
@@ -5674,6 +5688,8 @@ export namespace Prisma {
     promoCodeUsed?: boolean
     promoDiscount?: boolean
     addressId?: boolean
+    orderName?: boolean
+    orderEmail?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
     address?: boolean | Order$addressArgs<ExtArgs>
@@ -5707,9 +5723,11 @@ export namespace Prisma {
     promoCodeUsed?: boolean
     promoDiscount?: boolean
     addressId?: boolean
+    orderName?: boolean
+    orderEmail?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "shippingAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "shippingAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId" | "orderName" | "orderEmail", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
@@ -5751,6 +5769,8 @@ export namespace Prisma {
       promoCodeUsed: string | null
       promoDiscount: number | null
       addressId: number | null
+      orderName: string
+      orderEmail: string
     }, ExtArgs["result"]["order"]>
     composites: {}
   }
@@ -6147,6 +6167,8 @@ export namespace Prisma {
     readonly promoCodeUsed: FieldRef<"Order", 'String'>
     readonly promoDiscount: FieldRef<"Order", 'Int'>
     readonly addressId: FieldRef<"Order", 'Int'>
+    readonly orderName: FieldRef<"Order", 'String'>
+    readonly orderEmail: FieldRef<"Order", 'String'>
   }
     
 
@@ -6664,6 +6686,7 @@ export namespace Prisma {
     variantId: number
     productId: number
     productTitle: number
+    images: number
     variantSize: number
     variantColor: number
     variantSku: number
@@ -6734,6 +6757,7 @@ export namespace Prisma {
     variantId?: true
     productId?: true
     productTitle?: true
+    images?: true
     variantSize?: true
     variantColor?: true
     variantSku?: true
@@ -6837,6 +6861,7 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
+    images: JsonValue | null
     variantSize: string
     variantColor: string
     variantSku: string | null
@@ -6872,6 +6897,7 @@ export namespace Prisma {
     variantId?: boolean
     productId?: boolean
     productTitle?: boolean
+    images?: boolean
     variantSize?: boolean
     variantColor?: boolean
     variantSku?: boolean
@@ -6892,6 +6918,7 @@ export namespace Prisma {
     variantId?: boolean
     productId?: boolean
     productTitle?: boolean
+    images?: boolean
     variantSize?: boolean
     variantColor?: boolean
     variantSku?: boolean
@@ -6902,7 +6929,7 @@ export namespace Prisma {
     taxRate?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "variantId" | "productId" | "productTitle" | "variantSize" | "variantColor" | "variantSku" | "unitPrice" | "quantity" | "totalPrice" | "taxAmount" | "taxRate", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "variantId" | "productId" | "productTitle" | "images" | "variantSize" | "variantColor" | "variantSku" | "unitPrice" | "quantity" | "totalPrice" | "taxAmount" | "taxRate", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     variant?: boolean | VariantDefaultArgs<ExtArgs>
@@ -6920,6 +6947,7 @@ export namespace Prisma {
       variantId: string
       productId: string
       productTitle: string
+      images: Prisma.JsonValue | null
       variantSize: string
       variantColor: string
       variantSku: string | null
@@ -7304,6 +7332,7 @@ export namespace Prisma {
     readonly variantId: FieldRef<"OrderItem", 'String'>
     readonly productId: FieldRef<"OrderItem", 'String'>
     readonly productTitle: FieldRef<"OrderItem", 'String'>
+    readonly images: FieldRef<"OrderItem", 'Json'>
     readonly variantSize: FieldRef<"OrderItem", 'String'>
     readonly variantColor: FieldRef<"OrderItem", 'String'>
     readonly variantSku: FieldRef<"OrderItem", 'String'>
@@ -15464,7 +15493,9 @@ export namespace Prisma {
     promoCodeId: 'promoCodeId',
     promoCodeUsed: 'promoCodeUsed',
     promoDiscount: 'promoDiscount',
-    addressId: 'addressId'
+    addressId: 'addressId',
+    orderName: 'orderName',
+    orderEmail: 'orderEmail'
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -15476,6 +15507,7 @@ export namespace Prisma {
     variantId: 'variantId',
     productId: 'productId',
     productTitle: 'productTitle',
+    images: 'images',
     variantSize: 'variantSize',
     variantColor: 'variantColor',
     variantSku: 'variantSku',
@@ -15714,7 +15746,9 @@ export namespace Prisma {
     paymentIntentId: 'paymentIntentId',
     currency: 'currency',
     status: 'status',
-    promoCodeUsed: 'promoCodeUsed'
+    promoCodeUsed: 'promoCodeUsed',
+    orderName: 'orderName',
+    orderEmail: 'orderEmail'
   };
 
   export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
@@ -16158,6 +16192,8 @@ export namespace Prisma {
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
+    orderName?: StringFilter<"Order"> | string
+    orderEmail?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
@@ -16188,6 +16224,8 @@ export namespace Prisma {
     promoCodeUsed?: SortOrderInput | SortOrder
     promoDiscount?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
+    orderName?: SortOrder
+    orderEmail?: SortOrder
     user?: UserOrderByWithRelationInput
     promoCode?: PromoCodeOrderByWithRelationInput
     address?: AddressOrderByWithRelationInput
@@ -16222,6 +16260,8 @@ export namespace Prisma {
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
+    orderName?: StringFilter<"Order"> | string
+    orderEmail?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
     address?: XOR<AddressNullableScalarRelationFilter, AddressWhereInput> | null
@@ -16252,6 +16292,8 @@ export namespace Prisma {
     promoCodeUsed?: SortOrderInput | SortOrder
     promoDiscount?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
+    orderName?: SortOrder
+    orderEmail?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
     _max?: OrderMaxOrderByAggregateInput
@@ -16285,6 +16327,8 @@ export namespace Prisma {
     promoCodeUsed?: StringNullableWithAggregatesFilter<"Order"> | string | null
     promoDiscount?: IntNullableWithAggregatesFilter<"Order"> | number | null
     addressId?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    orderName?: StringWithAggregatesFilter<"Order"> | string
+    orderEmail?: StringWithAggregatesFilter<"Order"> | string
   }
 
   export type OrderItemWhereInput = {
@@ -16296,6 +16340,7 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
+    images?: JsonNullableFilter<"OrderItem">
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -16314,6 +16359,7 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
+    images?: SortOrderInput | SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrderInput | SortOrder
@@ -16336,6 +16382,7 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
+    images?: JsonNullableFilter<"OrderItem">
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -16354,6 +16401,7 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
+    images?: SortOrderInput | SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrderInput | SortOrder
@@ -16378,6 +16426,7 @@ export namespace Prisma {
     variantId?: StringWithAggregatesFilter<"OrderItem"> | string
     productId?: StringWithAggregatesFilter<"OrderItem"> | string
     productTitle?: StringWithAggregatesFilter<"OrderItem"> | string
+    images?: JsonNullableWithAggregatesFilter<"OrderItem">
     variantSize?: StringWithAggregatesFilter<"OrderItem"> | string
     variantColor?: StringWithAggregatesFilter<"OrderItem"> | string
     variantSku?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
@@ -17423,6 +17472,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -17453,6 +17504,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -17476,6 +17529,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -17506,6 +17561,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -17533,6 +17590,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
   }
 
   export type OrderUpdateManyMutationInput = {
@@ -17554,6 +17613,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -17579,11 +17640,14 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderItemCreateInput = {
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17602,6 +17666,7 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17615,6 +17680,7 @@ export namespace Prisma {
   export type OrderItemUpdateInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17633,6 +17699,7 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17649,6 +17716,7 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -17662,6 +17730,7 @@ export namespace Prisma {
   export type OrderItemUpdateManyMutationInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17678,6 +17747,7 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19050,6 +19120,8 @@ export namespace Prisma {
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
+    orderName?: SortOrder
+    orderEmail?: SortOrder
   }
 
   export type OrderAvgOrderByAggregateInput = {
@@ -19086,6 +19158,8 @@ export namespace Prisma {
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
+    orderName?: SortOrder
+    orderEmail?: SortOrder
   }
 
   export type OrderMinOrderByAggregateInput = {
@@ -19109,6 +19183,8 @@ export namespace Prisma {
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
+    orderName?: SortOrder
+    orderEmail?: SortOrder
   }
 
   export type OrderSumOrderByAggregateInput = {
@@ -19204,6 +19280,7 @@ export namespace Prisma {
     variantId?: SortOrder
     productId?: SortOrder
     productTitle?: SortOrder
+    images?: SortOrder
     variantSize?: SortOrder
     variantColor?: SortOrder
     variantSku?: SortOrder
@@ -21079,6 +21156,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
@@ -21107,6 +21186,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -21289,6 +21370,8 @@ export namespace Prisma {
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
+    orderName?: StringFilter<"Order"> | string
+    orderEmail?: StringFilter<"Order"> | string
   }
 
   export type AddressUpsertWithWhereUniqueWithoutUserInput = {
@@ -22127,6 +22210,7 @@ export namespace Prisma {
   export type OrderItemCreateWithoutOrderInput = {
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22143,6 +22227,7 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22361,6 +22446,7 @@ export namespace Prisma {
     variantId?: StringFilter<"OrderItem"> | string
     productId?: StringFilter<"OrderItem"> | string
     productTitle?: StringFilter<"OrderItem"> | string
+    images?: JsonNullableFilter<"OrderItem">
     variantSize?: StringFilter<"OrderItem"> | string
     variantColor?: StringFilter<"OrderItem"> | string
     variantSku?: StringNullableFilter<"OrderItem"> | string | null
@@ -22390,6 +22476,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -22419,6 +22507,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -22492,6 +22582,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -22521,6 +22613,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -22628,6 +22722,7 @@ export namespace Prisma {
   export type OrderItemCreateWithoutVariantInput = {
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22644,6 +22739,7 @@ export namespace Prisma {
     orderId: number
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -22862,6 +22958,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
@@ -22890,6 +22988,8 @@ export namespace Prisma {
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -23190,6 +23290,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
     promoUsages?: PromoCodeUsageCreateNestedManyWithoutOrderInput
@@ -23218,6 +23320,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -23425,6 +23529,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -23454,6 +23560,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -23599,6 +23707,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -23628,6 +23738,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -23653,6 +23765,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
   }
 
   export type AddressCreateManyUserInput = {
@@ -23703,6 +23817,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
@@ -23731,6 +23847,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -23757,6 +23875,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
   export type AddressUpdateWithoutUserInput = {
@@ -23966,6 +24086,7 @@ export namespace Prisma {
     variantId: string
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -24011,6 +24132,7 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutOrderInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24027,6 +24149,7 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24042,6 +24165,7 @@ export namespace Prisma {
     variantId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24065,6 +24189,7 @@ export namespace Prisma {
     orderId: number
     productId: string
     productTitle: string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize: string
     variantColor: string
     variantSku?: string | null
@@ -24101,6 +24226,7 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutVariantInput = {
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24117,6 +24243,7 @@ export namespace Prisma {
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24132,6 +24259,7 @@ export namespace Prisma {
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: StringFieldUpdateOperationsInput | string
     productTitle?: StringFieldUpdateOperationsInput | string
+    images?: NullableJsonNullValueInput | InputJsonValue
     variantSize?: StringFieldUpdateOperationsInput | string
     variantColor?: StringFieldUpdateOperationsInput | string
     variantSku?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24220,6 +24348,8 @@ export namespace Prisma {
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
+    orderName: string
+    orderEmail: string
   }
 
   export type CartCreateManyShippingAddressInput = {
@@ -24257,6 +24387,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
@@ -24285,6 +24417,8 @@ export namespace Prisma {
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -24311,6 +24445,8 @@ export namespace Prisma {
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
   export type CartUpdateWithoutShippingAddressInput = {
@@ -24402,6 +24538,8 @@ export namespace Prisma {
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
+    orderName: string
+    orderEmail: string
   }
 
   export type PromoCodeUsageCreateManyPromoCodeInput = {
@@ -24485,6 +24623,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
     promoUsages?: PromoCodeUsageUpdateManyWithoutOrderNestedInput
@@ -24513,6 +24653,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -24539,6 +24681,8 @@ export namespace Prisma {
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
+    orderName?: StringFieldUpdateOperationsInput | string
+    orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
   export type PromoCodeUsageUpdateWithoutPromoCodeInput = {

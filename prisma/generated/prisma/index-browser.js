@@ -179,7 +179,9 @@ exports.Prisma.OrderScalarFieldEnum = {
   promoCodeId: 'promoCodeId',
   promoCodeUsed: 'promoCodeUsed',
   promoDiscount: 'promoDiscount',
-  addressId: 'addressId'
+  addressId: 'addressId',
+  orderName: 'orderName',
+  orderEmail: 'orderEmail'
 };
 
 exports.Prisma.OrderItemScalarFieldEnum = {
@@ -188,6 +190,7 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   variantId: 'variantId',
   productId: 'productId',
   productTitle: 'productTitle',
+  images: 'images',
   variantSize: 'variantSize',
   variantColor: 'variantColor',
   variantSku: 'variantSku',
@@ -375,7 +378,9 @@ exports.Prisma.OrderOrderByRelevanceFieldEnum = {
   paymentIntentId: 'paymentIntentId',
   currency: 'currency',
   status: 'status',
-  promoCodeUsed: 'promoCodeUsed'
+  promoCodeUsed: 'promoCodeUsed',
+  orderName: 'orderName',
+  orderEmail: 'orderEmail'
 };
 
 exports.Prisma.OrderItemOrderByRelevanceFieldEnum = {

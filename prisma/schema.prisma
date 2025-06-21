@@ -132,9 +132,11 @@ model Order {
   promoCodeUsed    String?      // Code string used
   promoDiscount    Int?         // Discount amount in cents
 
-
   address Address? @relation(fields: [addressId], references: [id])
   addressId Int?
+
+  orderName String
+  orderEmail String
 
   promoUsages      PromoCodeUsage[]
   items            OrderItem[]
@@ -156,6 +158,7 @@ model OrderItem {
   // Snapshot of product/variant data at purchase time
   productId    String   // For historical reference
   productTitle String 
+  images       Json?
   variantSize  String
   variantColor String
   variantSku   String?  // For inventory tracking                    

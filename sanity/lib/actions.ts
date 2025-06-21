@@ -1675,6 +1675,7 @@ export const initiateCheckout = async (userId: string) => {
             productId: item.variant.product.id,
             productTitle: item.variant.product.title,
             variantId: item.variant.id,
+            images: parseServerActionResponse(item.variant.product.images),
             size: item.variant.size,
             color: item.variant.color,
             sku: item.variant.sku,
