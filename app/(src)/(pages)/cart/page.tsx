@@ -65,7 +65,7 @@ const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                     You can add items to your cart by clicking the "Add to Cart" button on the product page.
                   </p>
                   <Link href="/">
-                    <p className="font-plex-sans text-[16px] xs:text-[18px] md:text-[20px] text-gray-500 px-2 py-1 border border-gray-500 rounded-md transition-all duration-300 hover:bg-gray-500 hover:text-white">
+                    <p className="font-plex-sans text-[16px] xs:text-[18px] md:text-[20px] text-gray-500 px-2 py-1 border border-gray-500 rounded-md transition-all duration-300 hover:bg-gray-300 hover:text-white">
                       Go to Home
                     </p>
                   </Link>

@@ -4,7 +4,6 @@ import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { validatePromoCodeForOrder, removePromoCodeFromCart, verifyCart, getCartForCheckout, initiateCheckout } from '@/sanity/lib/actions';
-import { fetchShippingOptions } from '@/lib/utils';
 import { BasketType } from '@/globalTypes';
 import {loadStripe} from '@stripe/stripe-js';
 import {
@@ -51,20 +50,9 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                   }
                   return;
                 }
-                console.log("passed cart check");
-                
-                const temp_shipping_method = cart.data.shippingMethod;
-                console.log("temp_shipping_method", temp_shipping_method);
-                console.log("cart.data.shippingMethod: ", cart.data.shippingMethod);
-
-                const shipping_options = await fetchShippingOptions(cart.data.shippingMethod);
-                console.log("shipping_options", shipping_options);
-                if (shipping_options.status === 'ERROR') {
-                  toast.error('ERROR', { description: 'Invalid shipping method' });
-                  return;
-                }
-                const shipping_option = shipping_options.data;
-                const subtotal = cart.data.items.reduce((sum: number, item: BasketType) => { return sum + (item.price || 0) * item.quantity}, 0) + (cart.data.promoDiscountAmount || 0) + shipping_option.fixed_amount.amount;
+                console.log("passed cart exists check");
+              
+                const subtotal = cart.data.items.reduce((sum: number, item: BasketType) => { return sum + (item.price || 0) * item.quantity}, 0);
                 if (subtotal <= 0) {
                   toast.error('ERROR', { description: 'No items in cart' });
                   return;

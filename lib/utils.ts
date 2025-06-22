@@ -283,4 +283,13 @@ return parseServerActionResponse({
 }
 
 
+export const stripeToShippingMethod = (cost: number) => {
+  if (cost === 0) return "Free Shipping";
+  if (cost === 999) return "Standard Shipping";
+  if (cost === 1299) return "Express Shipping";
+  if (cost === 1999) return "Overnight Shipping";
+  return "Unknown Shipping Method";
+}
+
+
 

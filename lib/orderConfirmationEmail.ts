@@ -44,7 +44,6 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
     orderDate,
     subtotal,
     taxAmount,
-    discountAmount,
     totalAmount,
     currency,
     shippingCost,
@@ -136,7 +135,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
                   ${items.map(item => `
                     <tr>
                       <td>
-                        ${item.images?.[0] ? `<img src="${item.images[0]}" alt="${item.productTitle}" class="product-image">` : ''}
+                        ${item.images?.[0] ? `<img src="${getImageUrl(item.images[0])}" alt="${item.productTitle}" class="product-image">` : ''}
                       </td>
                       <td>
                         <strong>${item.productTitle}</strong><br>
@@ -184,7 +183,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
                 ${shippingAddress.name || customerName}<br>
                 ${shippingAddress.line1}<br>
                 ${shippingAddress.line2 ? `${shippingAddress.line2}<br>` : ''}
-                ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.postal_code}<br>
+                ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.postalCode}<br>
                 ${shippingAddress.country}
               </p>
             </div>
@@ -220,6 +219,31 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
     throw error;
   }
 }
+
+const getImageUrl = (images: string | string[] | null | undefined): string | null => {
+    if (!images) return null;
+    
+    // If it's a string, try to parse as JSON first
+    if (typeof images === 'string') {
+      try {
+        const parsed = JSON.parse(images);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed[0];
+        }
+        return parsed || null;
+      } catch {
+        // If parsing fails, treat as direct URL
+        return images;
+      }
+    }
+    
+    // If it's already an array
+    if (Array.isArray(images) && images.length > 0) {
+      return images[0];
+    }
+    
+    return null;
+  };
 
 // Usage in your webhook:
 /*

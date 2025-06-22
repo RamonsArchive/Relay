@@ -1,19 +1,21 @@
 // app/api/webhook/stripe/route.ts
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-import { parseServerActionResponse, sanitizeSanityId } from "@/lib/utils";
+import { parseServerActionResponse, sanitizeSanityId, stripeToShippingMethod } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { NextResponse } from "next/server";
 import {  OrderItemEmailType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
 import { writeClient } from "@/sanity/lib/write-client";
+import { verifyCart } from "@/sanity/lib/actions";
+import { sendRefundEmail } from "@/lib/orderRefund";
 
 
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
-  console.log("🔑 Webhook received:", body);
-  console.log("🔑 Webhook signature:", signature);
-  console.log("🔑 Webhook secret:", process.env.STRIPE_WEBHOOK_SECRET);
+ // console.log("🔑 Webhook received:", body);
+  //console.log("🔑 Webhook signature:", signature);
+  //console.log("🔑 Webhook secret:", process.env.STRIPE_WEBHOOK_SECRET);
 
   if (!signature) {
     return new Response('No signature provided', { status: 400 });
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
     return new Response('Webhook signature verification failed', { status: 400 });
   }
 
-  console.log('✅ Webhook verified:', event.type);
+ // console.log('✅ Webhook verified:', event.type); 
 
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
@@ -53,13 +55,27 @@ export async function POST(request: Request) {
 
 // Modified version of your function for webhooks (no auth/rate limiting)
 async function handleCheckoutComplete(session: any) {
-  console.log("Processing checkout complete", session);
+  console.log("Processing session", session);
 
   // Get user ID from session metadata (you'll need to set this during checkout)
   const userId = session.metadata?.userId;
   if (!userId) {
     return NextResponse.json({ status: "ERROR", error: "No user ID in session metadata" }, { status: 500 })
   }
+
+  const cartId = session.metadata?.cartId;
+  if (!cartId) {
+    return NextResponse.json({ status: "ERROR", error: "No cart ID in session metadata" }, { status: 500 })
+  }
+
+   // verify the cart is still valid
+  const verify_cart = await verifyCart(userId, cartId);
+  if (verify_cart.status === "ERROR") {
+    console.error('Failed to verify cart:', verify_cart.error);
+    await handleRefundAndNotify(session, 'CART_INVALID', verify_cart.error);
+    return NextResponse.json({ status: "ERROR", error: "Failed to verify cart" }, { status: 500 })
+  }
+  console.log("Cart verified successfully");
 
   const userIdSanitized = sanitizeSanityId(userId);
 
@@ -101,7 +117,12 @@ async function handleCheckoutComplete(session: any) {
   // Check if this exact address already exists for the user
   const existingAddress = await prisma.address.findFirst({
     where: {
-      userId: userIdSanitized || "",   
+      userId: userIdSanitized || "",
+      line1: session.customer_details?.address?.line1,
+      city: session.customer_details?.address?.city,
+      state: session.customer_details?.address?.state,
+      postalCode: session.customer_details?.address?.postal_code,
+      country: session.customer_details?.address?.country || "US"
     }
   });
 
@@ -114,10 +135,8 @@ async function handleCheckoutComplete(session: any) {
     });
   }
 
-  const selectedShippingRate = session.shipping_cost.shipping_rate;
-    const selectedOption = session.shipping_options.find((option: ShippingSessionType) => 
-    option.shipping_rate === selectedShippingRate
-    );
+  const costToShip = session.shipping_cost.amount_total;
+  const selectedShippingMethod = stripeToShippingMethod(costToShip);
 
   // Create order
   const order = await prisma.order.create({
@@ -127,16 +146,16 @@ async function handleCheckoutComplete(session: any) {
       stripeCustomerId: session.customer,
       addressId: shippingAddress.id,
       status: 'PAID',
-      amountTotal: (session.amount_total || 0) / 100,
+      amountTotal: (session.amount_total || 0),
       currency: session.currency,
-      shippingMethod: selectedOption,
-      shippingCost: (session.shipping_details?.shipping_option_data?.amount_total || 0) / 100,
+      shippingMethod: selectedShippingMethod,
+      shippingCost: costToShip || 0,
       paymentIntentId: session.payment_intent || "",
-      subtotal: subtotal / 100, // Convert to dollars
+      subtotal: subtotal, // Convert to dollars
       promoCodeUsed: session.metadata?.appliedPromoCode || "",
-      promoDiscount: (session.metadata?.promoDiscountAmount || 0),
-      discountAmount: (session.metadata?.promoDiscountAmount || 0),
-      taxAmount: (session.total_details?.amount_tax || 0) / 100,
+      promoDiscount: (parseInt(session.metadata?.promoDiscountAmount) || 0),
+      discountAmount: (parseInt(session.metadata?.promoDiscountAmount) || 0),
+      taxAmount: (session.total_details?.amount_tax || 0),
       orderName: session.customer_details?.name || "",
       orderEmail: session.customer_details?.email || "",
 
@@ -160,8 +179,8 @@ async function handleCheckoutComplete(session: any) {
             productId: metadata.productId,
             variant: { connect: { id: metadata.variantId } },
             quantity: item.quantity || 1,
-            unitPrice: (item?.price?.unit_amount || 0) / 100,
-            totalPrice: (item?.price?.unit_amount || 0) / 100 * (item.quantity || 1),
+            unitPrice: (item?.price?.unit_amount || 0),
+            totalPrice: (item?.price?.unit_amount || 0) * (item.quantity || 1),
             productTitle: metadata.productTitle,
             images: parseServerActionResponse(metadata.images),
             variantSize: metadata.size,
@@ -177,6 +196,7 @@ async function handleCheckoutComplete(session: any) {
   });
 
   // Delete cart
+  console.log("Deleting cart with session id", session.id);
   await prisma.cart.delete({
     where: {
       stripeCheckoutSessionId: session.id,
@@ -185,7 +205,21 @@ async function handleCheckoutComplete(session: any) {
 
   // Update inventory (your existing function)
   try {
-    await updateSanityInventory(lineItems);
+    const updateMYSQLVariants = await updateMYSQLInventory(lineItems);
+    if (updateMYSQLVariants.status === "ERROR") {
+      console.error('Failed to update inventory:', updateMYSQLVariants.error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to update inventory" }, { status: 500 })
+    }
+  } catch (error) {
+    console.error('Failed to update inventory:', error);
+    return NextResponse.json({ status: "ERROR", error: "Failed to update inventory" }, { status: 500 })
+  }
+  try {
+    const updateSanity = await updateSanityInventory(lineItems);
+    if (updateSanity.status === "ERROR") {
+      console.error('Failed to update inventory:', updateSanity.error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to update inventory" }, { status: 500 })
+    }
   } catch (inventoryError) {
     console.error('Failed to update inventory:', inventoryError);
     return NextResponse.json({ status: "ERROR", error: "Failed to update inventory" }, { status: 500 })
@@ -229,9 +263,100 @@ async function handleCheckoutComplete(session: any) {
   }
 }
 
+   const updateMYSQLInventory = async (lineItems: any) => {
+    try {
+        console.log("Updating MYSQL inventory");
+        const result = await prisma.$transaction(async (tx) => {
+            const updates = [];
+            
+            for (const item of lineItems.data) {
+              const variantId = item.price.product.metadata.variantId;
+              const purchasedQuantity = item.quantity;
+              
+              const variantUpdate = await tx.variant.update({
+                where: { id: variantId },
+                data: {
+                  stockQuantity: { decrement: purchasedQuantity }
+                }
+              });
+              
+              updates.push(variantUpdate);
+            }
+            
+            return updates;
+          });
+          if (!result || result.length === 0) {
+            return parseServerActionResponse({
+                status: "ERROR",
+                error: "Failed to update inventory"
+            })
+          }
+          return parseServerActionResponse({    
+            status: "SUCCESS",
+            message: "Inventory updated successfully"
+          })
+    } catch (error) {
+        console.error('Failed to update inventory:', error);
+        return parseServerActionResponse({
+            status: "ERROR",
+            error: "Failed to update inventory"
+        })
+    }
+   }
+// Updated refund handler with proper error handling
+export const handleRefundAndNotify = async (session: any, errorType: string, errorMessage: string) => {
+    try {
+      console.log(`🔄 Processing refund for session: ${session.id}`);
+      console.log(`📝 Reason: ${errorType} - ${errorMessage}`);
+      
+      // 1. Process the refund
+      const refund = await stripe.refunds.create({
+        payment_intent: session.payment_intent,
+        reason: 'requested_by_customer', // Use standard Stripe reasons
+        metadata: {
+          original_session_id: session.id,
+          refund_reason: errorType,
+          error_details: errorMessage,
+          processed_by: 'webhook_auto_refund'
+        }
+      });
+  
+      // Check refund status
+      if (refund.status === "failed") {
+        console.error('❌ Refund failed:', refund.failure_reason);
+        throw new Error(`Refund failed: ${refund.failure_reason}`);
+      }
+  
+      console.log(`✅ Refund created: ${refund.id} (Status: ${refund.status})`);
+  
+      // 2. Send customer notification
+      const refundEmail = await sendRefundEmail(session, refund, errorType);
+      
+      if (refundEmail.status === "ERROR") {
+        console.error('❌ Failed to send refund email:', refundEmail.error);
+        // Don't fail the entire process if email fails
+      } else {
+        console.log('✅ Refund email sent successfully');
+      }
+  
+      return {
+        success: true,
+        refundId: refund.id,
+        refundStatus: refund.status,
+        emailSent: refundEmail.status === "SUCCESS"
+      };
+  
+    } catch (error) {
+      console.error('❌ Failed to process refund:', error);
+      throw error; // Re-throw to be handled by calling function
+    }
+  };
+  
+
     
-    export const updateSanityInventory = async (lineItems: any) => {
+    const updateSanityInventory = async (lineItems: any) => {
         try {
+          console.log("Updating sanity inventory");
           for (const item of lineItems.data) {
             const product = item?.price?.product;
             const metadata = typeof product === 'object' && product && 'metadata' in product 
@@ -240,14 +365,23 @@ async function handleCheckoutComplete(session: any) {
             const productId = metadata.productId;
             const variantId = metadata.variantId;
             const purchasedQuantity = item.quantity || 0;
+
+            console.log("Product ID", productId);
+            console.log("Variant ID", variantId);
+            console.log("Purchased quantity", purchasedQuantity);
             
-            if (!productId || !variantId) continue;
+            if (!productId || !variantId) {
+                return parseServerActionResponse({
+                    status: "ERROR",
+                    error: "Failed to update inventory"
+                })
+            }
       
             // Fetch current product
             const currentProduct = await writeClient.fetch(
-              `*[_type == "products" && _id == $productId][0]{
+              `*[_type == "product" && _id == $productId][0]{
                 _id,
-                variants[]{
+                "variants": variants[]{
                   _key,
                   size,
                   color->{_id, name, value},
@@ -257,7 +391,12 @@ async function handleCheckoutComplete(session: any) {
               { productId }
             );
       
-            if (!currentProduct?.variants) continue;
+            if (!currentProduct?.variants) {
+                return parseServerActionResponse({
+                    status: "ERROR",
+                    error: "Failed to update inventory"
+                })
+            }
       
             // Process variants
             const updatedVariants = currentProduct.variants
@@ -269,6 +408,8 @@ async function handleCheckoutComplete(session: any) {
                 return variant;
               })
               .filter(Boolean); // Remove null variants (those with 0 quantity)
+
+            console.log("Updated variants", updatedVariants);
       
             // Update the entire variants array
             await writeClient
@@ -277,10 +418,18 @@ async function handleCheckoutComplete(session: any) {
               .commit();
       
             console.log(`Updated product ${productId}: ${currentProduct.variants.length} -> ${updatedVariants.length} variants`);
+            return parseServerActionResponse({
+              status: "SUCCESS",
+              message: "Inventory updated successfully"
+            })
+
           }
         } catch (error) {
           console.error('Error in advanced inventory update:', error);
-          throw error;
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: "Failed to update inventory"
+          })
         }
       };
        

@@ -33,6 +33,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
     }, [selectedShipping, shippingOptions]);
   
     const subtotal = useMemo(() => {
+      if (!cartItems || cartItems.length === 0) return 0;
       return cartItems.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
     }, [cartItems]);
   
