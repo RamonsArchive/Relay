@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartType, ReviewType, TaxLineItemType, categoriesType, UserType } from "@/globalTypes";
+import { CartType, ReviewType, TaxLineItemType, categoriesType, UserType, CartItemForCheckoutType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -1545,6 +1545,122 @@ export const verifyCart = async (userId: string, cartId: number) => {
   }
 }
 
+export const verifyCartInternal = async (userId: string, cartId: number) => {
+  try {
+
+    if (!userId && !cartId) {
+      return parseServerActionResponse({
+        status: "ERROR",    
+        error: "Unauthorized request"
+      })
+    }
+
+
+    if (!userId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      })
+    }
+
+    const transaction = await prisma.$transaction(async (tx) => {
+      const cart = await tx.cart.findUnique({
+        where: { id: cartId,
+          userId: userId,
+         },
+        include: { items: { include: { variant: true } } },
+      });
+  
+      if (!cart) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Cart not found"
+        })
+      }
+      const cartItems = cart.items;
+  
+      if (cartItems.length === 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "Cart is empty"
+        })
+      }
+  
+      const variantIds = cartItems.map((item) => item.variantId);
+      const existingVariants = new Set<string>();
+      const variants = await tx.variant.findMany({
+        where: { id: { in: variantIds } },
+        select: { id: true, stockQuantity: true }
+      })
+
+      for (const variant of variants) {
+        existingVariants.add(variant.id);
+      }
+
+      const missingVariants = variantIds.filter((id) => !existingVariants.has(id));
+      if (missingVariants.length > 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: `Missing variants: ${missingVariants.join(", ")}`
+        })
+      }
+
+      for (const item of cartItems) {
+        const variant = variants.find((v) => v.id === item.variantId);
+        if (!variant) {
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: `Missing variant: ${item.variantId}`
+          })
+        }
+
+        if (variant.stockQuantity < item.quantity) {
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: `Insufficient stock for variant: ${item.variantId}`
+          })
+        }  
+      }
+
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        error: "",
+        data: { cart: cart },
+      })
+    });
+
+    if (transaction.status === "ERROR") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: transaction.error
+      })
+    }
+
+    const cart = transaction.data.cart;
+    if (!cart) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to verify cart"
+      })
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      cart: cart,   
+    })
+
+    // check if this is a good validation for the cart? 
+
+  } catch (error) {
+    console.error("Error verifying cart", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Internal server error"
+    })
+  }
+}
+
  //==== SHIPPING OPTIONS =====
  const getShippingOptions = [
   {
@@ -1770,7 +1886,6 @@ export const initiateCheckout = async (userId: string) => {
         hasExistingCustomer: stripeCustomerId ? "true" : "false",
         appliedPromoCode: cart.appliedPromoCode?.code || "",
         promoDiscountAmount: cart.promoDiscountAmount || 0,
-        shippingMethod: cart.shippingMethod || "",
       },
     });
 
@@ -2462,7 +2577,27 @@ export const getCartForCheckout = async (userId: string) => {
       },
       select: {
         id: true,
-        items: true,
+        items: {
+          select: {
+            id: true,
+            quantity: true,
+            variant: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                sku: true,
+                product: {
+                  select: {
+                    id: true,
+                    title: true,
+                    price: true
+                  }
+                }
+              }
+            }
+          }
+        },
         promoDiscountAmount: true,
         requiresPromoVerification: true,
         shippingMethod: true,
@@ -2482,7 +2617,7 @@ export const getCartForCheckout = async (userId: string) => {
       data: {
         cartId: cart.id,
         shippingMethod: cart.shippingMethod,
-        items: cart.items,
+        items: cart.items as CartItemForCheckoutType[],
         promoDiscountAmount: cart.promoDiscountAmount,
         requiresPromoVerification: cart.requiresPromoVerification,
       }

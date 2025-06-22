@@ -6,7 +6,7 @@ import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { NextResponse } from "next/server";
 import {  OrderItemEmailType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
 import { writeClient } from "@/sanity/lib/write-client";
-import { verifyCart } from "@/sanity/lib/actions";
+import { verifyCartInternal } from "@/sanity/lib/actions";
 import { sendRefundEmail } from "@/lib/orderRefund";
 
 
@@ -63,13 +63,13 @@ async function handleCheckoutComplete(session: any) {
     return NextResponse.json({ status: "ERROR", error: "No user ID in session metadata" }, { status: 500 })
   }
 
-  const cartId = session.metadata?.cartId;
+  const cartId = parseInt(session.metadata?.cartId || "0");
   if (!cartId) {
     return NextResponse.json({ status: "ERROR", error: "No cart ID in session metadata" }, { status: 500 })
   }
 
    // verify the cart is still valid
-  const verify_cart = await verifyCart(userId, cartId);
+  const verify_cart = await verifyCartInternal(userId, cartId);
   if (verify_cart.status === "ERROR") {
     console.error('Failed to verify cart:', verify_cart.error);
     await handleRefundAndNotify(session, 'CART_INVALID', verify_cart.error);

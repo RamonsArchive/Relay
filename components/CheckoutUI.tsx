@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { validatePromoCodeForOrder, removePromoCodeFromCart, verifyCart, getCartForCheckout, initiateCheckout } from '@/sanity/lib/actions';
-import { BasketType } from '@/globalTypes';
+import { BasketType, CartItemForCheckoutType } from '@/globalTypes';
 import {loadStripe} from '@stripe/stripe-js';
 import {
   EmbeddedCheckoutProvider,
@@ -52,7 +52,10 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                 }
                 console.log("passed cart exists check");
               
-                const subtotal = cart.data.items.reduce((sum: number, item: BasketType) => { return sum + (item.price || 0) * item.quantity}, 0);
+                const subtotal = cart.data.items.reduce((sum: number, item: CartItemForCheckoutType) => { 
+                  return sum + (item.variant.product.price || 0) * item.quantity
+                }, 0);
+                console.log("subtotal", subtotal);
                 if (subtotal <= 0) {
                   toast.error('ERROR', { description: 'No items in cart' });
                   return;

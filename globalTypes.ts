@@ -567,3 +567,19 @@ export type ShippingSessionType = {
   shipping_amount: number;
   shipping_rate: string;
 }
+
+export type CartItemForCheckoutType = {
+  id: number;
+  quantity: number;
+  variant: {
+    id: string;
+    size: string;
+    color: string;
+    sku: string | null;
+    product: {
+      id: string;
+      title: string;
+      price: number | null;
+    };
+  };
+}
