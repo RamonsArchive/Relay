@@ -4,7 +4,7 @@ import Stripe from "stripe";
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY_TEST;
 
 if (!stripeSecretKey) {
-  throw new Error("Missing STRIPE_SECRET_KEY in environment");
+  throw new Error("Missing STRIPE_SECRET_KEY_TEST in environment");
 }
 
 export const stripe = new Stripe(stripeSecretKey, {
