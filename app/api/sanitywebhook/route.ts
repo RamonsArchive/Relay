@@ -47,63 +47,50 @@ export async function POST(request: NextRequest) {
   }
   
 }
-
 async function syncProductFromSanity(payload: WebhookPayload, productId: string, syncId: number) {
     try {
-        const result = await prisma.$transaction(async (tx) => {
-            const productImages = [...(payload.mainImage ? [payload.mainImage.asset._ref] : []), ...payload.imageGallery.map((image) => image.asset._ref)];
-            const product = await tx.product.upsert({
-                where: { id: productId},
-                update: {
-                    title: payload.title,
-                    description: payload.description,
-                    slug: payload.slug.current,
-                    price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: productImages,
-                    sanityRevisionId: payload._rev,
-                    lastSyncedAt: new Date(),
-                    isActive: true,
-                        
-                },
-                create: {
-                    id: productId,
-                    title: payload.title,
-                    description: payload.description,
-                    slug: payload.slug.current,
-                    price: payload.cost ? Math.round(payload.cost * 100) : null, // convert to cents if needed
-                    images: productImages,
-                    categories: payload.categories || [],
-                    sanityRevisionId: payload._rev,
-                    lastSyncedAt: new Date(),
-                    isActive: true,
-                }
-            })
+        // 1. Pre-process all data OUTSIDE the transaction
+        const productImages = [
+            ...(payload.mainImage ? [payload.mainImage.asset._ref] : []), 
+            ...payload.imageGallery.map((image) => image.asset._ref)
+        ];
 
-            // 2. get existing variants to keep track of what needs to be updated or deactivated
-            console.log("THIS IS THEPRODUCT ID", product.id);
-            const existingVariants = await tx.variant.findMany({
-                where: {productId: product.id}
-            })
+        // 2. Get existing variants OUTSIDE the transaction
+        const existingVariants = await prisma.variant.findMany({
+            where: { productId: productId }
+        });
 
-            const existingVariantMap: Record<string, DatabaseVariantType> = {}
-            existingVariants.forEach((variant) => {
-                // add the unique variant id to the map
-                if (variant.id) {
-                    existingVariantMap[variant.id] = variant;
-                }
-            })
+        const existingVariantMap: Record<string, DatabaseVariantType> = {};
+        existingVariants.forEach((variant) => {
+            if (variant.id) {
+                existingVariantMap[variant.id] = variant;
+            }
+        });
 
-            const processedVariantIds = new Set();
+        // 3. Pre-process variant operations
+        const processedVariantIds = new Set<string>();
+        const variantOperations: Array<{
+            type: 'upsert';
+            data: any;
+        }> = [];
 
-            // 3. proccess each variant 
-            if (payload.variants && Array.isArray(payload.variants)) {
-                for (const variant of payload.variants) {
-                    // create stable id by combining product id and variant key
-                    const variantId = variant._key;
-                    processedVariantIds.add(variantId);
-                    await tx.variant.upsert({
-                        where: {id: variantId},
+        if (payload.variants && Array.isArray(payload.variants)) {
+            for (const variant of payload.variants) {
+                const variantId = variant._key;
+                processedVariantIds.add(variantId);
+                
+                variantOperations.push({
+                    type: 'upsert',
+                    data: {
+                        where: {
+                            productId_size_color: {
+                                productId: productId,
+                                size: variant.size,
+                                color: variant.color,
+                            }
+                        },
                         update: {
+                            id: variantId,
                             size: variant.size,
                             color: variant.color,
                             stockQuantity: variant.quantity == null ? 0 : variant.quantity,
@@ -114,9 +101,7 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
                         create: {
                             id: variantId,
                             product: {
-                                connect: {
-                                    id: productId
-                                }
+                                connect: { id: productId }
                             },
                             size: variant.size,
                             color: variant.color,
@@ -125,31 +110,70 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
                             lastSyncedAt: new Date(),
                             isActive: true,
                         }
-                    })
-                    
+                    }
+                });
+            }
+        }
+
+        // 4. Identify variants to deactivate
+        const variantsToDeactivate = Object.keys(existingVariantMap).filter(
+            variantId => !processedVariantIds.has(variantId)
+        );
+
+        // 5. Execute all operations in a SHORTER transaction
+        const result = await prisma.$transaction(async (tx) => {
+            // Update/create product
+            const product = await tx.product.upsert({
+                where: { id: productId },
+                update: {
+                    title: payload.title,
+                    description: payload.description,
+                    slug: payload.slug.current,
+                    price: payload.cost ? Math.round(payload.cost * 100) : null,
+                    images: productImages,
+                    sanityRevisionId: payload._rev,
+                    lastSyncedAt: new Date(),
+                    isActive: true,
+                },
+                create: {
+                    id: productId,
+                    title: payload.title,
+                    description: payload.description,
+                    slug: payload.slug.current,
+                    price: payload.cost ? Math.round(payload.cost * 100) : null,
+                    images: productImages,
+                    categories: payload.categories || [],
+                    sanityRevisionId: payload._rev,
+                    lastSyncedAt: new Date(),
+                    isActive: true,
                 }
+            });
+
+            // Execute all variant upserts
+            for (const operation of variantOperations) {
+                await tx.variant.upsert(operation.data);
             }
 
-             // 4. Soft-delete variants that weren't in this update
-            for (const variantId in existingVariantMap) {
-                if (!processedVariantIds.has(variantId)) {
-                  await tx.variant.update({
-                    where: { id: variantId },
+            // Deactivate removed variants
+            if (variantsToDeactivate.length > 0) {
+                await tx.variant.updateMany({
+                    where: { id: { in: variantsToDeactivate } },
                     data: { isActive: false }
-                  })
-                }
-              }
-              
-              // 5. Mark sync as successful
-              await tx.sanitySync.update({
+                });
+            }
+
+            // Mark sync as successful
+            await tx.sanitySync.update({
                 where: { id: syncId },
                 data: {
-                  status: 'success',
-                  processedAt: new Date()
+                    status: 'success',
+                    processedAt: new Date()
                 }
-              })
- 
-        }, {timeout: 2000})
+            });
+
+            return product;
+        }, { timeout: 5000 }); // Still increase timeout but less aggressive
+
         return parseServerActionResponse({
             result,
             status: "SUCCESS",
@@ -158,19 +182,21 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
         
     } catch (error) {
         console.error("Error syncing product from Sanity", error);
-        // mark sync as failed
+        
+        // Mark sync as failed (outside transaction)
         await prisma.sanitySync.update({
-            where: {id: syncId},
+            where: { id: syncId },
             data: {
                 status: "failed",
                 errorMessage: JSON.stringify(error) || "Unknown error",
                 processedAt: new Date(),
             }
-        })
+        });
+        
         return {
             status: "ERROR",
             error: "Failed to sync product from Sanity",
             syncId: syncId,
-        }
+        };
     }
 }
