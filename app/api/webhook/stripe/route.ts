@@ -13,7 +13,7 @@ import { sendRefundEmail } from "@/lib/orderRefund";
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
- // console.log("🔑 Webhook received:", body);
+  console.log("🔑 Webhook received:", body);
   //console.log("🔑 Webhook signature:", signature);
   //console.log("🔑 Webhook secret:", process.env.STRIPE_WEBHOOK_SECRET);
 
@@ -199,7 +199,7 @@ async function handleCheckoutComplete(session: any) {
   console.log("Deleting cart with session id", session.id);
   await prisma.cart.delete({
     where: {
-      stripeCheckoutSessionId: session.id,
+      id: cartId,
     }
   });
 
@@ -355,6 +355,7 @@ export const handleRefundAndNotify = async (session: any, errorType: string, err
 
     
     const updateSanityInventory = async (lineItems: any) => {
+      console.log("line items for types", lineItems);
         try {
           console.log("Updating sanity inventory");
           for (const item of lineItems.data) {
@@ -384,12 +385,13 @@ export const handleRefundAndNotify = async (session: any, errorType: string, err
                 "variants": variants[]{
                   _key,
                   size,
-                  color->{_id, name, value},
+                  color,
                   quantity
                 }
               }`,
               { productId }
             );
+            console.log("Current product", currentProduct);
       
             if (!currentProduct?.variants) {
                 return parseServerActionResponse({
@@ -403,7 +405,12 @@ export const handleRefundAndNotify = async (session: any, errorType: string, err
               .map((variant: any) => {
                 if (variant._key === variantId) {
                   const newQuantity = Math.max(0, variant.quantity - purchasedQuantity);
-                  return newQuantity > 0 ? { ...variant, quantity: newQuantity } : null;
+                  return newQuantity > 0 ? { 
+                    ...variant, 
+                    quantity: newQuantity,
+                    size: variant.size,
+                    color: variant.color
+                  } : null;
                 }
                 return variant;
               })

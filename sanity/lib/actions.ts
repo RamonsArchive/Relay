@@ -906,6 +906,7 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       }
     })
 
+    console.log("existingVariant", existingVariant);
     if (!existingVariant) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -1890,13 +1891,20 @@ export const initiateCheckout = async (userId: string) => {
     });
 
     // Update cart with checkout session
-    await prisma.cart.update({
+    const updateCartWithCheckoutSession = await prisma.cart.update({
       where: { id: cart.id },
       data: {
-        stripeCheckoutSessionId: stripeSession.id,
         checkoutStatus: 'in_progress',
       }
     });
+    console.log("updateCartWithCheckoutSession", updateCartWithCheckoutSession);
+    if (!updateCartWithCheckoutSession) {
+      console.error("Failed to update cart with checkout session");
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update cart with checkout session"
+      })
+    }
 
     return {
       status: 'SUCCESS',

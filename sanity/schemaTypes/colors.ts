@@ -53,7 +53,7 @@ export const colors = defineType({
       title: "Slug",
       type: "slug",
       options: {
-          source: (doc) => `${doc.nickname}-${doc.reviewTitle}-${doc._id.slice(-4)}`,
+          source: "name",
           maxLength: 80,
       },
       validation: (Rule) => Rule.required(),

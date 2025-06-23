@@ -99,7 +99,7 @@ async function syncProductFromSanity(payload: WebhookPayload, productId: string,
             if (payload.variants && Array.isArray(payload.variants)) {
                 for (const variant of payload.variants) {
                     // create stable id by combining product id and variant key
-                    const variantId = `${product.id}-${variant._key}`;
+                    const variantId = variant._key;
                     processedVariantIds.add(variantId);
                     await tx.variant.upsert({
                         where: {id: variantId},
