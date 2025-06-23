@@ -121,7 +121,8 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
       }
     };
   
-    const handlePromoSubmit = async (prevState: any, formData: FormData) => {
+
+    const handlePromoSubmit = async (prevState: ActionState, formData: FormData): Promise<ActionState> => {
       const promoCode = formData.get('promoCode') as string;
       if (!promoCode) {
         toast.error('ERROR', { description: 'Please enter a promo code' });

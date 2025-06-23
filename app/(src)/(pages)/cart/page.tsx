@@ -18,7 +18,7 @@ const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const user = session?.user;
   const userId = user?.id || "";
   const cookieJar = await cookies();
-  let temp_cartId = cookieJar.get("temp_cartId")?.value || "";
+  const temp_cartId = cookieJar.get("temp_cartId")?.value || "";
   console.log("temp_cartId in cart page", temp_cartId);
   let cartItems: BasketType[] = [];
 
@@ -62,7 +62,7 @@ const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                     Oops! Looks like your cart is empty.
                   </p>
                   <p className="font-plex-sans text-[16px] xs:text-[18px] md:text-[20px] text-gray-500">
-                    You can add items to your cart by clicking the "Add to Cart" button on the product page.
+                    You can add items to your cart by clicking the Add to Cart button on the product page.
                   </p>
                   <Link href="/">
                     <p className="font-plex-sans text-[16px] xs:text-[18px] md:text-[20px] text-gray-500 px-2 py-1 border border-gray-500 rounded-md transition-all duration-300 hover:bg-gray-300 hover:text-white">
