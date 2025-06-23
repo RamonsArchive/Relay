@@ -304,7 +304,7 @@ async function handleCheckoutComplete(session: any) {
     }
    }
 // Updated refund handler with proper error handling
-export const handleRefundAndNotify = async (session: any, errorType: string, errorMessage: string) => {
+const handleRefundAndNotify = async (session: any, errorType: string, errorMessage: string) => {
     try {
       console.log(`🔄 Processing refund for session: ${session.id}`);
       console.log(`📝 Reason: ${errorType} - ${errorMessage}`);
