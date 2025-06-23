@@ -1,7 +1,7 @@
 // lib/stripe.ts
 import Stripe from "stripe";
 
-const stripeSecretKey = process.env.STRIPE_SECRETE_KEY_TEST;
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY_TEST;
 
 if (!stripeSecretKey) {
   throw new Error("Missing STRIPE_SECRET_KEY in environment");
