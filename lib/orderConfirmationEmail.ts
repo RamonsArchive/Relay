@@ -1,5 +1,6 @@
 // lib/email.ts
 import { Resend } from 'resend';
+import { ShippingAddressType } from '@/globalTypes';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 if (!process.env.RESEND_API_KEY) {
@@ -17,7 +18,7 @@ interface OrderConfirmationEmailProps {
   discountAmount: number;
   totalAmount: number;
   currency: string;
-  shippingAddress: any;
+  shippingAddress: ShippingAddressType;
   shippingMethod: string;
   estimatedDelivery: string;
   items: Array<{
@@ -180,7 +181,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
             <div class="shipping-info">
               <h3>Shipping Address</h3>
               <p>
-                ${shippingAddress.name || customerName}<br>
+                ${shippingAddress.firstName || customerName}<br>
                 ${shippingAddress.line1}<br>
                 ${shippingAddress.line2 ? `${shippingAddress.line2}<br>` : ''}
                 ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.postalCode}<br>

@@ -2,6 +2,8 @@ import { SanityDocument } from "sanity";
 import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop, Slug } from "./sanity.types";
 import { Categories } from "./sanity/types";
 import { JsonValue } from "type-fest";
+import { PaymentIntent } from "@stripe/stripe-js";
+
 
 export type ProductType = Pick<
   Product,
@@ -568,6 +570,17 @@ export type ShippingSessionType = {
   shipping_rate: string;
 }
 
+export type ShippingAddressType = {
+  firstName: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+}
+
 export type CartItemForCheckoutType = {
   id: number;
   quantity: number;
@@ -582,4 +595,16 @@ export type CartItemForCheckoutType = {
       price: number | null;
     };
   };
+}
+
+export type RefundType = {
+  id: string;
+  payment_intent: string | PaymentIntent | null;
+  reason: string;
+  metadata: {
+    original_session_id: string;
+    refund_reason: string;
+    error_details: string;
+    processed_by: string;
+  }
 }

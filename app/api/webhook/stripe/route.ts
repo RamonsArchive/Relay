@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { parseServerActionResponse, sanitizeSanityId, stripeToShippingMethod } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { NextResponse } from "next/server";
-import {  OrderItemEmailType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
+import {  OrderItemEmailType, RefundType, ShippingAddressType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
 import { writeClient } from "@/sanity/lib/write-client";
 import { verifyCartInternal } from "@/sanity/lib/actions";
 import { sendRefundEmail } from "@/lib/orderRefund";
@@ -237,7 +237,7 @@ async function handleCheckoutComplete(session: any) {
       discountAmount: order.discountAmount,
       totalAmount: order.amountTotal,
       currency: order.currency,
-      shippingAddress: order.shippingAddress,
+      shippingAddress: order.shippingAddress as ShippingAddressType,
       shippingMethod: order.shippingMethod,
       shippingCost: order.shippingCost,
       estimatedDelivery: "5-7 business days",
@@ -330,7 +330,7 @@ export const handleRefundAndNotify = async (session: any, errorType: string, err
       console.log(`✅ Refund created: ${refund.id} (Status: ${refund.status})`);
   
       // 2. Send customer notification
-      const refundEmail = await sendRefundEmail(session, refund, errorType);
+      const refundEmail = await sendRefundEmail(session, refund as unknown as RefundType, errorType);
       
       if (refundEmail.status === "ERROR") {
         console.error('❌ Failed to send refund email:', refundEmail.error);

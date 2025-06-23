@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { parseServerActionResponse } from "./utils";
+import { RefundType } from "@/globalTypes";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -81,7 +82,7 @@ const getCustomerFriendlyReason = (errorType: string): { title: string; explanat
   }
 };
 
-export async function sendRefundEmail(session: any, refund: any, errorType: string) {
+export async function sendRefundEmail(session: any, refund: RefundType, errorType: string) {
   // Extract data from session
   const customerEmail = session.customer_details?.email;
   const customerName = session.customer_details?.name || 'Valued Customer';
