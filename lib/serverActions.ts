@@ -216,49 +216,69 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
 export const getCart = async (userId: string, temp_cartId: string): Promise<CartResponseType> => {
   const userIdSanitized = sanitizeSanityId(userId);
   const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
-
+  
   try {
-  if (!userIdSanitized && !temp_cartIdSanitized) {
-    console.warn("No userId or temp_cartId provided");
-    return {
-      cartId: 0,
-      cart: [],
-    };
-  }
-
-  const {success} = await clientRateLimiter.limit(`${userIdSanitized}:getCartData`);
-  if (!success) {
-    console.warn("Rate limit exceeded. Please try again later");
-    return {
-      cartId: 0,
-      cart: [],
-    };
-  }
-
-  const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
-
-  const cart = await prisma.cart.findUnique({
-    where: findCartBy,
-    include: {
-      items:true,
+    if (!userIdSanitized && !temp_cartIdSanitized) {
+      console.warn("No userId or temp_cartId provided");
+      return {
+        cartId: 0,
+        cart: [],
+      };
     }
-  })
 
-  if (!cart) {
-    return parseServerActionResponse({
-      status: "ERROR",
-      error: "Failed to get cart"
-    })
-  }
-  const cartInfo = await getCartInfo(cart);
+    const {success} = await clientRateLimiter.limit(`${userIdSanitized}:getCartData`);
+    if (!success) {
+      console.warn("Rate limit exceeded. Please try again later");
+      return {
+        cartId: 0,
+        cart: [],
+      };
+    }
 
-  return {
-    cartId: cart.id,
-    cart: cartInfo,
-  };
+    const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
+    
+    // Single optimized query that includes all related data
+    const cart = await prisma.cart.findUnique({
+      where: findCartBy,
+      include: {
+        items: {
+          include: {
+            variant: {
+              select: {
+                id: true,
+                size: true,
+                color: true,
+                stockQuantity: true,
+                product: {
+                  select: {
+                    id: true,
+                    title: true,
+                    price: true,
+                    images: true,
+                    description: true,
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
 
+    if (!cart) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to get cart"
+      });
+    }
+
+    const cartInfo = getCartInfo(cart);
+    return {
+      cartId: cart.id,
+      cart: cartInfo,
+    };
   } catch (error) {
-    console.error("Failed to get cart", error)
+    console.error("Failed to get cart", error);
     return {
       cartId: 0,
       cart: [],
@@ -266,39 +286,23 @@ export const getCart = async (userId: string, temp_cartId: string): Promise<Cart
   }
 }
 
-const getCartInfo = async (cart: CartType | null) => {
+
+const getCartInfo = (cart: CartType | null) => {
   if (!cart) {
     console.warn("No cart provided");
     return [];
   }
 
-  const cartItems = cart.items;
-  const basket: BasketType[] = []
-
+  const basket: BasketType[] = [];
+  
   try {
-    for (const item of cartItems) {
-      const variant = await prisma.variant.findUnique({
-        where: { id: item.variantId },
-        select: {
-          id: true,
-          size: true,
-          color: true,
-          stockQuantity: true,
-          product: {
-            select: {
-              id: true,
-              title: true,
-              price: true,
-              images: true,
-              description: true,
-            }
-          }
-        }
-      })
-      if (!variant) {
-        console.warn("No variant found");
+    for (const item of cart.items) {
+      if (!item.variant) {
+        console.warn("No variant found for item");
         continue;
       }
+
+      const variant = item.variant;
       const inBasket = {
         id: variant.id,
         productId: variant.product.id,
@@ -312,15 +316,14 @@ const getCartInfo = async (cart: CartType | null) => {
         stockQuantity: variant.stockQuantity,
         images: variant.product.images,
         description: variant.product.description,
-      }
+      };
+      
       basket.push(inBasket);
     }
-    return basket;
     
+    return basket;
   } catch (error) {
     console.error("Error getting cart info", error);
     return [];
   }
-
 }
-

@@ -168,7 +168,6 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         const newPath = `${path}checkout`;
         console.log("newPath", newPath);
         router.push(newPath);
-        setIsLoading(false);
 
       } catch (error) {
         setIsLoading(false);
