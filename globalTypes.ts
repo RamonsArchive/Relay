@@ -429,7 +429,7 @@ export type TaxLineItemType = {
 }
 
 
-export type BasketType = {
+export type BasketTypeFetch = {
   id: number
   createdAt: Date
   updatedAt: Date
