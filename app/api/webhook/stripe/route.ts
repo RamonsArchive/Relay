@@ -1,16 +1,14 @@
 // app/api/webhook/stripe/route.ts
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-import { fetchShippingOptions, parseServerActionResponse, sanitizeSanityId, stripeToShippingMethod } from "@/lib/utils";
+import { fetchShippingOptions, parseServerActionResponse, sanitizeSanityId } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { NextResponse } from "next/server";
-import {  EasyPostAddressType, OrderItemEmailType, OrderType, RefundType, ShippingAddressType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
+import {  EasyPostAddressType, OrderItemEmailType, RefundType, ShippingAddressType } from "@/globalTypes";
 import { writeClient } from "@/sanity/lib/write-client";
 import { verifyCartInternal } from "@/sanity/lib/actions";
 import { sendRefundEmail } from "@/lib/orderRefund";
 import easypost, { createWarehouseAddress } from "@/lib/easyPost";
-import { checkPrime } from "crypto";
-
 
 export async function POST(request: Request) {
   const body = await request.text();

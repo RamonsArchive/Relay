@@ -600,7 +600,7 @@ export type OrderType = {
     stripeSessionId: string;
     stripeCustomerId: string | null;
     paymentIntentId: string | null;
-    status: 'PENDING' | 'PAID' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
+    status: string;
     subtotal: number;
     discountAmount: number;
     taxAmount: number;
@@ -745,3 +745,65 @@ export type RefundType = {
     processed_by: string;
   }
 }
+
+export type EasyPostTracker = {
+  id: string;
+  object: "Tracker";
+  mode: "test" | "production";
+  tracking_code: string;
+  status: string;
+  status_detail: string;
+  created_at: string;
+  updated_at: string;
+  signed_by: string | null;
+  weight: number | null;
+  est_delivery_date: string | null;
+  shipment_id: string | null;
+  carrier: string;
+  tracking_details: Array<{
+    object: "TrackingDetail";
+    message: string;
+    description: string;
+    status: string;
+    status_detail: string;
+    datetime: string;
+    source: string;
+    carrier_code: string;
+    tracking_location: {
+      object: "TrackingLocation";
+      city: string | null;
+      state: string | null;
+      country: string | null;
+      zip: string | null;
+    };
+    est_delivery_date: string | null;
+  }>;
+  fees: any[];
+  carrier_detail: {
+    object: "CarrierDetail";
+    service: string;
+    container_type: string | null;
+    est_delivery_date_local: string | null;
+    est_delivery_time_local: string | null;
+    origin_location: string;
+    origin_tracking_location: {
+      object: "TrackingLocation";
+      city: string | null;
+      state: string | null;
+      country: string | null;
+      zip: string | null;
+    };
+    destination_location: string;
+    destination_tracking_location: {
+      object: "TrackingLocation";
+      city: string | null;
+      state: string | null;
+      country: string | null;
+      zip: string | null;
+    } | null;
+    guaranteed_delivery_date: string | null;
+    alternate_identifier: string | null;
+    initial_delivery_attempt: string | null;
+  };
+  public_url: string;
+};

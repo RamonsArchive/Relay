@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import easypost from "@/lib/easyPost";
 import { parseServerActionResponse } from "@/lib/utils";
 import { sendOrderStatusEmail } from "@/lib/orderStatusEmail";
+import { EasyPostTracker } from "@/globalTypes";
 
 
 export async function POST(request: Request) {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 }
 
-const handleTrackingUpdate = async (tracker: any) => {
+const handleTrackingUpdate = async (tracker: EasyPostTracker) => {
     try {
 
         const order = await prisma.order.findFirst({
@@ -69,7 +69,7 @@ const handleTrackingUpdate = async (tracker: any) => {
 
           const importantStatuses = ['out_for_delivery', 'delivered', 'exception', 'failure'];
           if (importantStatuses.includes(tracker.status_detail)) {
-            const emailResult = await sendOrderStatusEmail(order);
+            const emailResult = await sendOrderStatusEmail(updatedOrder);
 
             if (emailResult.status === "ERROR") {
                 console.error("Failed to send order status email", emailResult.error);

@@ -29,7 +29,8 @@ const eslintConfig = [
       './lib/orderConfirmationEmail.ts', 
       './app/api/webhook/stripe/route.ts', 
       './app/api/sanitywebhook/route.ts', 
-      './lib/utils.ts'
+      './lib/utils.ts',
+      './lib/orderStatusEmail.ts'
     ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
