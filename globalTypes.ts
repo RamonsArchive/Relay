@@ -468,6 +468,75 @@ export type BasketItemTypeFetch = {
   variant: VariantWithProduct
 }
 
+export type CartWithIncludes = {
+  id: number
+  userId: string | null
+  tempCartId: string | null
+  appliedPromoCodeId: number | null
+  promoDiscountAmount: number | null
+  promoAppliedAt: Date | null
+  requiresPromoVerification: boolean
+  shippingMethod: string | null
+  shippingAddressId: number | null
+  stripeCheckoutSessionId: string | null
+  checkoutStatus: string | null
+  expiresAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  user?: UserType | null
+  items: {
+    id: number
+    cartId: number
+    variantId: string
+    quantity: number
+    addedAt: Date
+    updatedAt: Date
+    variant: {
+      id: string
+      size: string
+      color: string
+      stockQuantity: number
+      product: {
+        id: string
+        title: string
+        description: string | null
+        price: number | null
+        images: JsonValue
+        slug: string
+        categories: JsonValue
+        sanityRevisionId: string | null
+        lastSyncedAt: Date
+        isActive: boolean
+        createdAt: Date
+        updatedAt: Date
+      }
+    }
+  }[]
+  appliedPromoCode: {
+    id: number
+    code: string
+    discountType: string
+    discountValue: number
+    isActive: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+  } | null
+  shippingAddress: {
+    id: number
+    userId: string | null
+    name: string
+    street: string
+    city: string
+    state: string
+    zipCode: string
+    country: string
+    isDefault: boolean
+    createdAt: Date
+    updatedAt: Date
+  } | null
+}
+
 // Type for the transformed basket items used in your UI
 export type BasketItemType = {
   id: string              // variant.id
