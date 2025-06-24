@@ -5,7 +5,7 @@ import { cn, parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
 import { prisma } from "@/lib/prisma";
-import { BasketTypeFetch, BasketItemType, CartResponseType } from '@/globalTypes';
+import { BasketTypeFetch, BasketItemType, CartResponseType, CartType } from '@/globalTypes';
 
 export const handleSignIn = async (callbackUrl: string) => {
     return await signIn("google", {redirectTo: callbackUrl});
@@ -213,7 +213,7 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
 }
 
 
-export const getCart = async (userId: string, temp_cartId: string): Promise<CartResponseType> => {
+export const getCart = async (userId: string, temp_cartId: string) => {
   const userIdSanitized = sanitizeSanityId(userId);
   const temp_cartIdSanitized = sanitizeSanityId(temp_cartId);
   
@@ -264,6 +264,7 @@ export const getCart = async (userId: string, temp_cartId: string): Promise<Cart
         }
       }
     });
+    console.log("cart", cart);
 
     if (!cart) {
       return parseServerActionResponse({

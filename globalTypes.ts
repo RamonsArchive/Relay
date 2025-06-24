@@ -1,4 +1,3 @@
-import { SanityDocument } from "sanity";
 import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, SanityImageCrop, Slug } from "./sanity.types";
 import { Categories } from "./sanity/types";
 import { JsonValue } from "type-fest";
@@ -428,28 +427,63 @@ export type TaxLineItemType = {
   reference: string;
 }
 
-
-export type BasketTypeFetch = {
+export type CartType = {
   id: number
   createdAt: Date
   updatedAt: Date
   userId: string | null
   tempCartId: string | null
   expiresAt: Date | null
-  items: CartItemType[]
+  items: BasketItemType[]
   user?: UserType | null
 }
 
-export type BasketItemType = {
+export type BasketTypeFetch = {
+  id: number
+  userId: string | null
+  tempCartId: string | null
+  appliedPromoCodeId: number | null
+  promoDiscountAmount: number | null
+  promoAppliedAt: Date | null
+  requiresPromoVerification: boolean
+  shippingMethod: string | null
+  shippingAddressId: number | null
+  stripeCheckoutSessionId: string | null
+  checkoutStatus: string | null
+  expiresAt: Date | null
+  createdAt: Date
+  updatedAt: Date
+  items: BasketItemTypeFetch[]
+}
+
+// Type for cart items as returned by your Prisma query
+export type BasketItemTypeFetch = {
   id: number
   cartId: number
   variantId: string
   quantity: number
-  createdAt: Date
+  addedAt: Date
   updatedAt: Date
   variant: VariantWithProduct
 }
 
+// Type for the transformed basket items used in your UI
+export type BasketItemType = {
+  id: string              // variant.id
+  productId: string       // variant.product.id
+  title: string           // variant.product.title
+  color: string           // variant.color
+  size: string            // variant.size
+  imageUrl: JsonValue | null // variant.product.images
+  price: number | null    // variant.product.price
+  quantity: number        // item.quantity
+  lineSubtotal: number    // calculated: price * quantity
+  stockQuantity: number   // variant.stockQuantity
+  images: JsonValue | null // variant.product.images
+  description: string | null // variant.product.description
+}
+
+// Type for variant with product data as returned by Prisma
 export type VariantWithProduct = {
   id: string
   size: string
@@ -459,11 +493,10 @@ export type VariantWithProduct = {
     id: string
     title: string
     price: number | null
-    images: string[] | null
+    images: JsonValue | null
     description: string | null
   }
 }
-
 export type OrderItemType = {
     id: number;
     orderId: number;
