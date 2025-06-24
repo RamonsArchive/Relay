@@ -4,7 +4,7 @@ import { writeClient } from "@/sanity/lib/write-client"
 import { nanoid, customAlphabet } from "nanoid";
 import { fetchPopularCategories, fetchRecentSearches, fetchRecentyViewedProducts, verifyNoUserReview } from "@/lib/serverActions";
 import { client } from "@/sanity/lib/client";
-import { CartType, ReviewType, TaxLineItemType, categoriesType, UserType, CartItemForCheckoutType } from "@/globalTypes";
+import { ReviewType, TaxLineItemType, categoriesType, UserType, CartItemForCheckoutType } from "@/globalTypes";
 import slugify from "slugify";
 import { parseServerActionResponse, sanitizeSearchQuery } from "@/lib/utils";
 import {auth} from "@/auth";
@@ -1181,7 +1181,7 @@ export const checkCartSync = async (userId: string, temp_cartId: string) => {
     });
   }
 
-  let cart: CartType | null = null;
+  let cart: BasketType | null = null;
 
   if (!userId) {
     // Handle guest cart

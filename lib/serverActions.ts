@@ -5,7 +5,7 @@ import { cn, parseServerActionResponse, sanitizeSanityId } from '@/lib/utils'
 import { rateLimiter, clientRateLimiter } from '@/lib/rateLimiter'
 import {client} from '@/sanity/lib/client';
 import { prisma } from "@/lib/prisma";
-import { CartType, BasketType, CartResponseType } from '@/globalTypes';
+import { BasketType, CartResponseType } from '@/globalTypes';
 
 export const handleSignIn = async (callbackUrl: string) => {
     return await signIn("google", {redirectTo: callbackUrl});
@@ -287,7 +287,7 @@ export const getCart = async (userId: string, temp_cartId: string): Promise<Cart
 }
 
 
-const getCartInfo = (cart: CartType | null) => {
+const getCartInfo = (cart: BasketType | null) => {
   if (!cart) {
     console.warn("No cart provided");
     return [];
@@ -297,6 +297,8 @@ const getCartInfo = (cart: CartType | null) => {
   
   try {
     for (const item of cart.items) {
+      console.log("item", item);
+      console.log("item.variant", item.variant);
       if (!item.variant) {
         console.warn("No variant found for item");
         continue;

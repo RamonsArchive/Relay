@@ -428,15 +428,40 @@ export type TaxLineItemType = {
   reference: string;
 }
 
-export type CartType = {
-    id: number;
-    createdAt: Date;
-    updatedAt: Date;
-    userId: string | null;
-    tempCartId: string | null;
-    expiresAt: Date | null;
-    items: CartItemType[];
-    user?: UserType | null;
+
+export type BasketType = {
+  id: number
+  createdAt: Date
+  updatedAt: Date
+  userId: string | null
+  tempCartId: string | null
+  expiresAt: Date | null
+  items: CartItemType[]
+  user?: UserType | null
+}
+
+export type BasketItemType = {
+  id: number
+  cartId: number
+  variantId: string
+  quantity: number
+  createdAt: Date
+  updatedAt: Date
+  variant: VariantWithProduct
+}
+
+export type VariantWithProduct = {
+  id: string
+  size: string
+  color: string
+  stockQuantity: number
+  product: {
+    id: string
+    title: string
+    price: number | null
+    images: string[] | null
+    description: string | null
+  }
 }
 
 export type OrderItemType = {
