@@ -3,17 +3,45 @@ import { prisma } from "@/lib/prisma";
 import { parseServerActionResponse } from "@/lib/utils";
 import { sendOrderStatusEmail } from "@/lib/orderStatusEmail";
 import { EasyPostTracker } from "@/globalTypes";
-
+import crypto from "crypto";
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        console.log("received easypost tracking webhook body", body);
-        const signature = request.headers.get("x-hmac-sha256");
-        const secret = process.env.EASYPOST_TRACKING_WEBHOOK_SECRET;
-        if (!signature || !secret) {
-            return NextResponse.json({ status: "ERROR", error: "Missing signature or secret" }, { status: 400 })
-        }
+        / Get raw body for signature verification
+    const rawBody = await request.text();
+    const body = JSON.parse(rawBody);
+    
+    console.log("received easypost tracking webhook body", body);
+    
+    const signature = request.headers.get("x-hmac-sha256");
+    const secret = process.env.EASYPOST_TRACKER_WEBHOOK_SECRET;
+
+    // If secret is configured, verify the signature
+    if (secret) {
+      if (!signature) {
+        return NextResponse.json(
+          { status: "ERROR", error: "Missing signature" }, 
+          { status: 400 }
+        );
+      }
+
+      const expectedSignature = crypto
+        .createHmac('sha256', secret)
+        .update(rawBody)
+        .digest('hex');
+
+      if (signature !== expectedSignature) {
+        console.error("Invalid webhook signature");
+        return NextResponse.json(
+          { status: "ERROR", error: "Invalid signature" }, 
+          { status: 401 }
+        );
+      }
+    }
+
+
+        
+
         if (body.object === "Event" && body.description === "tracker.updated") {
             const updateResult = await handleTrackingUpdate(body.result);
             if (updateResult.status === "ERROR") {

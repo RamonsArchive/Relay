@@ -333,7 +333,7 @@ async function handleCheckoutComplete(session: any) {
 
    const buyShipment = async (shipmentId: string, rateId: string) => {
     try {
-      const purchase = await easypost.shipment.buy(shipmentId, {
+      const purchase = await easypost.Shipment.buy(shipmentId, {
         rate: {id: rateId}
       })
 
@@ -433,7 +433,7 @@ async function handleCheckoutComplete(session: any) {
       })
     }
 
-    const shipment = await easypost.shipment.create({
+    const shipment = await easypost.Shipment.create({
       mode: "test",
       to_address: toAddress,
       from_address: warehouseAddress,
@@ -491,7 +491,7 @@ async function handleCheckoutComplete(session: any) {
 
    const verifyAddress = async (address: EasyPostAddressType) => {
     try {
-      const verifiedAddress = await easypost.address.create({
+      const verifiedAddress = await easypost.Address.create({
         ...address,
         verify: true
       });
