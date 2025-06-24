@@ -2,6 +2,7 @@ import { Product, Collections, internalGroqTypeReferenceTo, SanityImageHotspot, 
 import { Categories } from "./sanity/types";
 import { JsonValue } from "type-fest";
 import { PaymentIntent } from "@stripe/stripe-js";
+// removed duplciate basket types
 
 
 export type ProductType = Pick<
