@@ -5331,6 +5331,8 @@ export namespace Prisma {
     discountAmount: number | null
     taxAmount: number | null
     amountTotal: number | null
+    deliveryDays: number | null
+    shipmentCost: number | null
     promoCodeId: number | null
     promoDiscount: number | null
     addressId: number | null
@@ -5343,6 +5345,8 @@ export namespace Prisma {
     discountAmount: number | null
     taxAmount: number | null
     amountTotal: number | null
+    deliveryDays: number | null
+    shipmentCost: number | null
     promoCodeId: number | null
     promoDiscount: number | null
     addressId: number | null
@@ -5362,13 +5366,24 @@ export namespace Prisma {
     amountTotal: number | null
     currency: string | null
     status: string | null
+    trackingCode: string | null
+    trackingNumber: string | null
+    trackingUrl: string | null
+    labelUrl: string | null
+    deliveryDate: Date | null
+    deliveryDays: number | null
+    methodShipped: string | null
+    carrier: string | null
+    shipmentCost: number | null
+    estimatedDelivery: string | null
     createdAt: Date | null
     updatedAt: Date | null
     promoCodeId: number | null
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
-    orderName: string | null
+    firstName: string | null
+    lastName: string | null
     orderEmail: string | null
   }
 
@@ -5386,13 +5401,24 @@ export namespace Prisma {
     amountTotal: number | null
     currency: string | null
     status: string | null
+    trackingCode: string | null
+    trackingNumber: string | null
+    trackingUrl: string | null
+    labelUrl: string | null
+    deliveryDate: Date | null
+    deliveryDays: number | null
+    methodShipped: string | null
+    carrier: string | null
+    shipmentCost: number | null
+    estimatedDelivery: string | null
     createdAt: Date | null
     updatedAt: Date | null
     promoCodeId: number | null
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
-    orderName: string | null
+    firstName: string | null
+    lastName: string | null
     orderEmail: string | null
   }
 
@@ -5412,13 +5438,24 @@ export namespace Prisma {
     currency: number
     taxCalculation: number
     status: number
+    trackingCode: number
+    trackingNumber: number
+    trackingUrl: number
+    labelUrl: number
+    deliveryDate: number
+    deliveryDays: number
+    methodShipped: number
+    carrier: number
+    shipmentCost: number
+    estimatedDelivery: number
     createdAt: number
     updatedAt: number
     promoCodeId: number
     promoCodeUsed: number
     promoDiscount: number
     addressId: number
-    orderName: number
+    firstName: number
+    lastName: number
     orderEmail: number
     _all: number
   }
@@ -5431,6 +5468,8 @@ export namespace Prisma {
     discountAmount?: true
     taxAmount?: true
     amountTotal?: true
+    deliveryDays?: true
+    shipmentCost?: true
     promoCodeId?: true
     promoDiscount?: true
     addressId?: true
@@ -5443,6 +5482,8 @@ export namespace Prisma {
     discountAmount?: true
     taxAmount?: true
     amountTotal?: true
+    deliveryDays?: true
+    shipmentCost?: true
     promoCodeId?: true
     promoDiscount?: true
     addressId?: true
@@ -5462,13 +5503,24 @@ export namespace Prisma {
     amountTotal?: true
     currency?: true
     status?: true
+    trackingCode?: true
+    trackingNumber?: true
+    trackingUrl?: true
+    labelUrl?: true
+    deliveryDate?: true
+    deliveryDays?: true
+    methodShipped?: true
+    carrier?: true
+    shipmentCost?: true
+    estimatedDelivery?: true
     createdAt?: true
     updatedAt?: true
     promoCodeId?: true
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
-    orderName?: true
+    firstName?: true
+    lastName?: true
     orderEmail?: true
   }
 
@@ -5486,13 +5538,24 @@ export namespace Prisma {
     amountTotal?: true
     currency?: true
     status?: true
+    trackingCode?: true
+    trackingNumber?: true
+    trackingUrl?: true
+    labelUrl?: true
+    deliveryDate?: true
+    deliveryDays?: true
+    methodShipped?: true
+    carrier?: true
+    shipmentCost?: true
+    estimatedDelivery?: true
     createdAt?: true
     updatedAt?: true
     promoCodeId?: true
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
-    orderName?: true
+    firstName?: true
+    lastName?: true
     orderEmail?: true
   }
 
@@ -5512,13 +5575,24 @@ export namespace Prisma {
     currency?: true
     taxCalculation?: true
     status?: true
+    trackingCode?: true
+    trackingNumber?: true
+    trackingUrl?: true
+    labelUrl?: true
+    deliveryDate?: true
+    deliveryDays?: true
+    methodShipped?: true
+    carrier?: true
+    shipmentCost?: true
+    estimatedDelivery?: true
     createdAt?: true
     updatedAt?: true
     promoCodeId?: true
     promoCodeUsed?: true
     promoDiscount?: true
     addressId?: true
-    orderName?: true
+    firstName?: true
+    lastName?: true
     orderEmail?: true
     _all?: true
   }
@@ -5625,13 +5699,24 @@ export namespace Prisma {
     currency: string
     taxCalculation: JsonValue | null
     status: string
+    trackingCode: string | null
+    trackingNumber: string | null
+    trackingUrl: string | null
+    labelUrl: string | null
+    deliveryDate: Date | null
+    deliveryDays: number | null
+    methodShipped: string | null
+    carrier: string | null
+    shipmentCost: number | null
+    estimatedDelivery: string | null
     createdAt: Date
     updatedAt: Date
     promoCodeId: number | null
     promoCodeUsed: string | null
     promoDiscount: number | null
     addressId: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -5670,13 +5755,24 @@ export namespace Prisma {
     currency?: boolean
     taxCalculation?: boolean
     status?: boolean
+    trackingCode?: boolean
+    trackingNumber?: boolean
+    trackingUrl?: boolean
+    labelUrl?: boolean
+    deliveryDate?: boolean
+    deliveryDays?: boolean
+    methodShipped?: boolean
+    carrier?: boolean
+    shipmentCost?: boolean
+    estimatedDelivery?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     promoCodeId?: boolean
     promoCodeUsed?: boolean
     promoDiscount?: boolean
     addressId?: boolean
-    orderName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     orderEmail?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
@@ -5704,17 +5800,28 @@ export namespace Prisma {
     currency?: boolean
     taxCalculation?: boolean
     status?: boolean
+    trackingCode?: boolean
+    trackingNumber?: boolean
+    trackingUrl?: boolean
+    labelUrl?: boolean
+    deliveryDate?: boolean
+    deliveryDays?: boolean
+    methodShipped?: boolean
+    carrier?: boolean
+    shipmentCost?: boolean
+    estimatedDelivery?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     promoCodeId?: boolean
     promoCodeUsed?: boolean
     promoDiscount?: boolean
     addressId?: boolean
-    orderName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     orderEmail?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId" | "orderName" | "orderEmail", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "shippingAddress" | "shippingMethod" | "shippingCost" | "stripeSessionId" | "stripeCustomerId" | "paymentIntentId" | "subtotal" | "discountAmount" | "taxAmount" | "amountTotal" | "currency" | "taxCalculation" | "status" | "trackingCode" | "trackingNumber" | "trackingUrl" | "labelUrl" | "deliveryDate" | "deliveryDays" | "methodShipped" | "carrier" | "shipmentCost" | "estimatedDelivery" | "createdAt" | "updatedAt" | "promoCodeId" | "promoCodeUsed" | "promoDiscount" | "addressId" | "firstName" | "lastName" | "orderEmail", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     promoCode?: boolean | Order$promoCodeArgs<ExtArgs>
@@ -5749,13 +5856,24 @@ export namespace Prisma {
       currency: string
       taxCalculation: Prisma.JsonValue | null
       status: string
+      trackingCode: string | null
+      trackingNumber: string | null
+      trackingUrl: string | null
+      labelUrl: string | null
+      deliveryDate: Date | null
+      deliveryDays: number | null
+      methodShipped: string | null
+      carrier: string | null
+      shipmentCost: number | null
+      estimatedDelivery: string | null
       createdAt: Date
       updatedAt: Date
       promoCodeId: number | null
       promoCodeUsed: string | null
       promoDiscount: number | null
       addressId: number | null
-      orderName: string
+      firstName: string
+      lastName: string
       orderEmail: string
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -6146,13 +6264,24 @@ export namespace Prisma {
     readonly currency: FieldRef<"Order", 'String'>
     readonly taxCalculation: FieldRef<"Order", 'Json'>
     readonly status: FieldRef<"Order", 'String'>
+    readonly trackingCode: FieldRef<"Order", 'String'>
+    readonly trackingNumber: FieldRef<"Order", 'String'>
+    readonly trackingUrl: FieldRef<"Order", 'String'>
+    readonly labelUrl: FieldRef<"Order", 'String'>
+    readonly deliveryDate: FieldRef<"Order", 'DateTime'>
+    readonly deliveryDays: FieldRef<"Order", 'Int'>
+    readonly methodShipped: FieldRef<"Order", 'String'>
+    readonly carrier: FieldRef<"Order", 'String'>
+    readonly shipmentCost: FieldRef<"Order", 'Int'>
+    readonly estimatedDelivery: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
     readonly promoCodeId: FieldRef<"Order", 'Int'>
     readonly promoCodeUsed: FieldRef<"Order", 'String'>
     readonly promoDiscount: FieldRef<"Order", 'Int'>
     readonly addressId: FieldRef<"Order", 'Int'>
-    readonly orderName: FieldRef<"Order", 'String'>
+    readonly firstName: FieldRef<"Order", 'String'>
+    readonly lastName: FieldRef<"Order", 'String'>
     readonly orderEmail: FieldRef<"Order", 'String'>
   }
     
@@ -15472,13 +15601,24 @@ export namespace Prisma {
     currency: 'currency',
     taxCalculation: 'taxCalculation',
     status: 'status',
+    trackingCode: 'trackingCode',
+    trackingNumber: 'trackingNumber',
+    trackingUrl: 'trackingUrl',
+    labelUrl: 'labelUrl',
+    deliveryDate: 'deliveryDate',
+    deliveryDays: 'deliveryDays',
+    methodShipped: 'methodShipped',
+    carrier: 'carrier',
+    shipmentCost: 'shipmentCost',
+    estimatedDelivery: 'estimatedDelivery',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     promoCodeId: 'promoCodeId',
     promoCodeUsed: 'promoCodeUsed',
     promoDiscount: 'promoDiscount',
     addressId: 'addressId',
-    orderName: 'orderName',
+    firstName: 'firstName',
+    lastName: 'lastName',
     orderEmail: 'orderEmail'
   };
 
@@ -15730,8 +15870,16 @@ export namespace Prisma {
     paymentIntentId: 'paymentIntentId',
     currency: 'currency',
     status: 'status',
+    trackingCode: 'trackingCode',
+    trackingNumber: 'trackingNumber',
+    trackingUrl: 'trackingUrl',
+    labelUrl: 'labelUrl',
+    methodShipped: 'methodShipped',
+    carrier: 'carrier',
+    estimatedDelivery: 'estimatedDelivery',
     promoCodeUsed: 'promoCodeUsed',
-    orderName: 'orderName',
+    firstName: 'firstName',
+    lastName: 'lastName',
     orderEmail: 'orderEmail'
   };
 
@@ -16169,13 +16317,24 @@ export namespace Prisma {
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
     status?: StringFilter<"Order"> | string
+    trackingCode?: StringNullableFilter<"Order"> | string | null
+    trackingNumber?: StringNullableFilter<"Order"> | string | null
+    trackingUrl?: StringNullableFilter<"Order"> | string | null
+    labelUrl?: StringNullableFilter<"Order"> | string | null
+    deliveryDate?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryDays?: IntNullableFilter<"Order"> | number | null
+    methodShipped?: StringNullableFilter<"Order"> | string | null
+    carrier?: StringNullableFilter<"Order"> | string | null
+    shipmentCost?: IntNullableFilter<"Order"> | number | null
+    estimatedDelivery?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     promoCodeId?: IntNullableFilter<"Order"> | number | null
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
-    orderName?: StringFilter<"Order"> | string
+    firstName?: StringFilter<"Order"> | string
+    lastName?: StringFilter<"Order"> | string
     orderEmail?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
@@ -16200,13 +16359,24 @@ export namespace Prisma {
     currency?: SortOrder
     taxCalculation?: SortOrderInput | SortOrder
     status?: SortOrder
+    trackingCode?: SortOrderInput | SortOrder
+    trackingNumber?: SortOrderInput | SortOrder
+    trackingUrl?: SortOrderInput | SortOrder
+    labelUrl?: SortOrderInput | SortOrder
+    deliveryDate?: SortOrderInput | SortOrder
+    deliveryDays?: SortOrderInput | SortOrder
+    methodShipped?: SortOrderInput | SortOrder
+    carrier?: SortOrderInput | SortOrder
+    shipmentCost?: SortOrderInput | SortOrder
+    estimatedDelivery?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     promoCodeId?: SortOrderInput | SortOrder
     promoCodeUsed?: SortOrderInput | SortOrder
     promoDiscount?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
-    orderName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     orderEmail?: SortOrder
     user?: UserOrderByWithRelationInput
     promoCode?: PromoCodeOrderByWithRelationInput
@@ -16235,13 +16405,24 @@ export namespace Prisma {
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
     status?: StringFilter<"Order"> | string
+    trackingCode?: StringNullableFilter<"Order"> | string | null
+    trackingNumber?: StringNullableFilter<"Order"> | string | null
+    trackingUrl?: StringNullableFilter<"Order"> | string | null
+    labelUrl?: StringNullableFilter<"Order"> | string | null
+    deliveryDate?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryDays?: IntNullableFilter<"Order"> | number | null
+    methodShipped?: StringNullableFilter<"Order"> | string | null
+    carrier?: StringNullableFilter<"Order"> | string | null
+    shipmentCost?: IntNullableFilter<"Order"> | number | null
+    estimatedDelivery?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     promoCodeId?: IntNullableFilter<"Order"> | number | null
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
-    orderName?: StringFilter<"Order"> | string
+    firstName?: StringFilter<"Order"> | string
+    lastName?: StringFilter<"Order"> | string
     orderEmail?: StringFilter<"Order"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     promoCode?: XOR<PromoCodeNullableScalarRelationFilter, PromoCodeWhereInput> | null
@@ -16266,13 +16447,24 @@ export namespace Prisma {
     currency?: SortOrder
     taxCalculation?: SortOrderInput | SortOrder
     status?: SortOrder
+    trackingCode?: SortOrderInput | SortOrder
+    trackingNumber?: SortOrderInput | SortOrder
+    trackingUrl?: SortOrderInput | SortOrder
+    labelUrl?: SortOrderInput | SortOrder
+    deliveryDate?: SortOrderInput | SortOrder
+    deliveryDays?: SortOrderInput | SortOrder
+    methodShipped?: SortOrderInput | SortOrder
+    carrier?: SortOrderInput | SortOrder
+    shipmentCost?: SortOrderInput | SortOrder
+    estimatedDelivery?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     promoCodeId?: SortOrderInput | SortOrder
     promoCodeUsed?: SortOrderInput | SortOrder
     promoDiscount?: SortOrderInput | SortOrder
     addressId?: SortOrderInput | SortOrder
-    orderName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     orderEmail?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -16300,13 +16492,24 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"Order"> | string
     taxCalculation?: JsonNullableWithAggregatesFilter<"Order">
     status?: StringWithAggregatesFilter<"Order"> | string
+    trackingCode?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    trackingNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    trackingUrl?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    labelUrl?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    deliveryDate?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    deliveryDays?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    methodShipped?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    carrier?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    shipmentCost?: IntNullableWithAggregatesFilter<"Order"> | number | null
+    estimatedDelivery?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     promoCodeId?: IntNullableWithAggregatesFilter<"Order"> | number | null
     promoCodeUsed?: StringNullableWithAggregatesFilter<"Order"> | string | null
     promoDiscount?: IntNullableWithAggregatesFilter<"Order"> | number | null
     addressId?: IntNullableWithAggregatesFilter<"Order"> | number | null
-    orderName?: StringWithAggregatesFilter<"Order"> | string
+    firstName?: StringWithAggregatesFilter<"Order"> | string
+    lastName?: StringWithAggregatesFilter<"Order"> | string
     orderEmail?: StringWithAggregatesFilter<"Order"> | string
   }
 
@@ -17446,11 +17649,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
@@ -17475,13 +17689,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -17501,11 +17726,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
@@ -17530,13 +17766,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -17558,13 +17805,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
   }
 
@@ -17582,11 +17840,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
@@ -17606,13 +17875,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
@@ -19085,13 +19365,24 @@ export namespace Prisma {
     currency?: SortOrder
     taxCalculation?: SortOrder
     status?: SortOrder
+    trackingCode?: SortOrder
+    trackingNumber?: SortOrder
+    trackingUrl?: SortOrder
+    labelUrl?: SortOrder
+    deliveryDate?: SortOrder
+    deliveryDays?: SortOrder
+    methodShipped?: SortOrder
+    carrier?: SortOrder
+    shipmentCost?: SortOrder
+    estimatedDelivery?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     promoCodeId?: SortOrder
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
-    orderName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     orderEmail?: SortOrder
   }
 
@@ -19102,6 +19393,8 @@ export namespace Prisma {
     discountAmount?: SortOrder
     taxAmount?: SortOrder
     amountTotal?: SortOrder
+    deliveryDays?: SortOrder
+    shipmentCost?: SortOrder
     promoCodeId?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
@@ -19121,13 +19414,24 @@ export namespace Prisma {
     amountTotal?: SortOrder
     currency?: SortOrder
     status?: SortOrder
+    trackingCode?: SortOrder
+    trackingNumber?: SortOrder
+    trackingUrl?: SortOrder
+    labelUrl?: SortOrder
+    deliveryDate?: SortOrder
+    deliveryDays?: SortOrder
+    methodShipped?: SortOrder
+    carrier?: SortOrder
+    shipmentCost?: SortOrder
+    estimatedDelivery?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     promoCodeId?: SortOrder
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
-    orderName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     orderEmail?: SortOrder
   }
 
@@ -19145,13 +19449,24 @@ export namespace Prisma {
     amountTotal?: SortOrder
     currency?: SortOrder
     status?: SortOrder
+    trackingCode?: SortOrder
+    trackingNumber?: SortOrder
+    trackingUrl?: SortOrder
+    labelUrl?: SortOrder
+    deliveryDate?: SortOrder
+    deliveryDays?: SortOrder
+    methodShipped?: SortOrder
+    carrier?: SortOrder
+    shipmentCost?: SortOrder
+    estimatedDelivery?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     promoCodeId?: SortOrder
     promoCodeUsed?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
-    orderName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     orderEmail?: SortOrder
   }
 
@@ -19162,6 +19477,8 @@ export namespace Prisma {
     discountAmount?: SortOrder
     taxAmount?: SortOrder
     amountTotal?: SortOrder
+    deliveryDays?: SortOrder
+    shipmentCost?: SortOrder
     promoCodeId?: SortOrder
     promoDiscount?: SortOrder
     addressId?: SortOrder
@@ -21118,11 +21435,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -21145,13 +21473,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -21328,13 +21667,24 @@ export namespace Prisma {
     currency?: StringFilter<"Order"> | string
     taxCalculation?: JsonNullableFilter<"Order">
     status?: StringFilter<"Order"> | string
+    trackingCode?: StringNullableFilter<"Order"> | string | null
+    trackingNumber?: StringNullableFilter<"Order"> | string | null
+    trackingUrl?: StringNullableFilter<"Order"> | string | null
+    labelUrl?: StringNullableFilter<"Order"> | string | null
+    deliveryDate?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryDays?: IntNullableFilter<"Order"> | number | null
+    methodShipped?: StringNullableFilter<"Order"> | string | null
+    carrier?: StringNullableFilter<"Order"> | string | null
+    shipmentCost?: IntNullableFilter<"Order"> | number | null
+    estimatedDelivery?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     promoCodeId?: IntNullableFilter<"Order"> | number | null
     promoCodeUsed?: StringNullableFilter<"Order"> | string | null
     promoDiscount?: IntNullableFilter<"Order"> | number | null
     addressId?: IntNullableFilter<"Order"> | number | null
-    orderName?: StringFilter<"Order"> | string
+    firstName?: StringFilter<"Order"> | string
+    lastName?: StringFilter<"Order"> | string
     orderEmail?: StringFilter<"Order"> | string
   }
 
@@ -22435,11 +22785,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
@@ -22463,13 +22824,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -22539,11 +22911,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
@@ -22567,13 +22950,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -22913,11 +23307,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
@@ -22941,12 +23346,23 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -23243,11 +23659,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     address?: AddressCreateNestedOneWithoutOrdersInput
@@ -23271,12 +23698,23 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     promoUsages?: PromoCodeUsageUncheckedCreateNestedManyWithoutOrderInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -23480,11 +23918,22 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     user: UserCreateNestedOneWithoutOrdersInput
     promoCode?: PromoCodeCreateNestedOneWithoutOrdersInput
@@ -23508,13 +23957,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -23656,11 +24116,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
@@ -23684,13 +24155,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -23710,13 +24192,24 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
   }
 
@@ -23763,11 +24256,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -23790,13 +24294,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -23817,13 +24332,24 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
@@ -24290,12 +24816,23 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeId?: number | null
     promoCodeUsed?: string | null
     promoDiscount?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
   }
 
@@ -24329,11 +24866,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     promoCode?: PromoCodeUpdateOneWithoutOrdersNestedInput
@@ -24357,12 +24905,23 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -24384,12 +24943,23 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeId?: NullableIntFieldUpdateOperationsInput | number | null
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
   }
 
@@ -24476,12 +25046,23 @@ export namespace Prisma {
     currency?: string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status: string
+    trackingCode?: string | null
+    trackingNumber?: string | null
+    trackingUrl?: string | null
+    labelUrl?: string | null
+    deliveryDate?: Date | string | null
+    deliveryDays?: number | null
+    methodShipped?: string | null
+    carrier?: string | null
+    shipmentCost?: number | null
+    estimatedDelivery?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     promoCodeUsed?: string | null
     promoDiscount?: number | null
     addressId?: number | null
-    orderName: string
+    firstName: string
+    lastName: string
     orderEmail: string
   }
 
@@ -24561,11 +25142,22 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     address?: AddressUpdateOneWithoutOrdersNestedInput
@@ -24589,12 +25181,23 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
     promoUsages?: PromoCodeUsageUncheckedUpdateManyWithoutOrderNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -24616,12 +25219,23 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     taxCalculation?: NullableJsonNullValueInput | InputJsonValue
     status?: StringFieldUpdateOperationsInput | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    trackingUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    labelUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryDays?: NullableIntFieldUpdateOperationsInput | number | null
+    methodShipped?: NullableStringFieldUpdateOperationsInput | string | null
+    carrier?: NullableStringFieldUpdateOperationsInput | string | null
+    shipmentCost?: NullableIntFieldUpdateOperationsInput | number | null
+    estimatedDelivery?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     promoCodeUsed?: NullableStringFieldUpdateOperationsInput | string | null
     promoDiscount?: NullableIntFieldUpdateOperationsInput | number | null
     addressId?: NullableIntFieldUpdateOperationsInput | number | null
-    orderName?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
     orderEmail?: StringFieldUpdateOperationsInput | string
   }
 

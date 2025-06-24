@@ -619,6 +619,14 @@ export type OrderType = {
     items: OrderItemType[];
 }
 
+export type EasyPostAddressType = {
+  name: string;
+  street1: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
 export type StripeSessionType = {
     id: string;
     object: 'checkout.session';
@@ -700,6 +708,7 @@ export type ShippingSessionType = {
 
 export type ShippingAddressType = {
   firstName: string;
+  lastName: string;
   line1: string;
   line2: string;
   city: string;

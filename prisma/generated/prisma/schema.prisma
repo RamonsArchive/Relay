@@ -115,11 +115,20 @@ model Order {
   taxAmount      Int // Tax amount in cents
   amountTotal    Int // Final total in cents
   currency       String @default("usd")
-
   // Tax calculation details (for compliance)
   taxCalculation Json? // Store full tax calculation details
 
-  status String // "pending", "processing", "shipped", "delivered", "cancelled"
+  status            String // "pending", "processing", "shipped", "delivered", "cancelled"
+  trackingCode      String?
+  trackingNumber    String?
+  trackingUrl       String?
+  labelUrl          String?
+  deliveryDate      DateTime?
+  deliveryDays      Int?
+  methodShipped     String?
+  carrier           String?
+  shipmentCost      Int?
+  estimatedDelivery String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -133,12 +142,14 @@ model Order {
   address   Address? @relation(fields: [addressId], references: [id])
   addressId Int?
 
-  orderName  String
+  firstName  String
+  lastName   String
   orderEmail String
 
   promoUsages PromoCodeUsage[]
   items       OrderItem[]
 
+  @@index([trackingCode])
   @@index([userId])
   @@index([status])
   @@index([promoCodeId])

@@ -212,8 +212,8 @@ export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) =
   }));
 };
 
-export const fetchShippingOptions = async (method: string) => {
-  console.log("method", method);
+export const fetchShippingOptions = async (cost: number) => {
+  console.log("method", cost);
 // ===== SHIPPING OPTIONS =====
 const getShippingOptions = [
   {
@@ -267,7 +267,7 @@ const getShippingOptions = [
 ];
 
 for (const option of getShippingOptions) {
-  if (option.shipping_rate_data.id === method.toLowerCase()) {
+  if (option.shipping_rate_data.fixed_amount.amount === cost) {
     return parseServerActionResponse({
       status: "SUCCESS",
       error: "",

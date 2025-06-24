@@ -173,13 +173,24 @@ exports.Prisma.OrderScalarFieldEnum = {
   currency: 'currency',
   taxCalculation: 'taxCalculation',
   status: 'status',
+  trackingCode: 'trackingCode',
+  trackingNumber: 'trackingNumber',
+  trackingUrl: 'trackingUrl',
+  labelUrl: 'labelUrl',
+  deliveryDate: 'deliveryDate',
+  deliveryDays: 'deliveryDays',
+  methodShipped: 'methodShipped',
+  carrier: 'carrier',
+  shipmentCost: 'shipmentCost',
+  estimatedDelivery: 'estimatedDelivery',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   promoCodeId: 'promoCodeId',
   promoCodeUsed: 'promoCodeUsed',
   promoDiscount: 'promoDiscount',
   addressId: 'addressId',
-  orderName: 'orderName',
+  firstName: 'firstName',
+  lastName: 'lastName',
   orderEmail: 'orderEmail'
 };
 
@@ -377,8 +388,16 @@ exports.Prisma.OrderOrderByRelevanceFieldEnum = {
   paymentIntentId: 'paymentIntentId',
   currency: 'currency',
   status: 'status',
+  trackingCode: 'trackingCode',
+  trackingNumber: 'trackingNumber',
+  trackingUrl: 'trackingUrl',
+  labelUrl: 'labelUrl',
+  methodShipped: 'methodShipped',
+  carrier: 'carrier',
+  estimatedDelivery: 'estimatedDelivery',
   promoCodeUsed: 'promoCodeUsed',
-  orderName: 'orderName',
+  firstName: 'firstName',
+  lastName: 'lastName',
   orderEmail: 'orderEmail'
 };
 

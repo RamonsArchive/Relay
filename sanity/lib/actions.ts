@@ -15,7 +15,6 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { stripe } from "@/lib/stripe";
-import type { JsonArray } from 'type-fest';
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -2642,81 +2641,60 @@ export const getCartForCheckout = async (userId: string) => {
   
 }
 
-
-/*
-export const createCheckoutSession = async (userId: string, promoCode?: string) => {
+export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: string) => {
   try {
-    // Get line items
-    const lineItems = await getCartItemsForStripe(userId);
-    
-    // Get cart totals for promo validation
-    const cartSummary = await getCartSummary(userId);
-    
-    let discounts = [];
-    let shippingOptions = [];
-    
-    // Handle promo codes
-    if (promoCode) {
-      const promoDiscount = await validateAndApplyPromoCode(userId, promoCode, cartSummary.subtotal);
-      if (promoDiscount.valid) {
-        // Create Stripe coupon if it doesn't exist
-        const stripeCoupon = await createOrGetStripeCoupon(promoDiscount);
-        discounts.push({ coupon: stripeCoupon.id });
-      }
-    }
-    
-    // Handle shipping
-    if (cartSummary.requiresShipping) {
-      shippingOptions = [{
-        shipping_rate_data: {
-          type: 'fixed_amount',
-          fixed_amount: {
-            amount: Math.round(cartSummary.shippingCost * 100), // Convert to cents
-            currency: 'usd',
-          },
-          display_name: 'Standard Shipping',
-          delivery_estimate: {
-            minimum: {
-              unit: 'business_day',
-              value: 3,
-            },
-            maximum: {
-              unit: 'business_day', 
-              value: 7,
-            },
-          },
-        },
-      }];
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid user ID"
+      });
     }
 
-    // Create checkout session
-    const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomerId,
-      payment_method_types: ['card'],
-      line_items: lineItems, // Individual items, not totals
-      mode: 'payment',
-      
-      // Apply discounts
-      ...(discounts.length > 0 && { discounts }),
-      
-      // Shipping options
-      ...(shippingOptions.length > 0 && { shipping_options: shippingOptions }),
-      
-      // Auto-calculate tax on each line item
-      automatic_tax: {
-        enabled: true,
-      },
-      
-      // Other settings...
-      success_url: `${process.env.NEXT_PUBLIC_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
+    if (sessionId && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      });
+    }
+
+    if (!stripeSessionId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No stripe session ID provided"
+      });
+    }
+
+    const lastStripeSession  = await stripe.checkout.sessions.retrieve(stripeSessionId, {
+      expand: ["line_items"]
     });
 
-    return { sessionId: session.id, url: session.url };
+    if (lastStripeSession.status !== "complete") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Last stripe session is not complete"
+      });
+    }
+
+
+
+    if (!lastStripeSession) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No stripe session found"
+      });
+    }
+  
 
   } catch (error) {
-    console.error('Failed to create checkout session:', error);
-    throw error;
+    console.error("Error fetching last order:", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to fetch last order"
+    });
   }
-};
- */
+}
+

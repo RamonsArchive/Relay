@@ -1,13 +1,15 @@
 // app/api/webhook/stripe/route.ts
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-import { parseServerActionResponse, sanitizeSanityId, stripeToShippingMethod } from "@/lib/utils";
+import { fetchShippingOptions, parseServerActionResponse, sanitizeSanityId, stripeToShippingMethod } from "@/lib/utils";
 import { sendOrderConfirmationEmail } from "@/lib/orderConfirmationEmail";
 import { NextResponse } from "next/server";
-import {  OrderItemEmailType, RefundType, ShippingAddressType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
+import {  EasyPostAddressType, OrderItemEmailType, OrderType, RefundType, ShippingAddressType, ShippingSessionType, StripeSessionType } from "@/globalTypes";
 import { writeClient } from "@/sanity/lib/write-client";
 import { verifyCartInternal } from "@/sanity/lib/actions";
 import { sendRefundEmail } from "@/lib/orderRefund";
+import easypost, { createWarehouseAddress } from "@/lib/easyPost";
+import { checkPrime } from "crypto";
 
 
 export async function POST(request: Request) {
@@ -136,7 +138,10 @@ async function handleCheckoutComplete(session: any) {
   }
 
   const costToShip = session.shipping_cost.amount_total;
-  const selectedShippingMethod = stripeToShippingMethod(costToShip);
+  const getShippingData = await fetchShippingOptions(costToShip);
+  const selectedShippingMethod = getShippingData.data.display_name;
+  const minimumDeliveryDays = getShippingData.data.delivery_estimate.minimum.value;
+  const maximumDeliveryDays = getShippingData.data.delivery_estimate.maximum.value;
 
   // Create order
   const order = await prisma.order.create({
@@ -156,11 +161,13 @@ async function handleCheckoutComplete(session: any) {
       promoDiscount: (parseInt(session.metadata?.promoDiscountAmount) || 0),
       discountAmount: (parseInt(session.metadata?.promoDiscountAmount) || 0),
       taxAmount: (session.total_details?.amount_tax || 0),
-      orderName: session.customer_details?.name || "",
+      firstName: session.customer_details?.name?.split(' ')[0] || "",
+      lastName: session.customer_details?.name?.split(' ').slice(1).join(' ') || "",
       orderEmail: session.customer_details?.email || "",
 
       shippingAddress: parseServerActionResponse({
         firstName: session.customer_details?.name?.split(' ')[0] || "",
+        lastName: session.customer_details?.name?.split(' ').slice(1).join(' ') || "",
         line1: session.customer_details?.address?.line1 || "",
         line2: session.customer_details?.address?.line2 || "",
         city: session.customer_details?.address?.city || "",
@@ -225,49 +232,294 @@ async function handleCheckoutComplete(session: any) {
     return NextResponse.json({ status: "ERROR", error: "Failed to update inventory" }, { status: 500 })
   }
 
-  // Send confirmation email
+  // Create shipment and update order
   try {
-    await sendOrderConfirmationEmail({
-      email: order.orderEmail,
-      customerName: order.orderName,
-      orderNumber: order.id,
-      orderDate: order.createdAt,
-      subtotal: order.subtotal,
-      taxAmount: order.taxAmount,
-      discountAmount: order.discountAmount,
-      totalAmount: order.amountTotal,
-      currency: order.currency,
-      shippingAddress: order.shippingAddress as ShippingAddressType,
-      shippingMethod: order.shippingMethod,
-      shippingCost: order.shippingCost,
-      estimatedDelivery: "5-7 business days",
-      items: order.items.map((item: OrderItemEmailType) => ({
-        productTitle: item.productTitle,
-        variantSize: item.variantSize,
-        variantColor: item.variantColor,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.totalPrice,
-        images: item.images,
-      })),
-      promoCode: session.discounts?.[0]?.coupon?.name || undefined,
-      promoDiscount: order.discountAmount,
-      orderTrackingUrl: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${order.id}`,
-      supportUrl: `${process.env.NEXT_PUBLIC_APP_URL}/support`,
-      paymentIntentId: order.paymentIntentId,
-    });
+    const shipmentResult = await makeShipment(order);
+    if (shipmentResult.status === "ERROR") {
+      console.error("Failed to create shipment", shipmentResult.error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to create shipment" }, { status: 500 })
+    }
+    const rateResult = await getRate(shipmentResult.shipment, costToShip, minimumDeliveryDays, maximumDeliveryDays)
+    if (rateResult.status === "ERROR") {
+      console.error("Failed to get rate", rateResult.error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to get rate" }, { status: 500 })
+    }
+    const purchaseResult = await buyShipment(shipmentResult.shipment.id, rateResult.data.rate.id)
+    if (purchaseResult.status === "ERROR") {
+      console.error("Failed to buy shipment", purchaseResult.error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to buy shipment" }, { status: 500 })
+    }
+    try {
+      const updateOrder = await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          status: purchaseResult.data.status,
+          trackingCode: purchaseResult.data.trackingCode,
+          trackingNumber: purchaseResult.data.trackingNumber,
+          trackingUrl: purchaseResult.data.trackingUrl,
+          labelUrl: purchaseResult.data.labelUrl,
+          deliveryDate: purchaseResult.data.deliveryDate, 
+          deliveryDays: purchaseResult.data.deliveryDays,
+          methodShipped: purchaseResult.data.shippingMethod,
+          carrier: purchaseResult.data.carrier,
+          shipmentCost: purchaseResult.data.shipmentCost,
+          estimatedDelivery: purchaseResult.data.estimatedDelivery,
+        }
+      })
+
+      if (!updateOrder) {
+        console.error("Failed to update order", updateOrder);
+        return NextResponse.json({ status: "ERROR", error: "Failed to update order" }, { status: 500 })
+      } 
+
+      try {
+        await sendOrderConfirmationEmail({
+          email: order.orderEmail,
+          firstName: order.firstName,
+          lastName: order.lastName,
+          orderNumber: order.id,
+          orderDate: order.createdAt,
+          subtotal: order.subtotal,
+          taxAmount: order.taxAmount,
+          shippingCost: order.shippingCost,
+          discountAmount: order.discountAmount,
+          totalAmount: order.amountTotal,
+          currency: order.currency,
+          shippingAddress: order.shippingAddress as ShippingAddressType,
+          shippingMethod: order.shippingMethod,
+          estimatedDelivery: `${minimumDeliveryDays}-${maximumDeliveryDays} business days`,
+          items: order.items.map((item: OrderItemEmailType) => ({
+            productTitle: item.productTitle,
+            variantSize: item.variantSize,
+            variantColor: item.variantColor,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice,
+            images: item.images,
+          })),
+          promoCode: session.discounts?.[0]?.coupon?.name || undefined,
+          promoDiscount: order.discountAmount,
+          orderTrackingUrl: `${process.env.NEXT_PUBLIC_APP_URL}/orders/${order.id}`,
+          supportUrl: `${process.env.NEXT_PUBLIC_APP_URL}/support`,
+          paymentIntentId: order.paymentIntentId,
+          // EasyPost tracking data from updateOrder
+          trackingCode: purchaseResult.data.trackingCode,
+          trackingNumber: purchaseResult.data.trackingNumber,
+          trackingUrl: purchaseResult.data.trackingUrl,
+          labelUrl: purchaseResult.data.labelUrl,
+          deliveryDate: purchaseResult.data.deliveryDate,
+          deliveryDays: purchaseResult.data.deliveryDays,
+          carrier: purchaseResult.data.carrier,
+          methodShipped: purchaseResult.data.methodShipped,
+          shipmentCost: purchaseResult.data.shipmentCost,
+        });
+    
+        return NextResponse.json({ status: "SUCCESS", message: "Order processed successfully" }, { status: 200 })
+    
+      } catch (error) {
+        console.error("Failed to send order confirmation email", error);
+        return NextResponse.json({ status: "ERROR", error: "Failed to send order confirmation email" }, { status: 500 })
+      }
+
+    } catch (error) {
+      console.error("Failed to update order", error);
+      return NextResponse.json({ status: "ERROR", error: "Failed to update order" }, { status: 500 })
+    }
 
   } catch (error) {
     console.error("Failed to send order confirmation email", error);
     return NextResponse.json({ status: "ERROR", error: "Failed to send order confirmation email" }, { status: 500 })
   }
+
 }
+
+   const buyShipment = async (shipmentId: string, rateId: string) => {
+    try {
+      const purchase = await easypost.shipment.buy(shipmentId, {
+        rate: {id: rateId}
+      })
+
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        data: {
+          purchase: purchase,
+          status: purchase.status_detail,
+          trackingCode: purchase.tracking_code,
+          trackingNumber: purchase.tracking_code,
+          trackingUrl: purchase.public_url,
+          labelUrl: purchase.postage_label.label_url,
+          deliveryDate: purchase.delivery_date,
+          deliveryDays: purchase.delivery_days,
+          shippingMethod: purchase.service,
+          carrier: purchase.carrier,
+          shipmentCost: purchase.rate.rate,
+          estimatedDelivery: `${purchase.delivery_days} business days`,
+        }
+      })
+    } catch (error) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to buy shipment"
+      })
+    }
+   }
+
+   const getRate = async (shipment: any, costToShip: number, minimumDeliveryDays: number, maximumDeliveryDays: number) => {
+  
+    try {
+        // costToShip is the cost of the shipping method
+      const validRates: any[] = [];
+      for (const rate of shipment.rates) {
+        const inRange = rate.delivery_days >= minimumDeliveryDays && rate.delivery_days <= maximumDeliveryDays;
+        if (rate.rate <= costToShip && inRange) {
+          validRates.push(rate);
+        }
+      }
+
+      // Sort by cost (min-heap behavior)
+      validRates.sort((a, b) => parseFloat(a.rate) - parseFloat(b.rate));
+
+      const cheapestRate = validRates[0];
+
+      return parseServerActionResponse({
+        status: "SUCCESS",
+        data: {
+          rate: cheapestRate,
+          shipmentCost: parseFloat(cheapestRate.rate), // Already in dollars
+          estimatedDelivery: `${cheapestRate.delivery_days} business days`,
+          shippingMethod: cheapestRate.service,
+          carrier: cheapestRate.carrier,
+          deliveryDays: cheapestRate.delivery_days,
+          deliveryDate: cheapestRate.delivery_date,
+          // NO tracking info here - only available after purchase
+        }
+      })
+
+    } catch (error) {
+      console.error("Failed to get rate", error);
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to get rate"
+      })
+    }
+   }
+
+   const makeShipment = async (order: any) => {
+    console.log("Making shipment for order", order);
+    if (!order) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No order provided"
+      })
+    }
+
+    const warehouseAddress = await createWarehouseAddress();
+
+    const toAddress = {
+        name: order.shippingAddress.name,
+        street1: order.shippingAddress.line1,
+        city: order.shippingAddress.city,
+        state: order.shippingAddress.state,
+        zip: order.shippingAddress.postalCode,
+        country: order.shippingAddress.country,
+        phone: order.shippingAddress.phone,
+        verify: true,
+    }
+
+    const verifyToAddress = await verifyAddress(toAddress);
+    if (verifyToAddress.status === "ERROR") {
+      console.error("Failed to verify to address", verifyToAddress.error);
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: verifyToAddress.error
+      })
+    }
+
+    const shipment = await easypost.shipment.create({
+      mode: "test",
+      to_address: toAddress,
+      from_address: warehouseAddress,
+      return_address: warehouseAddress,
+      parcel: {
+        weight: 5.0,
+        length: 10.0,
+        width: 10.0,
+        height: 10.0,
+      },
+    })
+
+    console.log("Shipment created", shipment);
+    if (shipment.status === "failed") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to create shipment"
+      })
+    }
+
+    if (shipment.messages && shipment.messages.length > 0) {
+      // Check for warnings/errors in messages
+      const errors = shipment.messages.filter((msg: any) => 
+        msg.type === 'rate_error' || msg.type === 'address_error'
+      );
+      
+      if (errors.length > 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: `Shipment issues: ${errors.map((e: any) => e.message).join(', ')}`
+        });
+      }
+    }
+
+    if (!shipment.rates || shipment.rates.length === 0) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No shipping rates found for this destination"
+      })
+    }
+
+    if (shipment.to_address.verifications.delivery.success === false) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to verify to address"
+      })
+    }
+    
+    return parseServerActionResponse({  
+      status: "SUCCESS",
+      error: "",
+      shipment: shipment
+    })
+   }
+
+   const verifyAddress = async (address: EasyPostAddressType) => {
+    try {
+      const verifiedAddress = await easypost.address.create({
+        ...address,
+        verify: true
+      });
+      
+      if (verifiedAddress.verifications.delivery.success) {
+        return { status: "SUCCESS", address: verifiedAddress };
+      } else {
+        return { 
+          status: "ERROR", 
+          error: verifiedAddress.verifications.delivery.errors 
+        };
+      }
+    } catch (error) {
+      return { status: "ERROR", error: (error as Error).message };
+    }
+  };
+
+   
 
    const updateMYSQLInventory = async (lineItems: any) => {
     try {
         console.log("Updating MYSQL inventory");
         const result = await prisma.$transaction(async (tx) => {
             const updates = [];
+
+            
             
             for (const item of lineItems.data) {
               const variantId = item.price.product.metadata.variantId;

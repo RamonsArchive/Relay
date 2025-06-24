@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import OrderDetails from '@/components/OrderDetails'
 import Link from 'next/link'
 import { auth } from '@/auth';
+import { fetchLastCompleteOrder } from '@/sanity/lib/actions';
 
 
 const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>}) => {
@@ -10,6 +11,8 @@ const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>
   const session = await auth();
   const sessionId = session?.user;
   const userId = sessionId?.id|| "";
+  const orders = await fetchLastCompleteOrder(userId, stripeSessionId);
+
 
   return (
     <div className="flex flex-col w-full pt-[1.5rem] md:pt-[0] min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] px-5 items-center">
