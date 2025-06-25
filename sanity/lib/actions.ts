@@ -1879,7 +1879,7 @@ export const initiateCheckout = async (userId: string) => {
       // Let Stripe handle tax calculation
       automatic_tax: { enabled: true },
       
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${process.env.APP_URL}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
       
       metadata: {
         cartId: cart.id.toString(),
