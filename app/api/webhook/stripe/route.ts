@@ -126,7 +126,6 @@ async function handleCheckoutComplete(session: any) {
       country: session.customer_details?.address?.country || "US"
     }
   });
-  console.log("Existing address", existingAddress);
 
   if (existingAddress) {
     shippingAddress = existingAddress;
@@ -203,7 +202,6 @@ async function handleCheckoutComplete(session: any) {
   });
 
   // Delete cart
-  console.log("Deleting cart with session id", session.id);
   await prisma.cart.delete({
     where: {
       id: cartId,
@@ -371,6 +369,7 @@ async function handleCheckoutComplete(session: any) {
    const getRate = async (shipment: any, costToShip: number, minimumDeliveryDays: number, maximumDeliveryDays: number) => {
   
     try {
+      console.log("Getting rates for shipment", shipment.rates);
         // costToShip is the cost of the shipping method
       let cheapestRate = null;
       let validRates = shipment.rates.filter((rate: any) => {
@@ -421,7 +420,6 @@ async function handleCheckoutComplete(session: any) {
    }
 
    const makeShipment = async (order: any) => {
-    console.log("Making shipment for order", order);
     if (!order) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -430,7 +428,6 @@ async function handleCheckoutComplete(session: any) {
     }
 
     const warehouseAddress = await createWarehouseAddress();
-    console.log("Warehouse address", warehouseAddress);
 
     const toAddress = {
         name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
@@ -441,7 +438,6 @@ async function handleCheckoutComplete(session: any) {
         country: order.shippingAddress.country,
         phone: order.shippingAddress.phone,
     }
-    console.log("To address", toAddress);
 
     const verifyToAddress = await verifyAddress(toAddress);
     console.log("Verify to address", verifyToAddress);
@@ -629,9 +625,7 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
 
     
     const updateSanityInventory = async (lineItems: any) => {
-      console.log("line items for types", lineItems);
         try {
-          console.log("Updating sanity inventory");
           for (const item of lineItems.data) {
             const product = item?.price?.product;
             const metadata = typeof product === 'object' && product && 'metadata' in product 
