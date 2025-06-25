@@ -10,7 +10,7 @@ if (!process.env.EASYPOST_API_KEY) {
 export const createWarehouseAddress = async () => {
   const address = await easypost.Address.create({
     name: "Relay Warehouse",
-    street1: "9785 Genesse Ave",
+    street1: "9785 Genesee Aveneue",
     city: "San Diego",
     state: "CA",
     zip: "92121",

@@ -432,7 +432,7 @@ async function handleCheckoutComplete(session: any) {
     console.log("Warehouse address", warehouseAddress);
 
     const toAddress = {
-        name: order.shippingAddress.name,
+        name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
         street1: order.shippingAddress.line1,
         city: order.shippingAddress.city,
         state: order.shippingAddress.state,
