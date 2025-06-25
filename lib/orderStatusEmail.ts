@@ -73,7 +73,7 @@ export async function sendOrderStatusEmail(orderData: any) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Your Store <onboarding@resend.dev>', // Replace with your domain
+      from: 'Relay <onboarding@resend.dev>', // Replace with your domain
       to: [props.email],
       subject: `${statusContent.subject} - Order #${props.orderNumber}`,
       html: `
@@ -227,7 +227,7 @@ export async function sendOrderStatusEmail(orderData: any) {
               <p><strong>Questions?</strong> <a href="${props.supportUrl}">Contact our support team</a></p>
               <p>This email was sent to ${props.email}</p>
               <p style="margin-top: 20px;">
-                &copy; ${new Date().getFullYear()} Your Store Name. All rights reserved.<br>
+                &copy; ${new Date().getFullYear()} Relay. All rights reserved.<br>
                 <small>Order #${props.orderNumber}${props.trackingCode ? ` • Tracking: ${props.trackingCode}` : ''}</small>
               </p>
             </div>

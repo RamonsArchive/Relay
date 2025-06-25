@@ -99,7 +99,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Your Store <onboarding@resend.dev>', // Replace with your domain
+      from: 'Relay <onboarding@resend.dev>', // Replace with your domain
       to: [email],
       subject: `Order Confirmation #${orderNumber} - ${trackingCode ? 'Shipping Label Created' : 'Processing'}`,
       html: `
@@ -325,7 +325,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
               <p><strong>Questions about your order?</strong> <a href="${supportUrl}">Contact our support team</a></p>
               <p>This email was sent to ${email}</p>
               <p style="margin-top: 20px;">
-                &copy; ${new Date().getFullYear()} Your Store Name. All rights reserved.<br>
+                &copy; ${new Date().getFullYear()} Relay. All rights reserved.<br>
                 <small>Order #${orderNumber} • ${trackingCode ? `Tracking: ${trackingCode}` : 'Processing'}</small>
               </p>
             </div>

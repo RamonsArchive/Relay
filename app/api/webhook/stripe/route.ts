@@ -126,6 +126,7 @@ async function handleCheckoutComplete(session: any) {
       country: session.customer_details?.address?.country || "US"
     }
   });
+  console.log("Existing address", existingAddress);
 
   if (existingAddress) {
     shippingAddress = existingAddress;

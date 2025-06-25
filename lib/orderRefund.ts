@@ -152,7 +152,7 @@ async function sendRefundEmailWithTemplate(props: RefundEmailProps) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Your Store <onboarding@resend.dev>', // Replace with your domain
+      from: 'Relay <onboarding@resend.dev>', // Replace with your domain
       to: [email],
       subject: `Refund Processed - Order ${orderNumber}`,
       html: `
@@ -216,23 +216,23 @@ async function sendRefundEmailWithTemplate(props: RefundEmailProps) {
                 <div class="refund-details">
                   <h3 style="margin-top: 0; color: #dc3545;">Refund Information</h3>
                   <div class="detail-row">
-                    <span>Order Number:</span>
+                    <span>Order Number: </span>
                     <strong>#${orderNumber}</strong>
                   </div>
                   <div class="detail-row">
-                    <span>Refund ID:</span>
+                    <span>Refund ID: </span>
                     <strong>${refundId}</strong>
                   </div>
                   <div class="detail-row">
-                    <span>Original Order Date:</span>
+                    <span>Original Order Date: </span>
                     <span>${originalOrderDate}</span>
                   </div>
                   <div class="detail-row">
-                    <span>Refund Date:</span>
+                    <span>Refund Date: </span>
                     <span>${new Date().toLocaleDateString()}</span>
                   </div>
                   <div class="detail-row total">
-                    <span>Total Refunded:</span>
+                    <span>Total Refunded: </span>
                     <span>${formatCurrency(refundAmount)}</span>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ async function sendRefundEmailWithTemplate(props: RefundEmailProps) {
                 <p>Thank you for your understanding.</p>
                 
                 <p>Best regards,<br>
-                <strong>Your Store Team</strong></p>
+                <strong>Relay Team</strong></p>
               </div>
 
               <!-- Footer -->
