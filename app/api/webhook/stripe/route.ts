@@ -272,7 +272,7 @@ async function handleCheckoutComplete(session: any) {
       } 
 
       try {
-        await sendOrderConfirmationEmail({
+        const emailResult = await sendOrderConfirmationEmail({
           email: order.orderEmail,
           firstName: order.firstName,
           lastName: order.lastName,
@@ -312,6 +312,10 @@ async function handleCheckoutComplete(session: any) {
           methodShipped: purchaseResult.data.methodShipped,
           shipmentCost: purchaseResult.data.shipmentCost,
         });
+        if (!emailResult) {
+          console.error("Failed to send order confirmation email", emailResult);
+          return NextResponse.json({ status: "ERROR", error: "Failed to send order confirmation email" }, { status: 500 })
+        }
     
         return NextResponse.json({ status: "SUCCESS", message: "Order processed successfully" }, { status: 200 })
     
@@ -425,6 +429,7 @@ async function handleCheckoutComplete(session: any) {
     }
 
     const warehouseAddress = await createWarehouseAddress();
+    console.log("Warehouse address", warehouseAddress);
 
     const toAddress = {
         name: order.shippingAddress.name,
@@ -434,10 +439,11 @@ async function handleCheckoutComplete(session: any) {
         zip: order.shippingAddress.postalCode,
         country: order.shippingAddress.country,
         phone: order.shippingAddress.phone,
-        verify: true,
     }
+    console.log("To address", toAddress);
 
     const verifyToAddress = await verifyAddress(toAddress);
+    console.log("Verify to address", verifyToAddress);
     if (verifyToAddress.status === "ERROR") {
       console.error("Failed to verify to address", verifyToAddress.error);
       return parseServerActionResponse({
@@ -448,7 +454,10 @@ async function handleCheckoutComplete(session: any) {
 
     const shipment = await easypost.Shipment.create({
       mode: "test",
-      to_address: toAddress,
+      to_address: { 
+        ...toAddress,
+        verify: ["delivery"],
+      },
       from_address: warehouseAddress,
       return_address: warehouseAddress,
       parcel: {
@@ -508,7 +517,8 @@ async function handleCheckoutComplete(session: any) {
         ...address,
         verify: true
       });
-      
+      console.log("Verified address", verifiedAddress);
+
       if (verifiedAddress.verifications.delivery.success) {
         return { status: "SUCCESS", address: verifiedAddress };
       } else {
