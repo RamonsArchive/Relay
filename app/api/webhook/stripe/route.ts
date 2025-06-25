@@ -235,16 +235,19 @@ async function handleCheckoutComplete(session: any) {
     const shipmentResult = await makeShipment(order);
     if (shipmentResult.status === "ERROR") {
       console.error("Failed to create shipment", shipmentResult.error);
+      await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', shipmentResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to create shipment" }, { status: 500 })
     }
     const rateResult = await getRate(shipmentResult.shipment, costToShip, minimumDeliveryDays, maximumDeliveryDays)
     if (rateResult.status === "ERROR") {
       console.error("Failed to get rate", rateResult.error);
+      await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', rateResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to get rate" }, { status: 500 })
     }
     const purchaseResult = await buyShipment(shipmentResult.shipment.id, rateResult.data.rate.id)
     if (purchaseResult.status === "ERROR") {
       console.error("Failed to buy shipment", purchaseResult.error);
+      await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', purchaseResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to buy shipment" }, { status: 500 })
     }
     try {
@@ -267,6 +270,7 @@ async function handleCheckoutComplete(session: any) {
 
       if (!updateOrder) {
         console.error("Failed to update order", updateOrder);
+        await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', updateOrder);
         return NextResponse.json({ status: "ERROR", error: "Failed to update order" }, { status: 500 })
       } 
 
@@ -325,11 +329,13 @@ async function handleCheckoutComplete(session: any) {
 
     } catch (error) {
       console.error("Failed to update order", error);
+      await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', JSON.stringify(error));
       return NextResponse.json({ status: "ERROR", error: "Failed to update order" }, { status: 500 })
     }
 
   } catch (error) {
     console.error("Failed to send order confirmation email", error);
+    await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', JSON.stringify(error));
     return NextResponse.json({ status: "ERROR", error: "Failed to send order confirmation email" }, { status: 500 })
   }
 

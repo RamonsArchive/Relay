@@ -69,6 +69,11 @@ const getCustomerFriendlyReason = (errorType: string): { title: string; explanat
         title: 'Order Processing Issue',
         explanation: 'We encountered an issue with your order contents during processing. This is rare, but we\'ve automatically refunded your payment.'
       };
+    case 'SHIPPING_LABEL_FAILED':
+      return {
+        title: 'Shipping Service Unavailable',
+        explanation: 'We were unable to process shipping for your order due to a carrier service issue. We\'ve automatically refunded your payment and you can try placing the order again.'
+      };
     case 'PROCESSING_ERROR':
       return {
         title: 'Technical Issue',
