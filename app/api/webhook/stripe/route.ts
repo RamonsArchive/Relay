@@ -366,18 +366,30 @@ async function handleCheckoutComplete(session: any) {
   
     try {
         // costToShip is the cost of the shipping method
-      const validRates: any[] = [];
-      for (const rate of shipment.rates) {
-        const inRange = rate.delivery_days >= minimumDeliveryDays && rate.delivery_days <= maximumDeliveryDays;
-        if (rate.rate <= costToShip && inRange) {
-          validRates.push(rate);
-        }
+      let cheapestRate = null;
+      let validRates = shipment.rates.filter((rate: any) => {
+        const inRange = rate.delivery_days >= minimumDeliveryDays && 
+                       rate.delivery_days <= maximumDeliveryDays;
+        const withinBudget = rate.rate <= costToShip;
+        return inRange && withinBudget;
+      });
+    
+      if (!cheapestRate && validRates.length > 0) {
+        cheapestRate = validRates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
       }
-
-      // Sort by cost (min-heap behavior)
-      validRates.sort((a, b) => parseFloat(a.rate) - parseFloat(b.rate));
-
-      const cheapestRate = validRates[0];
+    
+      // Step 2: Try rates within delivery window (ignore cost)
+      validRates = shipment.rates.filter((rate: any) => {
+        return rate.delivery_days >= minimumDeliveryDays && 
+               rate.delivery_days <= maximumDeliveryDays;
+      });
+    
+      if (!cheapestRate && validRates.length > 0) {
+        cheapestRate = validRates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
+      }
+    
+      // Step 3: Fallback to cheapest rate overall
+      cheapestRate = shipment.rates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
 
       return parseServerActionResponse({
         status: "SUCCESS",

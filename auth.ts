@@ -86,10 +86,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-
-
-
-
          console.log("User exists in sanity", userId);
          return true; // allow sign in
       } catch (error) {

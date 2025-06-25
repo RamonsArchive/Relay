@@ -23,7 +23,7 @@ const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {
     if (!variant.color?.name) return false;
     return variant.color?.name.toLowerCase() === selectedColor.toLowerCase();
   });
-
+ 
   return (
     <div className="flex flex-wrap w-full gap-3 pt-2">
       {allSizes.map((size, index) => {

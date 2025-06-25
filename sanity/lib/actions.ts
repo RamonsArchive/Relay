@@ -826,6 +826,7 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
 
 export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string) => {
   try {
+    console.log("In addToBasket");
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
@@ -920,7 +921,8 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       })
     }
 
-    const findCartWhere = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
+    const findCartWhere = userIdSanitized ? { userId: userId } : { tempCartId: temp_cartId };
+    console.log("findCartWhere", findCartWhere);
 
     // fetch or create the cart
     let cart = await prisma.cart.upsert({

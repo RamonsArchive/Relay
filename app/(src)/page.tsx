@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { auth } from "@/auth";
 import FiltersShort from "@/components/FiltersShort";
 import ProductGridSkeleton from "@/components/ProductGridSkeleton";
+import { prisma } from "@/lib/prisma";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const experimental_ppr = true;
@@ -22,6 +23,26 @@ const Home = async ({
   const session = await auth();
   const user = session?.user;
   const userId = user?.id || null;
+
+  await prisma.user.upsert({
+    where: { id: userId || "" },
+    update: {
+      email:    session?.user?.email || '',
+      name:     session?.user?.name,
+      provider:     "Google",
+      updatedAt:    new Date(),
+    },
+    create: {
+      id:        userId || "",
+      email:     session?.user?.email || '',
+      name:      session?.user?.name,
+      provider:  "Google",
+      // createdAt and isActive use their defaults
+  },
+}) 
+console.log("upserted user into MySQL", userId);
+
+
 
   const path = (await params).slug || "/";
 
