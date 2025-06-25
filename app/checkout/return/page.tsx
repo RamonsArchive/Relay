@@ -7,11 +7,13 @@ import { fetchLastCompleteOrder } from '@/sanity/lib/actions';
 
 const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>}) => {
   const stripeSessionId = (await searchParams).session_id || "";
+  console.log("stripeSessionId", stripeSessionId);
 
   const session = await auth();
   const sessionId = session?.user;
   const userId = sessionId?.id|| "";
   const orders = await fetchLastCompleteOrder(userId, stripeSessionId);
+  console.log("orders", orders);
 
 
   return (

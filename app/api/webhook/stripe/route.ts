@@ -14,8 +14,8 @@ export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
   console.log("🔑 Webhook received:", body);
-  //console.log("🔑 Webhook signature:", signature);
-  //console.log("🔑 Webhook secret:", process.env.STRIPE_WEBHOOK_SECRET);
+  console.log("🔑 Webhook signature:", signature);
+  console.log("🔑 Webhook secret:", process.env.STRIPE_WEBHOOK_SECRET);
 
   if (!signature) {
     return new Response('No signature provided', { status: 400 });
