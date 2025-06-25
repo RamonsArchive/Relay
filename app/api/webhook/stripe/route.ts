@@ -337,6 +337,45 @@ async function handleCheckoutComplete(session: any) {
 
    const buyShipment = async (shipmentId: string, rateId: string) => {
     try {
+      const isTestMode = process.env.NODE_ENV === "development";
+      if (isTestMode) {
+        // Get the actual shipment and rate data to make mock more realistic
+        const shipment = await easypost.Shipment.retrieve(shipmentId);
+        const selectedRate = shipment.rates.find((rate: any) => rate.id === rateId);
+        
+        if (!selectedRate) {
+          throw new Error("Rate not found");
+        }
+  
+        // Generate realistic mock data based on actual rate
+        const mockTrackingNumber = `TEST${Date.now().toString().slice(-8)}`;
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + (selectedRate.delivery_days || 3));
+  
+        return parseServerActionResponse({
+          status: "SUCCESS",
+          data: {
+            purchase: {
+              id: shipmentId,
+              tracking_code: mockTrackingNumber,
+              status: "purchased",
+              // ... other mock fields
+            },
+            status: "Label created successfully",
+            trackingCode: mockTrackingNumber,
+            trackingNumber: mockTrackingNumber,
+            trackingUrl: `https://www.easypost.com/tracking/${mockTrackingNumber}`,
+            labelUrl: `https://easypost-files.s3-us-west-2.amazonaws.com/files/postage_label/${mockTrackingNumber}.pdf`,
+            deliveryDate: deliveryDate.toISOString(),
+            deliveryDays: selectedRate.delivery_days || 3,
+            shippingMethod: selectedRate.service,
+            carrier: selectedRate.carrier,
+            shipmentCost: selectedRate.rate,
+            estimatedDelivery: `${selectedRate.delivery_days || 3} business days`,
+          }
+        });
+      }
+
       const purchase = await easypost.Shipment.buy(shipmentId, {
         rate: {id: rateId}
       })

@@ -1828,7 +1828,7 @@ export const initiateCheckout = async (userId: string) => {
       },
 
       shipping_address_collection: {
-        allowed_countries: ['US', 'CA'],
+        allowed_countries: ['US'],
       },
 
       shipping_options: [
