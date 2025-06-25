@@ -13,9 +13,10 @@ import easypost, { createWarehouseAddress } from "@/lib/easyPost";
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
+  const endPointSecret = process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET;
   console.log("🔑 Webhook received:", body);
   console.log("🔑 Webhook signature:", signature);
-  console.log("🔑 Webhook secret:", process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET);
+  console.log("🔑 Webhook secret:", endPointSecret);
 
   if (!signature) {
     return new Response('No signature provided', { status: 400 });
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET!
+      endPointSecret!
     );
   } catch (err) {
     console.error('⚠️  Webhook signature verification failed:', err);
