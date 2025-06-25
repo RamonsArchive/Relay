@@ -1775,6 +1775,7 @@ export const initiateCheckout = async (userId: string) => {
     let stripeCustomerId = cart.user?.stripeCustomerId;
     if (!stripeCustomerId && cart.user) {
       const result = await createStripeCustomerForUser(cart.user);
+      console.log("result for new stripe customer", result);
       if (result.status === "ERROR") {
         return parseServerActionResponse({
           status: "ERROR",
