@@ -344,10 +344,12 @@ async function handleCheckoutComplete(session: any) {
    const buyShipment = async (shipmentId: string, rateId: string) => {
     try {
       const isTestMode = process.env.NODE_ENV === "development";
+      console.log("Is test mode", isTestMode);
       if (isTestMode) {
         // Get the actual shipment and rate data to make mock more realistic
         const shipment = await easypost.Shipment.retrieve(shipmentId);
         const selectedRate = shipment.rates.find((rate: any) => rate.id === rateId);
+        console.log("Selected rate", selectedRate);
         
         if (!selectedRate) {
           throw new Error("Rate not found");
