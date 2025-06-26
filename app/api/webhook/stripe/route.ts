@@ -382,7 +382,7 @@ async function handleCheckoutComplete(session: any) {
             deliveryDays: selectedRate.delivery_days || 3,
             shippingMethod: selectedRate.service,
             carrier: selectedRate.carrier,
-            shipmentCost: selectedRate.rate,
+            shipmentCost: Math.round(parseFloat(selectedRate.rate) * 100),
             estimatedDelivery: `${selectedRate.delivery_days || 3} business days`,
           }
         });
