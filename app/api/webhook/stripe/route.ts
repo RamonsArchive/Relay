@@ -392,6 +392,8 @@ async function handleCheckoutComplete(session: any) {
         rate: {id: rateId}
       })
 
+      console.log("Purchase", purchase);
+
       return parseServerActionResponse({
         status: "SUCCESS",
         data: {
