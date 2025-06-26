@@ -352,6 +352,7 @@ async function handleCheckoutComplete(session: any) {
         // Get the actual shipment and rate data to make mock more realistic
         const shipment = await easypost.Shipment.retrieve(shipmentId);
         const selectedRate = shipment.rates.find((rate: any) => rate.id === rateId);
+        console.log("Shipment", shipment);
         console.log("Selected rate", selectedRate);
         
         if (!selectedRate) {
