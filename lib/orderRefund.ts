@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { parseServerActionResponse } from "./utils";
 import { RefundType } from "@/globalTypes";
+import { urlFor } from "@/sanity/lib/client";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,27 +34,18 @@ interface RefundEmailProps {
 // Helper function to safely extract image URL
 const getImageUrl = (images: string | string[] | null | undefined): string | null => {
   if (!images) return null;
-  
   // If it's a string, try to parse as JSON first
-  if (typeof images === 'string') {
-    try {
-      const parsed = JSON.parse(images);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed[0];
-      }
-      return parsed || null;
-    } catch {
-      // If parsing fails, treat as direct URL
-      return images;
+  try {
+    if (Array.isArray(images)) {
+      const parseImage = JSON.parse(images[0]);
+      return urlFor(parseImage).url();
     }
+    const imageRef = JSON.parse(images);
+    return urlFor(imageRef).url();
+  } catch (error) {
+    console.error("Error parsing images", error);
+    return null;
   }
-  
-  // If it's already an array
-  if (Array.isArray(images) && images.length > 0) {
-    return images[0];
-  }
-  
-  return null;
 };
 
 // Helper function for customer-friendly error messages
