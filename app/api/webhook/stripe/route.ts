@@ -421,9 +421,21 @@ async function handleCheckoutComplete(session: any) {
   
     try {
       console.log("Getting rates for shipment", shipment.rates);
+
+      const carriersWithErrors = shipment.messages.filter((msg: any) => msg.type === "rate_error").map((msg: any) => msg.carrier);
+
+      const availableCarriers = shipment.rates.filter((rate: any) => !carriersWithErrors.includes(rate.carrier));
+
+      if (availableCarriers.length === 0) {
+        return parseServerActionResponse({
+          status: "ERROR",
+          error: "No available carriers"
+        })
+      }
+
         // costToShip is the cost of the shipping method
       let cheapestRate = null;
-      let validRates = shipment.rates.filter((rate: any) => {
+      let validRates = availableCarriers.filter((rate: any) => {
         const inRange = rate.delivery_days >= minimumDeliveryDays && 
                        rate.delivery_days <= maximumDeliveryDays;
         const withinBudget = rate.rate <= costToShip;
@@ -436,7 +448,7 @@ async function handleCheckoutComplete(session: any) {
       }
     
       // Step 2: Try rates within delivery window (ignore cost)
-      validRates = shipment.rates.filter((rate: any) => {
+      validRates = availableCarriers.filter((rate: any) => {
         return rate.delivery_days >= minimumDeliveryDays && 
                rate.delivery_days <= maximumDeliveryDays;
       });
@@ -446,7 +458,7 @@ async function handleCheckoutComplete(session: any) {
       }
     
       // Step 3: Fallback to cheapest rate overall
-      cheapestRate = shipment.rates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
+      cheapestRate = availableCarriers.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
 
       return parseServerActionResponse({
         status: "SUCCESS",
@@ -524,26 +536,24 @@ async function handleCheckoutComplete(session: any) {
         error: "Failed to create shipment"
       })
     }
+      if (shipment.messages && shipment.messages.length > 0) {
+        const criticalErrors = shipment.messages.filter((msg: any) =>
+          msg.type === 'address_error' || msg.type === 'shipment_error'
+        );
+        
+        if (criticalErrors.length > 0) {
+          return parseServerActionResponse({
+            status: "ERROR",
+            error: `Critical shipment issues: ${criticalErrors.map((e: any) => e.message).join(', ')}`
+          });
+        }
 
-    if (shipment.messages && shipment.messages.length > 0) {
-      // Check for warnings/errors in messages
-      const errors = shipment.messages.filter((msg: any) => 
-        msg.type === 'rate_error' || msg.type === 'address_error'
-      );
-      
-      if (errors.length > 0) {
+      if (!shipment.rates || shipment.rates.length === 0) {
         return parseServerActionResponse({
           status: "ERROR",
-          error: `Shipment issues: ${errors.map((e: any) => e.message).join(', ')}`
-        });
+          error: "No shipping rates found for this destination"
+        })
       }
-    }
-
-    if (!shipment.rates || shipment.rates.length === 0) {
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "No shipping rates found for this destination"
-      })
     }
 
     if (shipment.to_address.verifications.delivery.success === false) {
