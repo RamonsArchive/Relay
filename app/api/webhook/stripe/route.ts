@@ -233,18 +233,21 @@ async function handleCheckoutComplete(session: any) {
   // Create shipment and update order
   try {
     const shipmentResult = await makeShipment(order);
+    console.log("Shipment result", shipmentResult);
     if (shipmentResult.status === "ERROR") {
       console.error("Failed to create shipment", shipmentResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', shipmentResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to create shipment" }, { status: 500 })
     }
     const rateResult = await getRate(shipmentResult.shipment, costToShip, minimumDeliveryDays, maximumDeliveryDays)
+    console.log("Rate result", rateResult);
     if (rateResult.status === "ERROR") {
       console.error("Failed to get rate", rateResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', rateResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to get rate" }, { status: 500 })
     }
     const purchaseResult = await buyShipment(shipmentResult.shipment.id, rateResult.data.rate.id)
+    console.log("Purchase result", purchaseResult);
     if (purchaseResult.status === "ERROR") {
       console.error("Failed to buy shipment", purchaseResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', purchaseResult.error);
@@ -425,6 +428,7 @@ async function handleCheckoutComplete(session: any) {
         const withinBudget = rate.rate <= costToShip;
         return inRange && withinBudget;
       });
+      console.log("Valid rates", validRates);
     
       if (!cheapestRate && validRates.length > 0) {
         cheapestRate = validRates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
