@@ -346,7 +346,7 @@ async function handleCheckoutComplete(session: any) {
 
    const buyShipment = async (shipmentId: string, rateId: string) => {
     try {
-      const isTestMode = process.env.NODE_ENV === "development";
+      const isTestMode = process.env.EASYPOST_TEST_MODE === "true";
       console.log("Is test mode", isTestMode);
       if (isTestMode) {
         // Get the actual shipment and rate data to make mock more realistic
