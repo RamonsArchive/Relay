@@ -278,6 +278,9 @@ async function handleCheckoutComplete(session: any) {
       } 
 
       try {
+        for (const item of order.items) {
+          console.log("item images", item.images);
+        }
         const emailResult = await sendOrderConfirmationEmail({
           email: order.orderEmail,
           firstName: order.firstName,
@@ -352,8 +355,6 @@ async function handleCheckoutComplete(session: any) {
         // Get the actual shipment and rate data to make mock more realistic
         const shipment = await easypost.Shipment.retrieve(shipmentId);
         const selectedRate = shipment.rates.find((rate: any) => rate.id === rateId);
-        console.log("Shipment", shipment);
-        console.log("Selected rate", selectedRate);
         
         if (!selectedRate) {
           throw new Error("Rate not found");
@@ -392,8 +393,6 @@ async function handleCheckoutComplete(session: any) {
         rate: {id: rateId}
       })
 
-      console.log("Purchase", purchase);
-
       return parseServerActionResponse({
         status: "SUCCESS",
         data: {
@@ -422,8 +421,6 @@ async function handleCheckoutComplete(session: any) {
    const getRate = async (shipment: any, costToShip: number, minimumDeliveryDays: number, maximumDeliveryDays: number) => {
   
     try {
-      console.log("Getting rates for shipment", shipment.rates);
-
       const carriersWithErrors = shipment.messages.filter((msg: any) => msg.type === "rate_error").map((msg: any) => msg.carrier);
 
       const availableCarriers = shipment.rates.filter((rate: any) => !carriersWithErrors.includes(rate.carrier));
@@ -443,7 +440,6 @@ async function handleCheckoutComplete(session: any) {
         const withinBudget = rate.rate <= costToShip;
         return inRange && withinBudget;
       });
-      console.log("Valid rates", validRates);
     
       if (!cheapestRate && validRates.length > 0) {
         cheapestRate = validRates.sort((a: any, b: any) => parseFloat(a.rate) - parseFloat(b.rate))[0];
@@ -506,7 +502,6 @@ async function handleCheckoutComplete(session: any) {
     }
 
     const verifyToAddress = await verifyAddress(toAddress);
-    console.log("Verify to address", verifyToAddress);
     if (verifyToAddress.status === "ERROR") {
       console.error("Failed to verify to address", verifyToAddress.error);
       return parseServerActionResponse({
@@ -531,7 +526,6 @@ async function handleCheckoutComplete(session: any) {
       },
     })
 
-    console.log("Shipment created", shipment);
     if (shipment.status === "failed") {
       return parseServerActionResponse({
         status: "ERROR",
@@ -578,7 +572,6 @@ async function handleCheckoutComplete(session: any) {
         ...address,
         verify: true
       });
-      console.log("Verified address", verifiedAddress);
 
       if (verifiedAddress.verifications.delivery.success) {
         return { status: "SUCCESS", address: verifiedAddress };
@@ -597,12 +590,8 @@ async function handleCheckoutComplete(session: any) {
 
    const updateMYSQLInventory = async (lineItems: any) => {
     try {
-        console.log("Updating MYSQL inventory");
         const result = await prisma.$transaction(async (tx) => {
             const updates = [];
-
-            
-            
             for (const item of lineItems.data) {
               const variantId = item.price.product.metadata.variantId;
               const purchasedQuantity = item.quantity;
@@ -660,9 +649,7 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
         console.error('❌ Refund failed:', refund.failure_reason);
         throw new Error(`Refund failed: ${refund.failure_reason}`);
       }
-  
-      console.log(`✅ Refund created: ${refund.id} (Status: ${refund.status})`);
-  
+    
       // 2. Send customer notification
       const refundEmail = await sendRefundEmail(session, refund as unknown as RefundType, errorType);
       
@@ -698,10 +685,6 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
             const productId = metadata.productId;
             const variantId = metadata.variantId;
             const purchasedQuantity = item.quantity || 0;
-
-            console.log("Product ID", productId);
-            console.log("Variant ID", variantId);
-            console.log("Purchased quantity", purchasedQuantity);
             
             if (!productId || !variantId) {
                 return parseServerActionResponse({
@@ -723,7 +706,6 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
               }`,
               { productId }
             );
-            console.log("Current product", currentProduct);
       
             if (!currentProduct?.variants) {
                 return parseServerActionResponse({
@@ -747,8 +729,6 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
                 return variant;
               })
               .filter(Boolean); // Remove null variants (those with 0 quantity)
-
-            console.log("Updated variants", updatedVariants);
       
             // Update the entire variants array
             await writeClient

@@ -71,7 +71,6 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
     trackingCode,
     trackingNumber,
     trackingUrl,
-    labelUrl,
     deliveryDate,
     deliveryDays,
     carrier,
@@ -97,6 +96,9 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
     });
   };
 
+  for (const item of items) {
+    console.log("item images", item.images);
+  }
   try {
     const { data, error } = await resend.emails.send({
       from: 'Relay <onboarding@resend.dev>', // Replace with your domain
@@ -270,7 +272,7 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
               ${shipmentCost && shipmentCost !== shippingCost ? `
                 <div class="total-row" style="font-size: 12px; color: #6c757d;">
                   <span class="total-label">Actual Shipping Cost:</span>
-                  <span class="total-amount">${formatCurrency(Math.round(parseFloat(shipmentCost.toString()) * 100))}</span>
+                  <span class="total-amount">${formatCurrency(Math.round(parseFloat(shipmentCost.toString())))}</span>
                 </div>
               ` : ''}
               <div class="total-row">
