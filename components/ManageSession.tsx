@@ -1,13 +1,13 @@
 "use client";
-import { handleSignIn, handleSignOut } from "@/lib/serverActions";
 import { signOut, signIn } from "next-auth/react";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams, usePathname } from "next/navigation";
 import Loader from "./Loader";
 import { parseServerActionResponse } from "@/lib/utils";
 import { Session } from "next-auth";
-import { User } from 'lucide-react';
+import { User, LogOut, ListChecks } from 'lucide-react';
+import Link from "next/link";
 
 const ManageSession = ({ session }: { session: Session | null }) => {
   const user = session?.user;
@@ -16,6 +16,10 @@ const ManageSession = ({ session }: { session: Session | null }) => {
   const pathName = usePathname();
   const query = searchParams.get("query") || "";
   const filters = searchParams.get("f") || "";
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropDownRefInner = useRef<HTMLDivElement>(null);
+  const dropDownRefOuter = useRef<HTMLButtonElement>(null);
 
   // Construct callback URL
   let callbackUrl = pathName;
@@ -26,12 +30,39 @@ const ManageSession = ({ session }: { session: Session | null }) => {
     callbackUrl += `?${queryParams.toString()}`;
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      console.log("isDropdownOpen", isDropdownOpen);
+      const dropDownClicked = dropDownRefInner.current?.contains(event.target as Node);
+      const dropDownOuterClicked = dropDownRefOuter.current?.contains(event.target as Node);
+
+      if (!dropDownClicked && !dropDownOuterClicked) {
+        setIsDropdownOpen(false);
+      }
+      if (!dropDownClicked && dropDownOuterClicked) {
+        setIsDropdownOpen((prev) => !prev);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    }
+  },[isDropdownOpen])
+
+  const handleLogout = async () => {
+    setIsDropdownOpen(false);
+    await signOut({
+      redirectTo: "/",
+    })
+  }
+
   const handleFormSubmit = async () => {
     try {
       if (isSession) {
-        await signOut({
-          redirectTo: "/",
-        })
+        setIsDropdownOpen(true);
         // Don't manually call refreshBasketCount - let the state-based approach handle it
       } else {
         await signIn(
@@ -69,8 +100,8 @@ const ManageSession = ({ session }: { session: Session | null }) => {
       )}
       <div>
         {isSession ? (
-          <form action={formAction}>
-            <button type="submit" className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 cursor-pointer">
+          <div className="flex relative">
+            <button ref={dropDownRefOuter} type="submit" className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 cursor-pointer">
               {user?.image ? (
                 <Image
                   src={user.image}
@@ -83,7 +114,21 @@ const ManageSession = ({ session }: { session: Session | null }) => {
                 <User className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10" />
               )}
             </button>
-          </form>
+          <div ref={dropDownRefInner} className={`absolute top-full rounded-md right-0 w-40 xs:w-48 bg-slate-700 transition-all duration-300 ease-in-out${isDropdownOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
+            <div className="flex flex-col w-full bg-slate-700 rounded-md shadow-md items-center">
+              <button className="flex flex-row gap-x-3 items-center text-white px-2 py-2 font-bold text-[12px] sm:text-[14px] md:text-[16px] rounded-md transition-all duration-300 ease-in-out hover:bg-slate-800 w-full" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+                Logout
+              </button>  
+              <Link href="/orders" className="w-full">
+              <button className="flex flex-row gap-x-3 items-center text-white px-2 py-2 font-bold text-[12px] sm:text-[14px] md:text-[16px] rounded-md transition-all duration-300 ease-in-out hover:bg-slate-800 w-full">
+                <ListChecks className="w-4 h-4 md:w-5 md:h-5" />
+                Orders
+              </button>
+              </Link>
+              </div>
+            </div>
+          </div>
         ) : (
           <form action={formAction}>
             <button type="submit" className="font-plex-sans font-regular text-[16px] sm:text-[18px]">

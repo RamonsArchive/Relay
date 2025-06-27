@@ -39,8 +39,6 @@ export async function POST(request: Request) {
             }
         }
 
-
-
         if (body.object === "Event" && body.description === "tracker.updated") {
             const updateResult = await handleTrackingUpdate(body.result);
             if (updateResult.status === "ERROR") {
