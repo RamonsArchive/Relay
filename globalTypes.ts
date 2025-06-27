@@ -807,3 +807,12 @@ export type EasyPostTracker = {
   };
   public_url: string;
 };
+
+
+export type RefundOrderItemType = {
+  productTitle: string;
+  variant: string;
+  quantity: number;
+  unitPrice: number;
+  images: JsonValue;
+}

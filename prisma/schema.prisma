@@ -119,7 +119,7 @@ model Order {
   // Tax calculation details (for compliance)
   taxCalculation   Json?        // Store full tax calculation details
   
-  status           String       // "pending", "processing", "shipped", "delivered", "cancelled"
+  status           String       // "pending", "processing", "shipped", "delivered", "cancelled", "refunded"
   trackingCode     String?
   trackingNumber   String?
   trackingUrl      String?
@@ -142,6 +142,9 @@ model Order {
 
   address Address? @relation(fields: [addressId], references: [id])
   addressId Int?
+
+  refundReason String?
+  refundedAt DateTime?
 
   firstName String
   lastName String

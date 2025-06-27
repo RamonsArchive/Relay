@@ -1,10 +1,13 @@
 "use client";
+import { initiateRefund } from '@/sanity/lib/actions';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { toast } from 'sonner';
 
-const RefundButton = ({userId, paymentIntentId}: {userId: string, paymentIntentId: string}) => {
+const RefundButton = ({userId, paymentIntentId, stripeSessionId}: {userId: string, paymentIntentId: string, stripeSessionId: string}) => {
     const [isRefunding, setIsRefunding] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-
+    const router = useRouter();
     const handleRefundClick = () => {
         setShowConfirmModal(true);
       };
@@ -18,15 +21,20 @@ const RefundButton = ({userId, paymentIntentId}: {userId: string, paymentIntentI
         setIsRefunding(true);
         
         try {
-          const response = await fetch(`/api/refund`, {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({userId, paymentIntentId})
-          });
-          const data = await response.json();
-          console.log(data);
+          setIsRefunding(true);
+          const response = await initiateRefund(userId, paymentIntentId, stripeSessionId);
+          if (response.status === "ERROR") {
+            toast.error("ERROR", {
+              description: response.error,
+            });
+            setIsRefunding(false);
+            return;
+          } 
+          toast.success("SUCCESS", {
+            description: "Refund request sent successfully",
+          })
+          setIsRefunding(false);
+          router.refresh();
         } catch (error) {
           console.error('Refund error:', error);
         } finally {

@@ -15,6 +15,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { stripe } from "@/lib/stripe";
+import { sendRefundEmail } from "@/lib/orderRefund";
 
 export const uploadImageToSanity = async (imageFile: File) => {
   try {
@@ -2719,3 +2720,185 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
   }
 }
 
+
+export const initiateRefund = async (userId: string, paymentIntentId: string, stripeSessionId: string) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid user ID"
+      });
+    }
+
+    if (sessionId && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      });
+    }
+
+    if (!paymentIntentId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No payment intent ID provided"
+      });
+    }
+
+    if (!stripeSessionId) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No stripe session ID provided"
+      });
+    }
+
+    // Rate limiting
+    const { success } = await rateLimiter.limit(`${userIdSanitized}:initiateRefund`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      });
+    }
+
+    // Get order details
+    const order = await prisma.order.findUnique({
+      where: { stripeSessionId },
+      select: {
+        id: true,
+        status: true,
+        orderEmail: true,
+        firstName: true,
+        lastName: true,
+        amountTotal: true,
+        currency: true,
+        createdAt: true,
+        items: {
+          select: {
+            productTitle: true,
+            variantSize: true,
+            variantColor: true,
+            quantity: true,
+            unitPrice: true,
+            images: true,
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          }
+        }
+      }
+    });
+
+    if (!order) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Order not found"
+      });
+    }
+
+    // Verify user owns the order
+    if (order.user?.id !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      });
+    }
+
+    // Check if already refunded
+    if (order.status === "refunded") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Order already refunded"
+      });
+    }
+
+    // Business day constraint (e.g., 7 business days for test mode)
+    const refundWindowDays = process.env.NODE_ENV === 'production' ? 30 : 7; // Shorter window for testing
+    const orderAge = Math.floor((Date.now() - order.createdAt.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (orderAge > refundWindowDays) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: `Refund period has expired (${refundWindowDays} days from purchase)`
+      });
+    }
+
+    // Since it's test mode - always allow full refund within the time window
+    const isTestMode = process.env.EASYPOST_TEST_MODE === "true";
+    
+    // Process Stripe refund (this works in both test and live mode)
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      reason: 'requested_by_customer',
+      metadata: {
+        order_id: order.id,
+        test_mode: isTestMode.toString()
+      }
+    });
+
+    if (!refund) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to initiate refund"
+      });
+    }
+
+    // Update order status
+    const updateOrder = await prisma.order.update({
+      where: { stripeSessionId },
+      data: {
+        status: "refunded",
+        updatedAt: new Date(),
+        refundedAt: new Date(),
+        refundReason: 'customer_request'
+      }
+    });
+
+    if (!updateOrder) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update order"
+      });
+    }
+
+    // Log for testing purposes
+    console.log(`Refund processed for order ${order.id}:`, {
+      refundId: refund.id,
+      amount: refund.amount,
+      testMode: isTestMode
+    });
+
+    const refundEmail = await sendRefundEmail(order, refund, "CUSTOMER_REQUEST");
+    if (refundEmail.status === "ERROR") {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to send refund email"
+      });
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: { 
+        refund,
+        message: isTestMode 
+          ? "Test refund processed successfully" 
+          : "Refund processed successfully"
+      }
+    });
+
+  } catch (error) {
+    console.error("Error processing refund:", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to process refund"
+    });
+  }
+};

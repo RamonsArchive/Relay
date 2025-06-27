@@ -1,7 +1,7 @@
 import React from 'react'
 import RefundButton from './RefundButton';
 
-const OrderSummary = ({order, userId, paymentIntentId}: {order: any, userId: string, paymentIntentId: string}) => {
+const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId}: {order: any, userId: string, paymentIntentId: string, stripeSessionId: string}) => {
     const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingNumber, trackingUrl, labelUrl, deliveryDate, deliveryDays, shippingCost, carrier} = order;
 
     const {line1, line2, city, state, postalCode} = address;
@@ -9,7 +9,7 @@ const OrderSummary = ({order, userId, paymentIntentId}: {order: any, userId: str
     <div className="flex flex-col w-full gap-y-4 border border-gray-200 rounded-md p-3 shadow-md bg-gray-50">
         <div className="flex flex-row w-full justify-between items-center">
         <p className="font-plex-sans font-bold text-[20px] xs:text-[24px] sm:text-[28px] md:text-[32px]">Order Receipt</p>
-        <RefundButton userId={userId} paymentIntentId={paymentIntentId}/>
+        <RefundButton userId={userId} paymentIntentId={paymentIntentId} stripeSessionId={stripeSessionId}/>
         </div>
         <div className="flex flex-col gap-y-2 first:border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
             <p className="font-plex-sans font-bold text-[14px] xs:text-[16px] sm:text-[18px] md:text-[20px]">Order Details</p>

@@ -19,6 +19,8 @@ const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>
   console.log("Full response:", JSON.stringify(lastStripeSession, null, 2)); 
    const orders = lastStripeSession.data.stripeSession.items;
   console.log("orders", orders);
+  const paymentIntentId = lastStripeSession.data.stripeSession.payment_intent;
+  console.log("paymentIntentId", paymentIntentId);
 
  
 
@@ -49,7 +51,7 @@ const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>
             </Link>
           </div>
             <div className="flex flex-col w-full gap-y-3 md:border md:border-gray-200 shadow-none border-none rounded-md p-0 md:p-3 md:bg-primary-200 md:shadow-md">
-              <OrderSummary order={lastStripeSession.data.stripeSession} userId={userId} paymentIntentId={stripeSessionId}/> 
+              <OrderSummary order={lastStripeSession.data.stripeSession} userId={userId} paymentIntentId={paymentIntentId} stripeSessionId={stripeSessionId}/> 
             <div className="flex flex-col w-full gap-y-3 border border-gray-200 rounded-md p-0 pt-3 md:p-3 shadow-md bg-gray-50">
               <p className="font-plex-sans font-bold text-[20px] xs:text-[24px] sm:text-[28px] md:text-[32px] text-start pl-3 md:pl-0">Order Items</p>
             {orders ? orders.map((orderItem: any) => (
