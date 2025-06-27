@@ -114,7 +114,7 @@ const ManageSession = ({ session }: { session: Session | null }) => {
                 <User className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10" />
               )}
             </button>
-          <div ref={dropDownRefInner} className={`absolute top-full rounded-md right-0 w-40 xs:w-48 bg-slate-700 transition-all duration-300 ease-in-out${isDropdownOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
+          <div ref={dropDownRefInner} className={`absolute top-full rounded-md right-0 w-40 xs:w-48 bg-slate-700 transition-all duration-300 ease-in-out ${isDropdownOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 hidden"}`}>
             <div className="flex flex-col w-full bg-slate-700 rounded-md shadow-md items-center">
               <button className="flex flex-row gap-x-3 items-center text-white px-2 py-2 font-bold text-[12px] sm:text-[14px] md:text-[16px] rounded-md transition-all duration-300 ease-in-out hover:bg-slate-800 w-full" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 md:w-5 md:h-5" />

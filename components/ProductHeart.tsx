@@ -49,8 +49,16 @@ const ProductHeart = ({
         return;
       }
 
+      if (!heartedProductId) {
+        console.log("heartedProductId is not present, returning early");
+        return;
+      }
+
       try {
         setHearted(newHearted);
+        console.log("heartedProductId", heartedProductId);
+        console.log("userId", userId);
+        console.log("newHearted", newHearted);
 
         console.log("Right before handleHeartWrite");
         const result = await handleHeartWrite(
@@ -93,7 +101,7 @@ const ProductHeart = ({
         setHeart();
       }, 0);
     }
-  }, []);
+  }, [userId]);
 
   const toggleHeart = async () => {
     if (!userId) {

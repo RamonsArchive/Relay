@@ -163,6 +163,10 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                             <span className="text-gray-600">Shipping:</span>
                             <span className="text-gray-900">${(order.shippingCost / 100).toFixed(2)}</span>
                           </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">Taxes:</span>
+                            <span className="text-gray-900">${(order.taxAmount / 100).toFixed(2)}</span>
+                          </div>
                           <div className="flex justify-between font-medium text-lg border-t border-gray-100 pt-2">
                             <span className="text-gray-900">Total:</span>
                             <span className="text-gray-900">${(order.amountTotal / 100).toFixed(2)}</span>

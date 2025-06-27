@@ -62,11 +62,6 @@ const page = () => {
                             Home
                         </button>
                     </Link>
-                    <Link href="https://relay-liart.vercel.app" target="_blank" className="flex items-center justify-center flex-1 bg-blue-600 rounded-md">
-                        <button className="text-white font-semibold px-2 py-1 text-[10px] sm:text-[12px] md:text-[14px] rounded-md transition-all duration-300 ease-in-out hover:bg-blue-700 w-full">
-                            View Relay
-                        </button>
-                    </Link>
                 </div>
             </div>
         </div>

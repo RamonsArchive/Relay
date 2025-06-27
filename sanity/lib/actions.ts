@@ -148,10 +148,17 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
    const userIdSanitized = sanitizeSanityId(userId);
    const productIdSanitized = sanitizeSanityId(productId);
 
-   if (!userIdSanitized || !productIdSanitized) {
+   if (!userIdSanitized) {
     return parseServerActionResponse({
       status: "ERROR",
-      error: "Malformed user ID or productID"
+      error: "Malformed user ID"
+    })
+   }
+
+   if (!productIdSanitized) {
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Malformed productID"
     })
    }
 
@@ -2967,6 +2974,7 @@ export const getAllOrders = async (userId: string) => {
         firstName: true,
         lastName: true,
         amountTotal: true,
+        taxAmount: true,
         currency: true,
         createdAt: true,
         trackingCode: true,
