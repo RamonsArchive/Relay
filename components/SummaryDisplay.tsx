@@ -281,7 +281,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
             </form>
             </div>
             <div className="flex flex-row w-full justify-between border-white bg-primary-200 text-white border border-gray-300 border-[1px] transition-all duration-300 ease-in-out rounded-md hover:opacity-70 mt-3">
-              <button className="flex items-center justify-center px-2 py-2 w-full" onClick={checkout}>
+              <button className="flex items-center justify-center px-2 py-2 w-full" onClick={checkout} disabled={isLoading}>
                 <p className="font-regular text-[16px] xs:text-[18px] md:text-[20px]">Proceed to Checkout</p>
               </button>
             </div>

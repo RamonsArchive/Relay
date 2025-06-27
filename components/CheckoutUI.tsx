@@ -77,7 +77,6 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                   toast.error('ERROR', { description: verifyCartResult.error });
                   throw new Error('Failed to verify cart');
                 }
-                toast.success('SUCCESS', { description: 'Cart verified successfully' });
           
                 const initiateCheckoutResult = await initiateCheckout(userId);
                 if (initiateCheckoutResult.status === 'ERROR') {
@@ -90,9 +89,7 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                   throw new Error('Client secret not found');
                 }
                 const clientSecret = initiateCheckoutResult.clientSecret;
-                setStripeClientSecret(clientSecret);
-                toast.success('SUCCESS', { description: 'Checkout initiated successfully' });
-            
+                setStripeClientSecret(clientSecret);            
             } catch (error) {
                 console.log(error);
                 toast.error('ERROR', { description: 'Failed to checkout' });
@@ -101,28 +98,70 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
         createOrder();
     }, [])    
 
-  return (
-    <div id="checkout">
+    return (
+      <div className="min-h-screen w-full bg-white overflow-y-auto scrollbar-hide">
         {stripeClientSecret ? (
-            <EmbeddedCheckoutProvider stripe={stripePromise} options={{clientSecret: stripeClientSecret}}>
-            <EmbeddedCheckout />
-        </EmbeddedCheckoutProvider>
-        ) : ( noCart ? (
-          <div className="flex flex-col items-center justify-center h-screen gap-y-2">
-            <h1 className="text-2xl font-bold">No cart found</h1>
-            <p className="text-sm text-gray-500">Please add items to your cart to checkout</p>
-            <Link href="/">
-              <button className="flex items-center text-[12px] xs:text-[14px] sm:text-[16px] justify-center font-regular px-2 py-1 transition duration-300 ease-in-out hover:bg-gray-50 border border-gray-300 rounded-md"> Home </button>
-            </Link>
+          <div className="h-full w-full overflow-y-auto scrollbar-hide">
+            <EmbeddedCheckoutProvider 
+              stripe={stripePromise} 
+              options={{
+                clientSecret: stripeClientSecret,
+                // Optional: customize the appearance
+              }}
+            >
+              <div className="h-full w-full overflow-y-auto scrollbar-hide">
+                <EmbeddedCheckout />
+              </div>
+            </EmbeddedCheckoutProvider>
+            
+            {/* Custom CSS to ensure full height */}
+            <style jsx global>{`
+              #checkout {
+                min-height: 100vh !important;
+                width: 100% !important;
+              }
+              
+              /* Target Stripe's iframe container */
+              .EmbeddedCheckout {
+                min-height: 100vh !important;
+                width: 100% !important;
+              }
+              
+              /* Target the Stripe iframe itself */
+              iframe[src*="js.stripe.com"] {
+                min-height: 100vh !important;
+                width: 100% !important;
+                border: none !important;
+              }
+              
+              /* Ensure parent containers don't add padding/margin */
+              body, html {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+              }
+            `}</style>
           </div>
         ) : (
-            <div className="flex flex-col items-center justify-center h-screen">
-                <h1 className="text-2xl font-bold">Loading...</h1>
-                <p className="text-sm text-gray-500">Please wait while we process your checkout...</p>
+          noCart ? (
+            <div className="flex flex-col items-center justify-center min-h-screen gap-y-2 bg-white px-4">
+              <h1 className="text-2xl font-bold">No cart found</h1>
+              <p className="text-sm text-gray-500">Please add items to your cart to checkout</p>
+              <Link href="/">
+                <button className="flex items-center text-[12px] xs:text-[14px] sm:text-[16px] justify-center font-regular px-2 py-1 transition duration-300 ease-in-out hover:bg-gray-50 border border-gray-300 rounded-md">
+                  Home
+                </button>
+              </Link>
             </div>
-        ))}
-    </div>
-  )
+          ) : (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+              <h1 className="text-2xl font-bold">Loading...</h1>
+              <p className="text-sm text-gray-500">Please wait while we process your checkout...</p>
+            </div>
+          )
+        )}
+      </div>
+    );
 }
 
 export default CheckoutUI

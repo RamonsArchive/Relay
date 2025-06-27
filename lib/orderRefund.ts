@@ -102,7 +102,7 @@ export async function sendRefundEmail(
 
     // Send the email
     const { data, error } = await resend.emails.send({
-      from: 'orders@yourstore.com', // Update with your domain
+      from: 'onboarding@resend.dev', // Update with your domain
       to: customerEmail,
       subject: `Refund Processed - Order ${orderNumber}`,
       html: generateRefundEmailHTML({
@@ -249,7 +249,7 @@ function generateRefundEmailHTML(data: {
           
           <p>
             Best regards,<br>
-            <strong>Your Store Team</strong>
+            <strong>Relay Team</strong>
           </p>
         </div>
 

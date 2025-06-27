@@ -19,11 +19,8 @@ const page = async ({searchParams}: {searchParams: Promise<{session_id: string}>
   console.log("Full response:", JSON.stringify(lastStripeSession, null, 2)); 
    const orders = lastStripeSession.data.stripeSession.items;
   console.log("orders", orders);
-  const paymentIntentId = lastStripeSession.data.stripeSession.payment_intent;
+  const paymentIntentId = lastStripeSession.data.stripeSession.paymentIntentId;
   console.log("paymentIntentId", paymentIntentId);
-
- 
-
 
   return (
     <div className="flex flex-col w-full pt-[1.5rem] md:pt-[3] min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] px-5 items-center pb-10">

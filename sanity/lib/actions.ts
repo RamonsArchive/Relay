@@ -2675,7 +2675,6 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
     const lastStripeSession = await prisma.order.findFirst({
       where: {
         stripeSessionId: stripeSessionId,
-        userId: userIdSanitized,
       },
       select: {
         id: true,
@@ -2702,6 +2701,7 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
         carrier: true,
       }
     })
+    console.log("lastStripeSession", lastStripeSession);
 
     return parseServerActionResponse({
       status: "SUCCESS",

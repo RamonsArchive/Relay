@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react'
+import { Toaster } from 'sonner'
 
 const layout = ({children}: {children: React.ReactNode}) => {
   return (
@@ -8,6 +9,7 @@ const layout = ({children}: {children: React.ReactNode}) => {
               <Suspense fallback={<div>Loading pages...</div>}>
                 <div className="content-container">{children}</div>
               </Suspense>
+              <Toaster richColors />
         </div>
         </div>
         </main>

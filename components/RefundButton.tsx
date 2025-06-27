@@ -23,6 +23,7 @@ const RefundButton = ({userId, paymentIntentId, stripeSessionId}: {userId: strin
         try {
           setIsRefunding(true);
           const response = await initiateRefund(userId, paymentIntentId, stripeSessionId);
+          console.log("response for refund", response);
           if (response.status === "ERROR") {
             toast.error("ERROR", {
               description: response.error,
@@ -34,7 +35,7 @@ const RefundButton = ({userId, paymentIntentId, stripeSessionId}: {userId: strin
             description: "Refund request sent successfully",
           })
           setIsRefunding(false);
-          router.refresh();
+          router.push("/");
         } catch (error) {
           console.error('Refund error:', error);
         } finally {
@@ -44,7 +45,7 @@ const RefundButton = ({userId, paymentIntentId, stripeSessionId}: {userId: strin
   return (
     <>
         
-        <button className="font-plex-sans text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px] px-2 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all duration-300 ease-in-out active:scale-95" onClick={handleRefundClick} disabled={isRefunding}>
+        <button className="font-plex-sans text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px] px-2 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all duration-300 ease-in-out active:scale-95" onClick={handleRefundClick} disabled={isRefunding}>
             {isRefunding ? "Refunding..." : "Refund"}
         </button>
 
