@@ -202,7 +202,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
     }
 
   return (
-    <div className="flex flex-row w-full justify-end w-full mt-5 lg:mt-0">
+    <div className="flex flex-row w-full justify-end w-full mt-5 lg:mt-0 bg-gray-50">
         <div className="flex flex-col w-full h-full p-5 border border-gray-300 border-[1px] rounded-md shadow-md gap-y-5">
           <p className="font-bold text-[22px] xs:text-[24px] md:text-[28px] justify-start">Order Summary</p>
           <div className="flex flex-col w-full gap-y-5">

@@ -2995,6 +2995,7 @@ export const getAllOrders = async (userId: string) => {
             quantity: true,
             unitPrice: true,
             images: true,
+            productId: true,
           }
         }
       }
