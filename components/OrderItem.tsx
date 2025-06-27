@@ -3,15 +3,19 @@ import React from 'react'
 import { urlFor } from '@/sanity/lib/client';
 import Image from 'next/image';
 
-const OrderItem = ({userId, stripeSessionId, orderItem}: {userId: string, stripeSessionId: string, orderItem: any}) => {
+const OrderItem = ({orderItem}: {orderItem: any}) => {
+    console.log("orderItem", orderItem);
 
-    const {images, productTitle, price, quantity, totalPrice, unitPrice, variantColor, variantSize, paymentIntentId} = orderItem;
+    const {images, productTitle, quantity, unitPrice, variantColor, variantSize} = orderItem;
     const getImageUrl = (image: string) => {
+        if (typeof image === 'object') {
+            return urlFor(image).url();
+        }
         const imageRef = JSON.parse(image);
         return urlFor(imageRef).url();
     }
 
-    console.log("orderItem", orderItem);
+    
   return (
     <div className="flex flex-col w-full gap-y-2 bg-gray-50 rounded-md">
         <div className="flex flex-row w-full gap-x-2 min-h-[100px] max-h-[200px]">
@@ -36,7 +40,7 @@ const OrderItem = ({userId, stripeSessionId, orderItem}: {userId: string, stripe
                 </div>
                 <div className="flex justify-end items-end">
                     <p className="font-plex-sans font-bold text-[14px] xs:text-[20px] sm:text-[24px] md:text-[28px]">
-                        ${Math.round(totalPrice/100)}
+                        ${Math.round(unitPrice/100)}
                     </p>
                 </div>
                 </div>

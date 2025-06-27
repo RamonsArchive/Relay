@@ -2666,6 +2666,7 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
     }
 
     if (!stripeSessionId) {
+      console.log("No stripe session ID provided");
       return parseServerActionResponse({
         status: "ERROR",
         error: "No stripe session ID provided"
@@ -2678,7 +2679,6 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
       },
       select: {
         id: true,
-        items: true,
         paymentIntentId: true,
         status: true,
         amountTotal: true,
@@ -2699,8 +2699,19 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
         deliveryDays: true,
         shippingCost: true,
         carrier: true,
+        items: {
+          select: {
+            productTitle: true,
+            variantSize: true,
+            variantColor: true,
+            quantity: true,
+            unitPrice: true,
+            images: true,
+          }
+        }
       }
-    })
+    });
+
     console.log("lastStripeSession", lastStripeSession);
 
     return parseServerActionResponse({
@@ -2721,7 +2732,7 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
 }
 
 
-export const initiateRefund = async (userId: string, paymentIntentId: string, stripeSessionId: string) => {
+export const initiateRefund = async (userId: string, paymentIntentId: string, stripeSessionId: string, redirectPath: string) => {
   try {
     const session = await auth();
     const sessionId = session?.user?.id;
@@ -2752,6 +2763,13 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
       return parseServerActionResponse({
         status: "ERROR",
         error: "No stripe session ID provided"
+      });
+    }
+
+    if (!redirectPath) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No redirect path provided"
       });
     }
 
@@ -2883,6 +2901,8 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
       });
     }
 
+    revalidatePath(redirectPath);
+
     return parseServerActionResponse({
       status: "SUCCESS",
       error: "",
@@ -2902,3 +2922,104 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
     });
   }
 };
+
+
+export const getAllOrders = async (userId: string) => {
+  try {
+    const session = await auth();
+    const sessionId = session?.user?.id;
+    const userIdSanitized = sanitizeSanityId(userId);
+
+    if (!userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Invalid user ID"
+      });
+    }
+
+    if (sessionId && sessionId !== userIdSanitized) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Unauthorized request"
+      });
+    }
+    const {success} = await rateLimiter.limit(`${userIdSanitized}:getAllOrders`);
+    if (!success) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Too many requests. Please try again later"
+      });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: userIdSanitized,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        status: true,
+        paymentIntentId: true,
+        stripeSessionId: true,
+        orderEmail: true,
+        firstName: true,
+        lastName: true,
+        amountTotal: true,
+        currency: true,
+        createdAt: true,
+        trackingCode: true,
+        trackingNumber: true,
+        trackingUrl: true,
+        labelUrl: true,
+        deliveryDate: true,
+        deliveryDays: true,
+        shippingCost: true,
+        carrier: true,
+        address: {
+          select: {
+            line1: true,
+            line2: true,
+            city: true,
+            state: true,
+            postalCode: true,
+            country: true,
+          }
+        },
+        items: {
+          select: {
+            productTitle: true,
+            variantSize: true,
+            variantColor: true,
+            quantity: true,
+            unitPrice: true,
+            images: true,
+          }
+        }
+      }
+    });
+
+    if (!orders) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "No orders found"
+      });
+    }
+
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: {
+        orders,
+      }
+    });
+
+    } catch (error) {
+    console.error("Error fetching all orders:", error);
+    return parseServerActionResponse({
+      status: "ERROR",
+      error: "Failed to fetch all orders"
+    });
+  }
+}
