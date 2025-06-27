@@ -2671,26 +2671,44 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
       });
     }
 
-    const lastStripeSession  = await stripe.checkout.sessions.retrieve(stripeSessionId, {
-      expand: ["line_items"]
-    });
+    const lastStripeSession = await prisma.order.findFirst({
+      where: {
+        stripeSessionId: stripeSessionId,
+        userId: userIdSanitized,
+      },
+      select: {
+        id: true,
+        items: true,
+        paymentIntentId: true,
+        status: true,
+        amountTotal: true,
+        createdAt: true,
+        promoCodeUsed: true,
+        promoDiscount: true,
+        promoCodeId: true,
+        promoUsages: true,
+        address: true,
+        firstName: true,
+        lastName: true,
+        taxAmount: true,
+        trackingCode: true,
+        trackingNumber: true,
+        trackingUrl: true,
+        labelUrl: true,
+        deliveryDate: true,
+        deliveryDays: true,
+        shippingCost: true,
+        carrier: true,
+      }
+    })
 
-    if (lastStripeSession.status !== "complete") {
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "Last stripe session is not complete"
-      });
-    }
-
-
-
-    if (!lastStripeSession) {
-      return parseServerActionResponse({
-        status: "ERROR",
-        error: "No stripe session found"
-      });
-    }
-  
+    return parseServerActionResponse({
+      status: "SUCCESS",
+      error: "",
+      data: {
+        stripeSession: lastStripeSession,
+      }
+    })
 
   } catch (error) {
     console.error("Error fetching last order:", error);
