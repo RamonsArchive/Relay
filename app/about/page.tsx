@@ -41,7 +41,7 @@ const page = () => {
                 </p>
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">3. Experience</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">
-                    {`I've built several full-stack projects including <strong>Relay</strong>, a comprehensive e-commerce platform with hybrid database architecture, payment processing, and real-time inventory management.`}
+                    {`I've built several full-stack projects including Relay, a comprehensive e-commerce platform with hybrid database architecture, payment processing, and real-time inventory management.`}
                     {`I've also developed custom machine learning models using YOLOv8 for object detection, conducted statistical research analyzing media performance data, and created AI-powered transcription systems.`}
                 </p>
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">4. Skills</h2>
