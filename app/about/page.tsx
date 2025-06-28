@@ -13,9 +13,7 @@ const page = () => {
             <div className="flex flex-col gap-y-3 w-full">
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">1. Introduction</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">
-                    {`I am a cat lover, gym goer, soccer player, and a software engineer.`}
-                    {`I've lived in Long Beach CA during my early childhood, until I moved to Irvine CA, before moving to Placerville CA for my high school years, and then finally moving to San Diego CA for my college years.`}
-                    {`Every city has its own unique charm, and I've been fortunate to experience them all.`}
+                    {`I am a cat lover, gym goer, soccer player, and a software engineer. I've lived in Long Beach CA during my early childhood, until I moved to Irvine CA, before moving to Placerville CA for my high school years, and then finally moving to San Diego CA for my college years. Every city has its own unique charm, and I've been fortunate to experience them all.`}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                     <Image src="/assets/images/prettyMe.png" alt="Me" width={100} height={100} className="w-full h-56 rounded-md object-cover" />
