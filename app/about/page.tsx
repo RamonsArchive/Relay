@@ -30,8 +30,7 @@ const page = () => {
                         loop
                         className="rounded-md shadow-lg w-full h-56 object-cover"
                         >
-                        <source src="/assets/videos/video_results_2.mp4" type="video/mp4" />
-                        <source src="/assets/videos/video_results_2.webm" type="video/webm" />
+                        <source src="/assets/videos/test_video.mp4" type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
