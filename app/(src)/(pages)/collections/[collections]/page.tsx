@@ -73,7 +73,11 @@ const page = async ({
                 />
               ))
             ) : (
-              <div>No product available</div>
+              path.includes("hearted") && !userId ? (
+                <div>Must sign in to view hearted products</div>
+              ) : (
+                <div>No product available</div>
+              )
             )}
           </ul>
         </Suspense>
