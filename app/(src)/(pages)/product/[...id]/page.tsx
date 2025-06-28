@@ -326,7 +326,11 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                         );
                       })
                   ) : (
-                    <div>No recently viewed products</div>
+                    !userId ? (
+                      <div>Must sign in to view recently viewed products</div>
+                    ) : (
+                      <div>No recently viewed products</div>
+                    )
                   )}
                 </Suspense>
               </div>
