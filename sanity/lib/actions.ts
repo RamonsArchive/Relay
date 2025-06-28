@@ -2709,6 +2709,7 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
         items: {
           select: {
             productTitle: true,
+            productId: true,
             variantSize: true,
             variantColor: true,
             quantity: true,
@@ -2804,8 +2805,10 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
         items: {
           select: {
             productTitle: true,
+            productId: true,
             variantSize: true,
             variantColor: true,
+            variantId: true,
             quantity: true,
             unitPrice: true,
             images: true,
@@ -2890,6 +2893,86 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
       return parseServerActionResponse({
         status: "ERROR",
         error: "Failed to update order"
+      });
+    }
+
+    const updateMySQLQuantities = await Promise.all(
+      order.items.map(async (item) => {
+        return prisma.variant.update({
+          where: {
+            id: item.variantId
+          },
+          data: {
+            stockQuantity: {
+              increment: item.quantity // Positive number to add back to stock
+            }
+          }
+        });
+      })
+    );
+
+    console.log("updateMySQLQuantities", updateMySQLQuantities);
+
+    if (!updateMySQLQuantities) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update MySQL quantities"
+      });
+    }
+
+    const updateSanityQuantities = await Promise.all(
+      order.items.map(async (item) => {
+        // Find the product that contains this variant
+        const product = await writeClient.withConfig({useCdn: false}).fetch(
+          `*[_type=="product" && _id == $productId][0]{
+              _id,
+              "variants": variants[]{
+                _key,
+                size,
+                quantity,
+                "colorRef": color._ref,
+                "colorName": color->name
+              }
+            }`,
+          { productId: item.productId }
+        );
+    
+        if (!product) {
+          throw new Error(`Product not found for variant ${item.variantId}`);
+        }
+    
+        // Find the specific variant index
+        const variantIndex = product.variants.findIndex(
+          (v: any) => v._key === item.variantId
+        );
+    
+        if (variantIndex === -1) {
+          throw new Error(`Variant ${item.variantId} not found in product`);
+        }
+    
+        // Update the specific variant's quantity
+        return writeClient
+          .patch(product._id)
+          .set({
+            [`variants[${variantIndex}].quantity`]: product.variants[variantIndex].quantity + item.quantity
+          })
+          .commit();
+      })
+    );
+
+    console.log("updateSanityQuantities", updateSanityQuantities);
+
+    if (!updateSanityQuantities) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update Sanity quantities"
+      });
+    }
+
+    if (!updateSanityQuantities) {
+      return parseServerActionResponse({
+        status: "ERROR",
+        error: "Failed to update Sanity quantities"
       });
     }
 

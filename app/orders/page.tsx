@@ -4,6 +4,7 @@ import React, { Suspense } from 'react'
 import OrderItem from "@/components/OrderItem"
 import Link from 'next/link';
 import RefundButton from '@/components/RefundButton';
+import { OrderItemReturnType, OrderOrderPageType, ShippingAddressType } from '@/globalTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
@@ -17,7 +18,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
   const ordersResponse = await getAllOrders(userId || "");
   const orders = ordersResponse.data.orders;
 
-  const formatDate = (dateString: any) => {
+  const formatDate = (dateString: Date) => {
     if (!dateString) return 'Not available';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -28,7 +29,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
     });
   };
 
-  const formatAddress = (address: any) => {
+  const formatAddress = (address: ShippingAddressType) => {
     if (!address) return 'No address provided';
     const parts = [
       address.line1,
@@ -40,7 +41,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
     ].filter(Boolean);
     return parts.join(', ');
   };
-
+  
   const getStatusColor = (status: string) => {
     const colors = {
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -79,8 +80,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
 
         {orders && orders.length > 0 ? (
           <div className="flex flex-col gap-y-4 w-full">
-            {orders.map((order: any) => (
-              order.status !== "refunded" && (
+            {orders.map((order: OrderOrderPageType) => (
               <div 
                 key={order.id} 
                 className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
@@ -93,7 +93,9 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                       <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                         Order #{order.id}
                       </h2>
-                      <RefundButton userId={userId || ""} path={path} paymentIntentId={order.paymentIntentId} stripeSessionId={order.stripeSessionId} />
+                      {order.status !== "refunded" && (
+                        <RefundButton userId={userId || ""} path={path} paymentIntentId={order.paymentIntentId} stripeSessionId={order.stripeSessionId} />
+                      )}
                       </div>
                       <p className="text-sm text-gray-600 mt-1">
                         Placed on {formatDate(order.createdAt)}
@@ -174,7 +176,8 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                         </div>
                       </div>
 
-                      {(order.deliveryDate || order.trackingUrl) && (
+                      {(order.deliveryDate || order.trackingUrl) && order.status !== "refunded" && (
+
                         <div>
                           <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                             <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +223,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                         Order Items ({order.items.length})
                       </h3>
                       <div className="flex flex-col gap-y-3">
-                        {order.items.map((item: any, index: number) => (
+                        {order.items.map((item: OrderItemReturnType, index: number) => (
                           <Suspense key={index} fallback={
                             <div className="animate-pulse bg-gray-100 rounded-lg h-20"></div>
                           }>
@@ -238,7 +241,6 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                   )}
                 </div>
               </div>
-              )
             ))}
           </div>
         ) : (
@@ -250,7 +252,7 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
               No orders found
             </h2>
             <p className="text-gray-600 mb-6 max-w-md">
-              You haven't placed any orders yet. Start shopping to see your orders here.
+              {`You haven't placed any orders yet. Start shopping to see your orders here.`}
             </p>
             <Link 
               href="/" 

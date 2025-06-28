@@ -3,16 +3,18 @@ import React from 'react'
 import { urlFor } from '@/sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { OrderItemReturnType } from '@/globalTypes';
+import { JsonValue } from '@prisma/client/runtime/library';
 
-const OrderItem = ({orderItem}: {orderItem: any}) => {
+const OrderItem = ({orderItem}: {orderItem: OrderItemReturnType}) => {
     console.log("orderItem", orderItem);
 
     const {images, productTitle, quantity, unitPrice, variantColor, variantSize, productId} = orderItem;
-    const getImageUrl = (image: string) => {
+    const getImageUrl = (image: JsonValue) => {
         if (typeof image === 'object') {
             return urlFor(image).url();
         }
-        const imageRef = JSON.parse(image);
+        const imageRef = JSON.parse(image as string);
         return urlFor(imageRef).url();
     }
 

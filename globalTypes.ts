@@ -816,3 +816,65 @@ export type RefundOrderItemType = {
   unitPrice: number;
   images: JsonValue;
 }
+
+
+
+export type OrderReturnType = {
+  id: string;
+  paymentIntentId: string;
+  status: string;
+  amountTotal: number;
+  createdAt: Date;
+  promoCodeUsed: string | null;
+  promoDiscount: number | null;
+  promoCodeId: string | null;
+  promoUsages: number | null;
+  address: ShippingAddressType;
+  firstName: string;
+  lastName: string;
+  taxAmount: number;
+  trackingCode: string;
+  trackingNumber: string;
+  trackingUrl: string;
+  labelUrl: string;
+  deliveryDate: Date;
+  deliveryDays: number;
+  shippingCost: number;
+  carrier: string;
+  items: OrderItemReturnType[];
+}
+
+export type OrderItemReturnType = {
+  productTitle: string;
+  productId: string;
+  variantSize: string;
+  variantColor: string;
+  quantity: number;
+  unitPrice: number;
+  images: JsonValue;
+}
+
+
+export type OrderOrderPageType = {
+  id: string;
+  status: string;
+  paymentIntentId: string;
+  stripeSessionId: string;
+  orderEmail: string;
+  firstName: string;
+  lastName: string;
+  amountTotal: number;
+  taxAmount: number;
+  currency: string;
+  createdAt: Date;
+  trackingCode: string;
+  trackingNumber: string;
+  trackingUrl: string;
+  labelUrl: string;
+  deliveryDate: Date;
+  deliveryDays: number;
+  shippingCost: number;
+  carrier: string;
+  address: ShippingAddressType;
+  items: OrderItemReturnType[];
+}

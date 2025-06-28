@@ -1,7 +1,9 @@
 import React from 'react'
 import RefundButton from './RefundButton';
+import { OrderReturnType } from '@/globalTypes';
+import { formatDate } from '@/lib/utils';
 
-const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {order: any, userId: string, paymentIntentId: string, stripeSessionId: string, path: string}) => {
+const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {order: OrderReturnType, userId: string, paymentIntentId: string, stripeSessionId: string, path: string}) => {
     const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingNumber, trackingUrl, labelUrl, deliveryDate, deliveryDays, shippingCost, carrier} = order;
 
     const {line1, line2, city, state, postalCode} = address;
@@ -14,7 +16,7 @@ const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {
         <div className="flex flex-col gap-y-2 first:border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
             <p className="font-plex-sans font-bold text-[14px] xs:text-[16px] sm:text-[18px] md:text-[20px]">Order Details</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Order ID: {order.id}</p>
-            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Order Date: {order.createdAt}</p>
+            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Order Date: {formatDate(order.createdAt)}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Order Total: ${Math.round(order.amountTotal/100)}</p>
         </div>
         <div className="flex flex-1 flex-col gap-y-2">
@@ -24,7 +26,7 @@ const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Tracking Number: {trackingNumber}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Tracking URL: {trackingUrl}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Label URL: {labelUrl}</p>
-            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Delivery Date: {deliveryDate}</p>
+            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Delivery Date: {formatDate(deliveryDate)}</p>
         </div>
         <div className="flex flex-1 flex-col gap-y-2">
             <p className="font-plex-sans font-bold text-[14px] xs:text-[16px] sm:text-[18px] md:text-[20px]">Billing Details, Taxes, and Personal Information</p>
@@ -40,7 +42,7 @@ const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {
         <div className="flex flex-1 flex-col gap-y-2">
             <p className="font-plex-sans font-bold text-[14px] xs:text-[16px] sm:text-[18px] md:text-[20px]">Promo Code</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Promo Code Used: {promoCodeUsed}</p>
-            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Promo Discount: ${Math.round(promoDiscount/100)}</p>
+            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Promo Discount: ${Math.round((promoDiscount || 0)/100)}</p>
         </div>
     </div>
   )

@@ -22,7 +22,7 @@ const FloatingNavBar = ({
   return (
     <nav className="flex flex-row gap-3 justify-between items-center w-full">
       <div className="w-10 h-15 shrink-0">
-        <Link href="/" className="">
+        <Link href="/" className="min-h-23">
           <Image
             src="/assets/logo/logo-png.png"
             alt="logo"

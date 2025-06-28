@@ -47,7 +47,7 @@ const NavBarWrapper = ({
       >
         <nav className="hidden md:flex md:flex-row md:gap-4 md:items-center">
           <div className="flex flex-1 flex-row items-center gap-8">
-            <Link href="/" className="shrink-0">
+            <Link href="/" className="shrink-0 min-h-23">
               <Image
                 src="/assets/logo/logo-png.png"
                 alt="logo"

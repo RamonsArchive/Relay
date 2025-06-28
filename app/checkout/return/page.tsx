@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { fetchLastCompleteOrder } from '@/sanity/lib/actions';
 import OrderItem from '@/components/OrderItem';
 import OrderSummary from '@/components/OrderSummary';
+import { OrderItemReturnType } from '@/globalTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const experimental_ppr = true;
@@ -18,15 +19,13 @@ const page = async ({params, searchParams}: {params: Promise<{path: string}>, se
   const session = await auth();
   const sessionId = session?.user;
   const userId = sessionId?.id|| "";
-  await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+  await new Promise(resolve => setTimeout(resolve, 3000)); // 2 second delay
   const lastStripeSession = await fetchLastCompleteOrder(userId, stripeSessionId);
   console.log("Full response:", JSON.stringify(lastStripeSession, null, 2)); 
    const orders = lastStripeSession.data.stripeSession.items;
   console.log("orders", orders);
   const paymentIntentId = lastStripeSession.data.stripeSession.paymentIntentId;
-  console.log("paymentIntentId", paymentIntentId);
   const status = lastStripeSession.data.stripeSession.status;
-  console.log("status", status);
 
   return (
     <>
@@ -59,7 +58,7 @@ const page = async ({params, searchParams}: {params: Promise<{path: string}>, se
               <OrderSummary order={lastStripeSession.data.stripeSession} userId={userId} paymentIntentId={paymentIntentId} stripeSessionId={stripeSessionId} path={path}/> 
             <div className="flex flex-col w-full gap-y-3 border border-gray-200 rounded-md p-0 pt-3 md:p-3 shadow-md bg-gray-50">
               <p className="font-plex-sans font-bold text-[20px] xs:text-[24px] sm:text-[28px] md:text-[32px] text-start pl-3 md:pl-0">Order Items</p>
-            {orders ? orders.map((orderItem: any, index: number) => (
+            {orders ? orders.map((orderItem: OrderItemReturnType, index: number) => (
               <Suspense key={index} fallback={<div>Loading...</div>}>
                 <div className="[&:not(:last-child)]:border-b-[1px] border-gray-300 pb-3">
                 <OrderItem orderItem={orderItem}/>
