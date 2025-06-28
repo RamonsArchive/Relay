@@ -227,7 +227,6 @@ export const convertLineItemsWithPriceData = (checkoutLineItems: BasketType[]) =
 };
 
 export const fetchShippingOptions = async (cost: number) => {
-  console.log("method", cost);
 // ===== SHIPPING OPTIONS =====
 const getShippingOptions = [
   {

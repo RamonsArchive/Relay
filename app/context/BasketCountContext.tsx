@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useCallback, useRef} from 'react';
+import { createContext, useContext, useState, useEffect, useCallback} from 'react';
 import { parseServerActionResponse } from "@/lib/utils";
 import { useSession } from 'next-auth/react';
 
@@ -20,10 +20,9 @@ export const useBasketCount = () => {
 
 export const BasketCountProvider = ({children}: {children: React.ReactNode}) => {
     const [basketCount, setBasketCount] = useState(0);
-    const {data: session, status} = useSession();
+    const {data: _, status} = useSession();
     
     const refreshBasketCount = useCallback(async(optomisticUpdate: number) => {
-      console.log("refreshBasketCount", optomisticUpdate);
       try {
         if (optomisticUpdate) {
           setBasketCount(prev => prev + optomisticUpdate);
@@ -44,9 +43,7 @@ export const BasketCountProvider = ({children}: {children: React.ReactNode}) => 
   
     // Only handle sign out and initial load
     useEffect(() => {
-      console.log("THIS IS STATUS", status);
       if (status === "unauthenticated") {
-        console.log("REFRESHING BASKET COUNT ON SIGN OUT");
         refreshBasketCount(0);
       }
     }, [status]);
@@ -54,7 +51,6 @@ export const BasketCountProvider = ({children}: {children: React.ReactNode}) => 
     // Initial load
     useEffect(() => {
       if (status === "loading") {
-        console.log("REFRESHING BASKET COUNT ON INITIAL LOAD");
         refreshBasketCount(0);
       }
     }, [ status]);

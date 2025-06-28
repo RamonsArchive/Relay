@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { VariantItemType, VariantType } from "@/globalTypes";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useProductOptions } from "@/app/context/ProductOptionsContext";
 
 const ProductSizeButtons = ({ variants }: { variants: VariantType }) => {

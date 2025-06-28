@@ -16,17 +16,14 @@ export const handleSignOut = async () => {
 }
 
 export const revalidateFlaggedReviews = async () => {
-  console.log("Revalidating flagged reviews.........................");
   revalidateTag("flagged-reviews");
 };
 
 export const revalidateHeartedProducts = async () => {
-  console.log("Revalidating hearted products.........................");
   revalidateTag("hearted-products");
 }
 
 export const revalidateRecentSearches = async () => {
-  console.log("Revalidating recently searched.........................");
   revalidateTag("recent-searches");
 }
 
@@ -187,8 +184,6 @@ export const verifyNoUserReview = async (productId: string, userId: string) => {
     const query = `*[_type == "reviews" && defined(slug) && product._ref == $productIdSanitized && user._ref == $userIdSanitized][0]`
     const existingReview = await client.fetch(query, {productIdSanitized, userIdSanitized,}); 
 
-    console.log("Existing user in client", existingReview);
-
     if (existingReview) {
       console.error("User has already written a review for this product.")
       return parseServerActionResponse({
@@ -264,7 +259,6 @@ export const getCart = async (userId: string, temp_cartId: string) => {
         }
       }
     });
-    console.log("cart", cart);
 
     if (!cart) {
       return parseServerActionResponse({
@@ -298,8 +292,6 @@ const getCartInfo = (cart: BasketTypeFetch | null) => {
   
   try {
     for (const item of cart.items) {
-      console.log("item", item);
-      console.log("item.variant", item.variant);
       if (!item.variant) {
         console.warn("No variant found for item");
         continue;

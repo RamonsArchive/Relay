@@ -6,14 +6,9 @@ import {isValidSignature} from '@sanity/webhook'
 
 export async function POST(request: NextRequest) {
 
-  console.log("🔍 Incoming headers:", 
-    Object.fromEntries(request.headers.entries())
-  );
   const secret = process.env.SANITY_WEBHOOK_SECRET as string;
   const signature = request.headers.get("sanity-webhook-signature") || "";
   const body = await request.text(); // read boyd into a string.
-  console.log("RECIEVED BODY", body);
-  console.log("REVICED SECRETE", secret);
 
   // validate the signature
   if (!(isValidSignature(body, signature, secret))) {
@@ -22,8 +17,6 @@ export async function POST(request: NextRequest) {
 
   
   const payload = JSON.parse(body);
-  console.log("RECEVICED payload from webhook", payload);
-
   // record the sync operation
   const payloadId = payload._id.replace(/^drafts\./, '');
   const syncRecord = await prisma.sanitySync.create({
@@ -39,7 +32,6 @@ export async function POST(request: NextRequest) {
 
   // proccess the product sync
   const result = await syncProductFromSanity(payload, payloadId, syncRecord.id);
-  console.log("RESULT", result);
   if (result.status) {
     return NextResponse.json({status: 200, message: "Product synced successfully"});
   } else {

@@ -243,7 +243,6 @@ export async function sendOrderStatusEmail(orderData: any) {
       return { status: "ERROR", error: `Failed to send email: ${error.message}` };
     }
 
-    console.log('Order status email sent successfully:', data);
     return { status: "SUCCESS", data };
 
   } catch (error) {

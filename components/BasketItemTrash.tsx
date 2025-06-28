@@ -23,10 +23,10 @@ const BasketItemTrash = ({userId, variantId, cartId}: {userId: string, variantId
             });
             return;
         } catch (error) {
+            console.error("Error deleting item from cart", error);
             toast.error("ERROR", {
                 description: "Failed to delete item from cart"
             })
-            console.log("error", error);
         }
     }
 

@@ -2,14 +2,8 @@ import { getSpecialFilters } from "@/lib/utils";
 
 /*TODO: Fix the cost function  */
 export const PAGE_QUERY = (path: string, query: string, filters: string, heartedProducts: string[]) => {
-  const pageType = path.split("/")[0]; // first part of the path
   const pageEnd = path.split("/").pop(); // last part of the path
   const optimizedHeartedProductsIds = `[${heartedProducts.map(id => `"${id}"`).join(", ")}]`;
-
-  console.log(`Page Type: ${pageType}`);
-  console.log(`Page End: ${pageEnd}`);
-  console.log(`Query: ${query}`);
-  console.log(`Filters: ${filters}`);
 
   const filtersArray = filters ? filters?.split(",") : [];
   const queryArray = query ? query?.split(" ").filter((term) => term.trim() !== "") : [];
@@ -82,8 +76,6 @@ export const PAGE_QUERY = (path: string, query: string, filters: string, hearted
     console.log("NO SEARCH TERM and NO FILTERS for non home page");
     return constructNonHomePage(paramConditions, optimizedHeartedProductsIds);
    }
-
-   console.log.apply("NO SEARCH TERM and FILTERS for non home page");
    return constructNonHomePagePlusFilters(paramConditions, filtersArray, optimizedHeartedProductsIds);
   
 };

@@ -12,11 +12,9 @@ import BasketButton from "./BasketButton";
 const FloatingNavBar = ({
   session,
   initialSearches,
-  temp_cartId,
 }: {
   session: Session | null;
   initialSearches: RecentSearches;
-  temp_cartId: string;
 }) => {
   const compactMode = true;
   return (

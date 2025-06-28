@@ -19,7 +19,6 @@ export const createWarehouseAddress = async () => {
   });
   
   // Store address.id in your env or database
-  console.log("Warehouse address ID:", address.id);
   return address;
 };
 

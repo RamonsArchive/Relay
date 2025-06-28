@@ -37,7 +37,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
             }
           }
-          console.log("Creating new user in sanity", userId);
           await writeClient.create({
             _type: "user",
             _id: userId,
@@ -52,7 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // 2) Upsert into MySQL via Prisma
 
         try {
-          console.log("right before upsert", userId);
           await prisma.user.upsert({
             where: { id: userId },
             update: {
@@ -69,8 +67,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               // createdAt and isActive use their defaults
           },
         }) 
-        console.log("upserted user into MySQL", userId);
-
 
         const response = NextResponse.next();
         response.cookies.set('needs_cart_sync', 'true', {
@@ -86,8 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-         console.log("User exists in sanity", userId);
-         return true; // allow sign in
+        return true; // allow sign in
       } catch (error) {
         console.error("Error during signIn callback", error);
         console.error(parseServerActionResponse({status: "ERROR", error: "INTERNAL SERVER ERROR"}));

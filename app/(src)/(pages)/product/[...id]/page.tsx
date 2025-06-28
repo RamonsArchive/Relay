@@ -154,9 +154,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       selectedReviews = [...userReview, ...best, ...worst];
     }
   } else {
-    console.log("less than three reivews");
     if (!dereferencedReviews?.length) {
-      console.log("Returning cause no reviews");
       selectedReviews = [];
     }
     const sortedReviews = [...dereferencedReviews].sort(

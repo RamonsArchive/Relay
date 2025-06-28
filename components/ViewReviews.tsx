@@ -155,7 +155,6 @@ const ViewReviews = ({
     }
 
     if (stars?.length > 0) {
-      console.log("running stars greater than 0");
       newReviews = newReviews.filter((review) =>
         stars.includes(review.mainRating as number)
       );

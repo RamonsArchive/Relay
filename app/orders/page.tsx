@@ -177,7 +177,6 @@ const OrdersPage = async ({params}: {params: Promise<{page: string}>}) => {
                       </div>
 
                       {(order.deliveryDate || order.trackingUrl) && order.status !== "refunded" && (
-
                         <div>
                           <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
                             <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

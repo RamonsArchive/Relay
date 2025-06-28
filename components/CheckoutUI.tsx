@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { validatePromoCodeForOrder, removePromoCodeFromCart, verifyCart, getCartForCheckout, initiateCheckout } from '@/sanity/lib/actions';
-import { BasketType, CartItemForCheckoutType } from '@/globalTypes';
+import { CartItemForCheckoutType } from '@/globalTypes';
 import {loadStripe} from '@stripe/stripe-js';
 import {
   EmbeddedCheckoutProvider,
@@ -13,7 +13,6 @@ import {
 import Link from 'next/link';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_TEST || "");
-//console.log("stripePromise", stripePromise);
 
 if (!stripePromise) {
     throw new Error("Stripe promise not found");
@@ -27,14 +26,9 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
 
     useEffect(() => {
         const createOrder = async () => {
-            try {
-                console.log("userId", userId);
-                console.log("path", path);
-        
+            try { 
                 if (!userId) {
-                  console.log("path", path);
                   const callbackUrl = `${path}/cart`;
-                  console.log("callbackUrl", callbackUrl);
                   toast.info('Please login to checkout', {
                     description: 'You must be logged in to checkout',
                   });
@@ -42,7 +36,6 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                   return;
                 }
                 const cart = await getCartForCheckout(userId);
-                console.log("cart", cart);
                 if (cart.status === 'ERROR') {
                   toast.error('ERROR', { description: cart.error });
                   if (cart.error === 'No cart found') {
@@ -50,12 +43,10 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                   }
                   return;
                 }
-                console.log("passed cart exists check");
               
                 const subtotal = cart.data.items.reduce((sum: number, item: CartItemForCheckoutType) => { 
                   return sum + (item.variant.product.price || 0) * item.quantity
                 }, 0);
-                console.log("subtotal", subtotal);
                 if (subtotal <= 0) {
                   toast.error('ERROR', { description: 'No items in cart' });
                   return;
@@ -91,7 +82,7 @@ const CheckoutUI = ({userId, path}: {userId: string, path: string }) => {
                 const clientSecret = initiateCheckoutResult.clientSecret;
                 setStripeClientSecret(clientSecret);            
             } catch (error) {
-                console.log(error);
+                console.error("Error creating order", error);
                 toast.error('ERROR', { description: 'Failed to checkout' });
               }
         }

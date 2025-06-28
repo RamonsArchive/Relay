@@ -190,14 +190,10 @@ const ReviewCard = ({
 
   const handleFromSubmit = async (prevState: ActionState, formData: FormData) => {
     try {
-      console.log("Should be getting data");
       const editData = formData.get("review") || "";
-      console.log("Edit data", editData);
       await editReviewSchema.parseAsync({review: editData});
-      console.log("Edit reivew validation", editReviewSchema);
 
       const result = await writeReviewEdit(_id as string, editData as string);
-      console.log("Result", result);
       if (result.status === "SUCCESS") {
         toast.success("Success", {
           description: "Congrats, your review has been successfully edited",
@@ -258,7 +254,6 @@ const ReviewCard = ({
     try {
       setDropFlag(false);
       if (!userId) {
-        console.log("Going to sign in");
         setFlagged(false);
         setFlagPending(false);
         Cookies.set("flaggedReviewId", _id as string, { expires: 1 });
@@ -277,7 +272,6 @@ const ReviewCard = ({
         _id as string,
         flaggedReasonSanitized
       );
-      console.log("result for flaggin", result);
 
       if (result.status === "SUCCESS") {
         setFlagPending(false);
@@ -317,7 +311,6 @@ const ReviewCard = ({
     try {
       setFlagPending(true);
       const result = await deleteReviewFlag(userId as string, _id as string);
-      console.log("result for deleting flag", result);
       if (result.status === "SUCCESS") {
         setFlagPending(false);
         setFlagged(false);

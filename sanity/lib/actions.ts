@@ -30,7 +30,6 @@ export const uploadImageToSanity = async (imageFile: File) => {
     }
 
     if (!imageFile) {
-      console.log("No file provided");
       return parseServerActionResponse({
         status: "ERROR",
         error: "No file provided",
@@ -65,7 +64,6 @@ export const uploadImageToSanity = async (imageFile: File) => {
       filename: imageFile.name || `${nanoid()}.jpg`,
     });
 
-    console.log("Upload Success:", uploadImage);
     return uploadImage._id;
   } catch (error) {
     console.error("Error uploading image to Sanity:", error);
@@ -162,15 +160,12 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
     })
    }
 
-   console.log("passed asnitized check");
    if (!session || userIdSanitized !== sessionId) {
     return parseServerActionResponse({
       status: "ERROR",
       error: "Unauthorized request"
     })
    }
-
-   console.log("passed auth check")
 
    const {success} = await rateLimiter.limit(
     `${userIdSanitized}:heartWrite`
@@ -184,7 +179,6 @@ export const handleHeartWrite = async (userId: string, productId: string, hearte
 
     if (!hearted) {
       try {
-      console.log("In the try block");
       const result = await writeClient.withConfig({useCdn: false})
       .patch(userIdSanitized)
       .unset([`heartedProducts[_ref=="${productIdSanitized}"]`])
@@ -326,8 +320,6 @@ export const writePopularCategories = async (userId: string, productId: string, 
       });
     }
 
-    console.log("Valid categories");
-
     const dereferencedCategories = categories.map((obj: any) => obj.name);
 
     const popularCategories = await fetchPopularCategories(userId);
@@ -351,7 +343,6 @@ export const writePopularCategories = async (userId: string, productId: string, 
 };
 
 export const writeRecentSearch = async (userId: string, searchQuery: string) => {
-  console.log("In write recent search");
   try {
     const session = await auth();
     const sessionId = session?.user?.id;
@@ -418,7 +409,6 @@ export const writeRecentSearch = async (userId: string, searchQuery: string) => 
       console.error("Sanity update failed", result);
       return parseServerActionResponse({ status: "ERROR", error: "Sanity update failed" });
     }
-    console.error("Result for recent searches", result);
 
     return parseServerActionResponse({
       ...result,
@@ -698,7 +688,6 @@ export const deleteReview = async (reviewId: string, productId: string, userId: 
 
 export const writeFlaggedReview = async (userId: string, reviewId: string, flagReason: string) => {
 
-  console.log("In write flagged review");
   if (!flagReason) {
     return parseServerActionResponse({
       status: "ERROR",
@@ -834,7 +823,6 @@ export const deleteReviewFlag = async (userId: string, flaggedReviewId: string) 
 
 export const addToBasket = async (userId: string, productId: string, color: string, size: string, quantity: number, temp_cartId?: string) => {
   try {
-    console.log("In addToBasket");
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
@@ -848,7 +836,6 @@ export const addToBasket = async (userId: string, productId: string, color: stri
         maxAge: 60 * 60 * 24 * 30,
       });
     }
-    console.log("temp_cartId", temp_cartId);
 
     const findCartBy = userIdSanitized ? { userId: userIdSanitized } : { tempCartId: temp_cartId };
 
@@ -914,7 +901,6 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       }
     })
 
-    console.log("existingVariant", existingVariant);
     if (!existingVariant) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -930,7 +916,6 @@ export const addToBasket = async (userId: string, productId: string, color: stri
     }
 
     const findCartWhere = userIdSanitized ? { userId: userId } : { tempCartId: temp_cartId };
-    console.log("findCartWhere", findCartWhere);
 
     // fetch or create the cart
     let cart = await prisma.cart.upsert({
@@ -961,10 +946,7 @@ export const addToBasket = async (userId: string, productId: string, color: stri
       
       if (existingCartItem) {
         const newQuantity = existingCartItem.quantity + quantity;
-        console.log("newQuantity", newQuantity);
-        console.log("existingVariant.stockQuantity", existingVariant.stockQuantity);
         
-        // ✅ FIXED: Throw error instead of returning error response
         if (newQuantity > existingVariant.stockQuantity) {
           throw new Error("Quantity is not available");
         }
@@ -1314,7 +1296,6 @@ const createStripeCustomerForUser = async (user: UserType) => {
       data: { stripeCustomerId: stripeCustomer.id },
     });
 
-    console.log(`Created Stripe customer ${stripeCustomer.id} for user ${user.id}`);
     return parseServerActionResponse({
       status: "SUCCESS",
       error: "",
@@ -1783,7 +1764,6 @@ export const initiateCheckout = async (userId: string) => {
     let stripeCustomerId = cart.user?.stripeCustomerId;
     if (!stripeCustomerId && cart.user) {
       const result = await createStripeCustomerForUser(cart.user);
-      console.log("result for new stripe customer", result);
       if (result.status === "ERROR") {
         return parseServerActionResponse({
           status: "ERROR",
@@ -1908,7 +1888,6 @@ export const initiateCheckout = async (userId: string) => {
         checkoutStatus: 'in_progress',
       }
     });
-    console.log("updateCartWithCheckoutSession", updateCartWithCheckoutSession);
     if (!updateCartWithCheckoutSession) {
       console.error("Failed to update cart with checkout session");
       return parseServerActionResponse({
@@ -1945,7 +1924,6 @@ export const setShippingMethod = async (userId: string, shippingMethod: string, 
     const session = await auth();
     const sessionId = session?.user?.id;
     const userIdSanitized = sanitizeSanityId(userId);
-    console.log("temp_cartId", temp_cartId);
 
     if (!userIdSanitized && !temp_cartId) {
       return parseServerActionResponse({
@@ -2435,11 +2413,9 @@ const calculateDiscount = (promoCode: any, cartTotal: number): number => {
 
 export const checkZipCode = async (userId: string, zipCode: string) => {
   try {
-    console.log("rgith before the fetch request");
     const request = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${process.env.GOOGLE_MAPS_API_KEY}`)
     if (!request.ok) {
       console.warn("Failed to fetch zip code");
-      console.log("request", request);
       return parseServerActionResponse({
         status: "ERROR",
         error: "Failed to fetch zip code"
@@ -2530,9 +2506,7 @@ export const estimateTaxForZipCode = async (userId: string, zipCode: string, tax
 
     // Ensure shipping cost is in cents
     const shippingCostCents = Math.round(shippingCost * 100);
-
-    console.log("shippingCostCents", shippingCostCents);
-
+  
     const taxCalculation = await stripe.tax.calculations.create({
       currency: "usd",
       line_items: taxLineItems as any,
@@ -2673,7 +2647,6 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
     }
 
     if (!stripeSessionId) {
-      console.log("No stripe session ID provided");
       return parseServerActionResponse({
         status: "ERROR",
         error: "No stripe session ID provided"
@@ -2719,8 +2692,6 @@ export const fetchLastCompleteOrder = async (userId: string, stripeSessionId: st
         }
       }
     });
-
-    console.log("lastStripeSession", lastStripeSession);
 
     return parseServerActionResponse({
       status: "SUCCESS",
@@ -2911,8 +2882,6 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
       })
     );
 
-    console.log("updateMySQLQuantities", updateMySQLQuantities);
-
     if (!updateMySQLQuantities) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -2960,8 +2929,6 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
       })
     );
 
-    console.log("updateSanityQuantities", updateSanityQuantities);
-
     if (!updateSanityQuantities) {
       return parseServerActionResponse({
         status: "ERROR",
@@ -2975,13 +2942,6 @@ export const initiateRefund = async (userId: string, paymentIntentId: string, st
         error: "Failed to update Sanity quantities"
       });
     }
-
-    // Log for testing purposes
-    console.log(`Refund processed for order ${order.id}:`, {
-      refundId: refund.id,
-      amount: refund.amount,
-      testMode: isTestMode
-    });
 
     const refundEmail = await sendRefundEmail(order, refund, "CUSTOMER_REQUEST");
     if (refundEmail.status === "ERROR") {

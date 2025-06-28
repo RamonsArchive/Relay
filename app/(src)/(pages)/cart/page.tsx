@@ -13,13 +13,11 @@ const experimental_ppr = true;
 
 const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const path = (await params).id || "/";
-  console.log("path in cart page", path);
   const session = await auth();
   const user = session?.user;
   const userId = user?.id || "";
   const cookieJar = await cookies();
   const temp_cartId = cookieJar.get("temp_cartId")?.value || "";
-  console.log("temp_cartId in cart page", temp_cartId);
   let cartItems: BasketType[] = [];
 
   const theCart = await getCart(userId || "", temp_cartId);
@@ -33,8 +31,6 @@ const CartPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <>
-
-    
     {!cartItems || cartItems.length == 0 ? (
       <div className="flex flex-col flex-1 w-full min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-8rem)] items-center justify-center border border-gray-300 border-[1px] rounded-md shadow-md p-5"> 
       <div className="flex flex-col w-full h-full items-center justify-center gap-y-4 max-w-xl">

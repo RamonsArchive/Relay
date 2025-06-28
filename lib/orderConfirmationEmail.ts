@@ -97,9 +97,6 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
     });
   };
 
-  for (const item of items) {
-    console.log("item images", item.images);
-  }
   try {
     const { data, error } = await resend.emails.send({
       from: 'Relay <onboarding@resend.dev>', // Replace with your domain
@@ -343,7 +340,6 @@ export async function sendOrderConfirmationEmail(props: OrderConfirmationEmailPr
       throw new Error(`Failed to send email: ${error.message}`);
     }
 
-    console.log('Order confirmation email sent successfully:', data);
     return { success: true, data };
 
   } catch (error) {

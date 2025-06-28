@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId: string, path: string, cartItems: BasketType[], cartId: number, temp_cartId: string | null}) => {
-    console.log("temp_cartId in summary display", temp_cartId);
     const router = useRouter(); 
     const [selectedShipping, setSelectedShipping] = useState("");
     const [zipCode, setZipCode] = useState('');
@@ -47,43 +46,6 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
       }
     }, [selectedShipping, cartItems]);
 
-
-    /* ===== CREATE TEMP STRIPE CUSTOMER ===== */
-    // useEffect(() => {
-    //   const createTempStripeCustomer = async () => {
-    //     try {
-    //       setIsLoading(true);
-    //     const result = await fetch("/api/test", {
-    //       method: "POST",
-    //       body: JSON.stringify({
-    //         userId: userId,
-    //       })
-    //     })
-    //     if (!result.ok) {
-    //       toast.error('ERROR', { description: 'Failed to create temp stripe customer' });
-    //       setIsLoading(false);
-    //       return;
-    //     }
-    //     const data = await result.json();
-    //     console.log("data", data);
-    //     if (data.status === "ERROR") {
-    //       setIsLoading(false);
-    //       toast.error('ERROR', { description: data.error });
-    //       return;
-    //     }
-    //     toast.success('SUCCESS', { description: 'Temp stripe customer created successfully' });
-    //     setIsLoading(false);
-    //   } catch (error) {
-    //       console.log(error);
-    //       setIsLoading(false);
-    //       toast.error('ERROR', { description: 'Failed to create temp stripe customer' });
-    //       return;
-    //     }
-    //   }
-        
-    //   createTempStripeCustomer();
-    // }, [])
-  
     const estimateTax = async (verifyZipCode: boolean = false, zipFromRef?: string) => {
       setIsLoading(true);
 
@@ -106,9 +68,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         }
   
         const taxCalculation = result.calculation;
-        console.log("taxCalculation", taxCalculation);
         const estimated_tax = taxCalculation.tax_amount_exclusive / 100;
-        console.log("estimated_tax", estimated_tax);
         setTax(estimated_tax);
         setIsLoading(false);
         if (verifyZipCode) {
@@ -116,7 +76,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         }
       } catch (error) {
         setIsLoading(false);
-        console.log(error);
+        console.error("Error checking zip code", error);
         toast.error('ERROR', { description: 'Failed to check zip code' });
       }
     };
@@ -140,7 +100,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         toast.success('SUCCESS', { description: 'Promo code applied successfully' });
         return { status: 'SUCCESS', error: '' };
       } catch (error) {
-        console.log(error);
+        console.error("Error applying promo code", error);
         return { status: 'ERROR', error: 'Failed to apply promo code' };
       }
     };
@@ -154,10 +114,8 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
       try {
         setIsLoading(true);
         if (!userId) {
-          console.log("path", path);
           const callbackUrl = `${path}/cart`;
           setIsLoading(false);
-          console.log("callbackUrl", callbackUrl);
           router.push(`/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`);
           toast.info('Please login to checkout', {
             description: 'You must be logged in to checkout',
@@ -166,12 +124,11 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         }
   
         const newPath = `${path}checkout`;
-        console.log("newPath", newPath);
         router.push(newPath);
 
       } catch (error) {
         setIsLoading(false);
-        console.log(error);
+        console.error("Error checking zip code", error);
         toast.error('ERROR', { description: 'Failed to checkout' });
       }
       
@@ -182,7 +139,6 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
       try {
         setSelectedShipping(shippingMethod);
         setIsLoading(true);
-        console.log("temp_cartId", temp_cartId);
         const result = await setShippingMethod(userId, shippingMethod, temp_cartId);
         if (result.status === 'ERROR') {
           toast.error('ERROR', { description: result.error });
@@ -194,7 +150,7 @@ const SummaryDisplay = ({userId, path, cartItems, cartId, temp_cartId}: {userId:
         toast.success('SUCCESS', { description: 'Shipping method set successfully' });
          
       } catch (error) {
-        console.log(error);
+        console.error("Error setting shipping method", error);
         setIsLoading(false);
         setSelectedShipping(prevShippingMethod);
         toast.error('ERROR', { description: 'Failed to set shipping method' });

@@ -12,9 +12,6 @@ const experimental_ppr = true;
 const page = async ({params, searchParams}: {params: Promise<{path: string}>, searchParams: Promise<{session_id: string}>}) => {
   const path = (await params).path || "/";
   const stripeSessionId = (await searchParams).session_id || "";
-  console.log("path", path);
-  console.log("stripeSessionId", stripeSessionId);
-
 
   const session = await auth();
   const sessionId = session?.user;
@@ -22,10 +19,8 @@ const page = async ({params, searchParams}: {params: Promise<{path: string}>, se
   await new Promise(resolve => setTimeout(resolve, 3000)); // 2 second delay
   const lastStripeSession = await fetchLastCompleteOrder(userId, stripeSessionId);
   console.log("Full response:", JSON.stringify(lastStripeSession, null, 2)); 
-   const orders = lastStripeSession.data.stripeSession.items;
-  console.log("orders", orders);
+  const orders = lastStripeSession.data.stripeSession.items;
   const paymentIntentId = lastStripeSession.data.stripeSession.paymentIntentId;
-  const status = lastStripeSession.data.stripeSession.status;
 
   return (
     <>

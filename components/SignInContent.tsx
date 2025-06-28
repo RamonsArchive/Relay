@@ -2,7 +2,6 @@
 import React from 'react'
 import { handleSignIn } from "@/lib/serverActions";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const SignInContent = () => {
     const searchParams = useSearchParams();

@@ -19,24 +19,17 @@ export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
 
     useEffect(() => {
         const sync = async () => {
-            console.log("syncing cart");
             if (status === "authenticated" && session?.user?.id) {
                 
                 try {
                     const userId = session?.user?.id;
                     const temp_cartId = Cookies.get("temp_cartId");
-                    console.log("userId", userId);
-                    console.log("temp_cartId", temp_cartId);
-                    console.log("syncStatus", syncStatus);
                     if (!userId || !temp_cartId || syncStatus !== "idle") {
-                        console.log("no userId or temp_cartId or syncStatus is not idle");
                         return;
                     }
                     setSyncStatus("syncing");
                     const cartCheck = await checkCartSync(userId, temp_cartId || "");
-                    console.log("cartCheck in context", cartCheck);
                     if (cartCheck.status === "ERROR") {
-                        console.log("Cart synced successfully");
                         setSyncStatus("error");
                         return parseServerActionResponse({
                             status: "ERROR",
@@ -45,7 +38,6 @@ export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
                     }
                     setSyncStatus("synced");
                     if (refreshBasketCount) {
-                        console.log("Refreshing basket count after cart sync");
                         await refreshBasketCount(0);
                       }
 
@@ -69,7 +61,6 @@ export const CartSyncProvider = ({children}: {children: React.ReactNode}) => {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            console.log("unauthenticated, setting syncStatus to idle");
             setSyncStatus("idle");
         }
     }, [status]);

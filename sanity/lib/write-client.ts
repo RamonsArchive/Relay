@@ -8,9 +8,7 @@ export const writeClient = createClient({
   useCdn: false, // Set to false if statically generating pages, using ISR or tag-based revalidation
   token: process.env.SANITY_WRITE_TOKEN,
 })
-console.log("Write Token from global:", process.env.SANITY_WRITE_TOKEN);
 
-console.log(`Write token in write cleint ${token} `)
 if (!writeClient.config().token) {
     throw new Error("Write token not found");
 }

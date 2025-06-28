@@ -16,9 +16,6 @@ const SidebarWrapper = () => {
     setIsNoSideBarPage(noSideBarPage);
   }, [path]);
 
-  console.log("isNoSideBarPage", isNoSideBarPage);
-  console.log("Path", path);
-
   return (
     <div className={`${isNoSideBarPage ? "w-0 hidden opacity-0" : "side-bar"}`}>
       <Suspense fallback={<SideBarCardSkeleton />}>

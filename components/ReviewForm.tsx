@@ -107,7 +107,6 @@ const ReviewForm = ({ productId, user }: { productId: string; user: User }) => {
         productId.toString(),
         reviewData
       );
-      console.log("Result", result);
       if (result.status === "SUCCESS") {
         toast.success("Success", {
           description: "Congrats, your review was a success",

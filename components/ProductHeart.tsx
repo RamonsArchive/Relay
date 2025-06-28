@@ -34,7 +34,6 @@ const ProductHeart = ({
       Cookies.remove("heartedProductId");
 
       if (hearted) {
-        console.log("Hearted is true returning early");
         toast.info("Product is already hearted", {
           description: "Looks like this product is already hearted :)",
         });
@@ -42,7 +41,6 @@ const ProductHeart = ({
       }
 
       if (!userId) {
-        console.log("User id is not present, returning early");
         toast.error("Please login", {
           description: "To heart this product, please login."
         })
@@ -56,21 +54,14 @@ const ProductHeart = ({
 
       try {
         setHearted(newHearted);
-        console.log("heartedProductId", heartedProductId);
-        console.log("userId", userId);
-        console.log("newHearted", newHearted);
-
-        console.log("Right before handleHeartWrite");
         const result = await handleHeartWrite(
           userId as string,
           heartedProductId as string,
           newHearted
         );
-        console.log("Result", result);
         revalidateHeartedProducts();
 
         if (result.status === "SUCCESS") {
-          console.log("Heart is successful on callback, should toast");
           toast.success("Success", {
             description: "Product has been hearted successfully",
           });
@@ -122,7 +113,6 @@ const ProductHeart = ({
         newHearted as boolean
       );
       revalidateHeartedProducts();
-      console.log("Heart result", result);
       if (result.status == "SUCCESS") {
         if (hearted) {
           toast.success("Success", {

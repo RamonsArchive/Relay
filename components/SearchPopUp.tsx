@@ -74,7 +74,6 @@ const SearchPopUp = ({
 
   useEffect(() => {
     const refreshSearches = async () => {
-      console.log("Refetching dataaaaaa for searches");
       const userId = session?.user?.id || "";
       if (session && userId) {
         const newSearches = await fetchRecentSearchesFew(userId);
@@ -111,7 +110,6 @@ const SearchPopUp = ({
       const userId = session?.user?.id;
       resetFilters();
       router.push(`/?query=${encodeURIComponent(query).toLowerCase()}`);
-      console.log("After push");
       if (userId) {
         try {
           await writeRecentSearch(userId, query);

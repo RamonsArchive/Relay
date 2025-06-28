@@ -4,9 +4,9 @@ import { OrderReturnType } from '@/globalTypes';
 import { formatDate } from '@/lib/utils';
 
 const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {order: OrderReturnType, userId: string, paymentIntentId: string, stripeSessionId: string, path: string}) => {
-    const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingNumber, trackingUrl, labelUrl, deliveryDate, deliveryDays, shippingCost, carrier} = order;
+    const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingNumber, trackingUrl, labelUrl, deliveryDate, carrier} = order;
 
-    const {line1, line2, city, state, postalCode} = address;
+    const {line1, city, state, postalCode} = address;
   return (
     <div className="flex flex-col w-full gap-y-4 border border-gray-200 rounded-md p-3 shadow-md bg-gray-50">
         <div className="flex flex-row w-full justify-between items-center">

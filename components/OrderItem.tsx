@@ -7,8 +7,6 @@ import { OrderItemReturnType } from '@/globalTypes';
 import { JsonValue } from '@prisma/client/runtime/library';
 
 const OrderItem = ({orderItem}: {orderItem: OrderItemReturnType}) => {
-    console.log("orderItem", orderItem);
-
     const {images, productTitle, quantity, unitPrice, variantColor, variantSize, productId} = orderItem;
     const getImageUrl = (image: JsonValue) => {
         if (typeof image === 'object') {

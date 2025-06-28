@@ -13,9 +13,9 @@ const page = () => {
             <div className="flex flex-col gap-y-3 w-full">
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">1. Introduction</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">
-                    I am a cat lover, gym goer, soccer player, and a software engineer.
-                    I've lived in Long Beach CA during my early childhood, until I moved to Irvine CA, before moving to Placerville CA for my high school years, and then finally moving to San Diego CA for my college years.
-                    Every city has its own unique charm, and I've been fortunate to experience them all.
+                    {`I am a cat lover, gym goer, soccer player, and a software engineer.`}
+                    {`I've lived in Long Beach CA during my early childhood, until I moved to Irvine CA, before moving to Placerville CA for my high school years, and then finally moving to San Diego CA for my college years.`}
+                    {`Every city has its own unique charm, and I've been fortunate to experience them all.`}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                     <Image src="/assets/images/prettyMe.png" alt="Me" width={100} height={100} className="w-full h-56 rounded-md object-cover" />
@@ -37,12 +37,12 @@ const page = () => {
                 </div>
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">2. Education</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">
-                    I am a third year student at UC San Diego studying Cognitive Science with a specialization in Machine Learning and Neural Computation, minoring in Computer Science. Expected graduation: June 2027.
+                    {`I am a third year student at UC San Diego studying Cognitive Science with a specialization in Machine Learning and Neural Computation, minoring in Computer Science. Expected graduation: June 2027.`}
                 </p>
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">3. Experience</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">
-                    I've built several full-stack projects including <strong>Relay</strong>, a comprehensive e-commerce platform with hybrid database architecture, payment processing, and real-time inventory management. 
-                    I've also developed custom machine learning models using YOLOv8 for object detection, conducted statistical research analyzing media performance data, and created AI-powered transcription systems.
+                    {`I've built several full-stack projects including <strong>Relay</strong>, a comprehensive e-commerce platform with hybrid database architecture, payment processing, and real-time inventory management.`}
+                    {`I've also developed custom machine learning models using YOLOv8 for object detection, conducted statistical research analyzing media performance data, and created AI-powered transcription systems.`}
                 </p>
                 <h2 className="font-plex-sans font-regular text-[14px] sm:text-[16px] md:text[18px]">4. Skills</h2>
                 <p className="font-plex-sans font-light text-[10px] md:text-[12px]">

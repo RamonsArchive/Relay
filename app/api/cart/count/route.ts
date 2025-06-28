@@ -11,23 +11,18 @@ export async function GET(request: NextRequest) {
         const userId = session?.user?.id;
         const temp_cartId = cookieJar.get("temp_cartId")?.value;
         const findCartBy = userId ? {userId: userId} : {tempCartId: temp_cartId};
-        console.log("findCartBy", findCartBy);
 
         // valid state after sync is complete
         if (!userId && !temp_cartId) {
             return NextResponse.json({count: 0}, {status: 200});
         }
 
-        console.log("findCartBy", findCartBy);
         const cart = await prisma.cart.findUnique({
             where: findCartBy,
             include: {
                 items: true,
             }
         })
-
-        console.log("cart ", cart)
-
         const count = cart?.items?.length || 0;
 
         return NextResponse.json({count}, {status: 200});

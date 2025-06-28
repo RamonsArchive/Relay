@@ -10,9 +10,7 @@ export async function POST(request: Request) {
         // Get raw body for signature verification
         const rawBody = await request.text();
         const body = JSON.parse(rawBody);
-        
-        console.log("received easypost tracking webhook body", body);
-        
+                
         const signature = request.headers.get("x-hmac-sha256");
         const secret = process.env.EASYPOST_TRACKER_WEBHOOK_SECRET;
 

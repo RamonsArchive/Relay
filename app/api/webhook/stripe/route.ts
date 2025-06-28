@@ -14,9 +14,6 @@ export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
   const endPointSecret = process.env.STRIPE_CHECKOUT_WEBHOOK_SECRET;
-  console.log("🔑 Webhook received:", body);
-  console.log("🔑 Webhook signature:", signature);
-  console.log("🔑 Webhook secret:", endPointSecret);
 
   if (!signature) {
     return new Response('No signature provided', { status: 400 });
@@ -36,7 +33,6 @@ export async function POST(request: Request) {
     return new Response('Webhook signature verification failed', { status: 400 });
   }
 
- // console.log('✅ Webhook verified:', event.type); 
 
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
@@ -44,7 +40,6 @@ export async function POST(request: Request) {
     
     try {
       await handleCheckoutComplete(session);
-      console.log('✅ Checkout completed successfully');
     } catch (error) {
       console.error('❌ Error processing checkout:', error);
       return new Response('Error processing checkout', { status: 500 });
@@ -56,8 +51,6 @@ export async function POST(request: Request) {
 
 // Modified version of your function for webhooks (no auth/rate limiting)
 async function handleCheckoutComplete(session: any) {
-  console.log("Processing session", session);
-
   // Get user ID from session metadata (you'll need to set this during checkout)
   const userId = session.metadata?.userId;
   if (!userId) {
@@ -76,7 +69,6 @@ async function handleCheckoutComplete(session: any) {
     await handleRefundAndNotify(session, 'CART_INVALID', verify_cart.error);
     return NextResponse.json({ status: "ERROR", error: "Failed to verify cart" }, { status: 500 })
   }
-  console.log("Cart verified successfully");
 
   const userIdSanitized = sanitizeSanityId(userId);
 
@@ -233,21 +225,18 @@ async function handleCheckoutComplete(session: any) {
   // Create shipment and update order
   try {
     const shipmentResult = await makeShipment(order);
-    console.log("Shipment result", shipmentResult);
     if (shipmentResult.status === "ERROR") {
       console.error("Failed to create shipment", shipmentResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', shipmentResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to create shipment" }, { status: 500 })
     }
     const rateResult = await getRate(shipmentResult.shipment, costToShip, minimumDeliveryDays, maximumDeliveryDays)
-    console.log("Rate result", rateResult);
     if (rateResult.status === "ERROR") {
       console.error("Failed to get rate", rateResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', rateResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to get rate" }, { status: 500 })
     }
     const purchaseResult = await buyShipment(shipmentResult.shipment.id, rateResult.data.rate.id)
-    console.log("Purchase result", purchaseResult);
     if (purchaseResult.status === "ERROR") {
       console.error("Failed to buy shipment", purchaseResult.error);
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', purchaseResult.error);
@@ -278,9 +267,6 @@ async function handleCheckoutComplete(session: any) {
       } 
 
       try {
-        for (const item of order.items) {
-          console.log("item images", item.images);
-        }
         const emailResult = await sendOrderConfirmationEmail({
           email: order.orderEmail,
           firstName: order.firstName,
@@ -350,7 +336,6 @@ async function handleCheckoutComplete(session: any) {
    const buyShipment = async (shipmentId: string, rateId: string) => {
     try {
       const isTestMode = process.env.EASYPOST_TEST_MODE === "true";
-      console.log("Is test mode", isTestMode);
       if (isTestMode) {
         // Get the actual shipment and rate data to make mock more realistic
         const shipment = await easypost.Shipment.retrieve(shipmentId);
@@ -629,9 +614,6 @@ async function handleCheckoutComplete(session: any) {
 // Updated refund handler with proper error handling
 const handleRefundAndNotify = async (session: any, errorType: string, errorMessage: string) => {
     try {
-      console.log(`🔄 Processing refund for session: ${session.id}`);
-      console.log(`📝 Reason: ${errorType} - ${errorMessage}`);
-      
       // 1. Process the refund
       const refund = await stripe.refunds.create({
         payment_intent: session.payment_intent,
@@ -736,7 +718,6 @@ const handleRefundAndNotify = async (session: any, errorType: string, errorMessa
               .set({ variants: updatedVariants })
               .commit();
       
-            console.log(`Updated product ${productId}: ${currentProduct.variants.length} -> ${updatedVariants.length} variants`);
             return parseServerActionResponse({
               status: "SUCCESS",
               message: "Inventory updated successfully"

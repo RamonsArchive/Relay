@@ -12,13 +12,8 @@ const ProductBuyButtons = ({ userId, productId, temp_cartId }: { userId: string 
   const { selectedColor, selectedSize, quantity } = useProductOptions();
 
   const handleAddToBasket = async() => {
-    console.log("add to basket id", userId);
-    console.log("add to basket temp_cartId", temp_cartId);
     try {
       const response = await addToBasket(userId || "", productId, selectedColor, selectedSize, quantity, temp_cartId || "");
-      console.log(response);
-      console.log(response.status);
-      console.log(response.error);
       if (response.status === "SUCCESS") {
         toast.success("SUCCESS", {
           description: "Item successfully added to basket",
@@ -31,17 +26,11 @@ const ProductBuyButtons = ({ userId, productId, temp_cartId }: { userId: string 
         });
       }
     } catch (error) {
+      console.error("Error adding item to basket", error);
       toast.error("ERROR", {
         description: "Failed to add item to basket",
       });
     }
-
-
-
-  }
-
-  const handlePurchaseNow = () => {
-    console.log("purchase now");
   }
 
   return (

@@ -8,11 +8,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const session = await auth();
-        console.log("session", session);
         const user = session?.user as UserType;
-        console.log("user", user);
-        const userId = user.id;
-
         const stripeCustomer = await stripe.customers.create({
             email: user.email,
             name: user.name || undefined,
@@ -27,7 +23,6 @@ export async function POST(request: NextRequest) {
             data: { stripeCustomerId: stripeCustomer.id },
           });
       
-          console.log(`Created Stripe customer ${stripeCustomer.id} for user ${user.id}`);
           return NextResponse.json({
             status: "SUCCESS",
             error: "",

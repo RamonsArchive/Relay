@@ -32,7 +32,6 @@ const ManageSession = ({ session }: { session: Session | null }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      console.log("isDropdownOpen", isDropdownOpen);
       const dropDownClicked = dropDownRefInner.current?.contains(event.target as Node);
       const dropDownOuterClicked = dropDownRefOuter.current?.contains(event.target as Node);
 

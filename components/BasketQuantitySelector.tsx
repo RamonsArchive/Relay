@@ -30,8 +30,6 @@ const BasketQuantitySelector = ({userId, variantId, productId, quantity, stockQu
        
         try {
             const result = await updateDataBaseQuantities(userId, variantId, productId as string, newQuantity, temp_cartId);
-            console.log("result", result);
-
             if (result.status === "ERROR") {
                 toast.error("ERROR", {
                     description: result.error

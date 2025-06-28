@@ -1,14 +1,11 @@
 "use client";
 import { initiateRefund } from '@/sanity/lib/actions';
-import { revalidatePath } from 'next/cache';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { toast } from 'sonner';
 
 const RefundButton = ({userId, path, paymentIntentId, stripeSessionId}: {userId: string, path: string, paymentIntentId: string, stripeSessionId: string}) => {
     const [isRefunding, setIsRefunding] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const router = useRouter();
     const handleRefundClick = () => {
         setShowConfirmModal(true);
       };
@@ -28,7 +25,6 @@ const RefundButton = ({userId, path, paymentIntentId, stripeSessionId}: {userId:
             redirectPath = path + "?session_id=" + stripeSessionId;
           }
           const response = await initiateRefund(userId, paymentIntentId, stripeSessionId, redirectPath);
-          console.log("response for refund", response);
           if (response.status === "ERROR") {
             toast.error("ERROR", {
               description: response.error,
