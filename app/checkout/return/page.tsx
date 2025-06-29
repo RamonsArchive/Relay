@@ -16,7 +16,7 @@ const page = async ({params, searchParams}: {params: Promise<{path: string}>, se
   const session = await auth();
   const sessionId = session?.user;
   const userId = sessionId?.id|| "";
-  await new Promise(resolve => setTimeout(resolve, 4000)); // 4 second delay
+  await new Promise(resolve => setTimeout(resolve, 8000)); // 8 second delay
   const lastStripeSession = await fetchLastCompleteOrder(userId, stripeSessionId);
   console.log("Full response:", JSON.stringify(lastStripeSession, null, 2)); 
   const orders = lastStripeSession.data.stripeSession.items;
