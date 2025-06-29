@@ -242,6 +242,7 @@ async function handleCheckoutComplete(session: any) {
       await handleRefundAndNotify(session, 'SHIPPING_LABEL_FAILED', purchaseResult.error);
       return NextResponse.json({ status: "ERROR", error: "Failed to buy shipment" }, { status: 500 })
     }
+    console.log("purchaseResult in route", purchaseResult);
     try {
       const updateOrder = await prisma.order.update({
         where: { id: order.id },

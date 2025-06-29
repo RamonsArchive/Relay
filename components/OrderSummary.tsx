@@ -4,7 +4,8 @@ import { OrderReturnType } from '@/globalTypes';
 import { formatDate } from '@/lib/utils';
 
 const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {order: OrderReturnType, userId: string, paymentIntentId: string, stripeSessionId: string, path: string}) => {
-    const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingNumber, trackingUrl, labelUrl, deliveryDate, carrier} = order;
+    const { promoCodeUsed, promoDiscount, address, firstName, lastName, taxAmount, trackingCode, trackingUrl, labelUrl, deliveryDate, carrier} = order;
+    console.log("order", order);
 
     const {line1, city, state, postalCode} = address;
   return (
@@ -23,7 +24,6 @@ const OrderSummary = ({order, userId, paymentIntentId, stripeSessionId, path}: {
             <p className="font-plex-sans font-bold text-[14px] xs:text-[16px] sm:text-[18px] md:text-[20px]">Shipping Details</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Shipping Method: {carrier}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Tracking Code: {trackingCode}</p>
-            <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Tracking Number: {trackingNumber}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Tracking URL: {trackingUrl}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Label URL: {labelUrl}</p>
             <p className="font-plex-sans font-regular text-[12px] xs:text-[14px] sm:text-[16px] md:text-[18px]">Delivery Date: {formatDate(deliveryDate)}</p>
