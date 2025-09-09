@@ -1,0 +1,410 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 1) User (Google ID as primary key)
+model User {
+  id       String  @id // Google user ID
+  email    String  @unique
+  name     String?
+  provider String?
+
+  // Stripe integration
+  stripeCustomerId String? @unique // Store Stripe customer ID for reuse
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  cart        Cart?
+  orders      Order[]
+  addresses   Address[]
+  promoUsages PromoCodeUsage[]
+
+  // Soft delete
+  isActive Boolean @default(true)
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 2) Cart & CartItem
+// 2) Cart & CartItem - SIMPLIFIED (no premature snapshot)
+model Cart {
+  id     Int     @id @default(autoincrement())
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+
+  tempCartId String? @unique
+
+  // Promo code fields - applied before checkout
+  appliedPromoCode          PromoCode? @relation(fields: [appliedPromoCodeId], references: [id])
+  appliedPromoCodeId        Int?
+  promoDiscountAmount       Int? // calculated discount in cents
+  promoAppliedAt            DateTime?
+  requiresPromoVerification Boolean    @default(false)
+
+  // Shipping preference (not cost - calculated at checkout)
+  shippingMethod    String?  @default("standard") // "standard", "express", "free"
+  shippingAddressId Int? // Reference to Address model instead of JSON
+  shippingAddress   Address? @relation(fields: [shippingAddressId], references: [id])
+
+  // Stripe checkout session tracking
+  stripeCheckoutSessionId String? @unique
+  checkoutStatus          String? @default("pending") // "pending", "in_progress", "completed", "expired"
+
+  // NO snapshot fields in Cart - calculated fresh each time
+  // This prevents stale data when items are added/removed
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  items            CartItem[]
+  checkoutSessions CheckoutSession[]
+
+  @@index([userId])
+  @@index([tempCartId])
+  @@index([stripeCheckoutSessionId])
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    Int
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId String
+  quantity  Int
+
+  addedAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, variantId])
+  @@index([cartId])
+  @@index([variantId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 3) Order & OrderItem
+model Order {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Shipping info (snapshot at purchase)
+  shippingAddress Json // Full address snapshot
+  shippingMethod  String // Method used
+  shippingCost    Int // Final shipping cost in cents
+
+  // Stripe integration
+  stripeSessionId  String  @unique
+  stripeCustomerId String? // Customer ID used for this order
+  paymentIntentId  String
+
+  // Order totals (final calculated amounts)
+  subtotal       Int // Items subtotal in cents
+  discountAmount Int // Total discount applied in cents
+  taxAmount      Int // Tax amount in cents
+  amountTotal    Int // Final total in cents
+  currency       String @default("usd")
+  // Tax calculation details (for compliance)
+  taxCalculation Json? // Store full tax calculation details
+
+  status            String // "pending", "processing", "shipped", "delivered", "cancelled", "refunded"
+  trackingCode      String?
+  trackingNumber    String?
+  trackingUrl       String?
+  labelUrl          String?
+  deliveryDate      DateTime?
+  deliveryDays      Int?
+  methodShipped     String?
+  carrier           String?
+  shipmentCost      Int?
+  estimatedDelivery String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Promo code integration (snapshot)
+  promoCode     PromoCode? @relation(fields: [promoCodeId], references: [id])
+  promoCodeId   Int?
+  promoCodeUsed String? // Code string used
+  promoDiscount Int? // Discount amount in cents
+
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId Int?
+
+  refundReason String?
+  refundedAt   DateTime?
+
+  firstName  String
+  lastName   String
+  orderEmail String
+
+  promoUsages PromoCodeUsage[]
+  items       OrderItem[]
+
+  @@index([trackingCode])
+  @@index([userId])
+  @@index([status])
+  @@index([promoCodeId])
+  @@index([createdAt])
+  @@index([stripeSessionId])
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId String
+
+  // Snapshot of product/variant data at purchase time
+  productId    String // For historical reference
+  productTitle String
+  images       Json?
+  variantSize  String
+  variantColor String
+  variantSku   String? // For inventory tracking                    
+
+  unitPrice  Int // Price per unit in cents (snapshot)
+  quantity   Int
+  totalPrice Int // unitPrice * quantity in cents
+
+  // Tax details for this line item (for compliance)
+  taxAmount Int? // Tax on this line item
+  taxRate   Float? // Tax rate applied
+
+  @@index([orderId])
+  @@index([variantId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 4) Variant (inventory mirror from Sanity)
+model Variant {
+  id            String  @id // Sanity document _id
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId     String
+  size          String // e.g. "M"
+  color         String // e.g. "Hot Pink"
+  stockQuantity Int // live stock count
+  sku           String? // Stock Keeping Unit
+
+  // Sanity sync fields
+  sanityRevisionId String? // Track Sanity's revision ID
+  lastSyncedAt     DateTime // When this variant was last synced
+  isActive         Boolean  @default(true) // For soft deletes
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, size, color]) // Each size/color combo should be unique per product
+  @@index([productId])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 5) Product (mirror from Sanity)
+model Product {
+  id          String  @id // Sanity product _id
+  title       String
+  description String? @db.Text // Using Text type for longer content
+  slug        String  @unique // URL-friendly identifier
+  price       Int? // Base price in cents
+  images      Json? // URLs to images (stored as JSON array)
+  categories  Json? // Category references (stored as JSON array)
+
+  // Sanity sync fields
+  sanityRevisionId String? // Track Sanity's revision ID
+  lastSyncedAt     DateTime // When this product was last synced
+  isActive         Boolean  @default(true) // For soft deletes
+
+  variants Variant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// 6) Address
+// 4) Address model (referenced by Cart and Order)
+model Address {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Address fields
+  firstName  String
+  lastName   String
+  company    String?
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  country    String  @default("US")
+  postalCode String
+  phone      String?
+
+  // Address type and defaults
+  type      String  @default("shipping") // "shipping", "billing", "both"
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orders Order[]
+  carts  Cart[] // For shipping address reference
+
+  @@index([userId])
+  @@index([userId, isDefault])
+}
+
+//   ──────────────────────────────────────────────────────────────────────────
+// 7) Checkout Session tracking (optional but recommended)
+model CheckoutSession {
+  id              Int    @id @default(autoincrement())
+  stripeSessionId String @unique
+
+  // Reference to cart that initiated checkout
+  cart   Cart? @relation(fields: [cartId], references: [id])
+  cartId Int?
+
+  // Calculated totals at checkout time (before Stripe)
+  subtotal          Int // in cents
+  estimatedTax      Int // in cents (estimated)
+  estimatedShipping Int // in cents
+  promoDiscount     Int // in cents
+  estimatedTotal    Int // in cents
+
+  // Final amounts from Stripe (after webhook)
+  finalTax      Int? // in cents (actual from Stripe)
+  finalShipping Int? // in cents  
+  finalTotal    Int? // in cents
+
+  status String @default("pending") // "pending", "completed", "expired", "cancelled"
+
+  // Stripe webhook data
+  stripeEventId      String? // For idempotency
+  webhookProcessedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stripeSessionId])
+  @@index([cartId])
+  @@index([status])
+}
+
+// Add relation to Cart model
+// (Add this to the Cart model above)
+// checkoutSessions     CheckoutSession[]
+
+// ──────────────────────────────────────────────────────────────────────────
+// 7) SanitySync - Track webhook synchronization status
+model SanitySync {
+  id           Int     @id @default(autoincrement())
+  documentId   String // Sanity document ID
+  documentType String // "product" or "variant"
+  operation    String // "create", "update", "delete" 
+  revisionId   String // Sanity revision ID
+  status       String // "success", "failed", "pending"
+  errorMessage String? @db.Text
+  payload      Json? // The webhook payload (useful for debugging/retry)
+
+  processedAt DateTime? // When this sync operation was processed
+  createdAt   DateTime  @default(now())
+
+  @@index([documentId])
+  @@index([status])
+  @@index([documentType])
+}
+
+// OPTIMIZED: Enhanced PromoCode model
+model PromoCode {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique
+  name        String? // Human-readable name for admin (e.g., "Black Friday 2024")
+  description String? // Internal description
+
+  // Discount configuration (exactly one should be set)
+  discountCents      Int? // fixed discount in cents
+  discountPercentage Int? // percentage discount (1-100, stored as integer)
+
+  // Usage constraints
+  minOrderAmount    Int  @default(0) // minimum order amount in cents
+  maxDiscountAmount Int? // cap on discount amount (useful for percentage discounts)
+  maxUses           Int? // total usage limit across all users (null = unlimited)
+  maxUsesPerUser    Int  @default(1) // per-user usage limit
+
+  // Time constraints
+  validFrom DateTime  @default(now())
+  validTo   DateTime?
+
+  // Targeting and visibility
+  isPublic        Boolean @default(false) // can be discovered/shared publicly
+  isActive        Boolean @default(true) // can be used
+  isFirstTimeOnly Boolean @default(false) // only for users with no previous orders
+
+  // Category/product restrictions (optional)
+  allowedCategories  Json? // array of category IDs this applies to
+  excludedCategories Json? // array of category IDs this excludes
+  allowedProducts    Json? // array of product IDs this applies to
+  excludedProducts   Json? // array of product IDs this excludes
+
+  // Analytics and metadata
+  usageCount Int       @default(0) // denormalized usage counter for performance
+  createdBy  String? // admin user who created this
+  lastUsedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  carts      Cart[]
+  orders     Order[] // orders that used this promo code
+  userUsages PromoCodeUsage[] // detailed usage tracking
+
+  @@index([code])
+  @@index([isActive, validFrom, validTo])
+  @@index([isPublic, isActive])
+  @@index([validTo]) // For cleanup of expired codes
+  @@index([usageCount]) // For popular codes analytics
+}
+
+model PromoCodeUsage {
+  id          Int       @id @default(autoincrement())
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  promoCodeId Int
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  order       Order?    @relation(fields: [orderId], references: [id])
+  orderId     Int? // null if usage attempt failed
+
+  discountApplied Int // actual discount amount in cents
+  orderAmount     Int // order subtotal when code was applied
+
+  // Status tracking
+  status        String // "applied", "failed", "expired", "invalid"
+  failureReason String? // reason if status is "failed"
+
+  usedAt DateTime @default(now())
+
+  @@unique([promoCodeId, orderId]) // prevent duplicate usage per order
+  @@index([promoCodeId, userId])
+  @@index([userId])
+  @@index([usedAt])
+}
