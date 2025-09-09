@@ -7,5 +7,5 @@ if (!stripeSecretKey) {
 }
 
 export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2025-05-28.basil", // or latest stable version
+  apiVersion: "2025-08-27.basil", // or latest stable version
 });
